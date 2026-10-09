@@ -16,16 +16,18 @@ describe('ForecastChart', () => {
         <ForecastChart
           points={POINTS}
           lowestKey="b"
-          lowestLabel="−R$ 200,00 · 1 nov · menor saldo do período"
+          lowestCallout={{ amount: '−R$ 200,00', detail: '1 nov · menor saldo do período' }}
           description="Conta X: hoje R$ 4.000,00, menor saldo −R$ 200,00 em 1 nov."
           formatAxis={(cents) => `${cents / 100}`}
         />
       </div>,
     )
 
-    await expect
-      .element(screen.getByText('−R$ 200,00 · 1 nov · menor saldo do período'))
-      .toBeVisible()
+    await expect.element(screen.getByText('1 nov · menor saldo do período')).toBeVisible()
+    await expect.element(screen.getByText('−R$ 200,00', { exact: true })).toBeVisible()
+    expect(
+      screen.container.querySelectorAll('.recharts-cartesian-grid-horizontal line').length,
+    ).toBeGreaterThan(0)
     await expect
       .element(screen.getByRole('figure'))
       .toHaveAccessibleName(/menor saldo −R\$ 200,00 em 1 nov/)
@@ -45,7 +47,7 @@ describe('ForecastChart', () => {
             { key: 'c', label: '5 nov', cents: 391_000 },
           ]}
           lowestKey="b"
-          lowestLabel="R$ 410,00 · 4 nov · menor saldo do período"
+          lowestCallout={{ amount: 'R$ 410,00', detail: '4 nov · menor saldo do período' }}
           description="Conta X."
           formatAxis={(cents) => `${cents / 100}`}
         />

@@ -4,9 +4,12 @@ import { SegmentedControl } from '@web/components/actions/segmented-control'
 import { TextLink } from '@web/components/actions/text-link'
 import { ForecastChart } from '@web/components/charts/forecast-chart'
 import { Card } from '@web/components/display/card'
+import { ResponsiveText } from '@web/components/display/responsive-text'
+import { RichText } from '@web/components/display/rich-text'
 import { homeMessages } from '@web/features/home/home.messages'
 import type { ForecastCardProps } from '@web/features/home/home.types'
 import { formatDayMonth, formatShortDate } from '@web/lib/format/calendar'
+import { Info } from 'lucide-react'
 import { useState } from 'react'
 
 const messages = homeMessages.forecast
@@ -28,7 +31,7 @@ export function ForecastCard({ workspaceId, overview, nameOf, className }: Forec
       id="forecast"
       className={className}
       title={messages.title}
-      description={messages.description}
+      description={<ResponsiveText short={messages.descriptionShort} long={messages.description} />}
       headerAction={
         forecasts.length > 1 && (
           <SegmentedControl
@@ -42,13 +45,24 @@ export function ForecastCard({ workspaceId, overview, nameOf, className }: Forec
           />
         )
       }
-      footerStat={messages.today(
-        formatBrl(forecast.startCents),
-        formatBrl(forecast.endCents),
-        formatShortDate(forecast.until),
-      )}
+      footerStat={
+        <span className="inline-flex items-center gap-1.5">
+          <Info className="size-4 shrink-0" aria-hidden="true" />
+          <span>
+            <RichText
+              text={messages.today}
+              values={{
+                start: formatBrl(forecast.startCents),
+                end: formatBrl(forecast.endCents),
+                until: formatShortDate(forecast.until),
+              }}
+            />
+          </span>
+        </span>
+      }
       footerAction={
         <TextLink
+          className="hidden lg:inline-flex"
           render={<Link to="/w/$workspaceId/$area" params={{ workspaceId, area: 'accounts' }} />}
         >
           {messages.seeAccounts}
@@ -62,10 +76,10 @@ export function ForecastCard({ workspaceId, overview, nameOf, className }: Forec
           cents: point.balanceCents,
         }))}
         lowestKey={forecast.lowestOn}
-        lowestLabel={messages.lowest(
-          formatBrl(forecast.lowestCents),
-          formatDayMonth(forecast.lowestOn),
-        )}
+        lowestCallout={{
+          amount: formatBrl(forecast.lowestCents),
+          detail: messages.lowestDetail(formatDayMonth(forecast.lowestOn)),
+        }}
         description={messages.alternative(
           account,
           formatBrl(forecast.startCents),

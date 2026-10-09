@@ -9,12 +9,12 @@ import { OwlKit } from '@web/components/brand/owl-kit'
 import { OwlScene } from '@web/components/brand/owl-scene'
 import { ProgressBar } from '@web/components/charts/progress-bar'
 import { Card } from '@web/components/display/card'
+import { ResponsiveText } from '@web/components/display/responsive-text'
 import { TwiseIcon } from '@web/components/icons/twise-icon'
 import { homeMessages } from '@web/features/home/home.messages'
 import type {
   FirstRunProps,
   GhostTileProps,
-  ResponsiveCopyProps,
   SetupStepKey,
   StepRowProps,
   UnlocksProps,
@@ -73,7 +73,7 @@ export function FirstRun({
             {messages.title}
           </h1>
           <p className="mt-3 max-w-125 text-body lg:text-claim-support">
-            <ResponsiveCopy short={messages.textShort} long={messages.text} />
+            <ResponsiveText short={messages.textShort} long={messages.text} />
           </p>
           <div className="mt-4 flex w-full items-center gap-3 lg:mt-5.5 lg:w-auto">
             <ProgressBar
@@ -82,7 +82,7 @@ export function FirstRun({
               className="w-0 flex-1 lg:w-65 lg:flex-none"
             />
             <span className="text-label whitespace-nowrap">
-              <ResponsiveCopy
+              <ResponsiveText
                 short={messages.progressShort(done, steps.length)}
                 long={messages.progress(done, steps.length)}
               />
@@ -100,7 +100,7 @@ export function FirstRun({
         <Card
           className="lg:col-span-7"
           title={messages.stepsTitle}
-          description={<ResponsiveCopy short={messages.stepsTextShort} long={messages.stepsText} />}
+          description={<ResponsiveText short={messages.stepsTextShort} long={messages.stepsText} />}
         >
           <ol className="flex flex-col">
             {steps.map((step, position) => (
@@ -119,7 +119,7 @@ export function FirstRun({
           className={cn('lg:col-span-5', canInvite && 'lg:row-span-2')}
           title={messages.previewTitle}
           description={
-            <ResponsiveCopy short={messages.previewTextShort} long={messages.previewText} />
+            <ResponsiveText short={messages.previewTextShort} long={messages.previewText} />
           }
         >
           <div className="flex flex-1 flex-col gap-2.5" aria-hidden="true">
@@ -128,13 +128,13 @@ export function FirstRun({
                 <GhostTile
                   key={item.key}
                   label={
-                    <ResponsiveCopy
+                    <ResponsiveText
                       short={messages.previewShort[item.key]}
                       long={messages.preview[item.key]}
                     />
                   }
                   unlock={
-                    <ResponsiveCopy
+                    <ResponsiveText
                       short={messages.stepShort(item.step)}
                       long={messages.afterStep(item.step)}
                     />
@@ -225,7 +225,7 @@ function StepRow({ step, position, isNext, hasDivider, workspaceId }: StepRowPro
           )}
           {step.isDone && <span className="sr-only">{messages.done}</span>}
         </span>
-        {!step.isDone && <ResponsiveCopy short={copy.textShort} long={copy.text} />}
+        {!step.isDone && <ResponsiveText short={copy.textShort} long={copy.text} />}
         {isNext && (
           <Button
             size="sm"
@@ -289,14 +289,5 @@ function Unlocks({ children }: UnlocksProps) {
       <Lock className="size-3.5" aria-hidden="true" />
       {children}
     </small>
-  )
-}
-
-function ResponsiveCopy({ short, long }: ResponsiveCopyProps) {
-  return (
-    <>
-      <span className="lg:hidden">{short}</span>
-      <span className="hidden lg:inline">{long}</span>
-    </>
   )
 }

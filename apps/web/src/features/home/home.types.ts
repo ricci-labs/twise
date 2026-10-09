@@ -167,11 +167,6 @@ export type UnlocksProps = {
   children: ReactNode
 }
 
-export type ResponsiveCopyProps = {
-  short: string
-  long: string
-}
-
 export type SetupState = {
   hasMoneyAccount: boolean
   hasCard: boolean
