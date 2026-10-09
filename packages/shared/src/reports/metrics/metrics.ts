@@ -8,7 +8,9 @@ import { fixedIncome } from '@shared/reports/metrics/fixed-income'
 import { freeToSpend } from '@shared/reports/metrics/free-to-spend'
 import type { PeriodFacts } from '@shared/reports/metrics/metrics.types'
 import { nextInvoice } from '@shared/reports/metrics/next-invoice'
+import { periodProgress } from '@shared/reports/metrics/period-progress'
 import { reserveCoverage } from '@shared/reports/metrics/reserve-coverage'
+import { spendingAverage } from '@shared/reports/metrics/spending-average'
 import { spent } from '@shared/reports/metrics/spent'
 import { variableAverage } from '@shared/reports/metrics/variable-average'
 import { variableIncome } from '@shared/reports/metrics/variable-income'
@@ -21,6 +23,8 @@ export const METRICS = {
   committed,
   freeToSpend,
   dailyAllowance,
+  periodProgress,
+  spendingAverage,
   budgetPace,
   variableAverage,
   reserveCoverage,

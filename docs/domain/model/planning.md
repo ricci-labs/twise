@@ -1,7 +1,7 @@
 ---
 summary: Planning tables — recurrence rules and planned occurrences (forecast, reminders, matching to real entries), financial period calculation, budgets, goals, holidays — and the dashboard metrics, insights, commission split, balance forecast and purchase simulation built on them.
 read_when: Working on projections, fixed bills, salaries/commission forecasts, reminders, budgets, goals, or the financial period.
-updated: 2026-09-26
+updated: 2026-10-09
 ---
 
 # Planning: forecast, periods, budgets, goals
@@ -149,9 +149,15 @@ free_to_spend     = budget_income − spent − committed
 daily_allowance   = max(free_to_spend, 0) ÷ days left, today included (the whole period before it
                     starts, null after it ends). Planned items of the remaining days are already
                     out, through `committed`, as the household chose
+period_progress   = days in the period, elapsed and left (today counts in both) and the elapsed
+                    share as a whole % (0 before the period, 100 after it)
+spending_average  = spending averaged over the last 3 previous periods with any activity →
+                    { monthlyCents, periods }; null without history
 budget_pace       = per budget in force (`planning.readBudgetFacts`): spent on the category and every
                     category below it; expected = limit × days elapsed ÷ days in the period (today
-                    included); `over` past the limit, `ahead` past the expected, else `within`
+                    included); `over` past the limit, `ahead` past the expected, else `within`.
+                    Before the period starts nothing is `ahead` (only `over`): installments already
+                    posted there aren't a pace problem
 committed_ahead   = for each of the next 6 periods: installments already posted there (by
                     `effective_on`, whatever the budget view: it's the burden that month) + pending
                     bills and subscriptions, and that total as a whole % of the period's fixed
@@ -163,8 +169,7 @@ next_invoice      = per card, the invoice a purchase made today goes to (`invoic
 variable_average  = variable income averaged over the 6 previous periods that have any posting
                     (a new household isn't averaged with empty months); null without history.
                     Information only: never part of the budget, household policy
-reserve_coverage  = the reserve goal's balance and target, the average spending of the last 3
-                    previous periods (idle ones left out) and how many months the reserve covers
+reserve_coverage  = the reserve goal's balance and target, `spending_average` and how many months the reserve covers
                     (one decimal); null without a reserve, months null without spending history
 ```
 

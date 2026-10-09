@@ -106,6 +106,15 @@ export type PeriodDays = {
   left: number
 }
 
+export type PeriodProgress = PeriodDays & {
+  elapsedPercent: number
+}
+
+export type SpendingAverage = {
+  monthlyCents: number
+  periods: number
+}
+
 export type ReserveCoverage = {
   savedCents: number
   targetCents: number

@@ -301,6 +301,45 @@ describe('budgetPace', () => {
     expect(expected('2026-09-30')).toEqual([0, 0, 0])
     expect(expected('2026-11-01')).toEqual([20_000, 250_000, 40_000])
   })
+
+  it('is never ahead of pace before the period starts, only over the limit', () => {
+    const early = household({ today: '2026-09-30' })
+    const statuses = computeMetrics({
+      ...early,
+      postings: [...early.postings, moved('housing', 300_000, '2026-10-02')],
+    }).budgetPace.map((line) => line.status)
+    expect(statuses).toEqual(['over', 'over', 'within'])
+  })
+})
+
+describe('periodProgress', () => {
+  it('counts today as elapsed and as left, with the elapsed share in whole percent', () => {
+    expect(computeMetrics(household()).periodProgress).toEqual({
+      total: 31,
+      elapsed: 15,
+      left: 17,
+      elapsedPercent: 48,
+    })
+  })
+
+  it('is untouched before the period and complete after it', () => {
+    const progress = (today: string) => computeMetrics(household({ today })).periodProgress
+    expect(progress('2026-09-30')).toMatchObject({ elapsed: 0, left: 31, elapsedPercent: 0 })
+    expect(progress('2026-11-01')).toMatchObject({ elapsed: 31, left: 0, elapsedPercent: 100 })
+  })
+})
+
+describe('spendingAverage', () => {
+  it('averages the last three periods that had any activity', () => {
+    expect(computeMetrics(household()).spendingAverage).toEqual({
+      monthlyCents: 35_000,
+      periods: 2,
+    })
+  })
+
+  it('has nothing to average before any history', () => {
+    expect(computeMetrics(household({ recentPeriods: [] })).spendingAverage).toBeNull()
+  })
 })
 
 describe('variableAverage', () => {

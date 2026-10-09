@@ -22,18 +22,14 @@ export function budgetPace(facts: PeriodFacts): BudgetPace[] {
       limitCents,
       spentCents,
       expectedCents,
-      status: statusOf(spentCents, limitCents, expectedCents),
+      status: statusOf(spentCents, limitCents, elapsed > 0 ? expectedCents : limitCents),
     }
   })
 }
 
-function statusOf(
-  spentCents: number,
-  limitCents: number,
-  expectedCents: number,
-): BudgetPace['status'] {
+function statusOf(spentCents: number, limitCents: number, paceCents: number): BudgetPace['status'] {
   if (spentCents > limitCents) {
     return 'over'
   }
-  return spentCents > expectedCents ? 'ahead' : 'within'
+  return spentCents > paceCents ? 'ahead' : 'within'
 }
