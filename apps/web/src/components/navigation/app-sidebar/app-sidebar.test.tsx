@@ -1,6 +1,7 @@
 import { AppSidebar } from '@web/components/navigation/app-sidebar/app-sidebar'
 import type { NavItem } from '@web/components/navigation/nav-link'
 import { expectNoAccessibilityViolations } from '@web/testing/accessibility'
+import { backgroundOfClass, colorOfClass } from '@web/testing/colors'
 import { createElement } from 'react'
 import { describe, expect, it, vi } from 'vitest'
 import { render } from 'vitest-browser-react'
@@ -57,6 +58,27 @@ describe('AppSidebar', () => {
     await expect.element(screen.getByRole('link', { name: 'Novo lançamento' })).toBeVisible()
     await expectNoAccessibilityViolations(screen.container)
   })
+
+  it.each([false, true])(
+    'puts the current item on mint with a dark, unfilled icon (collapsed: %s)',
+    async (isCollapsed) => {
+      const screen = await renderSidebar(isCollapsed)
+
+      const current = screen.getByRole('link', { name: 'Início' }).element()
+      const other = screen.getByRole('link', { name: 'Lançamentos' }).element()
+      expect(getComputedStyle(current).backgroundColor).toBe(backgroundOfClass('bg-mint'))
+      expect(getComputedStyle(current).color).toBe(colorOfClass('text-on-mint'))
+      if (!isCollapsed) {
+        expect(getComputedStyle(current).fontWeight).toBe('650')
+      }
+      const icon = current.querySelector('[data-slot=icon]')
+      expect(icon && getComputedStyle(icon).color).toBe(colorOfClass('text-on-mint'))
+      const fill = current.querySelector('[data-slot=icon-fill]')
+      expect(fill && getComputedStyle(fill).fill).toBe('none')
+      const otherIcon = other.querySelector('[data-slot=icon]')
+      expect(otherIcon && getComputedStyle(otherIcon).color).toBe(colorOfClass('text-ink-muted'))
+    },
+  )
 
   it('collapses to icons that keep their names, and opens again', async () => {
     const onToggle = vi.fn()

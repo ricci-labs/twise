@@ -44,9 +44,7 @@ function MenuEntry({ item }: ActionMenuEntryProps) {
       aria-current={item.isCurrent ? true : undefined}
       className={actionMenuItemVariants()}
     >
-      {item.icon && (
-        <TwiseIcon name={item.icon} tone={item.isCurrent ? 'selected' : 'muted'} size="md" />
-      )}
+      {item.icon && <TwiseIcon name={item.icon} tone="muted" size="md" />}
       <span className="flex min-w-0 flex-1 flex-col">
         <span className="truncate">{item.label}</span>
         {item.detail && <span className="text-caption text-ink-muted">{item.detail}</span>}

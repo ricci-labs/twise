@@ -12,7 +12,7 @@ export function CanIBuyCard({ workspaceId }: CanIBuyCardProps) {
       className="flex min-h-16 items-center gap-3 rounded-lg border border-border bg-surface px-3 py-2.5 hover:bg-sunken"
     >
       <span className="grid size-11 shrink-0 place-items-center rounded-full bg-mint-soft">
-        <TwiseIcon name="bag" tone="selected" size="md" />
+        <TwiseIcon name="bag" tone="accent" size="md" />
       </span>
       <span className="flex flex-1 flex-col">
         <span className="text-body font-semibold">{homeMessages.canIBuy.title}</span>

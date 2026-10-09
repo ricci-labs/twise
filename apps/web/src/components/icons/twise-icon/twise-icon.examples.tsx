@@ -45,7 +45,7 @@ export const twiseIconExamples: ComponentExamples = {
       render: () => (
         <div className="flex flex-wrap gap-3">
           {INTERFACE_ICONS.map((name) => (
-            <TwiseIcon key={name} name={name} tone="selected" />
+            <TwiseIcon key={name} name={name} tone="accent" />
           ))}
         </div>
       ),
@@ -64,9 +64,9 @@ export const twiseIconExamples: ComponentExamples = {
       name: 'Tamanhos',
       render: () => (
         <div className="flex items-center gap-3">
-          <TwiseIcon name="home" tone="selected" size="sm" />
-          <TwiseIcon name="home" tone="selected" size="md" />
-          <TwiseIcon name="home" tone="selected" size="lg" />
+          <TwiseIcon name="home" tone="accent" size="sm" />
+          <TwiseIcon name="home" tone="accent" size="md" />
+          <TwiseIcon name="home" tone="accent" size="lg" />
         </div>
       ),
     },

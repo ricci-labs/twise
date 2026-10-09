@@ -76,6 +76,8 @@ When to use each one: the design system guide → Colour, and each token's notes
   `amount-hero`, `amount-kpi` (the Home indicators), `display`, `title-lg`, `title` (display family), `amount-lg`, `amount`,
   `amount-sm`, `title-sm`, `body`, `body-sm`, `label`, `button`, `caption` (sans). Use one class:
   `text-title-sm`. A display style also needs `font-display`.
+- `font-emphasis` (650, `--font-weight-emphasis`) is the one extra weight: the current item of the
+  sidebar. Tailwind's `font-semibold` and `font-bold` cover the rest.
 - `text-xs`, `text-sm` and `text-base` exist only as aliases of `caption`, `body-sm` and `body`, so
   shadcn components work.
 - **Component type styles** (tier 3), from the account components' design CSS: `screen-title`
@@ -110,6 +112,7 @@ hides the bar of a swipeable row (the KPI carousel).
 | Token | Use |
 |---|---|
 | `--duration-fast` / `--duration-normal` / `--duration-slow` | Hover and press / popovers and toasts / sheets and page transitions |
+| `--duration-select` | 150 ms: the colour change of the bottom tab bar's current item |
 | `--ease-standard`, `--ease-emphasized` | In `@theme` (`--ease-*` is a Tailwind namespace) |
 | `--z-sticky` < `--z-overlay` < `--z-modal` < `--z-toast` | The only layers; no numeric `z-10` in components |
 

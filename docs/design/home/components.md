@@ -1,7 +1,7 @@
 ---
 summary: The components behind the shell, WS-01 and the Home, in build order, each mapped to its shadcn/ui piece.
 read_when: Creating or changing a component used by the shell or the Home.
-updated: 2026-10-07
+updated: 2026-10-09
 ---
 
 # Components
@@ -11,8 +11,8 @@ Existing design-system components (`../design-system/components`) are reused: Bu
 | # | Component | shadcn/ui base | Notes |
 |---|---|---|---|
 | 1 | `Icon` set | — | `../assets/icones`, two layers, see its README |
-| 2 | `AppSidebar` | `Sidebar` with `collapsible="icon"` | 264 px open / 76 px collapsed; logo 42 px; "Novo lançamento"; main items; group "Mais"; foot: workspace switcher + account. Collapse button `chevrons-left` beside the logo, discreet (18 px, `--ink-subtle`). State remembered in the browser. Tooltip with the item name when collapsed |
-| 3 | `BottomTabBar` | — | 94 px tall, white, attached to the bottom. Selected: icon fill mint, label bold, a 22×3 px mint bar 10 px under the label |
+| 2 | `AppSidebar` | `Sidebar` with `collapsible="icon"` | 264 px open / 76 px collapsed; logo 42 px; "Novo lançamento"; main items; group "Mais"; foot: workspace switcher + account. Collapse button `chevrons-left` beside the logo, discreet (18 px, `--ink-subtle`). State remembered in the browser. Tooltip with the item name when collapsed. Current item: `--mint` background, stroke and label `--on-mint`, weight 650, same radius; the others: label `--ink`, icon `--ink-muted`, hover `--bg-page`. Collapsed: the current item is the 48×44 mint square with the dark icon. The icon is never filled |
+| 3 | `BottomTabBar` | — | 94 px tall, white, attached to the bottom. No background and no mark under the current item: its stroke and label turn `--mint-ink`, label weight 700, icon not filled; the others `--ink-muted`. Changing item only changes the colour (150 ms) |
 | 4 | `PeriodPicker` | `Button` + `Popover` (desktop) / `Drawer` (mobile) | Arrows plus a label with the range; opens the months of the year |
 | 5 | `WorkspaceSwitcher` | `DropdownMenu` (desktop) / `Drawer` (mobile) | Name, role, current one checked, "Criar espaço" |
 | 6 | `Card` | `Card` | Title, description, body, footer with a stat on the left and a link on the right; rows stretch to equal height |

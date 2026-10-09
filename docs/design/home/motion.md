@@ -1,7 +1,7 @@
 ---
 summary: How the Home, its charts and menus move, and the workspace owl entrances, with durations and easing.
 read_when: Animating anything in the shell, WS-01 or the Home.
-updated: 2026-10-07
+updated: 2026-10-09
 ---
 
 # Motion (shell, workspace, Home)
@@ -30,7 +30,7 @@ Demo: `animations/Movimento-inicio.html` (one loop per piece), `animations/Anima
 | Pace | rings sweep to their value | 800 ms |
 | Budgets | bars fill from the left; pace mark fades in after | 500 ms, 60 ms stagger |
 | KPI carousel | snaps one card; active dot stretches | 300 ms |
-| Bottom tab bar | mint bar slides to the new tab; icon fill fades | 250 ms / 150 ms |
+| Bottom tab bar | only the color changes | 150 ms |
 | Sidebar collapse | width 264 → 76 px; labels fade first | 250 ms (labels 120 ms) |
 | Sheets (Mais, workspaces, period) | scrim fades; sheet slides up; closes faster | 200 + 280 ms; close 200 ms |
 | Help "?" popover | scale .96 → 1 and fade | 160 ms |

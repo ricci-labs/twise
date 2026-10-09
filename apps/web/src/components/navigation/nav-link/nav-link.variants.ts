@@ -6,13 +6,11 @@ export const navLinkVariants = cva(
     variants: {
       layout: {
         sidebar:
-          'min-h-11 gap-3 rounded-md px-3 text-body text-ink hover:bg-sunken aria-[current=page]:bg-mint-soft aria-[current=page]:font-semibold',
-        icon: 'size-11 justify-center self-center rounded-md hover:bg-sunken aria-[current=page]:bg-mint-soft',
-        tab: 'relative flex-col justify-start gap-1 pt-1.5 text-caption text-ink-muted aria-[current=page]:font-bold aria-[current=page]:text-ink',
+          'min-h-11 gap-3 rounded-md px-3 text-body text-ink hover:not-aria-[current=page]:bg-page aria-[current=page]:bg-mint aria-[current=page]:font-emphasis aria-[current=page]:text-on-mint',
+        icon: 'h-11 w-12 justify-center self-center rounded-md hover:not-aria-[current=page]:bg-page aria-[current=page]:bg-mint aria-[current=page]:text-on-mint',
+        tab: 'flex-col justify-start gap-1 pt-1.5 text-caption text-ink-muted transition-colors duration-select aria-[current=page]:font-bold aria-[current=page]:text-mint-ink',
       },
     },
     defaultVariants: { layout: 'sidebar' },
   },
 )
-
-export const navLinkMarkVariants = cva('absolute top-full mt-2.5 h-0.75 w-5.5 rounded-full bg-mint')

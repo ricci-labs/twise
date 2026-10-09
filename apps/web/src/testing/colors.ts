@@ -6,3 +6,12 @@ export function backgroundOfClass(className: string): string {
   probe.remove()
   return color
 }
+
+export function colorOfClass(className: string): string {
+  const probe = document.createElement('div')
+  probe.className = className
+  document.body.append(probe)
+  const color = getComputedStyle(probe).color
+  probe.remove()
+  return color
+}
