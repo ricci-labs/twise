@@ -19,7 +19,9 @@ import {
 import { WorkspaceSwitcher } from '@web/features/workspaces/components/workspace-switcher'
 import { workspacesMessages } from '@web/features/workspaces/workspaces.messages'
 import type { WorkspaceShellProps } from '@web/features/workspaces/workspaces.types'
+import { useMediaQuery } from '@web/hooks/use-media-query'
 import { useSidebarCollapsed } from '@web/hooks/use-sidebar-collapsed'
+import { DESKTOP_QUERY } from '@web/lib/breakpoints'
 import { isReadOnly } from '@web/lib/permissions'
 import { cloneElement, type MouseEvent, useState } from 'react'
 
@@ -35,6 +37,7 @@ export function WorkspaceShell({
   const { data: access } = useSuspenseQuery(workspaceAccessQueryOptions(workspaceId))
   const pathname = useLocation({ select: (location) => location.pathname })
   const sidebar = useSidebarCollapsed()
+  const isDesktop = useMediaQuery(DESKTOP_QUERY)
   const [isMoreOpen, setIsMoreOpen] = useState(false)
   const navigation = workspaceNavigation(workspaceId, access.permissions, currentAreaOf(pathname))
   const moreTab: NavItem = {
@@ -96,10 +99,10 @@ export function WorkspaceShell({
         }
       >
         <MobileTopBar access={access} />
-        {isReadOnly(access.permissions) && (
-          <div className="px-4 pt-3 lg:px-8">
-            <Tip>{messages.readOnly}</Tip>
-          </div>
+        {isReadOnly(access.permissions) && (!isDesktop || currentAreaOf(pathname) !== null) && (
+          <Tip tone="readOnly" className="mx-4 mt-2 lg:mx-8 lg:mt-7 lg:self-start">
+            {messages.readOnly}
+          </Tip>
         )}
         {children}
       </AppShell>

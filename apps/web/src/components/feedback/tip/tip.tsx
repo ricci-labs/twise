@@ -1,11 +1,13 @@
 import type { TipProps } from '@web/components/feedback/tip/tip.types'
 import { tipVariants } from '@web/components/feedback/tip/tip.variants'
-import { Info } from 'lucide-react'
+import { cn } from '@web/lib/cn'
+import { Eye, Info } from 'lucide-react'
 
-export function Tip({ children }: TipProps) {
+export function Tip({ tone = 'plain', className, children }: TipProps) {
+  const Icon = tone === 'readOnly' ? Eye : Info
   return (
-    <p data-slot="tip" className={tipVariants()}>
-      <Info aria-hidden="true" />
+    <p data-slot="tip" className={cn(tipVariants({ tone }), className)}>
+      <Icon aria-hidden="true" />
       {children}
     </p>
   )

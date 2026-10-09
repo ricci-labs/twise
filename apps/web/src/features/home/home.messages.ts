@@ -16,6 +16,7 @@ export const homeMessages = {
       ? `Hoje é ${day} · faltam ${left} ${plural(left, 'dia', 'dias')} para o fim do período`
       : `Hoje é ${day}`,
   updatedAt: (time: string) => `Atualizado às ${time}`,
+  readOnly: 'Você está vendo este espaço sem poder alterar nada.',
   period: {
     label: 'Período',
     previous: 'Período anterior',
@@ -23,6 +24,7 @@ export const homeMessages = {
     closed: 'Período encerrado',
     future: 'Período futuro',
     backToCurrent: 'Ir para o período atual',
+    range: (start: string, end: string) => `Período de ${start} a ${end}`,
   },
   kpis: {
     free: {

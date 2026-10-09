@@ -2,6 +2,7 @@ import { createMemoryHistory } from '@tanstack/react-router'
 import { AppProviders } from '@web/app/providers'
 import { createApp } from '@web/app/router'
 import { expectNoAccessibilityViolations } from '@web/testing/accessibility'
+import { demoAnswers } from '@web/testing/demo-api'
 import {
   accessAs,
   account,
@@ -86,6 +87,7 @@ describe('SHELL-01 workspace shell', () => {
   it('hides from a viewer what the role cannot open or change, and says so', async () => {
     await page.viewport(1440, 900)
     const { screen } = await openWorkspace({
+      ...demoAnswers(),
       [`GET /api/workspaces/${WORKSPACE_ID}`]: () => accessAs('Leitor', VIEWER_PERMISSIONS),
     })
     const menu = screen.getByRole('navigation', { name: 'Menu principal' })

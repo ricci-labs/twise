@@ -22,7 +22,9 @@ Where the design and the requirement docs disagree, the design wins and the doc 
 | Icons | Lucide | Own icon set (`../assets/icones`); Lucide only for small utility glyphs |
 | First run | Checklist of 4 steps | Mint hero with owl and house, numbered steps with the next one open, ghost preview of the KPIs saying which step unlocks each |
 | Offline | — | Shell band "Sem conexão. Você pode ver seus dados, mas não salvar." with "Atualizado às HH:MM" (the last fetch) at its right on the desktop and under the period picker on the phone. Write actions (Novo lançamento, Registrar, Dividir, Cobrar; marked `data-write`) show "Sem conexão. Dá para salvar quando a internet voltar." instead of opening. The account screens keep "Sem conexão. Verifique a internet e tente de novo." |
-| Viewer | — | Menu hides Membros, Configurações, Histórico, Lixeira (role matrix) |
+| Viewer | — | Menu hides Membros, Configurações, Histórico, Lixeira (role matrix). The note "Você está vendo este espaço sem poder alterar nada." is a soft grey pill with an eye: under the top bar on the phone (the workspace reads "Casa · Leitor"), under the Home title on the desktop |
+| Home header | — | Phone: greeting only (no date line); a past or future period adds a centred row under the picker with the badge and "Ir para o período atual". Desktop: "Hoje é … · faltam N dias" (or "Período de 5 set a 4 out" with the badge and the link) under the greeting, and "Posso comprar?" as a secondary button next to the picker (the full-width row stays on the phone) |
+| People avatars | — | One initial per person |
 
 ## Proposals (approved by the user on 2026-10-09; now in the requirements)
 

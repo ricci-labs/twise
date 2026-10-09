@@ -6,6 +6,7 @@ import { workspacesQueryOptions } from '@web/features/workspaces/api/workspaces.
 import { WorkspaceList } from '@web/features/workspaces/components/workspace-list'
 import { workspacesMessages } from '@web/features/workspaces/workspaces.messages'
 import type { MobileTopBarProps } from '@web/features/workspaces/workspaces.types'
+import { isReadOnly } from '@web/lib/permissions'
 import { ChevronDown } from 'lucide-react'
 
 const MAX_AVATARS = 3
@@ -26,6 +27,11 @@ export function MobileTopBar({ access }: MobileTopBarProps) {
               className="flex min-w-0 cursor-pointer items-center gap-1 text-title"
             >
               <span className="truncate">{workspace.name}</span>
+              {isReadOnly(access.permissions) && (
+                <span className="text-body-sm font-medium whitespace-nowrap text-ink-muted">
+                  · {access.role.name}
+                </span>
+              )}
               <ChevronDown className="size-4 shrink-0 text-ink-muted" aria-hidden="true" />
             </button>
           }
@@ -43,7 +49,6 @@ export function MobileTopBar({ access }: MobileTopBarProps) {
             key={name}
             name={name}
             tone={position === 0 ? 'paper' : 'mint'}
-            size="sm"
             className="ring-2 ring-page"
           />
         ))}
