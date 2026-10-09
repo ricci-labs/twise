@@ -16,8 +16,8 @@ Where the design and the requirement docs disagree, the design wins and the doc 
 | No alerts (RF-HOME-4) | "a calm success line, not a card" | Mobile: a calm line, no box. Desktop: the Alerts card stays (the grid must not jump) and shows the same calm line centered |
 | Closed period | Hero with no "por dia" | First KPI turns white and reads "Sobrou no período encerrado"; Comprometido R$ 0,00 "Nada ficou para vencer"; the forecast card is replaced by the achievements (proposal); pace becomes "Como o período terminou" |
 | Negative "Livre para gastar" | danger style, "Passou R$ X do planejado" | danger-soft card, badge "Passou do planejado", the reason, "Ver onde ajustar" (proposal), and the worried piggy bank |
-| Desktop sidebar | — | Collapsible; workspace switcher moved to the sidebar foot, above the account |
-| Mobile tab bar | — | Attached white bar; selected = filled mint icon + bold label + short mint bar |
+| Desktop sidebar | — | Collapsible; workspace switcher moved to the sidebar foot, above the account. Current item on a `--mint` background with `--on-mint` stroke and label (open and collapsed); icons never filled |
+| Mobile tab bar | — | Attached white bar; current item = `--mint-ink` stroke and bold label, no fill, no background, no mark under the label |
 | Icons | Lucide | Own icon set (`../assets/icones`); Lucide only for small utility glyphs |
 | First run | Checklist of 4 steps | Mint hero with owl and house, numbered steps with the next one open, ghost preview of the KPIs saying which step unlocks each |
 | Viewer | — | Menu hides Membros, Configurações, Histórico, Lixeira (role matrix) |

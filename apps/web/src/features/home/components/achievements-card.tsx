@@ -48,7 +48,7 @@ export function AchievementsCard({ overview, className }: AchievementsCardProps)
           {tiles.map((tile) => (
             <li key={tile.key} className="flex flex-col gap-1 rounded-md bg-page p-3.5">
               <span className="mb-1 grid size-8.5 place-items-center rounded-full bg-mint-soft">
-                <TwiseIcon name={tile.icon} tone="selected" size="md" />
+                <TwiseIcon name={tile.icon} tone="accent" size="md" />
               </span>
               <span className="font-display text-title whitespace-nowrap">{tile.value}</span>
               <span className="text-body-sm text-ink-muted">{tile.label}</span>

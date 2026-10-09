@@ -95,6 +95,8 @@
   --radius-xl: 1.75rem;
   --radius-full: 999px;
 
+  --font-weight-emphasis: 650;
+
   --spacing-touch: 2.75rem;
   --spacing-control: 3rem;
   --spacing-control-sm: 2.25rem;
@@ -227,6 +229,10 @@
 
 @utility duration-normal {
   transition-duration: var(--duration-normal);
+}
+
+@utility duration-select {
+  transition-duration: var(--duration-select);
 }
 
 @utility duration-slow {

@@ -21,15 +21,15 @@ describe('TwiseIcon', () => {
     await expectNoAccessibilityViolations(screen.container)
   })
 
-  it('shows its inner fill only when selected or in an alert', async () => {
+  it('shows its inner fill only as an accent or in an alert', async () => {
     const atRest = await render(<TwiseIcon name="card" tone="muted" />)
     expect(fillOf(atRest.container)).toBe('none')
-    const selected = await render(<TwiseIcon name="card" tone="selected" />)
-    expect(fillOf(selected.container)).not.toBe('none')
+    const accent = await render(<TwiseIcon name="card" tone="accent" />)
+    expect(fillOf(accent.container)).not.toBe('none')
   })
 
   it('has no fill layer for the plain glyphs', async () => {
-    const screen = await render(<TwiseIcon name="plus" tone="selected" />)
+    const screen = await render(<TwiseIcon name="plus" tone="accent" />)
     expect(screen.container.querySelector('[data-slot=icon-fill]')).toBeNull()
   })
 })

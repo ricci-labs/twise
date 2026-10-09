@@ -1,7 +1,7 @@
 ---
 summary: Every designed screen and state of the app shell, workspace creation and the Home (SHELL-01, WS-01, HOME-01), mobile and desktop, with HTML, PNG and designer notes.
 read_when: Building or reviewing the app shell, WS-01 or any part of HOME-01.
-updated: 2026-10-07
+updated: 2026-10-09
 ---
 
 # Shell, workspace and Home screens
@@ -105,5 +105,5 @@ Icon set and the bottom tab bar comparison.
 
 | Screen | Kind | Files | Notes |
 |---|---|---|---|
-| Ícones Twise | reference | [html](screens/html/Icones.html) · [png](screens/png/Icones.png) | Folha de referência para o time: como o ícone é montado (traço + preenchimento), os 15 ícones de interface e os 3 de aviso, nos dois estados, e como fica a seleção na barra inferior (celular) e na barra lateral (desktop). Utilitários pequenos (setas, fechar, calendário do período) seguem Lucide, porque precisam ser neutros e muito legíveis em 16 px. Exportar como SVG de duas camadas: o preenchimento usa var(--ti-fill), o traço usa currentColor. |
-| Barra inferior · opções | reference | [html](screens/html/Barra-opcoes.html) · [png](screens/png/Barra-opcoes.png) | Comparação da barra inferior do celular. Escolhida: C, encostada embaixo, com o risco do selecionado no mesmo menta do ícone. |
+| Ícones Twise | reference | [html](screens/html/Icones.html) · [png](screens/png/Icones.png) | Folha de referência para o time: como o ícone é montado (traço + preenchimento), os 15 ícones de interface e os 3 de aviso, nos dois estados, e como fica a seleção na barra inferior (celular) e na barra lateral (desktop). A seleção desenhada aqui foi revista em 2026-10-09: ícone nunca preenchido na seleção (ver `../assets/icones/README.md`). Utilitários pequenos (setas, fechar, calendário do período) seguem Lucide, porque precisam ser neutros e muito legíveis em 16 px. Exportar como SVG de duas camadas: o preenchimento usa var(--ti-fill), o traço usa currentColor. |
+| Barra inferior · opções | reference | [html](screens/html/Barra-opcoes.html) · [png](screens/png/Barra-opcoes.png) | Comparação da barra inferior do celular. Escolhida: C, encostada embaixo. Revisto em 2026-10-09: sem o risco embaixo do nome e sem preenchimento; o item atual fica com traço e nome em `--mint-ink` (`components.md`). |

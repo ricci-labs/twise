@@ -14,10 +14,7 @@ export function WorkspaceList({ workspaces, currentId }: WorkspaceListProps) {
             aria-current={workspace.workspaceId === currentId ? 'page' : undefined}
             className="flex items-center gap-3 rounded-md px-3 py-2 hover:bg-sunken aria-[current=page]:bg-mint-soft"
           >
-            <TwiseIcon
-              name="home"
-              tone={workspace.workspaceId === currentId ? 'selected' : 'muted'}
-            />
+            <TwiseIcon name="home" tone="muted" />
             <span className="flex flex-col">
               <span className="text-body font-semibold">{workspace.name}</span>
               <span className="text-body-sm text-ink-muted">{workspace.role.name}</span>

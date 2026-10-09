@@ -1,6 +1,7 @@
 import { BottomTabBar } from '@web/components/navigation/bottom-tab-bar/bottom-tab-bar'
 import type { NavItem } from '@web/components/navigation/nav-link'
 import { expectNoAccessibilityViolations } from '@web/testing/accessibility'
+import { backgroundOfClass, colorOfClass } from '@web/testing/colors'
 import { createElement } from 'react'
 import { describe, expect, it } from 'vitest'
 import { page } from 'vitest/browser'
@@ -46,6 +47,21 @@ describe('BottomTabBar', () => {
     await expect.element(screen.getByRole('button', { name: 'Mais' })).toBeVisible()
     expect(screen.container.querySelectorAll('[data-slot=nav-link]')).toHaveLength(5)
     await expectNoAccessibilityViolations(screen.container)
+  })
+
+  it('colors the current item in mint ink, with no fill, background or mark', async () => {
+    await page.viewport(390, 844)
+    const screen = await render(<BottomTabBar items={TABS} />)
+
+    const current = screen.getByRole('link', { name: 'Início' }).element()
+    const other = screen.getByRole('link', { name: 'Cartões' }).element()
+    expect(getComputedStyle(current).color).toBe(colorOfClass('text-mint-ink'))
+    expect(getComputedStyle(current).fontWeight).toBe('700')
+    expect(getComputedStyle(current).backgroundColor).toBe(backgroundOfClass('bg-transparent'))
+    expect(getComputedStyle(other).color).toBe(colorOfClass('text-ink-muted'))
+    const fill = current.querySelector('[data-slot=icon-fill]')
+    expect(fill && getComputedStyle(fill).fill).toBe('none')
+    expect(current.querySelectorAll('span')).toHaveLength(1)
   })
 
   it('gives way to the sidebar from 1024 px', async () => {

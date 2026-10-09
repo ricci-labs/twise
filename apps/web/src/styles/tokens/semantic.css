@@ -45,6 +45,7 @@
   --stroke-emphasis: 1.5px;
 
   --duration-fast: 120ms;
+  --duration-select: 150ms;
   --duration-normal: 200ms;
   --duration-slow: 320ms;
   --duration-swap: 250ms;
