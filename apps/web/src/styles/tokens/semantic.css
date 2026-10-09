@@ -49,6 +49,7 @@
   --duration-normal: 200ms;
   --duration-slow: 320ms;
   --duration-swap: 250ms;
+  --duration-collapse: 250ms;
   --duration-raise: 300ms;
   --duration-enter: 350ms;
   --duration-chart: 800ms;

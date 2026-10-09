@@ -37,8 +37,11 @@ import type {
 import { useFirstTimeThisSession } from '@web/hooks/use-first-time-this-session'
 import { usePageTitle } from '@web/hooks/use-page-title'
 import { ApiError } from '@web/lib/api/api-error'
+import { cn } from '@web/lib/cn'
 import { errorMessageFor } from '@web/lib/errors/error-message'
 import { hasPermission } from '@web/lib/permissions'
+
+const HOME_PAGE = 'mx-auto w-full max-w-400 px-4 py-6 lg:px-8 lg:pt-7 lg:pb-12'
 
 const SAO_PAULO_HOUR = new Intl.DateTimeFormat('pt-BR', {
   timeZone: 'America/Sao_Paulo',
@@ -81,7 +84,7 @@ export function HomePage({
   const data = overview.data
   if (setup && !setup.hasMoneyAccount) {
     return (
-      <div className="mx-auto w-full max-w-274 px-4 py-6 lg:px-8">
+      <div className={HOME_PAGE}>
         <FirstRun
           workspaceId={workspaceId}
           workspaceName={workspaceName}
@@ -107,7 +110,7 @@ export function HomePage({
 
 function HomeFailed({ error, isRetrying, onRetry }: HomeFailedProps) {
   return (
-    <div className="mx-auto w-full max-w-274 px-4 py-6 lg:px-8">
+    <div className={HOME_PAGE}>
       <SectionError
         message={errorMessageFor(error)}
         errorRef={error instanceof ApiError ? error.ref : null}
@@ -120,7 +123,7 @@ function HomeFailed({ error, isRetrying, onRetry }: HomeFailedProps) {
 
 function HomeLoading() {
   return (
-    <div className="mx-auto grid w-full max-w-274 gap-5 px-4 py-6 lg:grid-cols-4 lg:px-8">
+    <div className={cn(HOME_PAGE, 'grid gap-5 lg:grid-cols-4')}>
       {['free', 'income', 'spent', 'committed'].map((key) => (
         <SectionSkeleton key={key} lines={2} />
       ))}
@@ -156,7 +159,7 @@ function HomeContent({
       data-entrance={isFirstVisit ? 'play' : undefined}
       data-stale={isStale ? '' : undefined}
       aria-busy={isStale || undefined}
-      className="mx-auto flex w-full max-w-274 flex-col gap-5 px-4 py-6 lg:px-8"
+      className={cn(HOME_PAGE, 'flex flex-col gap-5')}
     >
       <HomeHeader
         workspaceId={workspaceId}
