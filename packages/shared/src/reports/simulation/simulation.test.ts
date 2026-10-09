@@ -20,6 +20,7 @@ function occurrence(overrides: Partial<FactOccurrence>): FactOccurrence {
     amountCents: 400_000,
     entryType: 'income',
     status: 'pending',
+    paidOn: null,
     categoryAccountId: 'salary',
     ...overrides,
   }

@@ -21,6 +21,7 @@ const FACTS: PeriodFacts = {
       amountCents: 200_000,
       entryType: 'expense',
       status: 'pending',
+      paidOn: null,
       categoryAccountId: 'housing',
     },
     {
@@ -31,6 +32,7 @@ const FACTS: PeriodFacts = {
       amountCents: 15_000,
       entryType: 'expense',
       status: 'matched',
+      paidOn: null,
       categoryAccountId: 'housing',
     },
     {
@@ -41,6 +43,7 @@ const FACTS: PeriodFacts = {
       amountCents: 200_000,
       entryType: 'expense',
       status: 'pending',
+      paidOn: null,
       categoryAccountId: 'housing',
     },
   ],

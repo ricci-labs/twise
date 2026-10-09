@@ -35,6 +35,7 @@ export {
   readCardFacts,
   readContactItems,
   readContactPostings,
+  readEntryDates,
   readInvoiceFacts,
   readInvoicesDueBetween,
   readPostingDetails,

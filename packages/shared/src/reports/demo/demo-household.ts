@@ -54,7 +54,7 @@ export function demoFacts(scenario: DemoScenario): PeriodFacts {
     budgetBase: 'fixed_income',
     accounts: ACCOUNTS,
     postings: [...pastMonths(), ...thisMonth(), ...cardInstallments(), ...overspent],
-    occurrences: [...billsThisMonth(), ...plannedAhead()],
+    occurrences: [...billsOfSeptember(), ...billsThisMonth(), ...plannedAhead()],
     budgets: [
       { categoryAccountId: ids.leisure, limitCents: 40_000 },
       { categoryAccountId: ids.groceries, limitCents: 120_000 },
@@ -187,6 +187,8 @@ function pastMonths(): FactPosting[] {
     ...SEPTEMBER_SPENDING.flatMap(({ category, cents }) =>
       spend(category, ids.checkingA, cents, '2026-09-18'),
     ),
+    ...move(ids.checkingA, ids.reserve, 60_000, '2026-09-10'),
+    ...move(ids.checkingB, ids.tripSavings, 50_000, '2026-09-12'),
   ]
   return [...usual, ...september]
 }
@@ -225,6 +227,26 @@ function cardInstallments(): FactPosting[] {
       '2026-12-10',
       '2027-01-10',
     ]),
+  ]
+}
+
+function billsOfSeptember(): FactOccurrence[] {
+  const paid = (ruleId: string, dueOn: IsoDate, amountCents: number, paidOn: IsoDate = dueOn) =>
+    planned(ruleId, 'expense', ids.checkingA, ids.bills, dueOn, amountCents, 'matched', paidOn)
+  return [
+    paid(ids.rentBill, '2026-09-05', 150_000),
+    paid(ids.englishCourse, '2026-09-10', 35_000),
+    paid(ids.phone, '2026-09-12', 6_000),
+    paid(ids.water, '2026-09-15', 9_000),
+    paid(ids.internet, '2026-09-18', 12_000),
+    paid(ids.gas, '2026-09-20', 7_000),
+    paid(ids.power, '2026-09-22', 24_000, '2026-09-24'),
+    paid(ids.condo, '2026-09-25', 48_000),
+    paid(ids.gym, '2026-09-26', 10_000),
+    paid(ids.cleaning, '2026-09-28', 40_000),
+    paid(ids.homeInsurance, '2026-09-30', 8_000),
+    paid(ids.healthPlan, '2026-10-01', 90_000),
+    paid(ids.carInsurance, '2026-10-03', 45_000),
   ]
 }
 
@@ -296,6 +318,10 @@ function spend(category: string, from: string, cents: number, on: IsoDate): Fact
   return [moved(category, cents, on), moved(from, -cents, on)]
 }
 
+function move(from: string, to: string, cents: number, on: IsoDate): FactPosting[] {
+  return [moved(to, cents, on), moved(from, -cents, on)]
+}
+
 function receive(category: string, to: string, cents: number, on: IsoDate): FactPosting[] {
   return [moved(category, -cents, on), moved(to, cents, on)]
 }
@@ -341,6 +367,7 @@ function planned(
   dueOn: IsoDate,
   amountCents: number,
   status: FactOccurrence['status'] = 'pending',
+  paidOn: IsoDate | null = status === 'matched' ? dueOn : null,
 ): FactOccurrence {
   return {
     id: occurrenceId(ruleId, dueOn),
@@ -351,6 +378,7 @@ function planned(
     entryType,
     status,
     categoryAccountId,
+    paidOn,
   }
 }
 

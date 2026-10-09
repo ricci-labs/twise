@@ -119,12 +119,13 @@ dias"; an overdue row is tinted danger-soft with "Atrasada há {n} dias" and "Re
 line (`entries:create`). "Ver contas fixas" → `PLAN-03`. None: "Nenhuma conta vence nos próximos 7
 dias."
 
-**RF-HOME-17 Achievements of a closed period** (`periodSummary` *(planned)*), in place of the
+**RF-HOME-17 Achievements of a closed period** (`periodSummary`), in place of the
 balance forecast: "Conquistas de {mês}" · "O que deu certo neste período." A mint highlight
 "Fecharam {mês} no azul · Sobrou R$ X · {n}º mês seguido" (`periodSummary.positiveStreak`; "{n}+ meses seguidos" when `streakCapped`)
-and four tiles: "{a} de {b} orçamentos dentro do limite", "{a} de {b} contas pagas em dia",
-"+R$ X na reserva, que agora cobre {m} meses", "{p}% → {q}% da meta {nome}". A tile without data
-is left out. A period that closed negative shows no highlight.
+and four tiles: "{a} de {b} orçamentos dentro do limite" (`budgetsWithin` / `budgetsTotal`), "{a} de
+{b} contas pagas em dia" (`billsOnTime` / `billsTotal`), "+R$ X na reserva, que agora cobre {m}
+meses" (`reserveAddedCents`, `reserveCoverage.months`), "{p}% → {q}% da meta {nome}" (the first of
+`goals`, the biggest move). A tile without data (total 0, nothing added, no goal moved) is left out. A period that closed negative shows no highlight.
 
 **RF-HOME-18 Commissions** (`variableIncome`, `variableAverage`): "Renda variável deste período."
 "Este período R$ X", "Média dos últimos meses R$ Y" ("—" when null) and "+{p}% acima da média" /

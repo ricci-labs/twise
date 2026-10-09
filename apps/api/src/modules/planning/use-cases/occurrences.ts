@@ -3,6 +3,7 @@ import type { Clock } from '@api/core/clock.types'
 import type { Database, WorkspaceTransaction } from '@api/core/db/db.types'
 import { withWorkspace } from '@api/core/db/tx'
 import { NotFoundError } from '@api/core/http/errors'
+import { readEntryDates } from '@api/modules/ledger'
 import {
   deletePendingOccurrences,
   insertOccurrencesIfMissing,
@@ -58,7 +59,14 @@ export async function readOccurrenceFacts(
   today: IsoDate,
 ): Promise<FactOccurrence[]> {
   await refreshOccurrences(tx, today)
-  return (await selectOccurrencesBetween(tx, from, to)).map((occurrence) => ({
+  const occurrences = await selectOccurrencesBetween(tx, from, to)
+  const paidOn = await readEntryDates(
+    tx,
+    occurrences.flatMap((occurrence) =>
+      occurrence.matchedEntryId ? [occurrence.matchedEntryId] : [],
+    ),
+  )
+  return occurrences.map((occurrence) => ({
     id: occurrence.id,
     description: occurrence.description,
     sourceAccountId: occurrence.sourceAccountId,
@@ -67,6 +75,7 @@ export async function readOccurrenceFacts(
     entryType: occurrence.entryType,
     status: occurrence.status,
     categoryAccountId: occurrence.categoryAccountId,
+    paidOn: occurrence.matchedEntryId ? (paidOn.get(occurrence.matchedEntryId) ?? null) : null,
   }))
 }
 

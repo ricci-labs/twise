@@ -1,7 +1,7 @@
 ---
 summary: Allowed and forbidden import directions across packages, layers and modules; enforced by dependency-cruiser.
 read_when: Adding an import that crosses a module, layer or package boundary.
-updated: 2026-10-01
+updated: 2026-10-09
 ---
 
 # Dependency rules
@@ -62,7 +62,7 @@ in the last column).
 | Caller | Callee | Reason |
 |---|---|---|
 | `ledger` | `workspaces` | Settings (currency, timezone) |
-| `planning` | `ledger` | Check the accounts of a recurrence (`loadUsableAccounts`); read the entry a member matches to a planned occurrence (`findActiveEntry`); goal progress from account balances (`readAccountBalances`) |
+| `planning` | `ledger` | Check the accounts of a recurrence (`loadUsableAccounts`); read the entry a member matches to a planned occurrence (`findActiveEntry`) and when the matched entries happened (`readEntryDates`); goal progress from account balances (`readAccountBalances`) |
 | `planning` | `workspaces` | The workspace time zone, for "today" (`currentWorkspaceDefaults`) |
 | `reports` | `ledger`, `planning`, `workspaces` | Load the period facts for the metrics and insights (ADR 0024) |
 | `contacts` | `ledger` | Open receivable items for charges and balances (`readContactPostings`, `readContactItems`); record settlements in the charge's transaction (`recordEntryInTransaction`); which payments are still active (`activeEntryIdsOf`) |
