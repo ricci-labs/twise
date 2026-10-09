@@ -7,16 +7,13 @@ import {
   replaceAllocationSteps,
   setBudget,
 } from '@api/modules/planning'
-import {
-  getPeriodOverview,
-  type PeriodOverview,
-  simulatePurchaseImpact,
-} from '@api/modules/reports'
+import { getPeriodOverview, simulatePurchaseImpact } from '@api/modules/reports'
 import { changeWorkspaceSettings } from '@api/modules/workspaces'
 import { testAppDeps } from '@api/testing/app'
 import { connectTestDatabases } from '@api/testing/database'
 import { createFixtures } from '@api/testing/fixtures'
 import { addMemberWithSystemRole, loggedInUser, requestsAs } from '@api/testing/http'
+import type { PeriodOverview } from '@financas/shared'
 import { afterAll, describe, expect, it } from 'vitest'
 
 const databases = connectTestDatabases()

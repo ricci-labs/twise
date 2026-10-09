@@ -46,6 +46,7 @@ the Home round (`../roadmap.md`). Field names are the plan; the PR that adds one
 | G32 | Reserve radial and goals with a deadline | `reserveCoverage.percent`; `goals[]` (`goalId`, `name`, `savedCents`, `targetCents`, `targetOn`, `percent`) |
 | G33 | "+25% acima da média" on commissions | `variableVsAverage`: `percent` |
 | G34 | Achievements of a closed period | `periodSummary` (null unless the period is closed): `leftCents`, `positiveStreak` (up to the 6 loaded periods) + `streakCapped`, `budgetsWithin` / `budgetsTotal`, `billsOnTime` / `billsTotal`, `reserveAddedCents`, `goals[]` (`goalId`, `startPercent`, `endPercent`) |
+| G35 | Found by the demo household: in a **future** period nothing has elapsed, so a budget with an installment already recorded there reads `ahead` (expected R$ 0,00) and raises `budget_ahead` | `budgetPace` reads `within` until the period starts (still `over` past the limit) |
 
 ## Behaviours to decide
 | # | Today | Options |

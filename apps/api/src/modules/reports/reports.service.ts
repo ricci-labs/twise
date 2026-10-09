@@ -20,7 +20,7 @@ import {
   readReserveFact,
   workspaceToday,
 } from '@api/modules/planning'
-import type { PeriodOverview, PeriodTimeline } from '@api/modules/reports/reports.types'
+import type { PeriodTimeline } from '@api/modules/reports/reports.types'
 import { currentWorkspaceSettings } from '@api/modules/workspaces'
 import {
   type AccountKind,
@@ -36,6 +36,7 @@ import {
   MONEY_ACCOUNT_KINDS,
   type OverviewQuery,
   type PeriodFacts,
+  type PeriodOverview,
   type PeriodSettings,
   type PurchaseImpact,
   type PurchaseSimulationQuery,

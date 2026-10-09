@@ -3,4 +3,4 @@ export {
   simulatePurchaseImpact,
   suggestAllocation,
 } from '@api/modules/reports/reports.service'
-export type { PeriodOverview, ReportRouteDeps } from '@api/modules/reports/reports.types'
+export type { ReportRouteDeps } from '@api/modules/reports/reports.types'
