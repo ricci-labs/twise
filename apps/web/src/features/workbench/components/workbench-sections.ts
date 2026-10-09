@@ -15,6 +15,7 @@ import { spinnerExamples } from '@web/components/feedback/spinner'
 import { tipExamples } from '@web/components/feedback/tip'
 import { toastExamples } from '@web/components/feedback/toast'
 import { formFieldExamples } from '@web/components/forms/form-field'
+import { twiseIconExamples } from '@web/components/icons/twise-icon'
 import { passwordInputExamples } from '@web/components/inputs/password-input'
 import { textInputExamples } from '@web/components/inputs/text-input'
 import { authLayoutExamples } from '@web/components/layout/auth-layout'
@@ -37,6 +38,7 @@ export const workbenchSections: readonly ComponentExamples[] = [
   owlKitExamples,
   owlEntranceExamples,
   logoExamples,
+  twiseIconExamples,
   nextStepCardExamples,
   richTextExamples,
   dividerExamples,

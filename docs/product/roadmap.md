@@ -184,8 +184,8 @@ updated: 2026-10-09
   9. [x] Overview: `periodSummary`, part 1: left over and positive streak (G34)
   10. [x] Overview: `periodSummary`, part 2: budgets within limit, bills on time, reserve added,
       goals progress (G34)
-  11. [ ] Web: Twise icons and the shell (collapsible sidebar, bottom bar, "Mais" sheet, period
-      picker, workspace switcher, account menu)
+  11. [ ] Web: Twise icons (done) and the shell (collapsible sidebar, bottom bar, "Mais" sheet,
+      period picker, workspace switcher, account menu)
   12. [ ] Web: `WS-01` with the owl entrance
   13. [ ] Web: Card, KPI card and carousel, section skeleton / error, empty state
   14. [ ] Web: charts (balance forecast, coming months, pace, budget rows, income bar)

@@ -1,7 +1,7 @@
 ---
 summary: How web components are layered and built — shadcn primitives, design-system components with one folder each (variants, types, copy, tests, examples), the props contract, forms, icons, copy, the workbench, tests and lint.
 read_when: Creating, changing or using any component in apps/web; adding a shadcn component; building a form; reviewing a web PR.
-updated: 2026-10-02
+updated: 2026-10-09
 ---
 
 # Web components
@@ -42,7 +42,7 @@ where it's used.
 | `layout/` | `AppShell`, `Page`, `PageHeader`, `Section`, `Stack`, `Grid` |
 | `finance/` | `StatHero`, `InsightCard`, `InvoiceCard`, `EntryRow`, `OccurrenceRow`, `ContactRow`, `ChargePreview`, `AmountSplitEditor` |
 | `brand/` | `Logo`, `OwlScene` (the layered owl scenes and their motion), `AppSplash` |
-| `icons/` | The icon registries (see Icons) |
+| `icons/` | `TwiseIcon` and the icon registries (see Icons) |
 
 `finance/` holds patterns with no data fetching: they take props and render. The feature passes
 the data.
@@ -230,7 +230,15 @@ React Hook Form v7 + `zodResolver` with the **schemas from `@financas/shared`** 
   the `_auth` route would change nothing visible yet; it waits for those kits.
 
 ## Icons
-- `lucide-react`, named imports only (each icon is its own module). Never the `icons` namespace or
+- **The Twise set** (`components/icons/twise-icon`, from `docs/design/assets/icones/`) draws every
+  icon of the navigation, the menus and the alerts: `<TwiseIcon name="home" tone="selected" />`.
+  Two layers: the stroke in `currentColor` and an inner fill that shows only when `tone` asks for
+  it (`selected`: ink stroke, mint fill; `danger`, `warning`, `info`, `success`: the alert colour
+  and its soft fill; `muted` and `inherit`: no fill). Always decorative (`aria-hidden`); the
+  control around it carries the name. A new design icon is added to its shape map by hand from the
+  SVG, keeping the two layers.
+- `lucide-react` only for small utility glyphs (chevrons, close, the period calendar, the sidebar
+  collapse), named imports only (each icon is its own module). Never the `icons` namespace or
   `DynamicIcon`, which pull in the whole set.
 - **Icons that carry meaning come from a registry** in `components/icons/`: `entryKindIcons`,
   `statusIcons`, `feedbackIcons`, and `accountIcons` (the names a user can pick, stored as the
