@@ -107,6 +107,7 @@ function household(overrides: Partial<PeriodFacts> = {}): PeriodFacts {
         amountCents: 400_000,
         entryType: 'income',
         status: 'pending',
+        paidOn: null,
         categoryAccountId: 'salary-b',
       },
       {
@@ -117,6 +118,7 @@ function household(overrides: Partial<PeriodFacts> = {}): PeriodFacts {
         amountCents: 100_000,
         entryType: 'income',
         status: 'pending',
+        paidOn: null,
         categoryAccountId: 'commission',
       },
       {
@@ -127,6 +129,7 @@ function household(overrides: Partial<PeriodFacts> = {}): PeriodFacts {
         amountCents: 200_000,
         entryType: 'expense',
         status: 'pending',
+        paidOn: null,
         categoryAccountId: 'housing',
       },
       {
@@ -137,6 +140,7 @@ function household(overrides: Partial<PeriodFacts> = {}): PeriodFacts {
         amountCents: 4_000,
         entryType: 'card_purchase',
         status: 'pending',
+        paidOn: null,
         categoryAccountId: 'electronics',
       },
       {
@@ -147,6 +151,7 @@ function household(overrides: Partial<PeriodFacts> = {}): PeriodFacts {
         amountCents: 15_000,
         entryType: 'expense',
         status: 'matched',
+        paidOn: null,
         categoryAccountId: 'housing',
       },
       {
@@ -157,6 +162,7 @@ function household(overrides: Partial<PeriodFacts> = {}): PeriodFacts {
         amountCents: 9_000,
         entryType: 'expense',
         status: 'skipped',
+        paidOn: null,
         categoryAccountId: 'housing',
       },
       {
@@ -167,6 +173,7 @@ function household(overrides: Partial<PeriodFacts> = {}): PeriodFacts {
         amountCents: 200_000,
         entryType: 'expense',
         status: 'pending',
+        paidOn: null,
         categoryAccountId: 'housing',
       },
       {
@@ -177,6 +184,7 @@ function household(overrides: Partial<PeriodFacts> = {}): PeriodFacts {
         amountCents: 400_000,
         entryType: 'income',
         status: 'pending',
+        paidOn: null,
         categoryAccountId: 'salary-b',
       },
     ],
@@ -403,6 +411,7 @@ describe('billsDue', () => {
           amountCents: 8_000,
           entryType: 'expense',
           status: 'pending',
+          paidOn: null,
           categoryAccountId: 'housing',
         },
         {
@@ -413,6 +422,7 @@ describe('billsDue', () => {
           amountCents: 9_000,
           entryType: 'expense',
           status: 'pending',
+          paidOn: null,
           categoryAccountId: 'housing',
         },
       ],
@@ -564,7 +574,7 @@ describe('periodSummary', () => {
 
   it('tells what was left and counts this period in the streak of positive ones', () => {
     const metrics = computeMetrics(afterOctober())
-    expect(metrics.periodSummary).toEqual({
+    expect(metrics.periodSummary).toMatchObject({
       leftCents: metrics.freeToSpend,
       positiveStreak: 1,
       streakCapped: false,
@@ -593,6 +603,73 @@ describe('periodSummary', () => {
       positiveStreak: 7,
       streakCapped: true,
     })
+  })
+
+  it('counts budgets within their limit and bills paid by their due date', () => {
+    const base = household({ today: '2026-11-02' })
+    const paid = (
+      id: string,
+      dueOn: string,
+      paidOn: string | null,
+      status: 'matched' | 'skipped',
+    ) => ({
+      id,
+      description: 'Bill',
+      sourceAccountId: 'checking',
+      dueOn,
+      amountCents: 1_000,
+      entryType: 'expense' as const,
+      status,
+      categoryAccountId: 'housing',
+      paidOn,
+    })
+    const summary = computeMetrics({
+      ...base,
+      occurrences: [
+        ...base.occurrences,
+        paid('on-time', '2026-10-10', '2026-10-09', 'matched'),
+        paid('late', '2026-10-11', '2026-10-14', 'matched'),
+        paid('skipped', '2026-10-12', null, 'skipped'),
+      ],
+    }).periodSummary
+    expect(summary).toMatchObject({ budgetsWithin: 2, budgetsTotal: 3 })
+    expect(summary).toMatchObject({ billsOnTime: 1, billsTotal: 4 })
+  })
+
+  it('adds up what went into the reserve and how far each goal moved in the period', () => {
+    const base = household({ today: '2026-11-02' })
+    const summary = computeMetrics({
+      ...base,
+      goals: [
+        ...base.goals,
+        {
+          goalId: 'trip',
+          name: 'Viagem',
+          accountId: 'trip-savings',
+          targetCents: 100_000,
+          targetOn: '2027-03-31',
+          isReserve: false,
+          savedCents: 50_000,
+        },
+        {
+          goalId: 'idle',
+          name: 'Parado',
+          accountId: 'idle-savings',
+          targetCents: 100_000,
+          targetOn: null,
+          isReserve: false,
+          savedCents: 10_000,
+        },
+      ],
+      postings: [
+        ...base.postings,
+        moved('savings', 20_000, '2026-10-10'),
+        moved('trip-savings', 30_000, '2026-10-12'),
+        moved('trip-savings', 5_000, '2026-11-01'),
+      ],
+    }).periodSummary
+    expect(summary?.reserveAddedCents).toBe(20_000)
+    expect(summary?.goals).toEqual([{ goalId: 'trip', startPercent: 15, endPercent: 45 }])
   })
 
   it('has no streak when the period closed negative', () => {
@@ -714,6 +791,7 @@ describe('nextInvoice', () => {
           amountCents: 7_000,
           entryType: 'card_purchase',
           status: 'pending',
+          paidOn: null,
           categoryAccountId: 'electronics',
         },
         {
@@ -724,6 +802,7 @@ describe('nextInvoice', () => {
           amountCents: 6_000,
           entryType: 'card_purchase',
           status: 'skipped',
+          paidOn: null,
           categoryAccountId: 'electronics',
         },
         {
@@ -734,6 +813,7 @@ describe('nextInvoice', () => {
           amountCents: 5_000,
           entryType: 'card_purchase',
           status: 'pending',
+          paidOn: null,
           categoryAccountId: 'electronics',
         },
       ],
@@ -785,6 +865,7 @@ describe('balanceForecast', () => {
           amountCents: 400_000,
           entryType: 'income',
           status: 'pending',
+          paidOn: null,
           categoryAccountId: 'salary-b',
         },
       ],
@@ -813,6 +894,7 @@ describe('balanceForecast', () => {
           amountCents: 400_000,
           entryType: 'income',
           status: 'pending',
+          paidOn: null,
           categoryAccountId: 'salary-b',
         },
       ],
@@ -841,6 +923,7 @@ describe('balanceForecast', () => {
           amountCents: 50_000,
           entryType: 'transfer',
           status: 'pending',
+          paidOn: null,
           categoryAccountId: 'reserve',
         },
       ],

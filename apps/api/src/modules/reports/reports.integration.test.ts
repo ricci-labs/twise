@@ -4,6 +4,8 @@ import { createAccount, createCard, deleteEntry, recordEntry } from '@api/module
 import {
   createGoal,
   createRecurrenceRule,
+  listOccurrences,
+  matchOccurrence,
   replaceAllocationSteps,
   setBudget,
 } from '@api/modules/planning'
@@ -220,6 +222,40 @@ describe('getPeriodOverview', () => {
       leftCents: september.metrics.freeToSpend,
     })
     expect(october.metrics.periodSummary).toBeNull()
+  })
+
+  it('counts a bill paid by its due date as on time in the closed period', async () => {
+    const { workspaceId, context, checking } = await household()
+    const [rent] = await listOccurrences(
+      databases.app,
+      workspaceId,
+      { from: '2026-10-25', to: '2026-10-25' },
+      MID_OCTOBER,
+    )
+    const { entryId } = await recordEntry(
+      databases.app,
+      { ...context, source: 'web' },
+      {
+        entryType: 'expense',
+        occurredOn: '2026-10-24',
+        description: 'Aluguel',
+        amountCents: 200_000,
+        paidFromAccountId: checking,
+        categoryId: rent?.categoryAccountId,
+      },
+      MID_OCTOBER,
+    )
+    await matchOccurrence(databases.app, { workspaceId, occurrenceId: rent?.id ?? '' }, entryId)
+    const afterOctober = { now: () => new Date('2026-11-02T12:00:00Z') }
+    const { metrics } = await getPeriodOverview(
+      databases.app,
+      workspaceId,
+      { period: '2026-10' },
+      afterOctober,
+    )
+
+    expect(rent?.description).toBe('Aluguel')
+    expect(metrics.periodSummary).toMatchObject({ billsOnTime: 1, billsTotal: 1 })
   })
 
   it('lists the bills of the next seven days with the description of their rule', async () => {

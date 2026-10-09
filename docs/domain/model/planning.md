@@ -124,7 +124,8 @@ number or alert is one file, one line in `METRICS` / `INSIGHTS`, and a test.
 today (workspace time zone), the period (from the settings and the holidays), the 6 periods
 before and the 6 after it, the budget view and base, the accounts (`ledger.readAccountFacts`), the postings of active entries that fall in the
 period by `effective_on` or by the entry's `occurred_on` (`ledger.readPostingFacts`), and the
-occurrences due in the period with their rule's description (`planning.readOccurrenceFacts`, which
+occurrences due in the period with their rule's description and, when matched, the date of the
+entry that paid them (`planning.readOccurrenceFacts`, which
 tops up the horizon first),
 the budgets in force (`planning.readBudgetFacts`), the goals with their deadline and saved balance, the reserve among them (`planning.readGoalFacts`), the
 cards with their payment account (`ledger.readCardFacts`), the invoices closing from a month ago on
@@ -182,7 +183,12 @@ period_summary    = only for a closed period (today after its end): what was lef
                     and the streak of periods that closed positive, this one included, going back
                     through the 6 loaded ones and stopping at the first negative or idle one;
                     `streakCapped` when all 6 were positive (it may be longer). A negative close
-                    has no streak. Null while the period is open or ahead
+                    has no streak. Also: budgets within their limit (n of m, from `budget_pace`),
+                    bills of the period paid by their due date (n of m: matched expense
+                    occurrences whose entry happened on or before the due date; skipped ones left
+                    out), the net amount that went into the reserve, and each goal that moved
+                    (% at the start and at the end, biggest move first). Null while the period is
+                    open or ahead
 variable_vs_average = this period's commission against `variable_average`, as a whole % difference
                     (positive = above); null before any commission this period or without history
 goal_progress     = goals with a deadline (the reserve left out: it has its own card), soonest

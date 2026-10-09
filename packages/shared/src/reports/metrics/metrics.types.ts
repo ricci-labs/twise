@@ -39,6 +39,7 @@ export type FactOccurrence = {
   entryType: RecurringEntryType
   status: OccurrenceStatus
   categoryAccountId: string
+  paidOn: IsoDate | null
 }
 
 export type FactBudget = {
@@ -176,10 +177,22 @@ export type VariableVsAverage = {
   percent: number
 }
 
+export type GoalProgressChange = {
+  goalId: string
+  startPercent: number
+  endPercent: number
+}
+
 export type PeriodSummary = {
   leftCents: number
   positiveStreak: number
   streakCapped: boolean
+  budgetsWithin: number
+  budgetsTotal: number
+  billsOnTime: number
+  billsTotal: number
+  reserveAddedCents: number
+  goals: GoalProgressChange[]
 }
 
 export type ReserveCoverage = {

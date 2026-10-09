@@ -610,6 +610,13 @@ export async function selectPostingDetails(tx: WorkspaceTransaction, postingIds:
     .where(inArray(postings.id, postingIds))
 }
 
+export function selectEntryDates(tx: WorkspaceTransaction, entryIds: string[]) {
+  return tx
+    .select({ id: journalEntries.id, occurredOn: journalEntries.occurredOn })
+    .from(journalEntries)
+    .where(and(inArray(journalEntries.id, entryIds), isNull(journalEntries.deletedAt)))
+}
+
 export async function selectActiveEntryIds(
   tx: WorkspaceTransaction,
   entryIds: string[],

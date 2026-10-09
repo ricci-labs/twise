@@ -138,7 +138,17 @@ describe('demo household', () => {
       freeToSpend: 41_000,
       dailyAllowance: null,
       incomeShare: { spentPercent: 95, committedPercent: 0, freePercent: 5 },
-      periodSummary: { leftCents: 41_000, positiveStreak: 3, streakCapped: false },
+      periodSummary: {
+        leftCents: 41_000,
+        positiveStreak: 3,
+        streakCapped: false,
+        budgetsWithin: 4,
+        budgetsTotal: 5,
+        billsOnTime: 12,
+        billsTotal: 13,
+        reserveAddedCents: 60_000,
+        goals: [{ goalId: DEMO_IDS.tripGoal, startPercent: 30, endPercent: 40 }],
+      },
     })
   })
 

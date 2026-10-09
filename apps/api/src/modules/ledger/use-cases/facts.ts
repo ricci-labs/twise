@@ -6,6 +6,7 @@ import {
   selectActiveEntryIds,
   selectContactItems,
   selectContactPostings,
+  selectEntryDates,
   selectFrontedByInvoice,
   selectInvoiceFacts,
   selectInvoicesDueBetween,
@@ -97,6 +98,17 @@ export async function readPostingDetails(
 ): Promise<ReadonlyMap<string, PostingDetails>> {
   const details = await selectPostingDetails(tx, postingIds)
   return new Map(details.map((detail) => [detail.postingId, detail]))
+}
+
+export async function readEntryDates(
+  tx: WorkspaceTransaction,
+  entryIds: string[],
+): Promise<ReadonlyMap<string, IsoDate>> {
+  if (entryIds.length === 0) {
+    return new Map()
+  }
+  const rows = await selectEntryDates(tx, entryIds)
+  return new Map(rows.map((row) => [row.id, row.occurredOn]))
 }
 
 export async function activeEntryIdsOf(
