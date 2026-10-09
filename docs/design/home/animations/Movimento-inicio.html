@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Movimento · Início</title>
+<link rel="stylesheet" href="../twise.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700..800&amp;family=Figtree:wght@400..700&amp;display=swap">
+<style>
+body{margin:0}
+</style>
+</head>
+<body>
+<div class="mv"><h1>Movimento da Início</h1><p class="mv-lead">Como os componentes ganham vida, com calma. Cada quadro abaixo está em loop para dar para ver; no app, cada movimento toca uma vez, quando acontece.</p><ul class="mv-rules">
+<li><b>Calma.</b> O movimento mostra o que mudou e de onde veio; nunca chama atenção à toa.</li>
+<li><b>Durações.</b> Toques e trocas de aba: 120–200 ms. Entrada de cartões e folhas: 250–350 ms. Gráficos: 600–800 ms.</li>
+<li><b>Curva.</b> Sai rápido e desacelera no fim (ease-out). Pulinho só em conquistas e na coruja.</li>
+<li><b>Uma vez.</b> A entrada completa toca só na primeira abertura da Início na sessão. Trocar de período só troca os números.</li>
+<li><b>Dinheiro não gira.</b> Valores aparecem com um esmaecer; nada de contador rodando, para não cansar nem parecer jogo.</li>
+<li><b>Aviso é sério.</b> Alertas entram sem pulo, sem brilho e sem piscadinha.</li>
+<li><b>Acessível.</b> Com "reduzir movimento" ligado no aparelho, tudo aparece direto, sem animação.</li></ul>
+<div class="mv-grid"><div class="mv-t"><div class="mv-demo"><div class="mv-row"><div class="mv-kpi mv-kpi-0"><i></i><b></b></div><div class="mv-kpi mv-kpi-1"><i></i><b></b></div><div class="mv-kpi mv-kpi-2"><i></i><b></b></div></div></div><b>Indicadores</b><small>Sobem 12 px e aparecem, um a cada 60 ms · 350 ms cada</small><style>.mv-kpi-0{animation:mv-k0 4.0s linear infinite}
+@keyframes mv-k0{0.00%{opacity:0;transform:translateY(12px)}7.50%{opacity:0;transform:translateY(12px)}16.25%{opacity:1;transform:none}91.25%{opacity:1;transform:none}100.00%{opacity:0;transform:translateY(12px)}}
+.mv-kpi-1{animation:mv-k1 4.0s linear infinite}
+@keyframes mv-k1{0.00%{opacity:0;transform:translateY(12px)}9.00%{opacity:0;transform:translateY(12px)}17.75%{opacity:1;transform:none}91.25%{opacity:1;transform:none}100.00%{opacity:0;transform:translateY(12px)}}
+.mv-kpi-2{animation:mv-k2 4.0s linear infinite}
+@keyframes mv-k2{0.00%{opacity:0;transform:translateY(12px)}10.50%{opacity:0;transform:translateY(12px)}19.25%{opacity:1;transform:none}91.25%{opacity:1;transform:none}100.00%{opacity:0;transform:translateY(12px)}}
+</style></div><div class="mv-t"><div class="mv-demo"><svg viewBox="0 0 300 120" class="mv-svg"><path d="M0 40 H50 V55 H100 V75 H150 V105 H165 V25 H220 V60 H300" fill="none" stroke="var(--mint-ink)" stroke-width="2.5" pathLength="1" class="mv-line"/><path d="M0 40 H50 V55 H100 V75 H150 V105 H165 V25 H220 V60 H300 V118 H0Z" fill="var(--mint)" opacity=".35" class="mv-area"/><circle cx="157" cy="105" r="5" fill="#fff" stroke="var(--mint-ink)" stroke-width="2.5" class="mv-dot"/></svg></div><b>Previsão de saldo</b><small>A linha se desenha da esquerda para a direita · 700 ms; o degradê aparece depois · 300 ms; o menor saldo salta</small><style>.mv-line{animation:mv-l 4.0s linear infinite}
+@keyframes mv-l{0.00%{stroke-dasharray:0 1}7.50%{stroke-dasharray:0 1}25.00%{stroke-dasharray:1 0}91.25%{stroke-dasharray:1 0}100.00%{stroke-dasharray:0 1}}
+.mv-area{animation:mv-a 4.0s linear infinite}
+@keyframes mv-a{0.00%{opacity:0}22.50%{opacity:0}30.00%{opacity:.35}91.25%{opacity:.35}100.00%{opacity:0}}
+.mv-dot{transform-box:fill-box;transform-origin:center}.mv-dot{animation:mv-d 4.0s linear infinite}
+@keyframes mv-d{0.00%{opacity:0;transform:scale(0)}27.50%{opacity:0;transform:scale(0)}32.00%{opacity:1;transform:scale(1.3)}35.00%{opacity:1;transform:none}91.25%{opacity:1;transform:none}100.00%{opacity:0;transform:scale(0)}}
+</style></div><div class="mv-t"><div class="mv-demo"><svg viewBox="0 0 300 120" class="mv-svg"><rect x="20" y="48" width="28" height="70" rx="4" fill="#3f67d1" class="mv-bar mv-bar-0"/><rect x="66" y="34" width="28" height="84" rx="4" fill="#26915d" class="mv-bar mv-bar-1"/><rect x="112" y="22" width="28" height="96" rx="4" fill="#3f67d1" class="mv-bar mv-bar-2"/><rect x="158" y="66" width="28" height="52" rx="4" fill="#26915d" class="mv-bar mv-bar-3"/><rect x="204" y="74" width="28" height="44" rx="4" fill="#3f67d1" class="mv-bar mv-bar-4"/><rect x="250" y="88" width="28" height="30" rx="4" fill="#26915d" class="mv-bar mv-bar-5"/><line x1="0" x2="300" y1="34" y2="34" stroke="var(--warning)" stroke-dasharray="5 4" class="mv-ref"/></svg></div><b>Próximos meses</b><small>Barras crescem da base, uma a cada 50 ms · 400 ms; a linha de 70% aparece no fim</small><style>.mv-bar{transform-box:fill-box;transform-origin:center bottom}.mv-bar-0{animation:mv-b0 4.0s linear infinite}
+@keyframes mv-b0{0.00%{transform:scaleY(0)}7.50%{transform:scaleY(0)}17.50%{transform:none}91.25%{transform:none}100.00%{transform:scaleY(0)}}
+.mv-bar-1{animation:mv-b1 4.0s linear infinite}
+@keyframes mv-b1{0.00%{transform:scaleY(0)}8.75%{transform:scaleY(0)}18.75%{transform:none}91.25%{transform:none}100.00%{transform:scaleY(0)}}
+.mv-bar-2{animation:mv-b2 4.0s linear infinite}
+@keyframes mv-b2{0.00%{transform:scaleY(0)}10.00%{transform:scaleY(0)}20.00%{transform:none}91.25%{transform:none}100.00%{transform:scaleY(0)}}
+.mv-bar-3{animation:mv-b3 4.0s linear infinite}
+@keyframes mv-b3{0.00%{transform:scaleY(0)}11.25%{transform:scaleY(0)}21.25%{transform:none}91.25%{transform:none}100.00%{transform:scaleY(0)}}
+.mv-bar-4{animation:mv-b4 4.0s linear infinite}
+@keyframes mv-b4{0.00%{transform:scaleY(0)}12.50%{transform:scaleY(0)}22.50%{transform:none}91.25%{transform:none}100.00%{transform:scaleY(0)}}
+.mv-bar-5{animation:mv-b5 4.0s linear infinite}
+@keyframes mv-b5{0.00%{transform:scaleY(0)}13.75%{transform:scaleY(0)}23.75%{transform:none}91.25%{transform:none}100.00%{transform:scaleY(0)}}
+.mv-ref{animation:mv-r 4.0s linear infinite}
+@keyframes mv-r{0.00%{opacity:0}27.50%{opacity:0}35.00%{opacity:1}91.25%{opacity:1}100.00%{opacity:0}}
+</style></div><div class="mv-t"><div class="mv-demo"><svg viewBox="0 0 120 120" class="mv-svg" style="height:120px"><circle cx="60" cy="60" r="46" fill="none" stroke="var(--bg-sunken)" stroke-width="12"/><circle cx="60" cy="60" r="46" fill="none" stroke="var(--mint-ink)" stroke-width="12" stroke-linecap="round" pathLength="100" stroke-dasharray="74 100" transform="rotate(-90 60 60)" class="mv-r1"/><circle cx="60" cy="60" r="30" fill="none" stroke="var(--bg-sunken)" stroke-width="10"/><circle cx="60" cy="60" r="30" fill="none" stroke="var(--ink-subtle)" stroke-width="10" stroke-linecap="round" pathLength="100" stroke-dasharray="52 100" transform="rotate(-90 60 60)" class="mv-r2"/></svg></div><b>Ritmo do período</b><small>Os anéis dão a volta até o valor · 800 ms, desacelerando no fim</small><style>.mv-r1{animation:mv-r1 4.0s linear infinite}
+@keyframes mv-r1{0.00%{stroke-dasharray:0 100}7.50%{stroke-dasharray:0 100}27.50%{stroke-dasharray:74 100}91.25%{stroke-dasharray:74 100}100.00%{stroke-dasharray:0 100}}
+.mv-r2{animation:mv-r2 4.0s linear infinite}
+@keyframes mv-r2{0.00%{stroke-dasharray:0 100}10.00%{stroke-dasharray:0 100}30.00%{stroke-dasharray:52 100}91.25%{stroke-dasharray:52 100}100.00%{stroke-dasharray:0 100}}
+</style></div><div class="mv-t"><div class="mv-demo"><div class="mv-col"><div class="mv-pb"><i class="mv-pb-0" style="width:100%;background:var(--danger)"></i><span></span></div><div class="mv-pb"><i class="mv-pb-1" style="width:68%;background:var(--warning-fill, #f2b33d)"></i><span></span></div><div class="mv-pb"><i class="mv-pb-2" style="width:52%;background:var(--mint)"></i><span></span></div></div></div><b>Orçamentos</b><small>Cada barra enche da esquerda · 500 ms, 60 ms entre elas; o traço do ritmo aparece depois</small><style>.mv-pb i{transform-origin:left center}.mv-pb-0{animation:mv-p0 4.0s linear infinite}
+@keyframes mv-p0{0.00%{transform:scaleX(0)}7.50%{transform:scaleX(0)}20.00%{transform:none}91.25%{transform:none}100.00%{transform:scaleX(0)}}
+.mv-pb-1{animation:mv-p1 4.0s linear infinite}
+@keyframes mv-p1{0.00%{transform:scaleX(0)}9.00%{transform:scaleX(0)}21.50%{transform:none}91.25%{transform:none}100.00%{transform:scaleX(0)}}
+.mv-pb-2{animation:mv-p2 4.0s linear infinite}
+@keyframes mv-p2{0.00%{transform:scaleX(0)}10.50%{transform:scaleX(0)}23.00%{transform:none}91.25%{transform:none}100.00%{transform:scaleX(0)}}
+.mv-pb span{animation:mv-ps 4.0s linear infinite}
+@keyframes mv-ps{0.00%{opacity:0}25.00%{opacity:0}31.25%{opacity:1}91.25%{opacity:1}100.00%{opacity:0}}
+</style></div><div class="mv-t"><div class="mv-demo"><div class="mv-car"><div class="mv-car__tr"><div class="mv-c mv-c--m"></div><div class="mv-c"></div><div class="mv-c"></div></div></div><div class="mv-dots"><i class="mv-dot1"></i><i class="mv-dot2"></i><i></i></div></div><b>Carrossel de indicadores</b><small>Desliza e encaixa um cartão por vez · 300 ms; a bolinha ativa estica</small><style>.mv-car__tr{animation:mv-ct 4.0s linear infinite}
+@keyframes mv-ct{0.00%{transform:none}25.00%{transform:none}32.50%{transform:translateX(-172px)}65.00%{transform:translateX(-172px)}72.50%{transform:none}91.25%{transform:none}100.00%{transform:none}}
+.mv-dot1{animation:mv-d1 4.0s linear infinite}
+@keyframes mv-d1{0.00%{width:18px;background:var(--ink)}25.00%{width:18px;background:var(--ink)}32.50%{width:6px;background:#c9ccd1}65.00%{width:6px;background:#c9ccd1}72.50%{width:18px;background:var(--ink)}91.25%{width:18px;background:var(--ink)}100.00%{width:18px;background:var(--ink)}}
+.mv-dot2{animation:mv-d2 4.0s linear infinite}
+@keyframes mv-d2{0.00%{width:6px;background:#c9ccd1}25.00%{width:6px;background:#c9ccd1}32.50%{width:18px;background:var(--ink)}65.00%{width:18px;background:var(--ink)}72.50%{width:6px;background:#c9ccd1}91.25%{width:6px;background:#c9ccd1}100.00%{width:6px;background:#c9ccd1}}
+</style></div><div class="mv-t"><div class="mv-demo"><div class="mv-tab"><span class="mv-ti mv-ti-0"><svg class="icon ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><g class="ti__f" stroke="none"><path d="M4.6 10.3v8.5a1.7 1.7 0 0 0 1.7 1.7h11.4a1.7 1.7 0 0 0 1.7-1.7v-8.5a1.7 1.7 0 0 0-.6-1.3l-5.7-4.7a1.7 1.7 0 0 0-2.2 0L5.2 9a1.7 1.7 0 0 0-.6 1.3z"/></g><path d="M4.6 10.3v8.5a1.7 1.7 0 0 0 1.7 1.7h11.4a1.7 1.7 0 0 0 1.7-1.7v-8.5a1.7 1.7 0 0 0-.6-1.3l-5.7-4.7a1.7 1.7 0 0 0-2.2 0L5.2 9a1.7 1.7 0 0 0-.6 1.3z"/><path d="M9.8 20.5v-4.3a2.2 2.2 0 0 1 4.4 0v4.3"/></svg></span><span class="mv-ti mv-ti-1"><svg class="icon ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><g class="ti__f" stroke="none"><rect x="5" y="3.5" width="14" height="16" rx="1.6"/></g><path d="M6.2 3.5h11.6c.7 0 1.2.5 1.2 1.2v15.8l-2.3-1.4-2.4 1.4-2.3-1.4-2.3 1.4-2.4-1.4L5 20.5V4.7c0-.7.5-1.2 1.2-1.2z"/><path d="M8.8 8.5h6.4M8.8 12.5h3.8M15.2 12.5h.01"/></svg></span><span class="mv-ti mv-ti-2"><svg class="icon ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><g class="ti__f" stroke="none"><rect x="2.8" y="5.5" width="18.4" height="13" rx="2.8"/></g><rect x="2.8" y="5.5" width="18.4" height="13" rx="2.8"/><path d="M2.8 10h18.4M6.5 14.8h3.5"/></svg></span><span class="mv-ti mv-ti-3"><svg class="icon ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><g class="ti__f" stroke="none"><rect x="3.8" y="5" width="16.4" height="15.5" rx="2.8"/></g><rect x="3.8" y="5" width="16.4" height="15.5" rx="2.8"/><path d="M8 3v4M16 3v4M3.8 10h16.4M9.2 15.2l2 2 3.8-3.9"/></svg></span><span class="mv-ti mv-ti-4"><svg class="icon ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><g class="ti__f" stroke="none"></g><path d="M4.5 7h15M4.5 12h15M4.5 17h9"/></svg></span><i class="mv-mark"></i></div></div><b>Barra inferior</b><small>O risco desliza até a aba nova · 250 ms; o ícone ganha o menta · 150 ms</small><style>.mv-mark{animation:mv-mk 4.0s linear infinite}
+@keyframes mv-mk{0.00%{transform:none}25.00%{transform:none}31.25%{transform:translateX(54px)}65.00%{transform:translateX(54px)}71.25%{transform:none}91.25%{transform:none}100.00%{transform:none}}
+.mv-ti-0{animation:mv-t0 4.0s linear infinite}
+@keyframes mv-t0{0.00%{--ti-fill:var(--mint);color:var(--ink)}25.00%{--ti-fill:var(--mint);color:var(--ink)}28.75%{--ti-fill:transparent;color:var(--ink-muted)}65.00%{--ti-fill:transparent;color:var(--ink-muted)}68.75%{--ti-fill:var(--mint);color:var(--ink)}91.25%{--ti-fill:var(--mint);color:var(--ink)}100.00%{--ti-fill:var(--mint);color:var(--ink)}}
+.mv-ti-1{animation:mv-t1 4.0s linear infinite}
+@keyframes mv-t1{0.00%{--ti-fill:transparent;color:var(--ink-muted)}27.50%{--ti-fill:transparent;color:var(--ink-muted)}31.25%{--ti-fill:var(--mint);color:var(--ink)}65.00%{--ti-fill:var(--mint);color:var(--ink)}68.75%{--ti-fill:transparent;color:var(--ink-muted)}91.25%{--ti-fill:transparent;color:var(--ink-muted)}100.00%{--ti-fill:transparent;color:var(--ink-muted)}}
+</style></div><div class="mv-t"><div class="mv-demo"><div class="mv-side"><div class="mv-sb"><i></i><i class="on"></i><i></i><i></i></div><div class="mv-main"></div></div></div><b>Menu recolher</b><small>A barra estreita · 250 ms; os nomes somem primeiro (120 ms) e o conteúdo acompanha</small><style>.mv-sb{animation:mv-sb 4.0s linear infinite}
+@keyframes mv-sb{0.00%{width:96px}25.00%{width:96px}31.25%{width:34px}65.00%{width:34px}71.25%{width:96px}91.25%{width:96px}100.00%{width:96px}}
+</style></div><div class="mv-t"><div class="mv-demo"><div class="mv-ph"><div class="mv-scrim"></div><div class="mv-sheet"><i></i><b></b><b></b><b></b></div></div></div><b>Folha que sobe (Mais, espaços, período)</b><small>O fundo escurece · 200 ms; a folha sobe da borda · 280 ms; fecha mais rápido, 200 ms</small><style>.mv-scrim{animation:mv-sc 4.0s linear infinite}
+@keyframes mv-sc{0.00%{opacity:0}15.00%{opacity:0}20.00%{opacity:1}65.00%{opacity:1}70.00%{opacity:0}91.25%{opacity:0}100.00%{opacity:0}}
+.mv-sheet{animation:mv-sh 4.0s linear infinite}
+@keyframes mv-sh{0.00%{transform:translateY(100%)}15.00%{transform:translateY(100%)}22.00%{transform:none}65.00%{transform:none}70.00%{transform:translateY(100%)}91.25%{transform:translateY(100%)}100.00%{transform:translateY(100%)}}
+</style></div><div class="mv-t"><div class="mv-demo"><div class="mv-per"><span class="mv-pl">‹</span><span class="mv-pv"><b class="mv-v1">R$ 2.340,00</b><b class="mv-v2">R$ 410,00</b></span><span class="mv-pl">›</span></div></div><b>Trocar de período</b><small>Os números saem 6 px para o lado e os novos entram do outro · 200 ms. Os gráficos não se redesenham</small><style>.mv-v1{animation:mv-v1 4.0s linear infinite}
+@keyframes mv-v1{0.00%{opacity:1;transform:none}25.00%{opacity:1;transform:none}30.00%{opacity:0;transform:translateX(8px)}65.00%{opacity:0;transform:translateX(8px)}70.00%{opacity:1;transform:none}91.25%{opacity:1;transform:none}100.00%{opacity:1;transform:none}}
+.mv-v2{animation:mv-v2 4.0s linear infinite}
+@keyframes mv-v2{0.00%{opacity:0;transform:translateX(-8px)}27.50%{opacity:0;transform:translateX(-8px)}32.50%{opacity:1;transform:none}65.00%{opacity:1;transform:none}67.50%{opacity:0;transform:translateX(-8px)}91.25%{opacity:0;transform:translateX(-8px)}100.00%{opacity:0;transform:translateX(-8px)}}
+</style></div><div class="mv-t"><div class="mv-demo"><div class="mv-ach"><span>Sobrou</span><b>R$ 410,00</b><em class="mv-streak"><svg class="icon-sm ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><g class="ti__f" stroke="none"><circle cx="12" cy="12" r="9"/></g><circle cx="12" cy="12" r="9"/><path d="m8.2 12.3 2.6 2.6 5-5.3"/></svg>3º mês seguido</em><img src="../../assets/ilustracoes/cofrinho.svg" alt="" class="mv-pig"></div></div><b>Conquistas</b><small>Único lugar com festa: o destaque sobe, o selo salta e o cofrinho pula · até 900 ms</small><style>.mv-ach{animation:mv-ac 4.0s linear infinite}
+@keyframes mv-ac{0.00%{opacity:0;transform:translateY(12px)}5.00%{opacity:0;transform:translateY(12px)}13.75%{opacity:1;transform:none}91.25%{opacity:1;transform:none}100.00%{opacity:0;transform:translateY(12px)}}
+.mv-streak{transform-origin:left center}.mv-streak{animation:mv-st 4.0s linear infinite}
+@keyframes mv-st{0.00%{opacity:0;transform:scale(0)}15.00%{opacity:0;transform:scale(0)}19.50%{opacity:1;transform:scale(1.15)}22.50%{opacity:1;transform:none}91.25%{opacity:1;transform:none}100.00%{opacity:0;transform:scale(0)}}
+.mv-pig{animation:mv-pg 4.0s linear infinite}
+@keyframes mv-pg{0.00%{opacity:0;transform:scale(0)}12.50%{opacity:0;transform:scale(0)}18.50%{opacity:1;transform:scale(1.15)}22.50%{opacity:1;transform:none}91.25%{opacity:1;transform:none}100.00%{opacity:0;transform:scale(0)}}
+</style></div><div class="mv-t"><div class="mv-demo"><div class="mv-alert"><img src="../../assets/ilustracoes/cofrinho-alerta.svg" alt="" class="mv-pig2"><div><span>Livre para gastar</span><b>−R$ 380,00</b></div></div></div><b>Passou do planejado</b><small>Aviso não faz festa: só aparece com um esmaecer · 250 ms e o cofrinho balança uma vez, de leve</small><style>.mv-alert{animation:mv-al 4.0s linear infinite}
+@keyframes mv-al{0.00%{opacity:0}7.50%{opacity:0}13.75%{opacity:1}91.25%{opacity:1}100.00%{opacity:0}}
+.mv-pig2{transform-origin:center bottom}.mv-pig2{animation:mv-p2 4.0s linear infinite}
+@keyframes mv-p2{0.00%{transform:none}17.50%{transform:none}21.25%{transform:rotate(-6deg)}25.00%{transform:rotate(4deg)}28.75%{transform:rotate(-2deg)}32.50%{transform:none}91.25%{transform:none}100.00%{transform:none}}
+</style></div></div></div><style>@media (prefers-reduced-motion: reduce){*{animation:none!important}}
+</style>
+</body>
+</html>
