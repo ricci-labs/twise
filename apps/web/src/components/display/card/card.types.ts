@@ -5,7 +5,7 @@ import type { ReactNode } from 'react'
 export type CardProps = VariantProps<typeof cardVariants> & {
   title: string
   id?: string
-  description?: string
+  description?: ReactNode
   headerAction?: ReactNode
   footerStat?: ReactNode
   footerAction?: ReactNode

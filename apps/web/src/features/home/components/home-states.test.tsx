@@ -74,6 +74,10 @@ describe('HOME-01 states', () => {
       .element(screen.getByRole('link', { name: 'Começar pelas contas' }))
       .toHaveAttribute('href', `${HOME}/accounts`)
     await expect.element(screen.getByText('Próximo passo')).toBeVisible()
+    await expect
+      .element(screen.getByRole('link', { name: /Cadastre seus cartões/ }))
+      .toHaveAttribute('href', `${HOME}/cards`)
+    await expect.element(screen.getByText('Depois dos passos 1 e 3')).toBeVisible()
     await expect.element(screen.getByText('Convide quem divide com você')).not.toBeInTheDocument()
     await expectNoAccessibilityViolations(screen.container)
   })

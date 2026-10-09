@@ -27,6 +27,6 @@ Existing design-system components (`../design-system/components`) are reused: Bu
 | 15 | `InvoiceList` | — | Card, dates, total, posted/planned, chip "R$ X são de outras pessoas" |
 | 16 | `ReserveGoalsCard` | `Progress` | Reserve radial + goals with deadline |
 | 17 | `ReceivablesCard`, `CommissionsCard` | — | Next receivable line; commission vs average bars |
-| 18 | `FirstRun` | — | Mint hero with the owl and house, numbered steps (next one open with its action), ghost preview of the KPIs ("Depois do passo N"), invite card (proposal) |
+| 18 | `FirstRun` | — | Mint hero with the owl and house (phone: owl at the top right, full-width button); progress bar on `--on-mint` 15% with a start dot and "N de 4 feitos" beside it. Numbered steps with their illustration (carteira, cartão, calendário, recibo), split by dividers: the next one open on `--mint-soft` with the "Próximo passo" tag and its button, the others whole-row links with a chevron. Ghost preview of the KPIs with a lock and "Depois do passo N" on dashed `--border-control` tiles, plus a ghost forecast on the desktop ("Depois dos passos 1 e 3"). Invite card (alone in the workspace): amber dashed outline, "juntos" illustration, under the steps on the desktop. The phone uses the shorter copy of `Inicio-primeiro-uso` |
 | 19 | `AchievementsCard` | — | Closed period only: mint highlight ("Fecharam setembro no azul", "Sobrou R$ X", streak badge) + 4 tiles |
 | 20 | `OfflineBanner`, `ViewerBanner` | — | Offline: dark band on top of the content with "Atualizado às HH:MM" at the right |

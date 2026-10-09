@@ -1,5 +1,8 @@
 import type { ProgressBarProps } from '@web/components/charts/progress-bar/progress-bar.types'
-import { progressBarVariants } from '@web/components/charts/progress-bar/progress-bar.variants'
+import {
+  progressBarVariants,
+  progressTrackVariants,
+} from '@web/components/charts/progress-bar/progress-bar.variants'
 import { cn } from '@web/lib/cn'
 
 const FULL = 100
@@ -13,7 +16,14 @@ export function ProgressBar({ percent, markPercent, tone, className }: ProgressB
       className={cn('h-4 w-full overflow-visible', className)}
       preserveAspectRatio="none"
     >
-      <rect x="0" y="4" width="100%" height="8" rx="4" className="fill-sunken" />
+      <rect
+        x="0"
+        y="4"
+        width="100%"
+        height="8"
+        rx="4"
+        className={progressTrackVariants({ tone })}
+      />
       <rect x="0" y="4" width={width} height="8" rx="4" className={progressBarVariants({ tone })} />
       {markPercent !== undefined && (
         <rect
