@@ -74,7 +74,7 @@ When to use each one: the design system guide → Colour, and each token's notes
 - **Type styles** are the design's, each with size, line height, weight and letter spacing
   (`--text-<style>`, `--text-<style>--line-height`, `--font-weight`, `--letter-spacing`):
   `amount-hero`, `amount-kpi` (the Home indicators), `display`, `title-lg`, `title` (display family), `amount-lg`, `amount`,
-  `amount-sm`, `title-sm`, `body`, `body-sm`, `label`, `button`, `caption` (sans). Use one class:
+  `amount-sm`, `title-sm`, `body`, `body-sm`, `label`, `button`, `button-sm`, `caption` (sans). Use one class:
   `text-title-sm`. A display style also needs `font-display`.
 - `font-emphasis` (650, `--font-weight-emphasis`) is the one extra weight: the current item of the
   sidebar. Tailwind's `font-semibold` and `font-bold` cover the rest.
@@ -89,9 +89,10 @@ When to use each one: the design system guide → Colour, and each token's notes
 
 ## Spacing, sizes, radius, elevation
 - **Spacing:** `--spacing: 0.25rem`, the design's 4 px base (`space-1` = `p-1` … `space-16` =
-  `p-16`). Side margins: `px-4` phone, `px-6` tablet, `px-12` desktop.
+  `p-16`). Side margins: `px-4` phone, `px-6` tablet, `px-8` desktop (the app content beside the sidebar).
 - **Control sizes** (`--spacing-*`): `touch` 44 px (`min-h-touch`), `control` 48 px (`h-control`),
-  `control-sm` 36 px, `fab` 56 px (`size-fab`).
+  `control-sm` 36 px, `control-xs` 30 px (the small button inside a list row, with the
+  `button-sm` type style), `fab` 56 px (`size-fab`).
 - **Radius:** the design's fixed scale, `sm` 8 px, `md` 14 px (fields, alerts), `lg` 20 px (cards,
   dialogs), `xl` 28 px (main card, bottom sheet), `full` (buttons, badges, chips).
 - **Elevation:** flat by default (cards use `border`). `shadow-float` (floating button, menus,

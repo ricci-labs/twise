@@ -32,6 +32,14 @@ export const buttonExamples: ComponentExamples = {
       ),
     },
     { name: 'Pequeno', render: () => <Button size="sm">Reenviar e-mail de confirmação</Button> },
+    {
+      name: 'Mínimo (dentro de uma linha)',
+      render: () => (
+        <Button variant="subtle" size="xs">
+          Registrar
+        </Button>
+      ),
+    },
     { name: 'Largura total', render: () => <Button width="full">Entrar</Button> },
     { name: 'Desativado', render: () => <Button isDisabled>Entrar</Button> },
     {
