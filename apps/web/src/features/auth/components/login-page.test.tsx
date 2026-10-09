@@ -2,7 +2,15 @@ import { createMemoryHistory } from '@tanstack/react-router'
 import { AppProviders } from '@web/app/providers'
 import { createApp } from '@web/app/router'
 import { expectNoAccessibilityViolations } from '@web/testing/accessibility'
-import { account, apiError, fakeApi, sessionRequired } from '@web/testing/fake-api'
+import {
+  account,
+  apiError,
+  fakeApi,
+  sessionRequired,
+  WORKSPACE_ID,
+  workspaceAccess,
+  workspaceList,
+} from '@web/testing/fake-api'
 import { fieldLabelled } from '@web/testing/fields'
 import type { FakeAnswer } from '@web/testing/testing.types'
 import { afterEach, describe, expect, it, vi } from 'vitest'
@@ -19,6 +27,8 @@ async function openLogin(path: string, answers: Record<string, FakeAnswer>) {
     'GET /api/auth/me': () => (isLoggedIn ? account() : sessionRequired()),
     'GET /api/auth/config': signupOpen,
     'GET /api/health/ready': healthy,
+    'GET /api/workspaces': () => workspaceList(),
+    [`GET /api/workspaces/${WORKSPACE_ID}`]: workspaceAccess,
     ...answers,
     'POST /api/auth/login': async (request) => {
       const answer = answers['POST /api/auth/login']
@@ -102,7 +112,7 @@ describe('AUTH-01 log in', () => {
     await screen.getByRole('button', { name: 'Entrar' }).click()
 
     await expect.element(screen.getByRole('heading', { name: 'Twise' })).toBeVisible()
-    expect(app.router.state.location.pathname).toBe('/')
+    expect(app.router.state.location.pathname).toBe(`/w/${WORKSPACE_ID}`)
     expect(sent).toEqual([{ email: EMAIL, password: PASSWORD }])
   })
 

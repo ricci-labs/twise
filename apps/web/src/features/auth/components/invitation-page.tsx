@@ -36,7 +36,7 @@ function InvitationFlow({ token }: InvitationFlowProps) {
   const [step, setStep] = useState<InvitationStep>('preview')
   const [signUpRefusal, setSignUpRefusal] = useState<unknown>(null)
   useCallOnce(token, preview.mutate)
-  useOpenWorkspaceOnceJoined(accept.isSuccess)
+  useOpenWorkspaceOnceJoined(accept.data?.workspaceId ?? null)
 
   const view = invitationViewOf({
     invitation: preview.data,
@@ -72,13 +72,16 @@ function InvitationFlow({ token }: InvitationFlowProps) {
   )
 }
 
-function useOpenWorkspaceOnceJoined(isJoined: boolean) {
+function useOpenWorkspaceOnceJoined(joinedWorkspaceId: string | null) {
   const navigate = useNavigate()
   useEffect(() => {
-    if (!isJoined) {
+    if (!joinedWorkspaceId) {
       return
     }
-    const timer = setTimeout(() => void navigate({ to: '/' }), JOINED_PAUSE_MS)
+    const timer = setTimeout(
+      () => void navigate({ to: '/w/$workspaceId', params: { workspaceId: joinedWorkspaceId } }),
+      JOINED_PAUSE_MS,
+    )
     return () => clearTimeout(timer)
-  }, [isJoined, navigate])
+  }, [joinedWorkspaceId, navigate])
 }

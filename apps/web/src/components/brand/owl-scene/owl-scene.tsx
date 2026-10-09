@@ -6,6 +6,7 @@ import key from '@web/assets/owls/key.svg'
 import linkExpired from '@web/assets/owls/link-expired.svg'
 import offline from '@web/assets/owls/offline.svg'
 import signUp from '@web/assets/owls/sign-up.svg'
+import space from '@web/assets/owls/space.svg'
 import together from '@web/assets/owls/together.svg'
 import wait from '@web/assets/owls/wait.svg'
 import welcome from '@web/assets/owls/welcome.svg'
@@ -25,6 +26,7 @@ const OWL_SCENES: Readonly<Record<OwlSceneName, string>> = {
   closed,
   invitation,
   together,
+  space,
 }
 
 export const OWL_SCENE_NAMES = Object.keys(OWL_SCENES) as OwlSceneName[]

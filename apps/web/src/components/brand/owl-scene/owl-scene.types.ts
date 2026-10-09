@@ -10,6 +10,7 @@ export type OwlSceneName =
   | 'closed'
   | 'invitation'
   | 'together'
+  | 'space'
 
 export type OwlSceneProps = {
   scene: OwlSceneName

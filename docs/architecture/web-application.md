@@ -1,7 +1,7 @@
 ---
 summary: The web's application layer — routes and guards (TanStack Router), server data (TanStack Query over the hc client), errors, permissions, dates and money, PWA, how the API serves the SPA, and the bundle budget.
 read_when: Adding a route or page, fetching or changing server data, handling an API error, touching the PWA, the SPA serving or the build.
-updated: 2026-10-02
+updated: 2026-10-09
 ---
 
 # Web application layer
@@ -29,8 +29,10 @@ tests build their own with a memory history.
 | `_auth.tsx` + `_auth/login.tsx`, `signup`, `forgot-password`, `reset-password` | No session needed; the pathless `_auth` layout keeps the owl block mounted between them (`AuthLayout`) |
 | `verify-email.tsx`, `invite.tsx` | No session needed; moments (`MomentScreen`) |
 | `_app.tsx` | Pathless layout: session guard + `AppShell` |
-| `_app/index.tsx` | Picks the workspace (last used, or the switcher, or `WS-01`) |
-| `_app/w/$workspaceId/route.tsx` | Loads the workspace and the member's permissions; 404 → switcher |
+| `_app/index.tsx` | Picks the workspace (`chooseWorkspace`): the last one used on this device if it is still theirs, else the only one, else `/workspaces`; none → `/workspaces/new` |
+| `_app/workspaces/index.tsx` | "Seus espaços": every workspace with the role, and "Criar espaço"; `?lost=true` adds "Você não tem mais acesso a este espaço." |
+| `_app/workspaces/new.tsx` | `WS-01`: create a workspace, remember it and open it ("Espaço criado.") |
+| `_app/w/$workspaceId/route.tsx` | `openWorkspace`: loads the workspace, the member's permissions and `memberNames`, and remembers it on the device; `WORKSPACE_NOT_FOUND` → `/workspaces?lost=true` |
 | `_app/w/$workspaceId/entries/index.tsx`... | One folder per area: `entries`, `cards`, `planning`, `contacts`, `accounts`, `members`, `settings`, `history`, `trash` |
 | `_app/account.tsx` | My account and preferences (`ME-01`) |
 | `dev/components.tsx` | Workbench, development only (`web-components.md`) |
@@ -136,9 +138,11 @@ tests build their own with a memory history.
 - `/invite` loads the session in its loader (`loadSession`) and reads it with
   `useSignedInAccount()`, which never fetches again: a logged-out visitor causes one `401`, not a
   second one that would clear the cache under the page. After joining, the moment stays 1.5 s and
-  opens `/`; it will open the workspace once `_app/w/$workspaceId` exists.
-- Nothing personal is stored in the browser; the only `localStorage` key is `theme`
-  (`web-design-tokens.md` → Dark mode).
+  opens the joined workspace (`/w/$workspaceId`).
+- Nothing personal is stored in the browser. `localStorage` holds only `theme`
+  (`web-design-tokens.md` → Dark mode) and `lastWorkspaceId` (`lib/last-workspace.ts`), the
+  workspace opened last on this device, as the design asks; an id the person no longer has is
+  ignored, and both survive a failing storage (private mode).
 
 ## Permissions in the UI
 `useCan(module, action)` (`lib/permissions.ts`) reads the workspace query. Buttons and navigation

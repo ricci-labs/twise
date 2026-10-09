@@ -32,3 +32,29 @@ export function sessionRequired(): Response {
 export function account(): Response {
   return Response.json({ id: 'user-a', email: 'member.a@exemplo.com', displayName: 'Member A' })
 }
+
+export const WORKSPACE_ID = '00000000-0000-4000-8000-0000000000aa'
+
+export function workspaceList(
+  workspaces: { workspaceId: string; name: string }[] = [
+    { workspaceId: WORKSPACE_ID, name: 'Casa' },
+  ],
+): Response {
+  return Response.json(
+    workspaces.map((workspace) => ({
+      ...workspace,
+      isArchived: false,
+      role: { roleId: 'role-owner', name: 'Dono', systemKey: 'owner' },
+    })),
+  )
+}
+
+export function workspaceAccess(): Response {
+  return Response.json({
+    workspace: { workspaceId: WORKSPACE_ID, name: 'Casa', isArchived: false },
+    membershipId: 'membership-a',
+    role: { roleId: 'role-owner', name: 'Dono', systemKey: 'owner' },
+    permissions: [],
+    memberNames: ['Member A', 'Member B'],
+  })
+}

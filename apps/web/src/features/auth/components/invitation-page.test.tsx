@@ -2,7 +2,14 @@ import { createMemoryHistory } from '@tanstack/react-router'
 import { AppProviders } from '@web/app/providers'
 import { createApp } from '@web/app/router'
 import { expectNoAccessibilityViolations } from '@web/testing/accessibility'
-import { account, apiError, fakeApi, sessionRequired } from '@web/testing/fake-api'
+import {
+  account,
+  apiError,
+  fakeApi,
+  sessionRequired,
+  WORKSPACE_ID,
+  workspaceAccess,
+} from '@web/testing/fake-api'
 import { fieldLabelled } from '@web/testing/fields'
 import type { FakeAnswer } from '@web/testing/testing.types'
 import { afterEach, describe, expect, it, vi } from 'vitest'
@@ -14,7 +21,7 @@ const PASSWORD = 'café com pão de queijo'
 const PREVIEW = 'POST /api/invitations/preview'
 const ACCEPT = 'POST /api/invitations/accept'
 const SIGN_UP = 'POST /api/invitations/sign-up'
-const JOINED = { workspaceId: 'workspace-1', membershipId: 'membership-1' }
+const JOINED = { workspaceId: WORKSPACE_ID, membershipId: 'membership-1' }
 
 function preview(overrides: Record<string, unknown> = {}) {
   return () =>
@@ -56,6 +63,7 @@ async function openInvite(
     'GET /api/auth/me': () => (session.isLoggedIn ? account() : sessionRequired()),
     'GET /api/auth/config': () => Response.json({ isSignupEnabled: false }),
     'GET /api/health/ready': () => Response.json({ status: 'ready', version: 'dev' }),
+    [`GET /api/workspaces/${WORKSPACE_ID}`]: workspaceAccess,
     'POST /api/auth/login': () => {
       session.isLoggedIn = true
       return Response.json({ userId: 'user-a' })
@@ -122,7 +130,9 @@ describe('INV-01 invitation', () => {
       .toBeVisible()
     await expect.element(screen.getByText('Abrindo o espaço…')).toBeVisible()
     expect(bodies[ACCEPT]).toEqual([{ token: TOKEN }])
-    await expect.poll(() => app.router.state.location.pathname, { timeout: 3000 }).toBe('/')
+    await expect
+      .poll(() => app.router.state.location.pathname, { timeout: 3000 })
+      .toBe(`/w/${WORKSPACE_ID}`)
   })
 
   it('asks the wrong account to leave, and returns to the invitation after the next log in', async () => {
