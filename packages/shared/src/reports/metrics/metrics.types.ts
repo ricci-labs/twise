@@ -115,6 +115,18 @@ export type SpendingAverage = {
   periods: number
 }
 
+export type IncomeShare = {
+  spentPercent: number
+  committedPercent: number
+  freePercent: number
+}
+
+export type PeriodPace = {
+  usedPercent: number
+  elapsedPercent: number
+  pointsAhead: number
+}
+
 export type ReserveCoverage = {
   savedCents: number
   targetCents: number

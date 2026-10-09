@@ -38,8 +38,8 @@ the Home round (`../roadmap.md`). Field names are the plan; the PR that adds one
 |---|---|---|
 | G25 | "faltam {n} dias", pace mark on budgets | **Done:** `periodProgress`: `total`, `elapsed`, `left`, `elapsedPercent` |
 | G26 | "Média mensal (3 meses)" under Gasto (was only inside `reserveCoverage`, null without a reserve) | **Done:** `spendingAverage`: `monthlyCents`, `periods` |
-| G27 | "% da renda" under Gasto and Comprometido; the 100% bar | `incomeShare`: `spentPercent`, `committedPercent`, `freePercent` (null without budget income) |
-| G28 | Pace radial | `periodPace`: `usedPercent`, `elapsedPercent`, `pointsAhead` |
+| G27 | "% da renda" under Gasto and Comprometido; the 100% bar | **Done:** `incomeShare`: `spentPercent`, `committedPercent`, `freePercent` (null without budget income) |
+| G28 | Pace radial | **Done:** `periodPace`: `usedPercent`, `elapsedPercent`, `pointsAhead` |
 | G29 | Bills due in 7 days and the count under Comprometido | `billsDue`: `until`, `count`, `totalCents`, `overdueCount`, `items[]` (`occurrenceId`, `description`, `entryType`, `dueOn`, `amountCents`, `daysFromToday`) |
 | G30 | "R$ X são de outras pessoas" on each invoice | `nextInvoice[].frontedCents` |
 | G31 | Receivables card | `receivables`: `owedCents`, `overdueCents`, `contactCount`, `next` (`contactId`, `dueOn`, `amountCents`) |

@@ -151,6 +151,10 @@ daily_allowance   = max(free_to_spend, 0) ÷ days left, today included (the whol
                     out, through `committed`, as the household chose
 period_progress   = days in the period, elapsed and left (today counts in both) and the elapsed
                     share as a whole % (0 before the period, 100 after it)
+income_share      = spent, committed and free as whole % of the budget income (free = what is left
+                    to 100, never below 0); null without budget income
+period_pace       = income used (spent % + committed %) against the elapsed share of the period,
+                    and the difference in points (positive = ahead of the time gone)
 spending_average  = spending averaged over the last 3 previous periods with any activity →
                     { monthlyCents, periods }; null without history
 budget_pace       = per budget in force (`planning.readBudgetFacts`): spent on the category and every

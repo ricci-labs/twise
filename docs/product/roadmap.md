@@ -177,7 +177,7 @@ updated: 2026-10-09
      no alerts, first run); a test proves `computeMetrics` gives the design's numbers. The web
      tests and workbench use it, and later the public demo page
   4. [x] Overview: `periodProgress`, `spendingAverage`, no pace alarm before a period starts (G25, G26, G35)
-  5. [ ] Overview: `incomeShare`, `periodPace` (G27, G28)
+  5. [x] Overview: `incomeShare`, `periodPace` (G27, G28)
   6. [ ] Overview: `billsDue` + occurrence description in `occurrence_overdue` (G29, G9)
   7. [ ] Overview: `frontedCents` on next invoices, `receivables` (G30, G31)
   8. [ ] Overview: reserve percent, `goals`, `variableVsAverage` (G32, G33)
