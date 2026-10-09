@@ -12,11 +12,13 @@ export function Sheet({ title, trigger, isOpen, onOpenChange, children }: SheetP
       {trigger && <Drawer.Trigger render={trigger} />}
       <Drawer.Portal>
         <Drawer.Backdrop className={sheetBackdropVariants()} />
-        <Drawer.Popup data-slot="sheet" className={sheetPopupVariants()}>
-          <span aria-hidden="true" className={sheetHandleVariants()} />
-          <Drawer.Title className="text-title-sm">{title}</Drawer.Title>
-          {children}
-        </Drawer.Popup>
+        <Drawer.Viewport>
+          <Drawer.Popup data-slot="sheet" className={sheetPopupVariants()}>
+            <span aria-hidden="true" className={sheetHandleVariants()} />
+            <Drawer.Title className="text-title-sm">{title}</Drawer.Title>
+            {children}
+          </Drawer.Popup>
+        </Drawer.Viewport>
       </Drawer.Portal>
     </Drawer.Root>
   )

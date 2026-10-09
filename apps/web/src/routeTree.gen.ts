@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as AuthRouteImport } from './routes/_auth'
+import { Route as DemoRouteImport } from './routes/demo'
 import { Route as InviteRouteImport } from './routes/invite'
 import { Route as VerifyEmailRouteImport } from './routes/verify-email'
 import { Route as AppIndexRouteImport } from './routes/_app/index'
@@ -31,6 +32,11 @@ const AppRoute = AppRouteImport.update({
 } as any)
 const AuthRoute = AuthRouteImport.update({
   id: '/_auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DemoRoute = DemoRouteImport.update({
+  id: '/demo',
+  path: '/demo',
   getParentRoute: () => rootRouteImport,
 } as any)
 const InviteRoute = InviteRouteImport.update({
@@ -101,6 +107,7 @@ const AppWWorkspaceIdAreaRoute = AppWWorkspaceIdAreaRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof AppIndexRoute
+  '/demo': typeof DemoRoute
   '/invite': typeof InviteRoute
   '/verify-email': typeof VerifyEmailRoute
   '/forgot-password': typeof AuthForgotPasswordRoute
@@ -116,6 +123,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof AppIndexRoute
+  '/demo': typeof DemoRoute
   '/invite': typeof InviteRoute
   '/verify-email': typeof VerifyEmailRoute
   '/forgot-password': typeof AuthForgotPasswordRoute
@@ -132,6 +140,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_app': typeof AppRouteWithChildren
   '/_auth': typeof AuthRouteWithChildren
+  '/demo': typeof DemoRoute
   '/invite': typeof InviteRoute
   '/verify-email': typeof VerifyEmailRoute
   '/_auth/forgot-password': typeof AuthForgotPasswordRoute
@@ -150,6 +159,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/demo'
     | '/invite'
     | '/verify-email'
     | '/forgot-password'
@@ -165,6 +175,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/demo'
     | '/invite'
     | '/verify-email'
     | '/forgot-password'
@@ -180,6 +191,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/_app'
     | '/_auth'
+    | '/demo'
     | '/invite'
     | '/verify-email'
     | '/_auth/forgot-password'
@@ -198,6 +210,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   AppRoute: typeof AppRouteWithChildren
   AuthRoute: typeof AuthRouteWithChildren
+  DemoRoute: typeof DemoRoute
   InviteRoute: typeof InviteRoute
   VerifyEmailRoute: typeof VerifyEmailRoute
   DevComponentsRoute: typeof DevComponentsRoute
@@ -217,6 +230,13 @@ declare module '@tanstack/react-router' {
       path: ''
       fullPath: '/'
       preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/demo': {
+      id: '/demo'
+      path: '/demo'
+      fullPath: '/demo'
+      preLoaderRoute: typeof DemoRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/invite': {
@@ -361,6 +381,7 @@ const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   AppRoute: AppRouteWithChildren,
   AuthRoute: AuthRouteWithChildren,
+  DemoRoute: DemoRoute,
   InviteRoute: InviteRoute,
   VerifyEmailRoute: VerifyEmailRoute,
   DevComponentsRoute: DevComponentsRoute,

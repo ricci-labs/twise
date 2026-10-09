@@ -27,6 +27,7 @@ tests build their own with a memory history.
 |---|---|
 | `__root.tsx` | `createRootRouteWithContext<RouterContext>()`; `RouterContext = { queryClient }` |
 | `_auth.tsx` + `_auth/login.tsx`, `signup`, `forgot-password`, `reset-password` | No session needed; the pathless `_auth` layout keeps the owl block mounted between them (`AuthLayout`) |
+| `demo.tsx` | Public demo, no session: the real `HOME-01` on the demo household (`features/demo` frames it with "Demonstração", the situation switcher `?variant=overspent` and "Entrar"). Its workspaces (`demo`, `demo-overspent`, `DEMO_WORKSPACE_IDS`) never reach the API: `features/home/api` computes them in the browser with `demoOverviewFor`, any `?period=`. Links to app areas show "Na demonstração, só a Início está aberta." instead of leaving |
 | `verify-email.tsx`, `invite.tsx` | No session needed; moments (`MomentScreen`) |
 | `_app.tsx` | Pathless layout: session guard + `AppShell` |
 | `_app/index.tsx` | Picks the workspace (`chooseWorkspace`): the last one used on this device if it is still theirs, else the only one, else `/workspaces`; none → `/workspaces/new` |
@@ -246,3 +247,7 @@ an email image and an unknown API path.
   menus, sheet, tooltip) into the initial chunk: 274 KB, over the budget (seen 2026-10-09; 183 KB
   with it). A new module that must run on import (a polyfill, a global style imported from JS)
   is added to that list.
+- `packages/shared/package.json` declares `"sideEffects": false`: shared is pure functions,
+  schemas and constants (no module runs anything on import), so the web keeps only what it uses of
+  the barrel. Adding the demo household to the Home without it put 6 KB of it in the initial chunk
+  (seen 2026-10-09); with it the initial load fell to 178 KB.

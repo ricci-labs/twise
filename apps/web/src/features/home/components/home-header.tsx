@@ -7,14 +7,7 @@ import { useIsOnline } from '@web/hooks/use-is-online'
 import { formatDayMonthLong, formatMonthLabel, formatRange } from '@web/lib/format/calendar'
 import { CalendarDays, ChevronLeft, ChevronRight } from 'lucide-react'
 
-export function HomeHeader({
-  workspaceId,
-  overview,
-  stage,
-  displayName,
-  hour,
-  updatedAt,
-}: HomeHeaderProps) {
+export function HomeHeader({ overview, stage, displayName, hour, updatedAt }: HomeHeaderProps) {
   const isOnline = useIsOnline()
   const { today, period, metrics } = overview
   const step = (direction: -1 | 1) => neighbourPeriod(period.label, direction)
@@ -40,8 +33,8 @@ export function HomeHeader({
                 {stage === 'closed' ? messages.period.closed : messages.period.future}
               </Badge>
               <Link
-                to="/w/$workspaceId"
-                params={{ workspaceId }}
+                to="."
+                search={(previous) => ({ ...previous, period: undefined })}
                 className="font-semibold text-mint-ink underline"
               >
                 {messages.period.backToCurrent}
@@ -55,9 +48,8 @@ export function HomeHeader({
         className="flex items-center justify-between gap-2 rounded-full border border-border bg-surface p-1 lg:min-w-96"
       >
         <Link
-          to="/w/$workspaceId"
-          params={{ workspaceId }}
-          search={{ period: step(-1) }}
+          to="."
+          search={(previous) => ({ ...previous, period: step(-1) })}
           aria-label={messages.period.previous}
           className="grid size-10 place-items-center rounded-full hover:bg-sunken"
         >
@@ -69,9 +61,8 @@ export function HomeHeader({
           <span className="text-ink-muted">· {formatRange(period.start, period.end)}</span>
         </p>
         <Link
-          to="/w/$workspaceId"
-          params={{ workspaceId }}
-          search={{ period: step(1) }}
+          to="."
+          search={(previous) => ({ ...previous, period: step(1) })}
           aria-label={messages.period.next}
           className="grid size-10 place-items-center rounded-full hover:bg-sunken"
         >

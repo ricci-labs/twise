@@ -71,7 +71,7 @@ export function ForecastChart({
             <Area
               type="stepAfter"
               dataKey="cents"
-              stroke={`url(#${gradientId}-stroke)`}
+              stroke={scale.bottom < 0 ? `url(#${gradientId}-stroke)` : LINE}
               strokeWidth={2}
               fill={`url(#${gradientId}-fill)`}
               isAnimationActive

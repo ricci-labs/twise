@@ -2,6 +2,15 @@ export const DEMO_SCENARIOS = ['current', 'overspent', 'closed', 'future'] as co
 
 export type DemoScenario = (typeof DEMO_SCENARIOS)[number]
 
+export const DEMO_VARIANTS = ['normal', 'overspent'] as const
+
+export type DemoVariant = (typeof DEMO_VARIANTS)[number]
+
+export const DEMO_WORKSPACE_IDS: Readonly<Record<DemoVariant, string>> = {
+  normal: 'demo',
+  overspent: 'demo-overspent',
+}
+
 export const DEMO_TODAY = '2026-10-20'
 
 export const DEMO_PERIOD_DAY = 5
