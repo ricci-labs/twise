@@ -121,7 +121,7 @@ dias."
 
 **RF-HOME-17 Achievements of a closed period** (`periodSummary` *(planned)*), in place of the
 balance forecast: "Conquistas de {mês}" · "O que deu certo neste período." A mint highlight
-"Fecharam {mês} no azul · Sobrou R$ X · {n}º mês seguido" (up to 6; "6+ meses seguidos" beyond)
+"Fecharam {mês} no azul · Sobrou R$ X · {n}º mês seguido" (`periodSummary.positiveStreak`; "{n}+ meses seguidos" when `streakCapped`)
 and four tiles: "{a} de {b} orçamentos dentro do limite", "{a} de {b} contas pagas em dia",
 "+R$ X na reserva, que agora cobre {m} meses", "{p}% → {q}% da meta {nome}". A tile without data
 is left out. A period that closed negative shows no highlight.

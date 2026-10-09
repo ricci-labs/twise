@@ -176,6 +176,12 @@ export type VariableVsAverage = {
   percent: number
 }
 
+export type PeriodSummary = {
+  leftCents: number
+  positiveStreak: number
+  streakCapped: boolean
+}
+
 export type ReserveCoverage = {
   savedCents: number
   targetCents: number

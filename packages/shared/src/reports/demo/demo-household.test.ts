@@ -138,6 +138,7 @@ describe('demo household', () => {
       freeToSpend: 41_000,
       dailyAllowance: null,
       incomeShare: { spentPercent: 95, committedPercent: 0, freePercent: 5 },
+      periodSummary: { leftCents: 41_000, positiveStreak: 3, streakCapped: false },
     })
   })
 
@@ -151,6 +152,7 @@ describe('demo household', () => {
   it('raises no pace alarm for a period that has not started', () => {
     const { metrics, insights } = demoOverview('future')
 
+    expect(metrics.periodSummary).toBeNull()
     expect(metrics.budgetPace.map((line) => line.status)).not.toContain('ahead')
     expect(insights.map((insight) => insight.code)).not.toContain('budget_ahead')
   })

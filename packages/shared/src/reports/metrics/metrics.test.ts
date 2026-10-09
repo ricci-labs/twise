@@ -548,6 +548,62 @@ describe('variableVsAverage', () => {
   })
 })
 
+describe('periodSummary', () => {
+  const afterOctober = (postings: FactPosting[] = []) => {
+    const base = household({ today: '2026-11-02' })
+    return household({ today: '2026-11-02', postings: [...base.postings, ...postings] })
+  }
+  const salaryIn = (month: string, amountCents: number) => [
+    moved('salary-a', -amountCents, `2026-${month}-05`),
+    moved('checking', amountCents, `2026-${month}-05`),
+  ]
+
+  it('has nothing to sum up while the period is open', () => {
+    expect(computeMetrics(household()).periodSummary).toBeNull()
+  })
+
+  it('tells what was left and counts this period in the streak of positive ones', () => {
+    const metrics = computeMetrics(afterOctober())
+    expect(metrics.periodSummary).toEqual({
+      leftCents: metrics.freeToSpend,
+      positiveStreak: 1,
+      streakCapped: false,
+    })
+  })
+
+  it('counts the previous periods that also closed positive, back to the first one that did not', () => {
+    const summary = computeMetrics(afterOctober(salaryIn('09', 50_000))).periodSummary
+    expect(summary).toMatchObject({ positiveStreak: 2, streakCapped: false })
+  })
+
+  it('stops at a period with no activity: a new household has no streak behind it', () => {
+    const base = household({ today: '2026-11-02' })
+    const newHousehold = household({
+      today: '2026-11-02',
+      postings: base.postings.filter((posting) => posting.effectiveOn >= '2026-10-01'),
+    })
+    expect(computeMetrics(newHousehold).periodSummary).toMatchObject({ positiveStreak: 1 })
+  })
+
+  it('says the streak may be longer when every loaded period closed positive', () => {
+    const everyMonth = ['04', '05', '06', '07', '08', '09'].flatMap((month) =>
+      salaryIn(month, 50_000),
+    )
+    expect(computeMetrics(afterOctober(everyMonth)).periodSummary).toMatchObject({
+      positiveStreak: 7,
+      streakCapped: true,
+    })
+  })
+
+  it('has no streak when the period closed negative', () => {
+    const summary = computeMetrics(
+      afterOctober([moved('groceries', 2_000_000, '2026-10-20')]),
+    ).periodSummary
+    expect(summary).toMatchObject({ positiveStreak: 0, streakCapped: false })
+    expect(summary?.leftCents).toBeLessThan(0)
+  })
+})
+
 describe('spendingAverage', () => {
   it('averages the last three periods that had any activity', () => {
     expect(computeMetrics(household()).spendingAverage).toEqual({
