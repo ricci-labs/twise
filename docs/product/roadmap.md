@@ -181,7 +181,7 @@ updated: 2026-10-09
   6. [x] Overview: `billsDue` + occurrence description in `occurrence_overdue` (G29, G9)
   7. [x] Overview: `frontedCents` on next invoices, `receivables` (G30, G31)
   8. [x] Overview: reserve percent, `goalProgress`, `variableVsAverage` (G32, G33)
-  9. [ ] Overview: `periodSummary`, part 1: left over and positive streak (G34)
+  9. [x] Overview: `periodSummary`, part 1: left over and positive streak (G34)
   10. [ ] Overview: `periodSummary`, part 2: budgets within limit, bills on time, reserve added,
       goals progress (G34)
   11. [ ] Web: Twise icons and the shell (collapsible sidebar, bottom bar, "Mais" sheet, period

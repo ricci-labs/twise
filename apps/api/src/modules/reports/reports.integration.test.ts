@@ -206,6 +206,22 @@ describe('getPeriodOverview', () => {
     expect(metrics.reserveCoverage).toMatchObject({ savedCents: 300_000, percent: 30 })
   })
 
+  it('sums up a closed period and nothing of the open one', async () => {
+    const { workspaceId } = await household()
+    const september = await getPeriodOverview(
+      databases.app,
+      workspaceId,
+      { period: '2026-09' },
+      MID_OCTOBER,
+    )
+    const october = await getPeriodOverview(databases.app, workspaceId, {}, MID_OCTOBER)
+
+    expect(september.metrics.periodSummary).toMatchObject({
+      leftCents: september.metrics.freeToSpend,
+    })
+    expect(october.metrics.periodSummary).toBeNull()
+  })
+
   it('lists the bills of the next seven days with the description of their rule', async () => {
     const { workspaceId } = await household()
     const fiveDaysBefore = { now: () => new Date('2026-10-20T12:00:00Z') }

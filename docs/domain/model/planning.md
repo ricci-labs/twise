@@ -178,6 +178,11 @@ next_invoice      = per card, the invoice a purchase made today goes to (`invoic
                     `GET /cards/:id/invoices`)
 receivables       = what contacts owe (only those with a positive balance): total, overdue, how
                     many, and the next due amount among them → null when nobody owes
+period_summary    = only for a closed period (today after its end): what was left (`free_to_spend`)
+                    and the streak of periods that closed positive, this one included, going back
+                    through the 6 loaded ones and stopping at the first negative or idle one;
+                    `streakCapped` when all 6 were positive (it may be longer). A negative close
+                    has no streak. Null while the period is open or ahead
 variable_vs_average = this period's commission against `variable_average`, as a whole % difference
                     (positive = above); null before any commission this period or without history
 goal_progress     = goals with a deadline (the reserve left out: it has its own card), soonest
