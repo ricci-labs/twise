@@ -39,7 +39,7 @@ future ones dashed); the period goes in the URL (`?period=2026-10`). A past peri
 |---|---|---|---|
 | "Livre para gastar" (mint, piggy bank) | `freeToSpend` | "R$ X por dia" (`dailyAllowance`) · "Até {fim} · faltam {n} dias" | "Renda fixa do período, menos o que já foi gasto, menos as contas que ainda vão vencer." |
 | "Renda do orçamento" | `budgetIncome` | "Comissão à parte: R$ X" (`variableIncome`, when the base is fixed income) | "Salários recebidos e previstos no período." |
-| "Gasto" | `spent` | "{p}% da renda" (`incomeShare.spentPercent` *(planned)*) · "Média mensal (3 meses): R$ X" (`spendingAverage.monthlyCents`) | "Despesas e parcelas que caem neste período." |
+| "Gasto" | `spent` | "{p}% da renda" (`incomeShare.spentPercent`) · "Média mensal (3 meses): R$ X" (`spendingAverage.monthlyCents`) | "Despesas e parcelas que caem neste período." |
 | "Comprometido" | `committed` | "{p}% da renda" (`incomeShare.committedPercent`) · "{n} contas vencem nos próximos 7 dias" (`billsDue.count` *(planned)*) | "Contas fixas previstas que ainda não foram pagas, incluindo atrasadas." |
 - **Negative** `freeToSpend`: the first card turns danger-soft, value in red, badge "Passou do
   planejado", the reason in one line, "Ver onde ajustar" (→ `PLAN-04` sorted by how far ahead of
@@ -104,13 +104,13 @@ comprometida." Help: "Quanto da renda fixa dos próximos meses já está comprom
 **RF-HOME-10 Shortcuts:** "Novo lançamento" (floating on mobile, sidebar button on desktop;
 `entries:create`).
 
-**RF-HOME-14 Pace of the period** (`periodPace` *(planned)*): "Quanto da renda já foi usada,
+**RF-HOME-14 Pace of the period** (`periodPace`): "Quanto da renda já foi usada,
 comparado ao tempo que passou." Radial "{p}% da renda", "Renda já usada {p}%", "Período passado
 {q}%" and "Vocês estão {n} pontos à frente do ritmo." / "… atrás do ritmo." / "Vocês estão no
 ritmo." Closed period: "Como o período terminou" with "Gasto {p}%" and "Sobrou {q}%" and "O que
 sobrou pode ir para a reserva."
 
-**RF-HOME-15 Where income goes** (`incomeShare` *(planned)*): "Renda do orçamento de R$ X neste
+**RF-HOME-15 Where income goes** (`incomeShare`): "Renda do orçamento de R$ X neste
 período." A 100% bar with "Gasto", "Comprometido", "Livre" (percent and amount); "A comissão de
 R$ X fica fora desta conta." when the base is fixed income.
 

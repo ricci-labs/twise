@@ -19,6 +19,8 @@ describe('demo household', () => {
       reserveCoverage: { monthlySpendingCents: 630_000, months: 2.4 },
       periodProgress: { left: 16, elapsedPercent: 52 },
       spendingAverage: { monthlyCents: 630_000, periods: 3 },
+      incomeShare: { spentPercent: 43, committedPercent: 31, freePercent: 26 },
+      periodPace: { usedPercent: 74, elapsedPercent: 52, pointsAhead: 22 },
     })
   })
 
@@ -73,7 +75,11 @@ describe('demo household', () => {
   it('passes the plan by R$ 380,00 when the car repair comes in', () => {
     const { metrics, insights } = demoOverview('overspent')
 
-    expect(metrics).toMatchObject({ spent: 658_000, freeToSpend: -38_000 })
+    expect(metrics).toMatchObject({
+      spent: 658_000,
+      freeToSpend: -38_000,
+      incomeShare: { spentPercent: 73, committedPercent: 31, freePercent: 0 },
+    })
     expect(insights[0]).toMatchObject({
       code: 'period_overspent',
       values: { overspentCents: 38_000 },
@@ -89,6 +95,7 @@ describe('demo household', () => {
       committed: 0,
       freeToSpend: 41_000,
       dailyAllowance: null,
+      incomeShare: { spentPercent: 95, committedPercent: 0, freePercent: 5 },
     })
   })
 

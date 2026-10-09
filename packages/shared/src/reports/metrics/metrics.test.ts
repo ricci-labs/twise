@@ -329,6 +329,46 @@ describe('periodProgress', () => {
   })
 })
 
+describe('incomeShare', () => {
+  it('splits the budget income into spent, committed and free, in whole percent', () => {
+    expect(computeMetrics(household()).incomeShare).toEqual({
+      spentPercent: 7,
+      committedPercent: 23,
+      freePercent: 70,
+    })
+  })
+
+  it('leaves nothing free once spending and bills pass the income', () => {
+    const base = household()
+    const overspent = household({
+      postings: [...base.postings, moved('groceries', 900_000, '2026-10-14')],
+    })
+    expect(computeMetrics(overspent).incomeShare).toEqual({
+      spentPercent: 107,
+      committedPercent: 23,
+      freePercent: 0,
+    })
+  })
+
+  it('has no share without budget income', () => {
+    expect(computeMetrics(household({ postings: [], occurrences: [] })).incomeShare).toBeNull()
+  })
+})
+
+describe('periodPace', () => {
+  it('compares the income used with the time gone, in points', () => {
+    expect(computeMetrics(household()).periodPace).toEqual({
+      usedPercent: 30,
+      elapsedPercent: 48,
+      pointsAhead: -18,
+    })
+  })
+
+  it('has no pace without budget income', () => {
+    expect(computeMetrics(household({ postings: [], occurrences: [] })).periodPace).toBeNull()
+  })
+})
+
 describe('spendingAverage', () => {
   it('averages the last three periods that had any activity', () => {
     expect(computeMetrics(household()).spendingAverage).toEqual({
