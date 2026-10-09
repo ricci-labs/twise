@@ -18,6 +18,7 @@ export default mergeConfig(
         '@base-ui/react/tooltip',
         '@base-ui/react/menu',
         '@base-ui/react/drawer',
+        'recharts',
         'class-variance-authority',
         'cn',
         'cn/config',

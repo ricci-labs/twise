@@ -188,7 +188,7 @@ updated: 2026-10-09
       period picker, workspace switcher, account menu)
   12. [x] Web: `WS-01` and the workspace routes (the owl entrance comes with the motion, 17)
   13. [x] Web: Card, KPI card and carousel, section skeleton / error, empty state (and `Amount`)
-  14. [ ] Web: charts (balance forecast, coming months, pace, budget rows, income bar)
+  14. [x] Web: charts (balance forecast, coming months, pace, budget rows, income bar)
   15. [ ] Web: `HOME-01` mobile and desktop, with the demo household
   16. [ ] Web: Home states (negative, closed + achievements, no alerts, no config, offline,
       viewer, section error) and first run

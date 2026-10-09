@@ -215,6 +215,27 @@ React Hook Form v7 + `zodResolver` with the **schemas from `@financas/shared`** 
   current item bold with a short mint bar under the label; hidden from 1024 px.
 - `AppShell` (`components/layout/app-shell`): the sidebar from 1024 px, the content (with an
   optional `banner` on top) and, on the phone, the bottom bar and an optional floating action.
+## Charts
+`docs/design/home/` → Rules: shadcn/ui's look on Recharts, the validated blue (`chart-4`), green
+(`chart-2`) and amber (`chart-3`), the forecast line in `mint-ink` over a mint gradient, negative
+stretches in the danger colour. Each chart is a `figure` whose drawing is `aria-hidden` and whose
+`figcaption` says the same in words (the text alternative the requirements ask for).
+- **No shadcn `chart.tsx`:** its `ChartStyle` writes a `<style>` element, which the CSP blocks (as
+  it did Sonner's). Colours go on the SVG as `var(--color-…)` attributes or token classes
+  (`fill-ink`, `stroke-chart-2`), and Recharts' own focusable layer is off (`accessibilityLayer`
+  `false`), since the figure carries the meaning.
+- Recharts is imported only by `ForecastChart` and `CommittedChart`, reached from the Home route's
+  chunk, so it stays out of the initial bundle.
+- `ForecastChart` (`components/charts/forecast-chart`): step area of one account's balance, dashed
+  zero line, the lowest point marked and named under the chart.
+- `CommittedChart` (`components/charts/committed-chart`): stacked bars of installments and bills
+  as a share of the fixed income, the share above each bar, a dashed line at the limit (70%) and
+  the months at or above it in amber.
+- `PaceRing`, `ProgressBar` and `IncomeBar` (`components/charts/`): plain SVG, since a width that
+  comes from data can't be a token class and `style` is not allowed: the two rings of the pace
+  (income used, time gone), the budget bar with the pace mark (`within`, `ahead`, `over`), and the
+  100% bar of where the income goes with its legend.
+
 ## Menus, sheets and avatars
 - `ActionMenu` (`components/actions/action-menu`, Base UI `Menu`): a `trigger` element and `groups`
   of items (separators between groups), each a link (`render`) or an action (`onSelect`), with an

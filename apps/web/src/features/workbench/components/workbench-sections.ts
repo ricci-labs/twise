@@ -6,6 +6,11 @@ import { logoExamples } from '@web/components/brand/logo'
 import { owlEntranceExamples } from '@web/components/brand/owl-entrance'
 import { owlKitExamples } from '@web/components/brand/owl-kit'
 import { owlSceneExamples } from '@web/components/brand/owl-scene'
+import { committedChartExamples } from '@web/components/charts/committed-chart'
+import { forecastChartExamples } from '@web/components/charts/forecast-chart'
+import { incomeBarExamples } from '@web/components/charts/income-bar'
+import { paceRingExamples } from '@web/components/charts/pace-ring'
+import { progressBarExamples } from '@web/components/charts/progress-bar'
 import { amountExamples } from '@web/components/display/amount'
 import { avatarExamples } from '@web/components/display/avatar'
 import { cardExamples } from '@web/components/display/card'
@@ -43,6 +48,11 @@ export const workbenchSections: readonly ComponentExamples[] = [
   sectionSkeletonExamples,
   sectionErrorExamples,
   emptyStateExamples,
+  forecastChartExamples,
+  committedChartExamples,
+  paceRingExamples,
+  progressBarExamples,
+  incomeBarExamples,
   actionMenuExamples,
   sheetExamples,
   avatarExamples,
