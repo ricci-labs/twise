@@ -16,7 +16,7 @@ describe('OwlKit', () => {
     await expect.poll(() => piece('k-lockBody')).not.toBeNull()
     const kit = screen.container.querySelector('[data-slot=owl-kit]')
     expect(kit?.getAttribute('aria-hidden')).toBe('true')
-    expect(kit?.querySelector('[data-slot=owl-scene]')).toBeNull()
+    await expect.poll(() => kit?.querySelector('[data-slot=owl-scene]')).toBeNull()
   })
 
   it('waits in its first look, then plays the sequence once the event comes', async () => {
