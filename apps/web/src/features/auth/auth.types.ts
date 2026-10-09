@@ -8,10 +8,14 @@ import type {
   loginSearchSchema,
   newPasswordSchema,
 } from '@web/features/auth/auth.schemas'
-import type { ReactNode } from 'react'
+import type { ReactElement, ReactNode } from 'react'
 import type { z } from 'zod'
 
 export type LoginNotice = (typeof LOGIN_NOTICES)[number]
+
+export type AccountLinkProps = {
+  accountLink: ReactElement
+}
 
 export type LogOutButtonProps = {
   variant?: 'button' | 'link'

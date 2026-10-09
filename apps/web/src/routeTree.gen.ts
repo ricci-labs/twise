@@ -23,6 +23,7 @@ import { Route as AppWWorkspaceIdRouteRouteImport } from './routes/_app/w/$works
 import { Route as AppWorkspacesIndexRouteImport } from './routes/_app/workspaces/index'
 import { Route as AppWorkspacesNewRouteImport } from './routes/_app/workspaces/new'
 import { Route as AppWWorkspaceIdIndexRouteImport } from './routes/_app/w/$workspaceId/index'
+import { Route as AppWWorkspaceIdAreaRouteImport } from './routes/_app/w/$workspaceId/$area'
 
 const AppRoute = AppRouteImport.update({
   id: '/_app',
@@ -92,6 +93,11 @@ const AppWWorkspaceIdIndexRoute = AppWWorkspaceIdIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AppWWorkspaceIdRouteRoute,
 } as any)
+const AppWWorkspaceIdAreaRoute = AppWWorkspaceIdAreaRouteImport.update({
+  id: '/$area',
+  path: '/$area',
+  getParentRoute: () => AppWWorkspaceIdRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AppIndexRoute
@@ -105,6 +111,7 @@ export interface FileRoutesByFullPath {
   '/w/$workspaceId': typeof AppWWorkspaceIdRouteRouteWithChildren
   '/workspaces/new': typeof AppWorkspacesNewRoute
   '/workspaces/': typeof AppWorkspacesIndexRoute
+  '/w/$workspaceId/$area': typeof AppWWorkspaceIdAreaRoute
   '/w/$workspaceId/': typeof AppWWorkspaceIdIndexRoute
 }
 export interface FileRoutesByTo {
@@ -118,6 +125,7 @@ export interface FileRoutesByTo {
   '/dev/components': typeof DevComponentsRoute
   '/workspaces/new': typeof AppWorkspacesNewRoute
   '/workspaces': typeof AppWorkspacesIndexRoute
+  '/w/$workspaceId/$area': typeof AppWWorkspaceIdAreaRoute
   '/w/$workspaceId': typeof AppWWorkspaceIdIndexRoute
 }
 export interface FileRoutesById {
@@ -135,6 +143,7 @@ export interface FileRoutesById {
   '/_app/w/$workspaceId': typeof AppWWorkspaceIdRouteRouteWithChildren
   '/_app/workspaces/new': typeof AppWorkspacesNewRoute
   '/_app/workspaces/': typeof AppWorkspacesIndexRoute
+  '/_app/w/$workspaceId/$area': typeof AppWWorkspaceIdAreaRoute
   '/_app/w/$workspaceId/': typeof AppWWorkspaceIdIndexRoute
 }
 export interface FileRouteTypes {
@@ -151,6 +160,7 @@ export interface FileRouteTypes {
     | '/w/$workspaceId'
     | '/workspaces/new'
     | '/workspaces/'
+    | '/w/$workspaceId/$area'
     | '/w/$workspaceId/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -164,6 +174,7 @@ export interface FileRouteTypes {
     | '/dev/components'
     | '/workspaces/new'
     | '/workspaces'
+    | '/w/$workspaceId/$area'
     | '/w/$workspaceId'
   id:
     | '__root__'
@@ -180,6 +191,7 @@ export interface FileRouteTypes {
     | '/_app/w/$workspaceId'
     | '/_app/workspaces/new'
     | '/_app/workspaces/'
+    | '/_app/w/$workspaceId/$area'
     | '/_app/w/$workspaceId/'
   fileRoutesById: FileRoutesById
 }
@@ -291,14 +303,23 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppWWorkspaceIdIndexRouteImport
       parentRoute: typeof AppWWorkspaceIdRouteRoute
     }
+    '/_app/w/$workspaceId/$area': {
+      id: '/_app/w/$workspaceId/$area'
+      path: '/$area'
+      fullPath: '/w/$workspaceId/$area'
+      preLoaderRoute: typeof AppWWorkspaceIdAreaRouteImport
+      parentRoute: typeof AppWWorkspaceIdRouteRoute
+    }
   }
 }
 
 interface AppWWorkspaceIdRouteRouteChildren {
+  AppWWorkspaceIdAreaRoute: typeof AppWWorkspaceIdAreaRoute
   AppWWorkspaceIdIndexRoute: typeof AppWWorkspaceIdIndexRoute
 }
 
 const AppWWorkspaceIdRouteRouteChildren: AppWWorkspaceIdRouteRouteChildren = {
+  AppWWorkspaceIdAreaRoute: AppWWorkspaceIdAreaRoute,
   AppWWorkspaceIdIndexRoute: AppWWorkspaceIdIndexRoute,
 }
 

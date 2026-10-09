@@ -6,6 +6,8 @@ export {
 } from '@web/features/auth/api/auth.queries'
 export { loginSearchSchema } from '@web/features/auth/auth.schemas'
 export type { LoginNotice, LoginSearch } from '@web/features/auth/auth.types'
+export { AccountActions } from '@web/features/auth/components/account-actions'
+export { AccountMenu } from '@web/features/auth/components/account-menu'
 export { AppOpening } from '@web/features/auth/components/app-opening'
 export { ForgotPasswordPage } from '@web/features/auth/components/forgot-password-page'
 export { InvitationPage } from '@web/features/auth/components/invitation-page'

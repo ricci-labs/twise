@@ -75,6 +75,6 @@ export function currentWorkspace(c: Context<AppEnv>): RequestWorkspace {
   return workspace
 }
 
-function workspaceNotFound(): NotFoundError {
+export function workspaceNotFound(): NotFoundError {
   return new NotFoundError('WORKSPACE_NOT_FOUND', 'Workspace not found')
 }

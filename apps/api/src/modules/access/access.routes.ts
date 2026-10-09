@@ -5,6 +5,7 @@ import {
   authorize,
   authorizeAnyMember,
   currentWorkspace,
+  workspaceNotFound,
 } from '@api/modules/access/access.middleware'
 import {
   changeMemberRole,
@@ -46,6 +47,9 @@ export function accessRoutes({ db }: AccessRouteDeps) {
         workspaceId,
         userId: currentSession(c).userId,
       })
+      if (!access) {
+        throw workspaceNotFound()
+      }
       return c.json({ ...access, memberNames: await listMemberNames(db, workspaceId) })
     })
     .get('/members', authorize('members', 'view'), async (c) => {

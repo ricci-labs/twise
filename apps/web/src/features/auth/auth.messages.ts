@@ -219,4 +219,8 @@ export const authMessages = {
     goToLogIn: 'Ir para o login',
   },
   logOut: 'Sair',
+  accountMenu: {
+    label: (name: string) => `Conta de ${name}`,
+    myAccount: 'Minha conta',
+  },
 } as const
