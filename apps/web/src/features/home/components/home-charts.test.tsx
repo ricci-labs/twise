@@ -40,9 +40,7 @@ describe('HOME-01 charts', () => {
     const screen = await openHome()
     const forecast = screen.getByRole('region', { name: 'Previsão de saldo' })
 
-    await expect
-      .element(forecast.getByText('R$ 410,00 · 4 nov · menor saldo do período'))
-      .toBeVisible()
+    await expect.element(forecast.getByText('4 nov · menor saldo do período')).toBeVisible()
     await expect
       .element(forecast.getByText(/Hoje R\$\s4\.200,00 · termina em R\$\s3\.910,00 em 05\/11/))
       .toBeVisible()

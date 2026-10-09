@@ -115,10 +115,10 @@ export const homeMessages = {
   forecast: {
     title: 'Previsão de saldo',
     description: 'Do dia de hoje até o próximo salário, com o que já está previsto.',
+    descriptionShort: 'Até o próximo salário.',
     account: 'Conta',
-    lowest: (amount: string, day: string) => `${amount} · ${day} · menor saldo do período`,
-    today: (start: string, end: string, until: string) =>
-      `Hoje ${start} · termina em ${end} em ${until}`,
+    lowestDetail: (day: string) => `${day} · menor saldo do período`,
+    today: 'Hoje **{start}** · termina em **{end}** em {until}',
     alternative: (account: string, start: string, end: string, lowest: string, lowestOn: string) =>
       `${account}: hoje ${start}, termina em ${end}, menor saldo ${lowest} em ${lowestOn}.`,
     seeAccounts: 'Ver contas',

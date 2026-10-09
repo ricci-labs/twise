@@ -19,6 +19,7 @@ import { dividerExamples } from '@web/components/display/divider'
 import { kpiCardExamples } from '@web/components/display/kpi-card'
 import { kpiCarouselExamples } from '@web/components/display/kpi-carousel'
 import { nextStepCardExamples } from '@web/components/display/next-step-card'
+import { responsiveTextExamples } from '@web/components/display/responsive-text'
 import { richTextExamples } from '@web/components/display/rich-text'
 import { stepTrackExamples } from '@web/components/display/step-track'
 import { alertExamples } from '@web/components/feedback/alert'
@@ -77,6 +78,7 @@ export const workbenchSections: readonly ComponentExamples[] = [
   bottomTabBarExamples,
   nextStepCardExamples,
   richTextExamples,
+  responsiveTextExamples,
   dividerExamples,
   authLayoutExamples,
   momentScreenExamples,

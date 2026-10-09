@@ -28,7 +28,7 @@ export const forecastChartExamples: ComponentExamples = {
         <ForecastChart
           points={POINTS}
           lowestKey="2026-11-04"
-          lowestLabel="R$ 410,00 · 4 nov · menor saldo do período"
+          lowestCallout={{ amount: 'R$ 410,00', detail: '4 nov · menor saldo do período' }}
           description="Conta X: hoje R$ 4.080,00, termina em R$ 3.910,00, menor saldo R$ 410,00 em 4 nov."
           formatAxis={axis}
         />
@@ -40,7 +40,7 @@ export const forecastChartExamples: ComponentExamples = {
         <ForecastChart
           points={NEGATIVE}
           lowestKey="2026-11-04"
-          lowestLabel="−R$ 790,00 · 4 nov · menor saldo do período"
+          lowestCallout={{ amount: '−R$ 790,00', detail: '4 nov · menor saldo do período' }}
           description="Conta X: fica negativa em 4 nov."
           formatAxis={axis}
         />
