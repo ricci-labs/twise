@@ -30,7 +30,7 @@ export function KpiCard({
       <div
         className={cn(
           'relative mt-auto flex flex-col items-start gap-1.5 text-body-sm',
-          art && 'pr-20',
+          art && 'pr-14',
         )}
       >
         {badge}

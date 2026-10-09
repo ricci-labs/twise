@@ -15,5 +15,8 @@ export function Avatar({ name, tone, size, className }: AvatarProps) {
 }
 
 function initialOf(name: string): string {
-  return name.trim().charAt(0).toLocaleUpperCase('pt-BR')
+  const words = name.trim().split(/\s+/)
+  const first = words[0] ?? ''
+  const last = words.length > 1 ? (words.at(-1) ?? '') : ''
+  return `${first.charAt(0)}${last.charAt(0)}`.toLocaleUpperCase('pt-BR')
 }

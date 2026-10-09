@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest'
 import { render } from 'vitest-browser-react'
 
 describe('Avatar', () => {
-  it('shows the initial of the name, decorative next to the name itself', async () => {
+  it('shows the initials of the first and last names, decorative next to the name itself', async () => {
     const screen = await render(
       <p>
         <Avatar name=" member a" /> Member A
@@ -12,7 +12,7 @@ describe('Avatar', () => {
     )
     const avatar = screen.container.querySelector('[data-slot=avatar]')
 
-    expect(avatar?.textContent).toBe('M')
+    expect(avatar?.textContent).toBe('MA')
     expect(avatar?.getAttribute('aria-hidden')).toBe('true')
     await expectNoAccessibilityViolations(screen.container)
   })

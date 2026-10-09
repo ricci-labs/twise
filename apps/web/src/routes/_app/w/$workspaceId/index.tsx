@@ -1,9 +1,19 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { LogOutButton } from '@web/features/auth'
-import { StatusPage } from '@web/features/system-status'
+import { HomePage, homeSearchSchema } from '@web/features/home'
 
 export const Route = createFileRoute('/_app/w/$workspaceId/')({
+  validateSearch: homeSearchSchema,
   component: function WorkspaceHomeRoute() {
-    return <StatusPage action={<LogOutButton />} />
+    const { workspaceId } = Route.useParams()
+    const { period } = Route.useSearch()
+    const { account, access } = Route.useRouteContext()
+    return (
+      <HomePage
+        workspaceId={workspaceId}
+        period={period}
+        displayName={account.displayName}
+        permissions={access.permissions}
+      />
+    )
   },
 })
