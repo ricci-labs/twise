@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { SectionError } from '@web/components/feedback/section-error'
 import { SectionSkeleton } from '@web/components/feedback/section-skeleton'
+import { Tip } from '@web/components/feedback/tip'
 import {
   accountNamesQueryOptions,
   contactNamesQueryOptions,
@@ -37,12 +38,14 @@ import type {
 import { useFirstTimeThisSession } from '@web/hooks/use-first-time-this-session'
 import { useJustCreated } from '@web/hooks/use-just-created'
 import { useMarkInView } from '@web/hooks/use-mark-in-view'
+import { useMediaQuery } from '@web/hooks/use-media-query'
 import { usePageTitle } from '@web/hooks/use-page-title'
 import { useSwapPhase } from '@web/hooks/use-swap-phase'
 import { ApiError } from '@web/lib/api/api-error'
+import { DESKTOP_QUERY } from '@web/lib/breakpoints'
 import { cn } from '@web/lib/cn'
 import { errorMessageFor } from '@web/lib/errors/error-message'
-import { hasPermission } from '@web/lib/permissions'
+import { hasPermission, isReadOnly } from '@web/lib/permissions'
 import { useRef } from 'react'
 
 const HOME_PAGE = 'mx-auto w-full max-w-400 px-4 py-6 lg:px-8 lg:pt-7 lg:pb-12'
@@ -160,6 +163,7 @@ function HomeContent({
 }: HomeContentProps) {
   const canWrite = hasPermission(permissions, 'entries', 'create')
   const stage = periodStageOf(data)
+  const isDesktop = useMediaQuery(DESKTOP_QUERY)
   const swap = useSwapPhase(data.period.label)
   const isEntrance = isFirstVisit && swap === undefined
   const gridRef = useRef<HTMLDivElement>(null)
@@ -180,10 +184,15 @@ function HomeContent({
         hour={Number(SAO_PAULO_HOUR.format(new Date()))}
         updatedAt={updatedAt}
       />
+      {isReadOnly(permissions) && isDesktop && (
+        <Tip tone="readOnly" className="self-start">
+          {homeMessages.readOnly}
+        </Tip>
+      )}
       <div className="-mx-4 lg:mx-0">
         <HomeIndicators workspaceId={workspaceId} overview={data} stage={stage} />
       </div>
-      {stage !== 'closed' && <CanIBuyCard workspaceId={workspaceId} />}
+      {stage !== 'closed' && <CanIBuyCard workspaceId={workspaceId} className="lg:hidden" />}
       <div
         ref={gridRef}
         data-slot="home-grid"

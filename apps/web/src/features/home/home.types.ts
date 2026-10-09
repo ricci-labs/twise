@@ -50,6 +50,10 @@ export type HomeHeaderProps = HomeSectionProps & {
   updatedAt: number
 }
 
+export type PeriodStateProps = {
+  stage: Exclude<PeriodStage, 'open'>
+}
+
 export type HomeIndicatorsProps = HomeSectionProps & {
   stage: PeriodStage
 }
@@ -81,6 +85,7 @@ export type BillRowProps = {
 
 export type CanIBuyCardProps = {
   workspaceId: string
+  className?: string
 }
 
 export type BudgetLine = OverviewMetrics['budgetPace'][number]
