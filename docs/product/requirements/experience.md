@@ -1,7 +1,7 @@
 ---
 summary: The idea of the web app — promise, people, design principles, key journeys, navigation and the screen inventory with IDs used by every module requirement.
 read_when: Starting the design system or any screen, deciding where a feature lives in the navigation, or looking up a screen ID.
-updated: 2026-09-29
+updated: 2026-10-09
 ---
 
 # Experience
@@ -78,8 +78,9 @@ the screens where recording makes sense.
 | 4 | "Planejamento" | `PLAN-01` |
 | 5 | "Mais" | A menu: contacts and charges, accounts and categories, members, settings, history, trash, my account, log out |
 
-**Desktop (≥ 1024 px):** a left sidebar with the same sections, expanded; "Novo lançamento" as the
-primary button at the top.
+**Desktop (≥ 1024 px):** a left sidebar with the same sections, collapsible to icons; "Novo
+lançamento" as the primary button at the top, the workspace switcher and the account at the foot
+(`SHELL-01`).
 
 **Always visible:** the current workspace name, with a switcher when the user has more than one
 (`SHELL-01`).
