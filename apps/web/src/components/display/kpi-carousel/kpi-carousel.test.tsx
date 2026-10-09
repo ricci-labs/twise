@@ -10,6 +10,10 @@ const SLIDES = ['Livre para gastar', 'Renda do orçamento', 'Gasto', 'Comprometi
   </p>
 ))
 
+const PAGE_MARGIN = 16
+const SLIDE_WIDTH = 300
+const SLIDE_GAP = 12
+
 describe('KpiCarousel', () => {
   afterEach(async () => {
     await page.viewport(414, 896)
@@ -33,6 +37,24 @@ describe('KpiCarousel', () => {
       .element(screen.getByRole('button', { name: 'Ir para o indicador 3' }))
       .toHaveAttribute('aria-current', 'true')
     await expectNoAccessibilityViolations(screen.container)
+  })
+
+  it('keeps the snapped card on the 16 px page margin, the next one peeking', async () => {
+    await page.viewport(390, 844)
+    const screen = await render(<KpiCarousel>{SLIDES}</KpiCarousel>)
+    const slides = [...screen.container.querySelectorAll('[role=group]')]
+    const box = (position: number) => slides[position]?.getBoundingClientRect()
+
+    await new Promise((resolve) => setTimeout(resolve, 300))
+    expect(box(0)?.left).toBe(PAGE_MARGIN)
+    expect(box(0)?.width).toBe(SLIDE_WIDTH)
+    expect(box(1)?.left).toBe(PAGE_MARGIN + SLIDE_WIDTH + SLIDE_GAP)
+
+    await screen.getByRole('button', { name: 'Ir para o indicador 2' }).click()
+    await expect.poll(() => box(1)?.left).toBe(PAGE_MARGIN)
+
+    await screen.getByRole('button', { name: 'Ir para o indicador 4' }).click()
+    await expect.poll(() => box(3)?.right).toBe(390 - PAGE_MARGIN)
   })
 
   it('lays the four cards side by side from 1024 px, without dots', async () => {
