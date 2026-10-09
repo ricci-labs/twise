@@ -1,7 +1,7 @@
 ---
 summary: Design decisions for the shell, WS-01 and the Home that change or extend the requirement docs, and the open proposals.
 read_when: Before building SHELL-01, WS-01 or HOME-01, and when updating dashboard.md or workspace-and-members.md.
-updated: 2026-10-07
+updated: 2026-10-09
 ---
 
 # Decisions (shell, workspace, Home)
@@ -22,7 +22,7 @@ Where the design and the requirement docs disagree, the design wins and the doc 
 | First run | Checklist of 4 steps | Mint hero with owl and house, numbered steps with the next one open, ghost preview of the KPIs saying which step unlocks each |
 | Viewer | — | Menu hides Membros, Configurações, Histórico, Lixeira (role matrix) |
 
-## Proposals (not in the requirements; confirm before building)
+## Proposals (approved by the user on 2026-10-09; now in the requirements)
 
 - 5th first-run step "Convide quem divide com você" (shown as its own card).
 - "Ir para o período atual" link next to "Período encerrado".

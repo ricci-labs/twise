@@ -1,7 +1,7 @@
 ---
-summary: API gaps and defects found while writing the web requirements (2026-09-29) — errors that surface as 500, reads the screens need, and behaviours to decide — with the proposed fix and whether it should come before the web.
+summary: API gaps and defects found while writing the web requirements (2026-09-29) and the Home design (2026-10-09) — errors that surface as 500, reads the screens need, overview fields the Home needs, and behaviours to decide — with the proposed fix and when.
 read_when: Planning the web work, fixing the API before a screen, or wondering why a requirement works around something.
-updated: 2026-09-29
+updated: 2026-10-09
 ---
 
 # API gaps found by the requirements
@@ -25,9 +25,27 @@ matching screen would be wrong or fragile without it.
 | G6 | ~~Charge items carry only `postingId` and amount.~~ **Fixed.** | Shows each item's description, installment and date. | Every item carries `description`, `installmentNo`, `installmentCount`, `effectiveOn`. | Done |
 | G7 | ~~No route for a contact's **open items**.~~ **Fixed.** | `CON-02` and the charge preview read it. | `GET /contacts/:contactId/open-items?until=`, the same computation the charge uses. | Done |
 | G8 | The upload size limit (`FILE_MAX_BYTES`) isn't exposed. | Uses a build-time value (10 MB). | Add it to `GET /api/auth/config` (or a workspace config route). | With attachments |
-| G9 | `occurrence_overdue` insights carry the occurrence id but not its description or type. | Looks it up in `GET /occurrences` when it's in range. | Add `description` and `entryType` to the insight values. | With the dashboard |
+| G9 | `occurrence_overdue` insights carry the occurrence id but not its description or type. | Looks it up in `GET /occurrences` when it's in range. | Add `description` and `entryType` to the insight values. | Home round (with G29) |
 | G10 | Reminder e-mails link to the app's home. | — | Link bills to `PLAN-03` and invoices to `CARD-03` with the ids. | With notifications |
 | G11 | The version history of an edited entry is only readable through `GET /audit`, which members and viewers can't open. | `ENT-03` shows "Histórico" only with `audit:view`. | Decide: a small `GET /entries/:id/versions` for `entries:view`. | Later |
+
+## Overview fields the Home needs
+From the Home design (`../../design/home/data.md`), approved by the user on 2026-10-09. The web
+never computes a metric, so every number, percent and day count on `HOME-01` comes from
+`GET /overview`. Each is one metric file in `packages/shared/src/reports/metrics/` (ADR 0024), in
+the Home round (`../roadmap.md`). Field names are the plan; the PR that adds one fixes it here.
+| # | Widget | Proposed field |
+|---|---|---|
+| G25 | "faltam {n} dias", pace mark on budgets | `periodDays`: `total`, `elapsed`, `left`, `elapsedPercent` |
+| G26 | "Média mensal (3 meses)" under Gasto (today only inside `reserveCoverage`, null without a reserve) | `spendingAverage`: `monthlyCents`, `periods` |
+| G27 | "% da renda" under Gasto and Comprometido; the 100% bar | `incomeShare`: `spentPercent`, `committedPercent`, `freePercent` (null without budget income) |
+| G28 | Pace radial | `periodPace`: `usedPercent`, `elapsedPercent`, `pointsAhead` |
+| G29 | Bills due in 7 days and the count under Comprometido | `billsDue`: `until`, `count`, `totalCents`, `overdueCount`, `items[]` (`occurrenceId`, `description`, `entryType`, `dueOn`, `amountCents`, `daysFromToday`) |
+| G30 | "R$ X são de outras pessoas" on each invoice | `nextInvoice[].frontedCents` |
+| G31 | Receivables card | `receivables`: `owedCents`, `overdueCents`, `contactCount`, `next` (`contactId`, `dueOn`, `amountCents`) |
+| G32 | Reserve radial and goals with a deadline | `reserveCoverage.percent`; `goals[]` (`goalId`, `name`, `savedCents`, `targetCents`, `targetOn`, `percent`) |
+| G33 | "+25% acima da média" on commissions | `variableVsAverage`: `percent` |
+| G34 | Achievements of a closed period | `periodSummary` (null unless the period is closed): `leftCents`, `positiveStreak` (up to the 6 loaded periods) + `streakCapped`, `budgetsWithin` / `budgetsTotal`, `billsOnTime` / `billsTotal`, `reserveAddedCents`, `goals[]` (`goalId`, `startPercent`, `endPercent`) |
 
 ## Behaviours to decide
 | # | Today | Options |

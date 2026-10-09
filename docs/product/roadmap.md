@@ -1,7 +1,7 @@
 ---
 summary: Phases, MVP scope, current focus and the list of open questions.
 read_when: Deciding what to build next, checking whether something is in scope, or resuming work in a new session.
-updated: 2026-10-02
+updated: 2026-10-09
 ---
 
 # Roadmap
@@ -168,6 +168,31 @@ updated: 2026-10-02
   17. [x] `SHELL-01` app opening (splash; its entrance and the 1.2 s rule come with 18)
   18. [x] Owl motion (`../design/account/motion.md`): the 8 designed sequences on the layered kits
   Then the other screens, in the order of `requirements/README.md`.
+- [ ] **Home round: shell, workspace and Home** (design `../design/home/`, every proposal approved
+  by the user on 2026-10-09; order docs → API → web; one PR each, merged by Claude when CI is green):
+  1. [x] Design package in `docs/design/home/` (#180)
+  2. [ ] Requirements: `HOME-01`, `SHELL-01`, `WS-01`, navigation, API gaps G25–G34 (this list)
+  3. [ ] Demo household: a typed fixture in `packages/shared` (period 5 out – 4 nov, today 20 out,
+     budget income R$ 9.000,00, the design's numbers) with scenarios (current, overspent, closed,
+     no alerts, first run); a test proves `computeMetrics` gives the design's numbers. The web
+     tests and workbench use it, and later the public demo page
+  4. [ ] Overview: `periodDays`, `spendingAverage` (G25, G26)
+  5. [ ] Overview: `incomeShare`, `periodPace` (G27, G28)
+  6. [ ] Overview: `billsDue` + occurrence description in `occurrence_overdue` (G29, G9)
+  7. [ ] Overview: `frontedCents` on next invoices, `receivables` (G30, G31)
+  8. [ ] Overview: reserve percent, `goals`, `variableVsAverage` (G32, G33)
+  9. [ ] Overview: `periodSummary`, part 1: left over and positive streak (G34)
+  10. [ ] Overview: `periodSummary`, part 2: budgets within limit, bills on time, reserve added,
+      goals progress (G34)
+  11. [ ] Web: Twise icons and the shell (collapsible sidebar, bottom bar, "Mais" sheet, period
+      picker, workspace switcher, account menu)
+  12. [ ] Web: `WS-01` with the owl entrance
+  13. [ ] Web: Card, KPI card and carousel, section skeleton / error, empty state
+  14. [ ] Web: charts (balance forecast, coming months, pace, budget rows, income bar)
+  15. [ ] Web: `HOME-01` mobile and desktop, with the demo household
+  16. [ ] Web: Home states (negative, closed + achievements, no alerts, no config, offline,
+      viewer, section error) and first run
+  17. [ ] Web: Home motion (`../design/home/motion.md`)
 - [ ] Remaining project skills (`new-module`, `db-migration`, `domain-rule`, `pr`) and Claude Code hooks
 
 ## Phase 1: MVP

@@ -1,7 +1,7 @@
 ---
 summary: Where every number on the Home comes from (existing endpoints and fields) and which ones are design proposals that need an API change first.
 read_when: Wiring a Home widget to data, or planning API work for the Home.
-updated: 2026-10-07
+updated: 2026-10-09
 ---
 
 # Data behind the Home
@@ -31,7 +31,7 @@ The web never computes a metric (`../../product/requirements/modules/dashboard.m
 | Goals with deadlines | `GET /goals` (`targetOn`, `savedCents`, `targetCents`) |
 | Receivables and "Próximo a receber" | `GET /contacts/balances` (`owedCents`, `overdueCents`, `nextDueOn`, `nextDueCents`) |
 
-## Proposals (need new API fields; add to `../../product/requirements/api-gaps.md` if approved)
+## Proposals (approved 2026-10-09; planned as `../../product/requirements/api-gaps.md` G25–G34)
 
 | Widget | Needs |
 |---|---|

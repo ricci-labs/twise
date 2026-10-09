@@ -1,7 +1,7 @@
 ---
 summary: Functional requirements for the app shell and workspaces — switcher, creating a workspace, settings (financial period, budget base, installment view, time zone), Pix receiving, members, roles and permissions, invitations (SHELL-01, WS-01, SET-01..02, MEM-01..03).
 read_when: Designing or building the shell, workspace settings, members, roles or invitations.
-updated: 2026-09-29
+updated: 2026-10-09
 ---
 
 # Workspace and members
@@ -39,22 +39,39 @@ Standards: `../ui-standards.md`. Messages per code: `../error-messages.md`. Doma
   by phone (the link is shown once, to share by hand). They last 7 days; one pending per contact.
 
 ## SHELL-01 App shell (MVP)
-**RF-WS-1** Navigation as in `../experience.md` → Navigation, with items hidden by permission.
-**RF-WS-2** Workspace switcher (top bar / sidebar): lists `GET /api/workspaces` (name and role);
-switching loads that workspace's permissions (`GET /api/workspaces/:id`) and opens its home. The
-last used workspace is remembered on the device. "Criar espaço" at the end → `WS-01`.
+Design: `../../../design/home/` (README → Layouts, screens "Shell-*" and "Desktop-app*").
+**RF-WS-1** Navigation as in `../experience.md` → Navigation, with items hidden by permission
+(a viewer doesn't see "Membros", "Configurações", "Histórico", "Lixeira"). Icons are the Twise set
+(`../../../design/assets/icones/`); Lucide only for small utility glyphs (arrows, close, calendar).
+- **Desktop sidebar:** 264 px, fixed to the window height (only the content scrolls): logo, a
+  discreet collapse button beside it, "Novo lançamento", the main items, the group "Mais", and at
+  the foot the workspace switcher above the account. Collapsed: 76 px, icons only with a tooltip
+  on hover, the logo becomes the owl, "Novo lançamento" a round "+", "Mais" a divider. The choice
+  is remembered in the browser; Ctrl/⌘ + B toggles it.
+- **Mobile bottom bar:** white, attached to the bottom; the selected item has the filled mint
+  icon, a bold label and a short mint bar under it. "Mais" opens a sheet: the workspace, the areas
+  that don't fit in the bar and, apart, "Minha conta" and "Sair".
+**RF-WS-2** Workspace switcher (mobile: tap the workspace name, a sheet; desktop: the sidebar foot,
+opening upward): lists `GET /api/workspaces` (name and role, the current one checked); switching
+loads that workspace's permissions (`GET /api/workspaces/:id`) and opens its home. The last used
+workspace is remembered on the device. "Criar espaço" at the end → `WS-01`.
 **RF-WS-3** A person with no workspace lands on `WS-01`. A workspace that answers
-`WORKSPACE_NOT_FOUND` (removed from it, or left) sends them to the switcher with "Você não tem
-mais acesso a este espaço."
-**RF-WS-4** The account menu: name, e-mail, "Minha conta" (`ME-01`), "Sair".
+`WORKSPACE_NOT_FOUND` (removed from it, or left) opens the switcher with "Você não tem mais acesso a
+este espaço." and none checked.
+**RF-WS-4** The account menu: name, e-mail, "Minha conta" (`ME-01`), "Sair" (no confirmation;
+back to log in with "Você saiu."). Desktop: a popover from the sidebar foot.
 
 ## WS-01 Create a workspace (MVP)
-`POST /api/workspaces`, any logged-in person.
+`POST /api/workspaces`, any logged-in person. Same layout as the account screens: a mint top with
+the owl and the house (scene `coruja-espaco`, entrance "Construir" once), a tip that the partner
+should be invited instead of creating a second workspace, and "Sair" at the foot (there is no menu
+yet).
 | Field | Label | Required | Rules |
 |---|---|---|---|
 | name | "Nome do espaço" | yes | trimmed, 1–80; placeholder "Casa" |
-Action "Criar espaço" → opens the new workspace's home (first-run checklist). Error
-`WORKSPACE_NAME_INVALID`.
+Action "Criar espaço" (spinner on the button, field read-only while sending) → opens the new
+workspace's home in the first-run state (`HOME-01`); the creator becomes the owner. Error
+`WORKSPACE_NAME_INVALID` when leaving the field empty or over 80 characters.
 
 ## SET-01 Workspace settings (MVP)
 Route `/configuracoes`. View `settings:view` (not for viewers); change `settings:update`.
