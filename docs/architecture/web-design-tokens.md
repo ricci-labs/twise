@@ -103,7 +103,8 @@ When to use each one: the design system guide → Colour, and each token's notes
 ## Motion and layers
 Tailwind has no duration or z-index namespace, so these are `:root` variables with one `@utility`
 each (`@utility duration-fast { transition-duration: var(--duration-fast) }`). `pb-safe` pads the
-bottom by the phone's safe area, at least `--spacing(3)` (the bottom tab bar).
+bottom by the phone's safe area, at least `--spacing(3)` (the bottom tab bar); `max-h-sheet` caps a
+bottom sheet at 85% of the screen.
 
 | Token | Use |
 |---|---|

@@ -215,6 +215,15 @@ React Hook Form v7 + `zodResolver` with the **schemas from `@financas/shared`** 
   current item bold with a short mint bar under the label; hidden from 1024 px.
 - `AppShell` (`components/layout/app-shell`): the sidebar from 1024 px, the content (with an
   optional `banner` on top) and, on the phone, the bottom bar and an optional floating action.
+## Menus, sheets and avatars
+- `ActionMenu` (`components/actions/action-menu`, Base UI `Menu`): a `trigger` element and `groups`
+  of items (separators between groups), each a link (`render`) or an action (`onSelect`), with an
+  optional Twise icon, a `detail` line and `isCurrent` (check mark). Keyboard and Escape come from
+  Base UI. Desktop popovers of the shell: the account menu and the workspace switcher.
+- `Sheet` (`components/layout/sheet`, Base UI `Drawer`): a titled dialog from the bottom with a
+  handle, a dimmed backdrop and the safe area; the phone's "Mais" and workspace switcher.
+- `Avatar` (`components/display/avatar`): the initial of a name in a circle (`mint` or `paper`),
+  decorative: the name is always written next to it or in the control's label.
 
 ## Account layouts
 - `AuthLayout` (`components/layout/auth-layout`): the auth screen of
