@@ -16,7 +16,11 @@ export function KpiCard({
   children,
 }: KpiCardProps) {
   return (
-    <article data-slot="kpi-card" className={cn(kpiCardVariants({ tone }), className)}>
+    <article
+      data-slot="kpi-card"
+      data-tone={tone ?? 'plain'}
+      className={cn(kpiCardVariants({ tone }), className)}
+    >
       {art && <div className="pointer-events-none absolute right-3.5 bottom-3.5">{art}</div>}
       <div className="relative flex min-h-6.5 items-center gap-1.5">
         <h3 data-slot="kpi-label" className="text-label">

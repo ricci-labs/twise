@@ -38,6 +38,7 @@ export const OWL_KIT_STILLS: Readonly<Record<OwlKitName, OwlKitStills>> = {
   'entrance-invitation': { before: 'invitation', after: 'invitation' },
   'entrance-together': { before: 'together', after: 'together' },
   'entrance-envelope': { before: 'envelope', after: 'envelope' },
+  'entrance-space': { before: 'space', after: 'space' },
 }
 
 export function loadedOwlKit(kit: OwlKitName): string | undefined {

@@ -119,6 +119,13 @@ const KITS = [
     settlesAt: 91.25,
   },
   {
+    name: 'entrance-space',
+    demo: '../../home/animations/Animacao-criar-espaco.html',
+    seconds: 4.5,
+    startsAt: 0,
+    settlesAt: 92.22,
+  },
+  {
     name: 'entrance-envelope',
     demo: 'Animacao-entrada-envelope.html',
     seconds: 4,

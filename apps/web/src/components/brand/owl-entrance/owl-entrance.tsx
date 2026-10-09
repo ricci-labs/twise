@@ -12,6 +12,7 @@ const ENTRANCES: Readonly<Partial<Record<OwlSceneName, OwlKitName>>> = {
   linkExpired: 'entrance-link-expired',
   invitation: 'entrance-invitation',
   together: 'entrance-together',
+  space: 'entrance-space',
   envelope: 'entrance-envelope',
 }
 

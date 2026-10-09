@@ -49,6 +49,11 @@
   --duration-slow: 320ms;
   --duration-swap: 250ms;
   --duration-raise: 300ms;
+  --duration-enter: 350ms;
+  --duration-chart: 800ms;
+  --duration-fill: 500ms;
+  --stagger: 60ms;
+  --duration-sway: 600ms;
 
   --z-sticky: 10;
   --z-overlay: 40;

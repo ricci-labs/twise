@@ -165,3 +165,14 @@ export type HomeFailedProps = {
   isRetrying: boolean
   onRetry: () => void
 }
+
+export type HomeContentProps = {
+  workspaceId: string
+  data: Overview
+  displayName: string
+  permissions: readonly Permission[]
+  nameOf: NameLookup
+  isFirstVisit: boolean
+  isStale: boolean
+  updatedAt: number
+}
