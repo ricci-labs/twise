@@ -14,6 +14,7 @@ const CARD = {
 function occurrence(overrides: Partial<FactOccurrence>): FactOccurrence {
   return {
     id: crypto.randomUUID(),
+    description: 'Bill',
     sourceAccountId: 'checking',
     dueOn: '2026-11-05',
     amountCents: 400_000,

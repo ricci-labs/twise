@@ -159,6 +159,17 @@ async function household() {
 }
 
 describe('getPeriodOverview', () => {
+  it('lists the bills of the next seven days with the description of their rule', async () => {
+    const { workspaceId } = await household()
+    const fiveDaysBefore = { now: () => new Date('2026-10-20T12:00:00Z') }
+    const { metrics } = await getPeriodOverview(databases.app, workspaceId, {}, fiveDaysBefore)
+
+    expect(metrics.billsDue).toMatchObject({ until: '2026-10-26', count: 1, overdueCount: 0 })
+    expect(metrics.billsDue.items).toMatchObject([
+      { description: 'Aluguel', dueOn: '2026-10-25', amountCents: 200_000, daysFromToday: 5 },
+    ])
+  })
+
   it('puts the ledger, the plan and the settings together for the current period', async () => {
     const { workspaceId, groceries, card, checking } = await household()
     const overview = await getPeriodOverview(databases.app, workspaceId, {}, MID_OCTOBER)
