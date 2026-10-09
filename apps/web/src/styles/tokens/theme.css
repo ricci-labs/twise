@@ -244,3 +244,7 @@
 @utility z-toast {
   z-index: var(--z-toast);
 }
+
+@utility pb-safe {
+  padding-bottom: max(--spacing(3), env(safe-area-inset-bottom));
+}

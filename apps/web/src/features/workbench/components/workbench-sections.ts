@@ -20,6 +20,8 @@ import { passwordInputExamples } from '@web/components/inputs/password-input'
 import { textInputExamples } from '@web/components/inputs/text-input'
 import { authLayoutExamples } from '@web/components/layout/auth-layout'
 import { momentScreenExamples } from '@web/components/layout/moment-screen'
+import { appSidebarExamples } from '@web/components/navigation/app-sidebar'
+import { bottomTabBarExamples } from '@web/components/navigation/bottom-tab-bar'
 import type { ComponentExamples } from '@web/lib/examples.types'
 
 export const workbenchSections: readonly ComponentExamples[] = [
@@ -39,6 +41,8 @@ export const workbenchSections: readonly ComponentExamples[] = [
   owlEntranceExamples,
   logoExamples,
   twiseIconExamples,
+  appSidebarExamples,
+  bottomTabBarExamples,
   nextStepCardExamples,
   richTextExamples,
   dividerExamples,

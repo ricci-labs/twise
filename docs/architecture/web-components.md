@@ -200,6 +200,22 @@ React Hook Form v7 + `zodResolver` with the **schemas from `@financas/shared`** 
   with `aria-current="step"` (a spinner while it loads), a solid line up to it and a dashed one
   after (no rounding on the dashed line, which Chrome would draw solid).
 
+## App shell
+`docs/design/home/` → Layouts. Presentational; the workspace feature gives them the items.
+- `NavItem` (`components/navigation/nav-link`): `{ key, label, icon, render, isCurrent }`. `render`
+  is the element that navigates (a router `Link`, or a `button` for "Mais"); `NavLink` draws it
+  with the Twise icon (mint fill when current) and forwards any props, so it can be a tooltip
+  trigger. `aria-current="page"` marks the current item.
+- `AppSidebar`: 264 px (`w-66`) with the logo, the collapse button (`chevrons-left`), the primary
+  action ("Novo lançamento"), the items, the group "Mais" and a `foot` slot (workspace switcher and
+  account); collapsed, 76 px (`w-19`) of icons that keep their names (`aria-label`) with a tooltip
+  on hover, the owl logo, a round "+" and a divider for "Mais". It's sticky at the window height.
+  The collapsed state is the caller's (`isCollapsed`, `onToggle`).
+- `BottomTabBar`: the phone's five items, fixed at the bottom with the safe area (`pb-safe`);
+  current item bold with a short mint bar under the label; hidden from 1024 px.
+- `AppShell` (`components/layout/app-shell`): the sidebar from 1024 px, the content (with an
+  optional `banner` on top) and, on the phone, the bottom bar and an optional floating action.
+
 ## Account layouts
 - `AuthLayout` (`components/layout/auth-layout`): the auth screen of
   `../product/requirements/ui-standards.md` → Account screens. On phones, a mint block with the
