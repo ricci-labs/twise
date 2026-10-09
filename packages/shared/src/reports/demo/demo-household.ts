@@ -9,7 +9,9 @@ import {
   DEMO_PERIOD_LABELS,
   DEMO_TODAY,
   type DemoScenario,
+  type DemoVariant,
 } from '@shared/reports/demo/demo.constants'
+import type { DemoDirectory } from '@shared/reports/demo/demo.types'
 import { computeInsights } from '@shared/reports/insights/insights'
 import { computeMetrics } from '@shared/reports/metrics/metrics'
 import type {
@@ -27,7 +29,34 @@ const SETTINGS = periodSettingsOf('day_of_month', DEMO_PERIOD_DAY)
 const ids = DEMO_IDS
 
 export function demoOverview(scenario: DemoScenario): PeriodOverview {
-  const facts = demoFacts(scenario)
+  return overviewOf(demoFacts(scenario))
+}
+
+export function demoOverviewFor(periodLabel: string, variant: DemoVariant): PeriodOverview {
+  return overviewOf(demoFactsFor(periodLabel, variant))
+}
+
+export function demoDirectory(): DemoDirectory {
+  return {
+    accounts: ACCOUNTS.map((account) => ({
+      ...account,
+      name: DEMO_NAMES[account.id] ?? account.id,
+    })),
+    contacts: [ids.contactC, ids.contactD, ids.contactE].map((id) => ({
+      id,
+      name: DEMO_NAMES[id] ?? id,
+    })),
+  }
+}
+
+export function demoFacts(scenario: DemoScenario): PeriodFacts {
+  return demoFactsFor(
+    DEMO_PERIOD_LABELS[scenario],
+    scenario === 'overspent' ? 'overspent' : 'normal',
+  )
+}
+
+function overviewOf(facts: PeriodFacts): PeriodOverview {
   const metrics = computeMetrics(facts)
   return {
     today: facts.today,
@@ -37,12 +66,12 @@ export function demoOverview(scenario: DemoScenario): PeriodOverview {
   }
 }
 
-export function demoFacts(scenario: DemoScenario): PeriodFacts {
-  const labelMonth = parseIsoDate(`${DEMO_PERIOD_LABELS[scenario]}-01`)
+function demoFactsFor(periodLabel: string, variant: DemoVariant): PeriodFacts {
+  const labelMonth = parseIsoDate(`${periodLabel}-01`)
   const periodAt = (offset: number): Period =>
     periodStartingIn(addMonths(labelMonth, offset), SETTINGS)
   const overspent =
-    scenario === 'overspent' ? spend(ids.car, ids.checkingA, 272_000, '2026-10-18') : []
+    variant === 'overspent' ? spend(ids.car, ids.checkingA, 272_000, '2026-10-18') : []
   return {
     today: DEMO_TODAY,
     period: periodAt(0),

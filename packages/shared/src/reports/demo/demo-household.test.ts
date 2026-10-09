@@ -1,5 +1,5 @@
 import { DEMO_IDS } from '@shared/reports/demo/demo.constants'
-import { demoOverview } from '@shared/reports/demo/demo-household'
+import { demoDirectory, demoOverview, demoOverviewFor } from '@shared/reports/demo/demo-household'
 import { describe, expect, it } from 'vitest'
 
 describe('demo household', () => {
@@ -165,5 +165,21 @@ describe('demo household', () => {
     expect(metrics.periodSummary).toBeNull()
     expect(metrics.budgetPace.map((line) => line.status)).not.toContain('ahead')
     expect(insights.map((insight) => insight.code)).not.toContain('budget_ahead')
+  })
+
+  it('builds any period of the same household, for the demo page to browse', () => {
+    expect(demoOverviewFor('2026-10', 'normal')).toEqual(demoOverview('current'))
+    expect(demoOverviewFor('2026-09', 'normal')).toEqual(demoOverview('closed'))
+    expect(demoOverviewFor('2026-10', 'overspent')).toEqual(demoOverview('overspent'))
+    expect(demoOverviewFor('2026-08', 'normal').metrics.periodSummary).toMatchObject({
+      leftCents: 384_500,
+    })
+  })
+
+  it('names every account and contact of the household', () => {
+    const { accounts, contacts } = demoDirectory()
+
+    expect(accounts.find((account) => account.id === DEMO_IDS.cardX)?.name).toBe('Cartão X')
+    expect(contacts.map((contact) => contact.name)).toEqual(['Member C', 'Member D', 'Member E'])
   })
 })

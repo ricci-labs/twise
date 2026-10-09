@@ -84,12 +84,7 @@ function InsightItem({ workspaceId, insight, nameOf, canWrite }: InsightItemProp
           <TextLink
             render={
               action.hash ? (
-                <Link
-                  to="/w/$workspaceId"
-                  params={{ workspaceId }}
-                  search={(search) => search}
-                  hash={action.hash}
-                />
+                <Link to="." search={(search) => search} hash={action.hash} />
               ) : (
                 <Link to="/w/$workspaceId/$area" params={{ workspaceId, area: action.area }} />
               )

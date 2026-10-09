@@ -204,7 +204,8 @@ without comments.
   the real metrics and insights over it, so web tests and the workbench mock `GET /overview` with it
   (`apps/web/src/testing/demo-api.ts` answers `/overview` by period, and `/accounts` and `/contacts`
   with the demo's names),
-  and the public demo page reuses it later. A new metric or fact extends the household and its test
+  and the public demo page (`/demo`) shows it: `demoOverviewFor(period, variant)` builds any period
+  of the same household. A new metric or fact extends the household and its test
   instead of inventing numbers in a web test.
 - **Web:** `*.test.ts` runs in Node (pure logic); `*.test.tsx` runs in Chromium through Vitest
   browser mode (`apps/web/vitest.config.ts`), with `vitest-browser-react`. Every component test file

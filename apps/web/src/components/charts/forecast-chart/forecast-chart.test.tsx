@@ -34,4 +34,27 @@ describe('ForecastChart', () => {
       .toBe(1)
     await expectNoAccessibilityViolations(screen.container)
   })
+
+  it('draws a forecast that never goes negative in the forecast colour only', async () => {
+    const screen = await render(
+      <div className="w-160">
+        <ForecastChart
+          points={[
+            { key: 'a', label: '20 out', cents: 400_000 },
+            { key: 'b', label: '4 nov', cents: 41_000 },
+            { key: 'c', label: '5 nov', cents: 391_000 },
+          ]}
+          lowestKey="b"
+          lowestLabel="R$ 410,00 · 4 nov · menor saldo do período"
+          description="Conta X."
+          formatAxis={(cents) => `${cents / 100}`}
+        />
+      </div>,
+    )
+
+    await expect.poll(() => screen.container.querySelector('.recharts-area-curve')).not.toBeNull()
+    expect(screen.container.querySelector('.recharts-area-curve')?.getAttribute('stroke')).toBe(
+      'var(--color-mint-ink)',
+    )
+  })
 })
