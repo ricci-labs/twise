@@ -6,7 +6,7 @@ import type {
   NameLookup,
   OverviewInsight,
 } from '@web/features/home/home.types'
-import { formatFullDate, formatMonthName } from '@web/lib/format/calendar'
+import { formatFullDate, formatMonthTitle } from '@web/lib/format/calendar'
 
 const sentences = homeMessages.insights.sentences
 const actions = homeMessages.insights.actions
@@ -49,7 +49,7 @@ export function insightText(insight: OverviewInsight, nameOf: NameLookup): Insig
       })
     case 'period_heavily_committed':
       return text(sentences.period_heavily_committed, {
-        month: capitalized(formatMonthName(insight.subject ?? '')),
+        month: formatMonthTitle(insight.subject ?? ''),
         percent: Number(values.percentOfIncome ?? 0),
         committed: money('committedCents'),
       })
@@ -73,11 +73,11 @@ export function insightAction(insight: OverviewInsight): InsightAction | null {
     case 'budget_ahead':
       return { label: actions.seeBudget, area: 'planning' }
     case 'balance_going_negative':
-      return { label: actions.seeForecast, area: 'forecast' }
+      return { label: actions.seeForecast, area: '', hash: 'forecast' }
     case 'occurrence_overdue':
       return { label: actions.record, area: 'planning' }
     case 'period_heavily_committed':
-      return { label: actions.seeComingMonths, area: 'coming-months' }
+      return { label: actions.seeComingMonths, area: '', hash: 'coming-months' }
     case 'contact_overdue':
       return { label: actions.charge, area: 'contacts' }
     case 'variable_income_to_split':
@@ -89,8 +89,4 @@ export function insightAction(insight: OverviewInsight): InsightAction | null {
 
 function text(template: string, values: InsightText['values']): InsightText {
   return { template, values }
-}
-
-function capitalized(word: string): string {
-  return word.charAt(0).toLocaleUpperCase('pt-BR') + word.slice(1)
 }

@@ -10,6 +10,7 @@ import { useId } from 'react'
 
 export function Card({
   title,
+  id,
   description,
   headerAction,
   footerStat,
@@ -23,6 +24,7 @@ export function Card({
   return (
     <section
       data-slot="card"
+      id={id}
       aria-labelledby={titleId}
       className={cn(cardVariants({ layout }), className)}
     >

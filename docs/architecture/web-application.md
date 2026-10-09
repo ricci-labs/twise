@@ -162,7 +162,9 @@ hidden, not disabled (`../product/requirements/ui-standards.md` → Permissions)
   as UTC midnight and shows the day before in São Paulo).
 - Display through `lib/format/` (`Intl.DateTimeFormat('pt-BR', { timeZone })`): "hoje", "ontem",
   `dd/mm/aaaa`, "out/26" (RNF-I18N-3).
-- Money: `parseBrl` and `formatBrl` from shared, only inside `MoneyInput` and `Amount`.
+- Money: `parseBrl` and `formatBrl` from shared. A figure on its own is an `Amount`; an amount
+  inside a sentence (a message's value) is `formatBrl`; compact whole reais ("R$ 460 de R$ 400")
+  are `formatWholeReais` (`lib/format/money.ts`). Never `toFixed` or string building.
 - **Later:** Temporal, once Safari ships it.
 
 ## PWA

@@ -262,6 +262,8 @@ passes the overview's numbers.
 - `KpiCarousel` (`components/display/kpi-carousel`): on the phone a scroll-snap row of 300 px
   cards (the next one peeks), each slide a group read as "2 de 4", dots that are buttons and
   follow the swipe; from 1024 px a row of four.
+- `SegmentedControl` (`components/actions/segmented-control`, Base UI `ToggleGroup`): one option
+  pressed at a time (`aria-pressed`), e.g. the forecast's account tabs.
 - `Badge` (`components/display/badge`): a short status pill (`neutral`, `info`, `success`,
   `warning`, `danger`), e.g. "Período encerrado".
 - `HelpPopover` (`components/display/help-popover`): the "?" next to a number ("O que é {topic}?"),

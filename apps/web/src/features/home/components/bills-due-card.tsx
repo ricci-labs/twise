@@ -1,6 +1,5 @@
 import { formatBrl } from '@financas/shared'
 import { Link } from '@tanstack/react-router'
-import { Button } from '@web/components/actions/button'
 import { TextLink } from '@web/components/actions/text-link'
 import { Amount } from '@web/components/display/amount'
 import { Card } from '@web/components/display/card'
@@ -68,22 +67,12 @@ function BillRow({ workspaceId, bill, canWrite }: BillRowProps) {
           {whenOf(bill)}
         </span>
         {isLate && canWrite && (
-          <TextLink className="self-start text-body-sm lg:hidden" render={recordLink(workspaceId)}>
+          <TextLink className="self-start text-body-sm" render={recordLink(workspaceId)}>
             {messages.record}
           </TextLink>
         )}
       </span>
       <Amount cents={bill.amountCents} />
-      {isLate && canWrite && (
-        <Button
-          variant="outline"
-          size="sm"
-          className="hidden lg:inline-flex"
-          render={recordLink(workspaceId)}
-        >
-          {messages.record}
-        </Button>
-      )}
     </li>
   )
 }

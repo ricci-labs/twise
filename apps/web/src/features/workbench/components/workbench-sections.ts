@@ -1,5 +1,6 @@
 import { actionMenuExamples } from '@web/components/actions/action-menu'
 import { buttonExamples } from '@web/components/actions/button'
+import { segmentedControlExamples } from '@web/components/actions/segmented-control'
 import { textLinkExamples } from '@web/components/actions/text-link'
 import { appSplashExamples } from '@web/components/brand/app-splash'
 import { logoExamples } from '@web/components/brand/logo'
@@ -41,6 +42,7 @@ import type { ComponentExamples } from '@web/lib/examples.types'
 
 export const workbenchSections: readonly ComponentExamples[] = [
   buttonExamples,
+  segmentedControlExamples,
   amountExamples,
   cardExamples,
   kpiCardExamples,

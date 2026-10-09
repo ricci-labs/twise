@@ -20,6 +20,8 @@ export default mergeConfig(
         '@base-ui/react/drawer',
         'recharts',
         '@base-ui/react/popover',
+        '@base-ui/react/toggle',
+        '@base-ui/react/toggle-group',
         'class-variance-authority',
         'cn',
         'cn/config',

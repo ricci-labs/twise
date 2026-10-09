@@ -7,10 +7,15 @@ import {
   overviewQueryOptions,
 } from '@web/features/home/api/home.queries'
 import { BillsDueCard } from '@web/features/home/components/bills-due-card'
+import { BudgetsCard } from '@web/features/home/components/budgets-card'
 import { CanIBuyCard } from '@web/features/home/components/can-i-buy-card'
+import { ComingMonthsCard } from '@web/features/home/components/coming-months-card'
+import { ForecastCard } from '@web/features/home/components/forecast-card'
 import { HomeHeader } from '@web/features/home/components/home-header'
 import { HomeIndicators } from '@web/features/home/components/home-indicators'
+import { IncomeSplitCard } from '@web/features/home/components/income-split-card'
 import { InsightsCard } from '@web/features/home/components/insights-card'
+import { PaceCard } from '@web/features/home/components/pace-card'
 import { periodStageOf } from '@web/features/home/components/period-stage'
 import { homeMessages } from '@web/features/home/home.messages'
 import type { HomePageProps, NameLookup } from '@web/features/home/home.types'
@@ -82,13 +87,44 @@ export function HomePage({ workspaceId, period, displayName, permissions }: Home
           overview={data}
           nameOf={nameOf}
           canWrite={canWrite}
-          className="lg:col-span-6"
+          className="lg:order-2 lg:col-span-4"
         />
         <BillsDueCard
           workspaceId={workspaceId}
           overview={data}
           canWrite={canWrite}
-          className="lg:col-span-6"
+          className="lg:order-7 lg:col-span-4"
+        />
+        {stage === 'open' && (
+          <ForecastCard
+            workspaceId={workspaceId}
+            overview={data}
+            nameOf={nameOf}
+            className="lg:order-1 lg:col-span-8"
+          />
+        )}
+        <PaceCard
+          workspaceId={workspaceId}
+          overview={data}
+          stage={stage}
+          className="lg:order-4 lg:col-span-4"
+        />
+        <BudgetsCard
+          workspaceId={workspaceId}
+          overview={data}
+          nameOf={nameOf}
+          canPlan={hasPermission(permissions, 'budgets', 'update')}
+          className="lg:order-3 lg:col-span-8"
+        />
+        <ComingMonthsCard
+          workspaceId={workspaceId}
+          overview={data}
+          className="lg:order-5 lg:col-span-8"
+        />
+        <IncomeSplitCard
+          workspaceId={workspaceId}
+          overview={data}
+          className="lg:order-6 lg:col-span-4"
         />
       </div>
     </div>

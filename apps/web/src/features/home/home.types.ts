@@ -36,6 +36,7 @@ export type InsightText = {
 export type InsightAction = {
   label: string
   area: string
+  hash?: string
 }
 
 export type HomeHeaderProps = HomeSectionProps & {
@@ -75,3 +76,28 @@ export type BillRowProps = {
 export type CanIBuyCardProps = {
   workspaceId: string
 }
+
+export type BudgetLine = OverviewMetrics['budgetPace'][number]
+
+export type CommittedPeriod = OverviewMetrics['committedAhead'][number]
+
+export type ForecastCardProps = HomeSectionProps & {
+  nameOf: NameLookup
+}
+
+export type PaceCardProps = HomeSectionProps & {
+  stage: PeriodStage
+}
+
+export type PaceVerdictProps = {
+  pointsAhead: number
+}
+
+export type BudgetsCardProps = HomeSectionProps & {
+  nameOf: NameLookup
+  canPlan: boolean
+}
+
+export type ComingMonthsCardProps = HomeSectionProps
+
+export type IncomeSplitCardProps = HomeSectionProps

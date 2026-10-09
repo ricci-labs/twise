@@ -68,6 +68,11 @@ export function dateBlockOf(date: IsoDate): DateBlock {
   return { day: String(day), month: SHORT_MONTHS[month - 1] ?? '' }
 }
 
+export function formatMonthTitle(label: string): string {
+  const name = formatMonthName(label)
+  return name.charAt(0).toLocaleUpperCase('pt-BR') + name.slice(1)
+}
+
 export function formatRange(start: IsoDate, end: IsoDate): string {
   return `${formatDayMonth(start)} – ${formatDayMonth(end)}`
 }
