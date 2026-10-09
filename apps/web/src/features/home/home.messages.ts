@@ -63,6 +63,7 @@ export const homeMessages = {
     title: 'Avisos',
     description: 'Os mais urgentes primeiro.',
     seeAll: (count: number) => `Ver todos os ${count} avisos`,
+    seeAllShort: (count: number) => `Ver todos (${count})`,
     seeFewer: 'Ver menos',
     calm: 'Tudo em ordem por aqui.',
     calmDetail: 'Quando algo precisar da atenção de vocês, aparece aqui primeiro.',

@@ -20,7 +20,8 @@ export function Card({
   children,
 }: CardProps) {
   const titleId = useId()
-  const hasFooter = footerStat !== undefined || footerAction !== undefined
+  const hasStat = isShown(footerStat)
+  const hasFooter = hasStat || isShown(footerAction)
   return (
     <section
       data-slot="card"
@@ -42,10 +43,14 @@ export function Card({
       </div>
       {hasFooter && (
         <div data-slot="card-foot" className={cardFootVariants()}>
-          <span>{footerStat}</span>
+          {hasStat && <span>{footerStat}</span>}
           {footerAction}
         </div>
       )}
     </section>
   )
+}
+
+function isShown(node: CardProps['footerStat']): boolean {
+  return node !== undefined && node !== null && node !== false && node !== ''
 }
