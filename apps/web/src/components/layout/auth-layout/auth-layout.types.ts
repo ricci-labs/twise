@@ -11,3 +11,22 @@ export type AuthLayoutProps = {
   children: ReactNode
   className?: string
 }
+
+export type AuthMainProps = Pick<
+  AuthLayoutProps,
+  'title' | 'subtitle' | 'notice' | 'footer' | 'children'
+>
+
+export type AuthArtProps = {
+  scene: OwlSceneName
+}
+
+export type AuthFrameProps = {
+  banner?: ReactNode
+  children: ReactNode
+}
+
+export type AuthFrameSlot = {
+  show: (scene: OwlSceneName) => void
+  hide: () => void
+}

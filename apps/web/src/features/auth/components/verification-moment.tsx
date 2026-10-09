@@ -90,7 +90,7 @@ export function VerificationMoment({ view, onResent, onRetry }: VerificationMome
     case 'failed':
       return (
         <MomentScreen
-          tone="celebrate"
+          tone="calm"
           scene={view.isOffline ? 'offline' : 'wait'}
           title={messages.confirming.title}
           banner={<OfflineBanner />}
