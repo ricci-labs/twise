@@ -82,6 +82,7 @@ function InsightItem({ workspaceId, insight, nameOf, canWrite }: InsightItemProp
         </p>
         {showsAction && (
           <TextLink
+            data-write={WRITE_ACTIONS.has(insight.code) ? '' : undefined}
             render={
               action.hash ? (
                 <Link to="." search={(search) => search} hash={action.hash} />

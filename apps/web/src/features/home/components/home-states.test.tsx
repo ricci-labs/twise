@@ -110,7 +110,18 @@ describe('HOME-01 states', () => {
     vi.spyOn(navigator, 'onLine', 'get').mockReturnValue(false)
     window.dispatchEvent(new Event('offline'))
 
-    await expect.element(screen.getByText(/^Atualizado às \d{2}:\d{2}$/)).toBeVisible()
+    const banner = screen.getByRole('status').filter({ hasText: 'Sem conexão' })
+    await expect.element(banner).toBeVisible()
+    expect(banner.element().textContent).toMatch(
+      /^Sem conexão\. Você pode ver seus dados, mas não salvar\.Atualizado às \d{2}:\d{2}$/,
+    )
+    await expect.element(screen.getByRole('heading', { name: 'Livre para gastar' })).toBeVisible()
+
+    await screen.getByRole('link', { name: 'Novo lançamento' }).first().click()
+
+    await expect
+      .element(screen.getByText('Sem conexão. Dá para salvar quando a internet voltar.'))
+      .toBeVisible()
     await expect.element(screen.getByRole('heading', { name: 'Livre para gastar' })).toBeVisible()
   })
 })

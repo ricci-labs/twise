@@ -34,6 +34,9 @@ export const workspacesMessages = {
     roleAndPeople: (role: string, people: number) =>
       people <= 1 ? `${role} · só você` : `${role} · ${people} pessoas`,
     readOnly: 'Você está vendo este espaço sem poder alterar nada.',
+    offline: 'Sem conexão. Você pode ver seus dados, mas não salvar.',
+    offlineWrite: 'Sem conexão. Dá para salvar quando a internet voltar.',
+    updatedAt: (time: string) => `Atualizado às ${time}`,
   },
   comingSoon: {
     pageTitle: 'Em breve',

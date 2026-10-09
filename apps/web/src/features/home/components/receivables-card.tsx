@@ -30,7 +30,7 @@ export function ReceivablesCard({
       description={messages.description}
       footerStat={
         canCharge && (
-          <Button variant="outline" size="sm" render={contacts}>
+          <Button variant="outline" size="sm" data-write="" render={contacts}>
             {messages.charge}
           </Button>
         )

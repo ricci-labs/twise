@@ -29,6 +29,7 @@ export function CommissionsCard({
           <Button
             variant="outline"
             size="sm"
+            data-write=""
             render={
               <Link to="/w/$workspaceId/$area" params={{ workspaceId, area: 'commission-split' }} />
             }
