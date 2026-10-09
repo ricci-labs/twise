@@ -72,7 +72,7 @@ function household(overrides: Partial<PeriodFacts> = {}): PeriodFacts {
       }),
     ],
     budgets: [],
-    reserve: null,
+    goals: [],
     cards: [CARD],
     invoices: [],
     allocation: null,

@@ -14,7 +14,6 @@ export {
   deleteGoal,
   listGoals,
   readGoalFacts,
-  readReserveFact,
 } from '@api/modules/planning/use-cases/goals'
 export {
   addHoliday,

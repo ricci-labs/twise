@@ -180,7 +180,17 @@ function household(overrides: Partial<PeriodFacts> = {}): PeriodFacts {
         categoryAccountId: 'salary-b',
       },
     ],
-    reserve: { targetCents: 3_000_000, savedCents: 1_200_000 },
+    goals: [
+      {
+        goalId: 'reserve-goal',
+        name: 'Reserva',
+        accountId: 'savings',
+        targetCents: 3_000_000,
+        targetOn: null,
+        isReserve: true,
+        savedCents: 1_200_000,
+      },
+    ],
     allocation: null,
     cards: [
       {
@@ -477,6 +487,67 @@ describe('receivables', () => {
   })
 })
 
+describe('goalProgress', () => {
+  const goal = (goalId: string, targetOn: string | null, savedCents: number) => ({
+    goalId,
+    name: goalId,
+    accountId: `${goalId}-account`,
+    targetCents: 100_000,
+    targetOn,
+    isReserve: false,
+    savedCents,
+  })
+
+  it('lists the goals with a deadline, soonest first, with their progress capped at 100%', () => {
+    const facts = household({
+      goals: [
+        goal('trip', '2027-03-31', 40_000),
+        goal('laptop', '2026-12-31', 150_000),
+        goal('someday', null, 1),
+      ],
+    })
+    expect(computeMetrics(facts).goalProgress).toEqual([
+      {
+        goalId: 'laptop',
+        name: 'laptop',
+        savedCents: 150_000,
+        targetCents: 100_000,
+        targetOn: '2026-12-31',
+        percent: 100,
+      },
+      {
+        goalId: 'trip',
+        name: 'trip',
+        savedCents: 40_000,
+        targetCents: 100_000,
+        targetOn: '2027-03-31',
+        percent: 40,
+      },
+    ])
+  })
+
+  it('leaves the reserve out: it has its own card', () => {
+    expect(computeMetrics(household()).goalProgress).toEqual([])
+  })
+})
+
+describe('variableVsAverage', () => {
+  it('compares the commission of the period with the average, in whole percent', () => {
+    expect(computeMetrics(household()).variableVsAverage).toEqual({ percent: 140 })
+  })
+
+  it('has no comparison before the commission arrives or without history', () => {
+    const base = household()
+    const noCommissionYet = household({
+      postings: base.postings.filter(
+        (posting) => !(posting.accountId === 'commission' && posting.effectiveOn >= '2026-10-01'),
+      ),
+    })
+    expect(computeMetrics(noCommissionYet).variableVsAverage).toBeNull()
+    expect(computeMetrics(household({ recentPeriods: [] })).variableVsAverage).toBeNull()
+  })
+})
+
 describe('spendingAverage', () => {
   it('averages the last three periods that had any activity', () => {
     expect(computeMetrics(household()).spendingAverage).toEqual({
@@ -505,6 +576,7 @@ describe('reserveCoverage', () => {
     expect(computeMetrics(household()).reserveCoverage).toEqual({
       savedCents: 1_200_000,
       targetCents: 3_000_000,
+      percent: 40,
       monthlySpendingCents: 35_000,
       months: 34.3,
     })
@@ -526,7 +598,7 @@ describe('reserveCoverage', () => {
 
   it('has no months without spending history, and nothing without a reserve', () => {
     expect(computeMetrics(household({ recentPeriods: [] })).reserveCoverage?.months).toBeNull()
-    expect(computeMetrics(household({ reserve: null })).reserveCoverage).toBeNull()
+    expect(computeMetrics(household({ goals: [] })).reserveCoverage).toBeNull()
   })
 })
 

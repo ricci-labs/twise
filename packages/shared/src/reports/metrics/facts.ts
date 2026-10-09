@@ -11,6 +11,8 @@ import type {
   PeriodFacts,
 } from '@shared/reports/metrics/metrics.types'
 
+const FULL_PERCENT = 100
+
 export function postingsCounted(
   facts: PeriodFacts,
   accountClass: AccountClass,
@@ -93,6 +95,13 @@ export function recentActivePeriods(
 
 export function sumCents(values: readonly number[]): number {
   return values.reduce((sum, value) => sum + value, 0)
+}
+
+export function progressPercent(savedCents: number, targetCents: number): number {
+  if (targetCents <= 0) {
+    return FULL_PERCENT
+  }
+  return Math.min(Math.round((savedCents * FULL_PERCENT) / targetCents), FULL_PERCENT)
 }
 
 function accountsById(facts: PeriodFacts): ReadonlyMap<string, FactAccount> {

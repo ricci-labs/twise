@@ -14,6 +14,7 @@ import { computeInsights } from '@shared/reports/insights/insights'
 import { computeMetrics } from '@shared/reports/metrics/metrics'
 import type {
   FactAccount,
+  FactGoal,
   FactOccurrence,
   FactPosting,
   PeriodFacts,
@@ -61,7 +62,11 @@ export function demoFacts(scenario: DemoScenario): PeriodFacts {
       { categoryAccountId: ids.home, limitCents: 80_000 },
       { categoryAccountId: ids.health, limitCents: 30_000 },
     ],
-    reserve: { targetCents: 2_250_000, savedCents: 1_512_000 },
+    goals: [
+      goal(ids.reserveGoal, ids.reserve, 2_250_000, 1_512_000, null, true),
+      goal(ids.tripGoal, ids.tripSavings, 500_000, 200_000, '2027-03-31'),
+      goal(ids.laptopGoal, ids.laptopSavings, 400_000, 120_000, '2026-12-31'),
+    ],
     cards: [
       { accountId: ids.cardX, paymentAccountId: ids.checkingA, ...CARD_X_CYCLE },
       { accountId: ids.cardY, paymentAccountId: ids.checkingB, ...CARD_Y_CYCLE },
@@ -89,6 +94,8 @@ export function demoFacts(scenario: DemoScenario): PeriodFacts {
       { accountId: ids.checkingA, balanceCents: 420_000 },
       { accountId: ids.checkingB, balanceCents: 310_000 },
       { accountId: ids.reserve, balanceCents: 1_512_000 },
+      { accountId: ids.tripSavings, balanceCents: 200_000 },
+      { accountId: ids.laptopSavings, balanceCents: 120_000 },
     ],
     contactBalances: [
       {
@@ -123,6 +130,8 @@ const ACCOUNTS: readonly FactAccount[] = [
   money(ids.checkingA, 'checking'),
   money(ids.checkingB, 'checking'),
   money(ids.reserve, 'savings'),
+  money(ids.tripSavings, 'savings'),
+  money(ids.laptopSavings, 'savings'),
   { id: ids.cardX, parentId: null, kind: 'credit_card', class: 'liability', incomeNature: null },
   { id: ids.cardY, parentId: null, kind: 'credit_card', class: 'liability', incomeNature: null },
   income(ids.salaryA, 'fixed'),
@@ -349,6 +358,25 @@ function occurrenceId(ruleId: string, dueOn: IsoDate): string {
   const { year, month, day } = parseIsoDate(dueOn)
   const monthDay = `${String(month).padStart(2, '0')}${String(day).padStart(2, '0')}`
   return `${ruleId.slice(0, 9)}${monthDay}-4${String(year).slice(1)}${ruleId.slice(18)}`
+}
+
+function goal(
+  goalId: string,
+  accountId: string,
+  targetCents: number,
+  savedCents: number,
+  targetOn: IsoDate | null,
+  isReserve = false,
+): FactGoal {
+  return {
+    goalId,
+    name: DEMO_NAMES[goalId] ?? goalId,
+    accountId,
+    targetCents,
+    targetOn,
+    isReserve,
+    savedCents,
+  }
 }
 
 function money(id: string, kind: 'checking' | 'savings'): FactAccount {
