@@ -189,9 +189,7 @@ updated: 2026-10-09
   12. [x] Web: `WS-01` and the workspace routes (the owl entrance comes with the motion, 17)
   13. [x] Web: Card, KPI card and carousel, section skeleton / error, empty state (and `Amount`)
   14. [x] Web: charts (balance forecast, coming months, pace, budget rows, income bar)
-  15. [ ] Web: `HOME-01` mobile and desktop, with the demo household (header, indicators, "Posso
-      comprar?", insights, bills due and the chart cards done; invoices, reserve and goals,
-      commissions and receivables next)
+  15. [x] Web: `HOME-01` mobile and desktop, with the demo household
   16. [ ] Web: Home states (negative, closed + achievements, no alerts, no config, offline,
       viewer, section error) and first run
   17. [ ] Web: Home motion (`../design/home/motion.md`)

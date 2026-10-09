@@ -233,7 +233,7 @@ stretches in the danger colour. Each chart is a `figure` whose drawing is `aria-
   the months at or above it in amber.
 - `PaceRing`, `ProgressBar` and `IncomeBar` (`components/charts/`): plain SVG, since a width that
   comes from data can't be a token class and `style` is not allowed: the two rings of the pace
-  (income used, time gone), the budget bar with the pace mark (`within`, `ahead`, `over`), and the
+  (income used, time gone; one ring and a `sm` size for the reserve), the budget bar with the pace mark (`within`, `ahead`, `over`), and the
   100% bar of where the income goes with its legend.
 
 ## Menus, sheets and avatars
