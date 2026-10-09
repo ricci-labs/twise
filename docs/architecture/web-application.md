@@ -237,3 +237,9 @@ an email image and an unknown API path.
   big addition to a shared chunk shows up here first.
 - Recharts and other heavy libraries are reached only from route components, which are split, so
   they never land in the initial chunk.
+- `apps/web/package.json` declares `"sideEffects": ["*.css", "./src/main.tsx"]`. Without it the
+  bundler must keep every module a feature's `index.ts` re-exports, so a guard that imports one
+  function (`openWorkspace` in `w/$workspaceId`'s `beforeLoad`) dragged the whole shell (Base UI
+  menus, sheet, tooltip) into the initial chunk: 274 KB, over the budget (seen 2026-10-09; 183 KB
+  with it). A new module that must run on import (a polyfill, a global style imported from JS)
+  is added to that list.
