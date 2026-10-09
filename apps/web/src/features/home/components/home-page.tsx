@@ -35,6 +35,7 @@ import type {
   SetupStep,
 } from '@web/features/home/home.types'
 import { useFirstTimeThisSession } from '@web/hooks/use-first-time-this-session'
+import { useJustCreated } from '@web/hooks/use-just-created'
 import { useMarkInView } from '@web/hooks/use-mark-in-view'
 import { usePageTitle } from '@web/hooks/use-page-title'
 import { useSwapPhase } from '@web/hooks/use-swap-phase'
@@ -62,6 +63,7 @@ export function HomePage({
 }: HomePageProps) {
   usePageTitle(homeMessages.pageTitle)
   const isFirstVisit = useFirstTimeThisSession('home')
+  const isJustCreated = useJustCreated(workspaceId)
   const overview = useQuery(overviewQueryOptions(workspaceId, period))
   const accountNames = useQuery(accountNamesQueryOptions(workspaceId)).data
   const setup = useQuery(setupQueryOptions(workspaceId)).data
@@ -92,6 +94,7 @@ export function HomePage({
           workspaceId={workspaceId}
           workspaceName={workspaceName}
           canInvite={memberCount <= 1 && hasPermission(permissions, 'members', 'create')}
+          isJustCreated={isJustCreated}
           steps={setupSteps(setup, data)}
         />
       </div>

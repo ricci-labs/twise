@@ -44,6 +44,6 @@ Demo: `animations/Movimento-inicio.html` (one loop per piece), `animations/Anima
 | Demo | Kit | Entrance | Timing |
 |---|---|---|---|
 | `animations/Animacao-criar-espaco.html` (WS-01) | `kit-espaco` | "Construir" (new): walls rise from the ground, roof drops and settles with a small bounce, door and chimney appear, sparkle pops. Form screen: only the owl moves | walls 0.25–0.65 s, roof 0.55–0.92 s, door 0.85 s, chimney 0.95 s, sparkle 1.25 s; ends 1.7 s |
-| `animations/Animacao-espaco-criado.html` (Home first run) | `kit-espaco` | Achievement: hero rises, sparkle, progress bar fills to the first step, steps enter one by one, "Próximo passo" pops, the owl winks | hero 0.1–0.45 s, sparkle 0.6 s, wink 1.1–1.6 s; ends 1.6 s |
+| `animations/Animacao-espaco-criado.html` (Home first run) | `kit-espaco` (app kit `space-created`, same drawing as `entrance-space`) | Achievement: hero rises, sparkle, progress bar fills to the first step, steps enter one by one, "Próximo passo" pops, the owl winks. Plays only on the Home opened right after WS-01 created the workspace, once | hero 0.1–0.45 s, sparkle 0.6 s, bar 0.6–1 s, steps 80 ms apart, tag 1.2 s, wink 1.1–1.6 s; ends 1.6 s |
 
 `kit-espaco` ids beyond the common ones: `k-telhado`, `k-paredes`, `k-porta`, `k-chamine`, `k-brilho-1..3`, `k-pontos`. Its last frame is identical to `coruja-espaco.svg`.

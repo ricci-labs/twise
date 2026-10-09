@@ -126,6 +126,22 @@ const KITS = [
     settlesAt: 92.22,
   },
   {
+    name: 'space-created',
+    demo: '../../home/animations/Animacao-espaco-criado.html',
+    seconds: 4.5,
+    startsAt: 0,
+    settlesAt: 92.22,
+    scope: "[data-slot='first-run'][data-created]",
+    texts: {
+      '.fr-hero': "[data-first-run='hero']",
+      '.fr-step:nth-child(1)': "[data-first-run='step']:nth-child(1)",
+      '.fr-step:nth-child(2)': "[data-first-run='step']:nth-child(2)",
+      '.fr-step:nth-child(3)': "[data-first-run='step']:nth-child(3)",
+      '.fr-step:nth-child(4)': "[data-first-run='step']:nth-child(4)",
+      '.fr-step__tag': "[data-first-run='next']",
+    },
+  },
+  {
     name: 'entrance-envelope',
     demo: 'Animacao-entrada-envelope.html',
     seconds: 4,
@@ -269,6 +285,13 @@ function isPiece(kit, selector) {
   return PIECE_SELECTOR.test(selector) || selector in (kit.texts ?? {})
 }
 
+function nameOf(piece) {
+  return piece
+    .replace(/^[.#]/, '')
+    .replace(/[^\w-]+/g, '-')
+    .replace(/-+$/, '')
+}
+
 function pieceLines(kit, keyframes, seconds, piece, rule) {
   const target = kit.texts?.[piece] ?? piece
   const lines = []
@@ -282,7 +305,7 @@ function pieceLines(kit, keyframes, seconds, piece, rule) {
     return lines
   }
   const frames = window(stops, kit)
-  const keyframeName = `owl-${kit.name}-${piece.replace(/^[.#]/, '')}`
+  const keyframeName = `owl-${kit.name}-${nameOf(piece)}`
   const keyframeStops = frames.map((frame) => `${frame.at}% { ${frame.declarations} }`).join(' ')
   lines.push(`@keyframes ${keyframeName} { ${keyframeStops} }`)
   if (kit.isPhased) {

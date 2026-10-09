@@ -147,6 +147,7 @@ export type FirstRunProps = {
   workspaceName: string
   steps: readonly SetupStep[]
   canInvite: boolean
+  isJustCreated?: boolean
 }
 
 export type StepRowProps = {

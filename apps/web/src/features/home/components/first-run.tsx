@@ -1,5 +1,6 @@
 import { Link } from '@tanstack/react-router'
 import { Button } from '@web/components/actions/button'
+import { OwlKit } from '@web/components/brand/owl-kit'
 import { OwlScene } from '@web/components/brand/owl-scene'
 import { ProgressBar } from '@web/components/charts/progress-bar'
 import { Badge } from '@web/components/display/badge'
@@ -11,6 +12,7 @@ import { cn } from '@web/lib/cn'
 
 const messages = homeMessages.firstRun
 const FULL = 100
+const OWL = 'w-40 shrink-0 self-center lg:order-last lg:w-56'
 const PREVIEW = [
   { key: 'free', label: messages.preview.free, step: 4 },
   { key: 'income', label: messages.preview.income, step: 3 },
@@ -18,14 +20,31 @@ const PREVIEW = [
   { key: 'committed', label: messages.preview.committed, step: 3 },
 ] as const
 
-export function FirstRun({ workspaceId, workspaceName, steps, canInvite }: FirstRunProps) {
+export function FirstRun({
+  workspaceId,
+  workspaceName,
+  steps,
+  canInvite,
+  isJustCreated = false,
+}: FirstRunProps) {
   const done = steps.filter((step) => step.isDone).length
   const next = steps.find((step) => !step.isDone)
   const link = (area: string) => <Link to="/w/$workspaceId/$area" params={{ workspaceId, area }} />
   return (
-    <div className="flex flex-col gap-5">
-      <section className="relative flex flex-col gap-4 overflow-hidden rounded-xl bg-mint p-5 text-on-mint lg:flex-row lg:items-center lg:p-8">
-        <OwlScene scene="space" className="w-40 shrink-0 self-center lg:order-last lg:w-56" />
+    <div
+      data-slot="first-run"
+      data-created={isJustCreated ? '' : undefined}
+      className="flex flex-col gap-5"
+    >
+      <section
+        data-first-run="hero"
+        className="relative flex flex-col gap-4 overflow-hidden rounded-xl bg-mint p-5 text-on-mint lg:flex-row lg:items-center lg:p-8"
+      >
+        {isJustCreated ? (
+          <OwlKit kit="space-created" scene="space" className={OWL} />
+        ) : (
+          <OwlScene scene="space" className={OWL} />
+        )}
         <div className="flex flex-1 flex-col items-start gap-3">
           <p className="text-label">{messages.welcome(workspaceName)}</p>
           <h1 className="font-display text-title-lg lg:text-display">{messages.title}</h1>
@@ -99,6 +118,7 @@ function StepRow({ step, position, isNext, action }: StepRowProps) {
   const copy = messages.steps[step.key]
   return (
     <li
+      data-first-run="step"
       aria-current={isNext ? 'step' : undefined}
       className={cn(
         'flex gap-3 rounded-md border px-3.5 py-3',
@@ -116,7 +136,11 @@ function StepRow({ step, position, isNext, action }: StepRowProps) {
       <div className="flex flex-1 flex-col items-start gap-1">
         <p className="flex flex-wrap items-center gap-2 text-body font-semibold">
           {copy.title}
-          {isNext && <Badge tone="success">{messages.next}</Badge>}
+          {isNext && (
+            <span data-first-run="next" className="inline-flex">
+              <Badge tone="success">{messages.next}</Badge>
+            </span>
+          )}
           {step.isDone && <span className="sr-only">{messages.done}</span>}
         </p>
         {!step.isDone && <p className="text-body-sm text-ink-muted">{copy.text}</p>}

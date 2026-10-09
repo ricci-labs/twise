@@ -1,3 +1,4 @@
+import { demoOverview } from '@financas/shared'
 import { createMemoryHistory } from '@tanstack/react-router'
 import { AppProviders } from '@web/app/providers'
 import { createApp } from '@web/app/router'
@@ -60,6 +61,41 @@ describe('WS-01 create a workspace', () => {
     expect(created).toEqual([{ name: 'Casa' }])
     expect(app.router.state.location.pathname).toBe(`/w/${WORKSPACE_ID}`)
     expect(localStorage.getItem('lastWorkspaceId')).toBe(WORKSPACE_ID)
+  })
+
+  it('opens the new workspace with the "espaço criado" moment, only that once', async () => {
+    const empty = demoOverview('current')
+    fakeApi({
+      '/api/auth/me': account,
+      'GET /api/workspaces': () => workspaceList(),
+      'POST /api/workspaces': () => Response.json({ workspaceId: WORKSPACE_ID }, { status: 201 }),
+      [`GET /api/workspaces/${WORKSPACE_ID}`]: workspaceAccess,
+      [`GET /api/workspaces/${WORKSPACE_ID}/accounts`]: () => Response.json([]),
+      [`GET /api/workspaces/${WORKSPACE_ID}/overview`]: () =>
+        Response.json({ ...empty, metrics: { ...empty.metrics, fixedIncome: 0, spent: 0 } }),
+      '/api/health/ready': () => Response.json({ status: 'ready', version: 'dev' }),
+    })
+    const { screen, name } = await openCreatePage()
+
+    await name.fill('Casa')
+    await screen.getByRole('button', { name: 'Criar espaço' }).click()
+
+    await expect
+      .poll(() => document.querySelector("[data-slot='first-run'][data-created]"))
+      .not.toBeNull()
+    await expect
+      .poll(() => document.querySelector("[data-owl-kit='space-created'] #k-piscadinha"))
+      .not.toBeNull()
+    const hero = document.querySelector("[data-first-run='hero']") as Element
+    expect(getComputedStyle(hero).animationName).toBe('owl-space-created-fr-hero')
+
+    await screen.getByRole('link', { name: 'Cartões' }).first().click()
+    await screen.getByRole('link', { name: 'Início' }).first().click()
+
+    await expect
+      .element(screen.getByRole('heading', { name: 'Vamos montar o mês de vocês' }))
+      .toBeVisible()
+    expect(document.querySelector("[data-slot='first-run'][data-created]")).toBeNull()
   })
 
   it('asks for a name before creating, with the catalog message', async () => {
