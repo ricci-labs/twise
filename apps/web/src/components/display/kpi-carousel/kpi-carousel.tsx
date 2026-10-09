@@ -6,12 +6,13 @@ import {
   kpiCarouselTrackVariants,
 } from '@web/components/display/kpi-carousel/kpi-carousel.variants'
 import { cn } from '@web/lib/cn'
-import { Children, isValidElement, useRef, useState } from 'react'
+import { Children, isValidElement, useId, useRef, useState } from 'react'
 
 export function KpiCarousel({ children, className }: KpiCarouselProps) {
   const trackRef = useRef<HTMLDivElement>(null)
   const [current, setCurrent] = useState(0)
   const total = children.length
+  const titleId = useId()
 
   function slides(): HTMLElement[] {
     return [...(trackRef.current?.children ?? [])] as HTMLElement[]
@@ -39,9 +40,12 @@ export function KpiCarousel({ children, className }: KpiCarouselProps) {
   return (
     <section
       data-slot="kpi-carousel"
-      aria-label={messages.label}
+      aria-labelledby={titleId}
       className={cn('flex flex-col gap-3', className)}
     >
+      <h2 id={titleId} className="sr-only">
+        {messages.label}
+      </h2>
       <div ref={trackRef} className={kpiCarouselTrackVariants()} onScroll={onScroll}>
         {Children.toArray(children).map((child, position) => (
           // biome-ignore lint/a11y/useSemanticElements: the WAI-ARIA carousel names each slide as a group

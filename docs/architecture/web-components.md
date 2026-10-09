@@ -262,6 +262,10 @@ passes the overview's numbers.
 - `KpiCarousel` (`components/display/kpi-carousel`): on the phone a scroll-snap row of 300 px
   cards (the next one peeks), each slide a group read as "2 de 4", dots that are buttons and
   follow the swipe; from 1024 px a row of four.
+- `Badge` (`components/display/badge`): a short status pill (`neutral`, `info`, `success`,
+  `warning`, `danger`), e.g. "Período encerrado".
+- `HelpPopover` (`components/display/help-popover`): the "?" next to a number ("O que é {topic}?"),
+  a Base UI popover with the plain-words explanation; Escape and a press outside close it.
 - `SectionSkeleton`, `SectionError` and `EmptyState` (`components/feedback/`): one per section.
   The skeleton is a `status` with "Carregando…" for screen readers and decorative blocks that
   stop pulsing with reduced motion; the error says what failed, "Código: {ref}" and "Tentar de

@@ -19,6 +19,7 @@ export default mergeConfig(
         '@base-ui/react/menu',
         '@base-ui/react/drawer',
         'recharts',
+        '@base-ui/react/popover',
         'class-variance-authority',
         'cn',
         'cn/config',

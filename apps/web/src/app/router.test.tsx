@@ -2,6 +2,7 @@ import { createMemoryHistory } from '@tanstack/react-router'
 import { AppProviders } from '@web/app/providers'
 import { createApp } from '@web/app/router'
 import { expectNoAccessibilityViolations } from '@web/testing/accessibility'
+import { demoAnswers } from '@web/testing/demo-api'
 import {
   account,
   apiError,
@@ -32,6 +33,7 @@ function healthy(): Response {
 }
 
 const inTheWorkspace = {
+  ...demoAnswers(),
   [ME]: account,
   [HEALTH]: healthy,
   [WORKSPACES]: () => workspaceList(),
@@ -57,7 +59,7 @@ describe('app router', () => {
     fakeApi({ ...inTheWorkspace })
     const { app, screen } = await startAt('/')
 
-    await expect.element(screen.getByRole('heading', { name: 'Twise' })).toBeVisible()
+    await expect.element(screen.getByRole('heading', { name: 'Livre para gastar' })).toBeVisible()
     expect(app.router.state.location.pathname).toBe(WORKSPACE_PATH)
   })
 
@@ -73,7 +75,7 @@ describe('app router', () => {
     })
     const { app, screen } = await startAt('/')
 
-    await expect.element(screen.getByRole('heading', { name: 'Twise' })).toBeVisible()
+    await expect.element(screen.getByRole('heading', { name: 'Livre para gastar' })).toBeVisible()
     expect(app.router.state.location.pathname).toBe(WORKSPACE_PATH)
   })
 
@@ -115,7 +117,7 @@ describe('app router', () => {
     fakeApi({ ...inTheWorkspace })
     const { app, screen } = await startAt('/login?next=%2F')
 
-    await expect.element(screen.getByRole('heading', { name: 'Twise' })).toBeVisible()
+    await expect.element(screen.getByRole('heading', { name: 'Livre para gastar' })).toBeVisible()
     expect(app.router.state.location.pathname).toBe(WORKSPACE_PATH)
   })
 
@@ -123,14 +125,14 @@ describe('app router', () => {
     fakeApi({ ...inTheWorkspace })
     const { app, screen } = await startAt('/login?next=%2F%2Fevil.test')
 
-    await expect.element(screen.getByRole('heading', { name: 'Twise' })).toBeVisible()
+    await expect.element(screen.getByRole('heading', { name: 'Livre para gastar' })).toBeVisible()
     expect(app.router.state.location.pathname).toBe(WORKSPACE_PATH)
   })
 
   it('returns to log in with the session-ended notice when the session ends', async () => {
     const api = fakeApi({ ...inTheWorkspace })
     const { app, screen } = await startAt('/')
-    await expect.element(screen.getByRole('heading', { name: 'Twise' })).toBeVisible()
+    await expect.element(screen.getByRole('heading', { name: 'Livre para gastar' })).toBeVisible()
 
     api.mockImplementation(() => Promise.resolve(sessionRequired()))
     await app.queryClient.refetchQueries()
@@ -151,7 +153,7 @@ describe('app router', () => {
   it('says when the role lost a permission and reloads the permissions', async () => {
     const api = fakeApi({ ...inTheWorkspace })
     const { app, screen } = await startAt('/')
-    await expect.element(screen.getByRole('heading', { name: 'Twise' })).toBeVisible()
+    await expect.element(screen.getByRole('heading', { name: 'Livre para gastar' })).toBeVisible()
 
     api.mockImplementation(() =>
       Promise.resolve(

@@ -2,6 +2,7 @@ import { createMemoryHistory } from '@tanstack/react-router'
 import { AppProviders } from '@web/app/providers'
 import { createApp } from '@web/app/router'
 import { expectNoAccessibilityViolations } from '@web/testing/accessibility'
+import { demoAnswers } from '@web/testing/demo-api'
 import {
   account,
   apiError,
@@ -27,6 +28,7 @@ async function openLogin(path: string, answers: Record<string, FakeAnswer>) {
     'GET /api/auth/me': () => (isLoggedIn ? account() : sessionRequired()),
     'GET /api/auth/config': signupOpen,
     'GET /api/health/ready': healthy,
+    ...demoAnswers(),
     'GET /api/workspaces': () => workspaceList(),
     [`GET /api/workspaces/${WORKSPACE_ID}`]: workspaceAccess,
     ...answers,
@@ -111,7 +113,7 @@ describe('AUTH-01 log in', () => {
     await fieldLabelled('Senha').fill(PASSWORD)
     await screen.getByRole('button', { name: 'Entrar' }).click()
 
-    await expect.element(screen.getByRole('heading', { name: 'Twise' })).toBeVisible()
+    await expect.element(screen.getByRole('heading', { name: 'Livre para gastar' })).toBeVisible()
     expect(app.router.state.location.pathname).toBe(`/w/${WORKSPACE_ID}`)
     expect(sent).toEqual([{ email: EMAIL, password: PASSWORD }])
   })
@@ -224,8 +226,9 @@ describe('AUTH-01 log in', () => {
       'POST /api/auth/logout': () => new Response(null, { status: 204 }),
     })
     await fillAndSubmit(screen)
-    await expect.element(screen.getByRole('heading', { name: 'Twise' })).toBeVisible()
+    await expect.element(screen.getByRole('heading', { name: 'Livre para gastar' })).toBeVisible()
 
+    await screen.getByRole('button', { name: 'Mais' }).click()
     await screen.getByRole('button', { name: 'Sair' }).click()
 
     await expect.element(screen.getByRole('heading', { name: 'Entrar no Twise' })).toBeVisible()

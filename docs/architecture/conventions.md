@@ -201,7 +201,9 @@ without comments.
 - **Demo household** (`packages/shared/src/reports/demo/`): one fictional couple whose period facts
   give the Home design's numbers (`../design/home/`: today 20 out, period 5 out – 4 nov, budget income
   R$ 9.000,00), in four scenarios (`current`, `overspent`, `closed`, `future`). `demoOverview()` runs
-  the real metrics and insights over it, so web tests and the workbench mock `GET /overview` with it,
+  the real metrics and insights over it, so web tests and the workbench mock `GET /overview` with it
+  (`apps/web/src/testing/demo-api.ts` answers `/overview` by period, and `/accounts` and `/contacts`
+  with the demo's names),
   and the public demo page reuses it later. A new metric or fact extends the household and its test
   instead of inventing numbers in a web test.
 - **Web:** `*.test.ts` runs in Node (pure logic); `*.test.tsx` runs in Chromium through Vitest
