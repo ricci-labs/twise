@@ -225,6 +225,28 @@ React Hook Form v7 + `zodResolver` with the **schemas from `@financas/shared`** 
 - `Avatar` (`components/display/avatar`): the initial of a name in a circle (`mint` or `paper`),
   decorative: the name is always written next to it or in the control's label.
 
+## Home building blocks
+`docs/design/home/` → Rules and `../design/home/components.md`. They take formatted pieces; the Home feature
+passes the overview's numbers.
+- `Amount` (`components/display/amount`): cents → "R$ 1.234,56" through `formatBrl`, the true minus
+  "−", "+" only with `sign="always"`, never wrapping, tabular figures; sizes `sm`, `md`, `lg`,
+  `kpi` (30 px, display font) and `hero`; `isCentsRaised` lifts ",00" (`text-cents`).
+- `Card` (`components/display/card`): a region named by its `h2` title, an optional description
+  and `headerAction` (tabs), the body, and a footer with a stat on the left and a link on the
+  right when given. Rows of cards stretch to the same height.
+- `KpiCard` + `KpiBadge` (`components/display/kpi-card`): label (`h3`) with an optional help
+  slot, the value, a badge and the foot lines (`children`); `tone` `plain`, `mint` (the first
+  card) or `danger` (passed the plan); `art` sits at the bottom right and the foot keeps clear of
+  it.
+- `KpiCarousel` (`components/display/kpi-carousel`): on the phone a scroll-snap row of 300 px
+  cards (the next one peeks), each slide a group read as "2 de 4", dots that are buttons and
+  follow the swipe; from 1024 px a row of four.
+- `SectionSkeleton`, `SectionError` and `EmptyState` (`components/feedback/`): one per section.
+  The skeleton is a `status` with "Carregando…" for screen readers and decorative blocks that
+  stop pulsing with reduced motion; the error says what failed, "Código: {ref}" and "Tentar de
+  novo" for that section only; the empty state is an illustration in a soft circle and one line
+  on the card itself, with an optional action.
+
 ## Account layouts
 - `AuthLayout` (`components/layout/auth-layout`): the auth screen of
   `../product/requirements/ui-standards.md` → Account screens. On phones, a mint block with the

@@ -73,7 +73,7 @@ When to use each one: the design system guide → Colour, and each token's notes
   files the design uses, so Vite ships them with the app (RNF-PRIV-1: no font CDN).
 - **Type styles** are the design's, each with size, line height, weight and letter spacing
   (`--text-<style>`, `--text-<style>--line-height`, `--font-weight`, `--letter-spacing`):
-  `amount-hero`, `display`, `title-lg`, `title` (display family), `amount-lg`, `amount`,
+  `amount-hero`, `amount-kpi` (the Home indicators), `display`, `title-lg`, `title` (display family), `amount-lg`, `amount`,
   `amount-sm`, `title-sm`, `body`, `body-sm`, `label`, `button`, `caption` (sans). Use one class:
   `text-title-sm`. A display style also needs `font-display`.
 - `text-xs`, `text-sm` and `text-base` exist only as aliases of `caption`, `body-sm` and `body`, so
@@ -104,7 +104,8 @@ When to use each one: the design system guide → Colour, and each token's notes
 Tailwind has no duration or z-index namespace, so these are `:root` variables with one `@utility`
 each (`@utility duration-fast { transition-duration: var(--duration-fast) }`). `pb-safe` pads the
 bottom by the phone's safe area, at least `--spacing(3)` (the bottom tab bar); `max-h-sheet` caps a
-bottom sheet at 85% of the screen.
+bottom sheet at 85% of the screen; `text-cents` lifts the cents of a big amount; `scrollbar-none`
+hides the bar of a swipeable row (the KPI carousel).
 
 | Token | Use |
 |---|---|
