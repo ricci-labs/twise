@@ -101,3 +101,20 @@ export type BudgetsCardProps = HomeSectionProps & {
 export type ComingMonthsCardProps = HomeSectionProps
 
 export type IncomeSplitCardProps = HomeSectionProps
+
+export type InvoicesCardProps = HomeSectionProps & {
+  nameOf: NameLookup
+}
+
+export type ReserveGoalsCardProps = HomeSectionProps & {
+  canPlan: boolean
+}
+
+export type CommissionsCardProps = HomeSectionProps & {
+  canWrite: boolean
+}
+
+export type ReceivablesCardProps = HomeSectionProps & {
+  nameOf: NameLookup
+  canCharge: boolean
+}

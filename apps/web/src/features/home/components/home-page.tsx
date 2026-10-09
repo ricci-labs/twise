@@ -10,13 +10,17 @@ import { BillsDueCard } from '@web/features/home/components/bills-due-card'
 import { BudgetsCard } from '@web/features/home/components/budgets-card'
 import { CanIBuyCard } from '@web/features/home/components/can-i-buy-card'
 import { ComingMonthsCard } from '@web/features/home/components/coming-months-card'
+import { CommissionsCard } from '@web/features/home/components/commissions-card'
 import { ForecastCard } from '@web/features/home/components/forecast-card'
 import { HomeHeader } from '@web/features/home/components/home-header'
 import { HomeIndicators } from '@web/features/home/components/home-indicators'
 import { IncomeSplitCard } from '@web/features/home/components/income-split-card'
 import { InsightsCard } from '@web/features/home/components/insights-card'
+import { InvoicesCard } from '@web/features/home/components/invoices-card'
 import { PaceCard } from '@web/features/home/components/pace-card'
 import { periodStageOf } from '@web/features/home/components/period-stage'
+import { ReceivablesCard } from '@web/features/home/components/receivables-card'
+import { ReserveGoalsCard } from '@web/features/home/components/reserve-goals-card'
 import { homeMessages } from '@web/features/home/home.messages'
 import type { HomePageProps, NameLookup } from '@web/features/home/home.types'
 import { usePageTitle } from '@web/hooks/use-page-title'
@@ -125,6 +129,31 @@ export function HomePage({ workspaceId, period, displayName, permissions }: Home
           workspaceId={workspaceId}
           overview={data}
           className="lg:order-6 lg:col-span-4"
+        />
+        <InvoicesCard
+          workspaceId={workspaceId}
+          overview={data}
+          nameOf={nameOf}
+          className="lg:order-8 lg:col-span-4"
+        />
+        <ReserveGoalsCard
+          workspaceId={workspaceId}
+          overview={data}
+          canPlan={hasPermission(permissions, 'planning', 'create')}
+          className="lg:order-9 lg:col-span-4"
+        />
+        <CommissionsCard
+          workspaceId={workspaceId}
+          overview={data}
+          canWrite={canWrite}
+          className="lg:order-10 lg:col-span-6"
+        />
+        <ReceivablesCard
+          workspaceId={workspaceId}
+          overview={data}
+          nameOf={nameOf}
+          canCharge={hasPermission(permissions, 'contacts', 'create')}
+          className="lg:order-11 lg:col-span-6"
         />
       </div>
     </div>
