@@ -6,6 +6,7 @@ export const progressBarVariants = cva('', {
       within: 'fill-mint',
       ahead: 'fill-chart-3',
       over: 'fill-danger',
+      onMint: 'fill-on-mint',
     },
   },
   defaultVariants: { tone: 'within' },

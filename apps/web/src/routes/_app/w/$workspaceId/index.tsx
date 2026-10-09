@@ -13,6 +13,8 @@ export const Route = createFileRoute('/_app/w/$workspaceId/')({
         period={period}
         displayName={account.displayName}
         permissions={access.permissions}
+        workspaceName={access.workspace.name}
+        memberCount={access.memberNames.length}
       />
     )
   },

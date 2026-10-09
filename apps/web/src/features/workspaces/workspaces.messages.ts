@@ -32,7 +32,7 @@ export const workspacesMessages = {
     workspace: 'Espaço',
     switchWorkspace: (name: string) => `Trocar de espaço. Atual: ${name}`,
     roleAndPeople: (role: string, people: number) =>
-      `${role} · ${people} ${new Intl.PluralRules('pt-BR').select(people) === 'one' ? 'pessoa' : 'pessoas'}`,
+      people <= 1 ? `${role} · só você` : `${role} · ${people} pessoas`,
     readOnly: 'Você está vendo este espaço sem poder alterar nada.',
   },
   comingSoon: {

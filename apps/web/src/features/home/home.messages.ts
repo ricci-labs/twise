@@ -15,6 +15,7 @@ export const homeMessages = {
     left > 0
       ? `Hoje é ${day} · faltam ${left} ${plural(left, 'dia', 'dias')} para o fim do período`
       : `Hoje é ${day}`,
+  updatedAt: (time: string) => `Atualizado às ${time}`,
   period: {
     label: 'Período',
     previous: 'Período anterior',
@@ -207,6 +208,74 @@ export const homeMessages = {
     next: 'Próximo a receber: **{contact}**, {amount} em {day}',
     charge: 'Cobrar',
     seeContacts: 'Ver contatos',
+  },
+  achievements: {
+    title: (month: string) => `Conquistas de ${month}`,
+    description: 'O que deu certo neste período.',
+    closedPositive: (month: string) => `Fecharam ${month} no azul`,
+    left: 'Sobrou',
+    streak: (months: number, isCapped: boolean) =>
+      isCapped ? `${months}+ meses seguidos` : `${months}º mês seguido`,
+    budgets: (within: number, total: number) => `${within} de ${total}`,
+    budgetsLabel: 'orçamentos dentro do limite',
+    bills: (onTime: number, total: number) => `${onTime} de ${total}`,
+    billsLabel: 'contas pagas em dia',
+    reserve: (amount: string) => `+${amount}`,
+    reserveLabel: (months: string | null) =>
+      months ? `na reserva, que agora cobre ${months} meses` : 'na reserva',
+    goal: (start: number, end: number) => `${start}% → ${end}%`,
+    goalLabel: (name: string) => `da meta ${name}`,
+  },
+  firstRun: {
+    welcome: (workspace: string) => `Bem-vindos ao ${workspace}`,
+    title: 'Vamos montar o mês de vocês',
+    text: 'Em 4 passos a Início passa a mostrar quanto ainda dá para gastar, o que vai vencer e como estão os próximos meses.',
+    progress: (done: number, total: number) => `${done} de ${total} feitos`,
+    stepsTitle: 'Passo a passo',
+    stepsText: 'Pode fazer na ordem que preferir; a gente marca o próximo.',
+    next: 'Próximo passo',
+    done: 'Feito',
+    steps: {
+      accounts: {
+        title: 'Cadastre suas contas',
+        text: 'Conta corrente, poupança e carteira. É daqui que sai a previsão de saldo.',
+        action: 'Cadastrar conta',
+        start: 'Começar pelas contas',
+      },
+      cards: {
+        title: 'Cadastre seus cartões',
+        text: 'Para acompanhar faturas, parcelas e quem usa cada cartão.',
+        action: 'Cadastrar cartão',
+        start: 'Continuar pelos cartões',
+      },
+      income: {
+        title: 'Cadastre salário e contas fixas',
+        text: 'Assim o Twise sabe o que entra e o que ainda vai vencer.',
+        action: 'Cadastrar salário',
+        start: 'Continuar pelo salário',
+      },
+      entries: {
+        title: 'Registre os primeiros gastos',
+        text: 'A partir daqui o "Livre para gastar" começa a aparecer.',
+        action: 'Registrar gasto',
+        start: 'Registrar o primeiro gasto',
+      },
+    },
+    invite: {
+      title: 'Convide quem divide com você',
+      text: 'Quem divide com você vê e registra junto, no mesmo espaço.',
+      action: 'Convidar',
+    },
+    previewTitle: 'O que vai aparecer aqui',
+    previewText: 'A Início se enche de números conforme vocês avançam.',
+    previewValue: 'R$ —',
+    afterStep: (step: number) => `Depois do passo ${step}`,
+    preview: {
+      free: 'Livre para gastar',
+      income: 'Renda do orçamento',
+      spent: 'Gasto',
+      committed: 'Comprometido',
+    },
   },
   unnamed: '—',
 } as const

@@ -5,12 +5,15 @@ import {
   accountNamesQueryOptions,
   contactNamesQueryOptions,
   overviewQueryOptions,
+  setupQueryOptions,
 } from '@web/features/home/api/home.queries'
+import { AchievementsCard } from '@web/features/home/components/achievements-card'
 import { BillsDueCard } from '@web/features/home/components/bills-due-card'
 import { BudgetsCard } from '@web/features/home/components/budgets-card'
 import { CanIBuyCard } from '@web/features/home/components/can-i-buy-card'
 import { ComingMonthsCard } from '@web/features/home/components/coming-months-card'
 import { CommissionsCard } from '@web/features/home/components/commissions-card'
+import { FirstRun } from '@web/features/home/components/first-run'
 import { ForecastCard } from '@web/features/home/components/forecast-card'
 import { HomeHeader } from '@web/features/home/components/home-header'
 import { HomeIndicators } from '@web/features/home/components/home-indicators'
@@ -22,7 +25,14 @@ import { periodStageOf } from '@web/features/home/components/period-stage'
 import { ReceivablesCard } from '@web/features/home/components/receivables-card'
 import { ReserveGoalsCard } from '@web/features/home/components/reserve-goals-card'
 import { homeMessages } from '@web/features/home/home.messages'
-import type { HomePageProps, NameLookup } from '@web/features/home/home.types'
+import type {
+  HomeFailedProps,
+  HomePageProps,
+  NameLookup,
+  Overview,
+  SetupState,
+  SetupStep,
+} from '@web/features/home/home.types'
 import { usePageTitle } from '@web/hooks/use-page-title'
 import { ApiError } from '@web/lib/api/api-error'
 import { errorMessageFor } from '@web/lib/errors/error-message'
@@ -34,10 +44,18 @@ const SAO_PAULO_HOUR = new Intl.DateTimeFormat('pt-BR', {
   hourCycle: 'h23',
 })
 
-export function HomePage({ workspaceId, period, displayName, permissions }: HomePageProps) {
+export function HomePage({
+  workspaceId,
+  period,
+  displayName,
+  permissions,
+  workspaceName,
+  memberCount,
+}: HomePageProps) {
   usePageTitle(homeMessages.pageTitle)
   const overview = useQuery(overviewQueryOptions(workspaceId, period))
   const accountNames = useQuery(accountNamesQueryOptions(workspaceId)).data
+  const setup = useQuery(setupQueryOptions(workspaceId)).data
   const contactNames = useQuery({
     ...contactNamesQueryOptions(workspaceId),
     enabled: hasPermission(permissions, 'contacts', 'view'),
@@ -46,31 +64,31 @@ export function HomePage({ workspaceId, period, displayName, permissions }: Home
     (id && (accountNames?.get(id) ?? contactNames?.get(id))) || homeMessages.unnamed
   const canWrite = hasPermission(permissions, 'entries', 'create')
 
-  if (overview.isError && !overview.data) {
-    return (
-      <div className="mx-auto w-full max-w-274 px-4 py-6 lg:px-8">
-        <SectionError
-          message={errorMessageFor(overview.error)}
-          errorRef={overview.error instanceof ApiError ? overview.error.ref : null}
-          isRetrying={overview.isFetching}
-          onRetry={() => void overview.refetch()}
-        />
-      </div>
-    )
-  }
   if (!overview.data) {
-    return (
-      <div className="mx-auto grid w-full max-w-274 gap-5 px-4 py-6 lg:grid-cols-4 lg:px-8">
-        {['free', 'income', 'spent', 'committed'].map((key) => (
-          <SectionSkeleton key={key} lines={2} />
-        ))}
-        <SectionSkeleton hasChart className="lg:col-span-3" />
-        <SectionSkeleton />
-      </div>
+    return overview.isError ? (
+      <HomeFailed
+        error={overview.error}
+        isRetrying={overview.isFetching}
+        onRetry={() => void overview.refetch()}
+      />
+    ) : (
+      <HomeLoading />
     )
   }
 
   const data = overview.data
+  if (setup && !setup.hasMoneyAccount) {
+    return (
+      <div className="mx-auto w-full max-w-274 px-4 py-6 lg:px-8">
+        <FirstRun
+          workspaceId={workspaceId}
+          workspaceName={workspaceName}
+          canInvite={memberCount <= 1 && hasPermission(permissions, 'members', 'create')}
+          steps={setupSteps(setup, data)}
+        />
+      </div>
+    )
+  }
   const stage = periodStageOf(data)
   return (
     <div className="mx-auto flex w-full max-w-274 flex-col gap-5 px-4 py-6 lg:px-8">
@@ -80,6 +98,7 @@ export function HomePage({ workspaceId, period, displayName, permissions }: Home
         stage={stage}
         displayName={displayName}
         hour={Number(SAO_PAULO_HOUR.format(new Date()))}
+        updatedAt={overview.dataUpdatedAt}
       />
       <div className="-mx-4 lg:mx-0">
         <HomeIndicators workspaceId={workspaceId} overview={data} stage={stage} />
@@ -99,6 +118,13 @@ export function HomePage({ workspaceId, period, displayName, permissions }: Home
           canWrite={canWrite}
           className="lg:order-7 lg:col-span-4"
         />
+        {stage === 'closed' && (
+          <AchievementsCard
+            workspaceId={workspaceId}
+            overview={data}
+            className="lg:order-1 lg:col-span-8"
+          />
+        )}
         {stage === 'open' && (
           <ForecastCard
             workspaceId={workspaceId}
@@ -158,4 +184,38 @@ export function HomePage({ workspaceId, period, displayName, permissions }: Home
       </div>
     </div>
   )
+}
+
+function HomeFailed({ error, isRetrying, onRetry }: HomeFailedProps) {
+  return (
+    <div className="mx-auto w-full max-w-274 px-4 py-6 lg:px-8">
+      <SectionError
+        message={errorMessageFor(error)}
+        errorRef={error instanceof ApiError ? error.ref : null}
+        isRetrying={isRetrying}
+        onRetry={onRetry}
+      />
+    </div>
+  )
+}
+
+function HomeLoading() {
+  return (
+    <div className="mx-auto grid w-full max-w-274 gap-5 px-4 py-6 lg:grid-cols-4 lg:px-8">
+      {['free', 'income', 'spent', 'committed'].map((key) => (
+        <SectionSkeleton key={key} lines={2} />
+      ))}
+      <SectionSkeleton hasChart className="lg:col-span-3" />
+      <SectionSkeleton />
+    </div>
+  )
+}
+
+function setupSteps(setup: SetupState, overview: Overview): SetupStep[] {
+  return [
+    { key: 'accounts', area: 'accounts', isDone: setup.hasMoneyAccount },
+    { key: 'cards', area: 'cards', isDone: setup.hasCard },
+    { key: 'income', area: 'planning', isDone: overview.metrics.fixedIncome > 0 },
+    { key: 'entries', area: 'new-entry', isDone: overview.metrics.spent > 0 },
+  ]
 }
