@@ -4,6 +4,7 @@ import {
   formatFullDate,
   formatMonthLabel,
   formatMonthName,
+  formatMonthTitle,
   formatRange,
   formatShortDate,
   formatWeekday,
@@ -22,6 +23,7 @@ describe('calendar formats', () => {
   it('names periods by their month and the days of the week', () => {
     expect(formatMonthLabel('2027-01')).toBe('jan/27')
     expect(formatMonthName('2026-09')).toBe('setembro')
+    expect(formatMonthTitle('2027-01')).toBe('Janeiro')
     expect(formatWeekday('2026-10-22')).toBe('Quinta')
   })
 })
