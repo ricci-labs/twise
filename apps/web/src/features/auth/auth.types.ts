@@ -13,6 +13,10 @@ import type { z } from 'zod'
 
 export type LoginNotice = (typeof LOGIN_NOTICES)[number]
 
+export type LogOutButtonProps = {
+  variant?: 'button' | 'link'
+}
+
 export type LoginSearch = z.infer<typeof loginSearchSchema>
 
 export type LoginPageProps = {
