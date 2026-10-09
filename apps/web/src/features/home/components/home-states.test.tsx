@@ -107,6 +107,25 @@ describe('HOME-01 states', () => {
     await expect.element(screen.getByText('Dono · só você')).toBeVisible()
   })
 
+  it('says all is well in a calm line on the phone, and in the card on the desktop', async () => {
+    const calm = {
+      [`GET /api/workspaces/${WORKSPACE_ID}/overview`]: () =>
+        Response.json({ ...demoOverview('current'), insights: [] }),
+    }
+    const phone = await openHome(HOME, calm)
+    await page.viewport(390, 844)
+
+    const alerts = phone.getByRole('region', { name: 'Avisos' })
+    await expect.element(alerts.getByRole('status')).toHaveTextContent('Tudo em ordem por aqui.')
+    expect(alerts.element().getAttribute('data-slot')).not.toBe('card')
+
+    await page.viewport(1440, 900)
+    const card = phone.getByRole('region', { name: 'Avisos' })
+    await expect.element(card.getByText('Tudo em ordem por aqui.')).toBeVisible()
+    expect(card.element().getAttribute('data-slot')).toBe('card')
+    expect(card.element().querySelector('[data-slot=card-foot]')).toBeNull()
+  })
+
   it('keeps the last numbers offline and says when they were fetched', async () => {
     const screen = await openHome()
     await expect.element(screen.getByRole('heading', { name: 'Livre para gastar' })).toBeVisible()

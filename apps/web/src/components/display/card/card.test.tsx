@@ -18,4 +18,25 @@ describe('Card', () => {
     expect(screen.container.querySelector('[data-slot=card-foot]')).toBeNull()
     await expectNoAccessibilityViolations(screen.container)
   })
+
+  it('drops a footer whose parts are all hidden, and puts a lone link on the left', async () => {
+    const screen = await render(
+      <main>
+        <Card title="Comissões" footerStat={false} footerAction={false}>
+          <p>Sem dividir.</p>
+        </Card>
+        <Card title="Faturas" footerAction={<a href="/cards">Ver cartões</a>}>
+          <p>Cartão X</p>
+        </Card>
+      </main>,
+    )
+
+    const feet = screen.container.querySelectorAll('[data-slot=card-foot]')
+    expect(feet).toHaveLength(1)
+    const link = screen.getByRole('link', { name: 'Ver cartões' }).element()
+    const foot = feet[0] as Element
+    expect(link.getBoundingClientRect().left).toBe(
+      foot.getBoundingClientRect().left + Number.parseFloat(getComputedStyle(foot).paddingLeft),
+    )
+  })
 })
