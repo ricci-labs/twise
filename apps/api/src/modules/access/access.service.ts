@@ -73,7 +73,12 @@ export function findRole(
   return withWorkspace(db, workspaceId, (tx) => selectActiveRole(tx, roleId))
 }
 
-export { changeMemberRole, listMembers, removeMember } from '@api/modules/access/use-cases/members'
+export {
+  changeMemberRole,
+  listMemberNames,
+  listMembers,
+  removeMember,
+} from '@api/modules/access/use-cases/members'
 export {
   changeRole,
   createRole,

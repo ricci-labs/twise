@@ -53,7 +53,7 @@ Design: `../../../design/home/` (README → Layouts, screens "Shell-*" and "Desk
   that don't fit in the bar and, apart, "Minha conta" and "Sair".
 **RF-WS-2** Workspace switcher (mobile: tap the workspace name, a sheet; desktop: the sidebar foot,
 opening upward): lists `GET /api/workspaces` (name and role, the current one checked); switching
-loads that workspace's permissions (`GET /api/workspaces/:id`) and opens its home. The last used
+loads that workspace's permissions and `memberNames` (`GET /api/workspaces/:id`) and opens its home. The last used
 workspace is remembered on the device. "Criar espaço" at the end → `WS-01`.
 **RF-WS-3** A person with no workspace lands on `WS-01`. A workspace that answers
 `WORKSPACE_NOT_FOUND` (removed from it, or left) opens the switcher with "Você não tem mais acesso a
