@@ -26,7 +26,7 @@ tests build their own with a memory history.
 | Path (file) | Is |
 |---|---|
 | `__root.tsx` | `createRootRouteWithContext<RouterContext>()`; `RouterContext = { queryClient }` |
-| `_auth.tsx` + `_auth/login.tsx`, `signup`, `forgot-password`, `reset-password` | No session needed; the pathless `_auth` layout keeps the owl block mounted between them (`AuthLayout`) |
+| `_auth.tsx` + `_auth/login.tsx`, `signup`, `forgot-password`, `reset-password` | No session needed; the pathless `_auth` layout renders `AuthFrame` (with the offline banner), which owns the art column (logo, owl, claim): each page's `AuthLayout` reports its scene to the frame and renders only its form column, so the owl stays mounted from screen to screen and only its object changes. A page that shows a `MomentScreen` instead leaves the frame without art. Outside `_auth` (WS-01, the invitation) `AuthLayout` draws the whole layout itself |
 | `demo.tsx` | Public demo, no session: the real `HOME-01` on the demo household (`features/demo` frames it with "Demonstração", the situation switcher `?variant=overspent` and "Entrar"). Its workspaces (`demo`, `demo-overspent`, `DEMO_WORKSPACE_IDS`) never reach the API: `features/home/api` computes them in the browser with `demoOverviewFor`, any `?period=`. Links to app areas show "Na demonstração, só a Início está aberta." instead of leaving |
 | `verify-email.tsx`, `invite.tsx` | No session needed; moments (`MomentScreen`) |
 | `_app.tsx` | Pathless layout: session guard + `AppShell` |
