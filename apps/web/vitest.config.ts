@@ -15,6 +15,7 @@ export default mergeConfig(
         '@tanstack/react-router',
         '@tanstack/react-query',
         '@base-ui/react/use-render',
+        '@base-ui/react/tooltip',
         'class-variance-authority',
         'cn',
         'cn/config',

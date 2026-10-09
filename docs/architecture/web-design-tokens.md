@@ -1,7 +1,7 @@
 ---
 summary: The web's single source of visual values — token tiers and files, naming, colour roles, type, spacing, radius, elevation, motion, layers, breakpoints, dark mode, tokens in JS, and the checks that keep raw values out.
 read_when: Adding or changing a colour, font, size, shadow, animation or theme; styling anything in apps/web; reviewing a web PR.
-updated: 2026-10-02
+updated: 2026-10-09
 ---
 
 # Web design tokens
@@ -102,7 +102,8 @@ When to use each one: the design system guide → Colour, and each token's notes
 
 ## Motion and layers
 Tailwind has no duration or z-index namespace, so these are `:root` variables with one `@utility`
-each (`@utility duration-fast { transition-duration: var(--duration-fast) }`).
+each (`@utility duration-fast { transition-duration: var(--duration-fast) }`). `pb-safe` pads the
+bottom by the phone's safe area, at least `--spacing(3)` (the bottom tab bar).
 
 | Token | Use |
 |---|---|
