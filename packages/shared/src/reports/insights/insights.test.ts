@@ -15,6 +15,7 @@ const FACTS: PeriodFacts = {
   occurrences: [
     {
       id: 'rent-october',
+      description: 'Bill',
       sourceAccountId: 'checking',
       dueOn: '2026-10-10',
       amountCents: 200_000,
@@ -24,6 +25,7 @@ const FACTS: PeriodFacts = {
     },
     {
       id: 'energy-october',
+      description: 'Bill',
       sourceAccountId: 'checking',
       dueOn: '2026-10-05',
       amountCents: 15_000,
@@ -33,6 +35,7 @@ const FACTS: PeriodFacts = {
     },
     {
       id: 'rent-november',
+      description: 'Bill',
       sourceAccountId: 'checking',
       dueOn: '2026-11-10',
       amountCents: 200_000,
@@ -106,7 +109,12 @@ describe('computeInsights', () => {
         code: 'occurrence_overdue',
         severity: 'warning',
         subject: 'rent-october',
-        values: { dueOn: '2026-10-10', amountCents: 200_000 },
+        values: {
+          description: 'Bill',
+          entryType: 'expense',
+          dueOn: '2026-10-10',
+          amountCents: 200_000,
+        },
       },
       {
         code: 'budget_ahead',

@@ -25,7 +25,7 @@ matching screen would be wrong or fragile without it.
 | G6 | ~~Charge items carry only `postingId` and amount.~~ **Fixed.** | Shows each item's description, installment and date. | Every item carries `description`, `installmentNo`, `installmentCount`, `effectiveOn`. | Done |
 | G7 | ~~No route for a contact's **open items**.~~ **Fixed.** | `CON-02` and the charge preview read it. | `GET /contacts/:contactId/open-items?until=`, the same computation the charge uses. | Done |
 | G8 | The upload size limit (`FILE_MAX_BYTES`) isn't exposed. | Uses a build-time value (10 MB). | Add it to `GET /api/auth/config` (or a workspace config route). | With attachments |
-| G9 | `occurrence_overdue` insights carry the occurrence id but not its description or type. | Looks it up in `GET /occurrences` when it's in range. | Add `description` and `entryType` to the insight values. | Home round (with G29) |
+| G9 | `occurrence_overdue` insights carry the occurrence id but not its description or type. | Looks it up in `GET /occurrences` when it's in range. | **Done:** `description` and `entryType` are in the insight values. | Home round (with G29) |
 | G10 | Reminder e-mails link to the app's home. | — | Link bills to `PLAN-03` and invoices to `CARD-03` with the ids. | With notifications |
 | G11 | The version history of an edited entry is only readable through `GET /audit`, which members and viewers can't open. | `ENT-03` shows "Histórico" only with `audit:view`. | Decide: a small `GET /entries/:id/versions` for `entries:view`. | Later |
 
@@ -40,7 +40,7 @@ the Home round (`../roadmap.md`). Field names are the plan; the PR that adds one
 | G26 | "Média mensal (3 meses)" under Gasto (was only inside `reserveCoverage`, null without a reserve) | **Done:** `spendingAverage`: `monthlyCents`, `periods` |
 | G27 | "% da renda" under Gasto and Comprometido; the 100% bar | **Done:** `incomeShare`: `spentPercent`, `committedPercent`, `freePercent` (null without budget income) |
 | G28 | Pace radial | **Done:** `periodPace`: `usedPercent`, `elapsedPercent`, `pointsAhead` |
-| G29 | Bills due in 7 days and the count under Comprometido | `billsDue`: `until`, `count`, `totalCents`, `overdueCount`, `items[]` (`occurrenceId`, `description`, `entryType`, `dueOn`, `amountCents`, `daysFromToday`) |
+| G29 | Bills due in 7 days and the count under Comprometido | **Done:** `billsDue`: `until`, `count`, `totalCents` (coming ones), `overdueCount`, `items[]` (`occurrenceId`, `description`, `dueOn`, `amountCents`, `daysFromToday`), expenses only |
 | G30 | "R$ X são de outras pessoas" on each invoice | `nextInvoice[].frontedCents` |
 | G31 | Receivables card | `receivables`: `owedCents`, `overdueCents`, `contactCount`, `next` (`contactId`, `dueOn`, `amountCents`) |
 | G32 | Reserve radial and goals with a deadline | `reserveCoverage.percent`; `goals[]` (`goalId`, `name`, `savedCents`, `targetCents`, `targetOn`, `percent`) |

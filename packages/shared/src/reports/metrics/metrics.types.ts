@@ -32,6 +32,7 @@ export type FactPosting = {
 
 export type FactOccurrence = {
   id: string
+  description: string
   sourceAccountId: string
   dueOn: IsoDate
   amountCents: number
@@ -125,6 +126,22 @@ export type PeriodPace = {
   usedPercent: number
   elapsedPercent: number
   pointsAhead: number
+}
+
+export type BillDue = {
+  occurrenceId: string
+  description: string
+  dueOn: IsoDate
+  amountCents: number
+  daysFromToday: number
+}
+
+export type BillsDue = {
+  until: IsoDate
+  count: number
+  totalCents: number
+  overdueCount: number
+  items: BillDue[]
 }
 
 export type ReserveCoverage = {

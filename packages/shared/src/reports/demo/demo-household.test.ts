@@ -48,6 +48,23 @@ describe('demo household', () => {
     ])
   })
 
+  it('lists three bills for the next seven days and one overdue', () => {
+    const { billsDue } = demoOverview('current').metrics
+
+    expect(billsDue).toMatchObject({
+      until: '2026-10-26',
+      count: 3,
+      totalCents: 82_000,
+      overdueCount: 1,
+    })
+    expect(billsDue.items.map((bill) => [bill.description, bill.daysFromToday])).toEqual([
+      ['Internet', -2],
+      ['Energia', 2],
+      ['Condomínio', 5],
+      ['Academia', 6],
+    ])
+  })
+
   it('keeps the main account positive until the next salary', () => {
     const [mainAccount] = demoOverview('current').metrics.balanceForecast
 

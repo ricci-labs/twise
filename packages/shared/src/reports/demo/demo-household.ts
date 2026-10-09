@@ -4,6 +4,7 @@ import { periodSettingsOf, periodStartingIn } from '@shared/core/calendar/period
 import type { RecurringEntryType } from '@shared/planning/recurrence/recurrence.constants'
 import {
   DEMO_IDS,
+  DEMO_NAMES,
   DEMO_PERIOD_DAY,
   DEMO_PERIOD_LABELS,
   DEMO_TODAY,
@@ -332,6 +333,7 @@ function planned(
 ): FactOccurrence {
   return {
     id: occurrenceId(ruleId, dueOn),
+    description: DEMO_NAMES[ruleId] ?? ruleId,
     sourceAccountId,
     dueOn,
     amountCents,

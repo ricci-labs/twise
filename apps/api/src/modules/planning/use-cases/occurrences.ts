@@ -60,6 +60,7 @@ export async function readOccurrenceFacts(
   await refreshOccurrences(tx, today)
   return (await selectOccurrencesBetween(tx, from, to)).map((occurrence) => ({
     id: occurrence.id,
+    description: occurrence.description,
     sourceAccountId: occurrence.sourceAccountId,
     dueOn: occurrence.dueOn,
     amountCents: occurrence.amountCents,

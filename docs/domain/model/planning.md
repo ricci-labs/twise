@@ -124,7 +124,8 @@ number or alert is one file, one line in `METRICS` / `INSIGHTS`, and a test.
 today (workspace time zone), the period (from the settings and the holidays), the 6 periods
 before and the 6 after it, the budget view and base, the accounts (`ledger.readAccountFacts`), the postings of active entries that fall in the
 period by `effective_on` or by the entry's `occurred_on` (`ledger.readPostingFacts`), and the
-occurrences due in the period (`planning.readOccurrenceFacts`, which tops up the horizon first),
+occurrences due in the period with their rule's description (`planning.readOccurrenceFacts`, which
+tops up the horizon first),
 the budgets in force (`planning.readBudgetFacts`), the reserve (`planning.readReserveFact`), the
 cards with their payment account (`ledger.readCardFacts`), the invoices closing from a month ago on
 (`ledger.readInvoiceFacts`), the account balances (`ledger.readBalanceFacts`) and the commission
@@ -149,6 +150,10 @@ free_to_spend     = budget_income − spent − committed
 daily_allowance   = max(free_to_spend, 0) ÷ days left, today included (the whole period before it
                     starts, null after it ends). Planned items of the remaining days are already
                     out, through `committed`, as the household chose
+bills_due         = pending expense occurrences that are overdue or due from today to 6 days ahead
+                    (whatever period is shown), oldest first, each with its description and days
+                    from today (negative = late); count and total of the coming ones, and how many
+                    are overdue. Card subscriptions and income are left out
 period_progress   = days in the period, elapsed and left (today counts in both) and the elapsed
                     share as a whole % (0 before the period, 100 after it)
 income_share      = spent, committed and free as whole % of the budget income (free = what is left

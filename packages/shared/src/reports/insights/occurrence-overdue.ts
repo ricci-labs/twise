@@ -7,5 +7,10 @@ export const occurrenceOverdue: InsightRule = (facts) =>
       code: 'occurrence_overdue',
       severity: 'warning',
       subject: occurrence.id,
-      values: { dueOn: occurrence.dueOn, amountCents: occurrence.amountCents },
+      values: {
+        description: occurrence.description,
+        entryType: occurrence.entryType,
+        dueOn: occurrence.dueOn,
+        amountCents: occurrence.amountCents,
+      },
     }))

@@ -1,4 +1,5 @@
 import { balanceForecast } from '@shared/reports/metrics/balance-forecast'
+import { billsDue } from '@shared/reports/metrics/bills-due'
 import { budgetIncome } from '@shared/reports/metrics/budget-income'
 import { budgetPace } from '@shared/reports/metrics/budget-pace'
 import { committed } from '@shared/reports/metrics/committed'
@@ -35,6 +36,7 @@ export const METRICS = {
   committedAhead,
   nextInvoice,
   balanceForecast,
+  billsDue,
 } as const
 
 export type PeriodMetrics = { [Key in keyof typeof METRICS]: ReturnType<(typeof METRICS)[Key]> }

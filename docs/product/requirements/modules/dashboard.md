@@ -40,7 +40,7 @@ future ones dashed); the period goes in the URL (`?period=2026-10`). A past peri
 | "Livre para gastar" (mint, piggy bank) | `freeToSpend` | "R$ X por dia" (`dailyAllowance`) · "Até {fim} · faltam {n} dias" | "Renda fixa do período, menos o que já foi gasto, menos as contas que ainda vão vencer." |
 | "Renda do orçamento" | `budgetIncome` | "Comissão à parte: R$ X" (`variableIncome`, when the base is fixed income) | "Salários recebidos e previstos no período." |
 | "Gasto" | `spent` | "{p}% da renda" (`incomeShare.spentPercent`) · "Média mensal (3 meses): R$ X" (`spendingAverage.monthlyCents`) | "Despesas e parcelas que caem neste período." |
-| "Comprometido" | `committed` | "{p}% da renda" (`incomeShare.committedPercent`) · "{n} contas vencem nos próximos 7 dias" (`billsDue.count` *(planned)*) | "Contas fixas previstas que ainda não foram pagas, incluindo atrasadas." |
+| "Comprometido" | `committed` | "{p}% da renda" (`incomeShare.committedPercent`) · "{n} contas vencem nos próximos 7 dias" (`billsDue.count`) | "Contas fixas previstas que ainda não foram pagas, incluindo atrasadas." |
 - **Negative** `freeToSpend`: the first card turns danger-soft, value in red, badge "Passou do
   planejado", the reason in one line, "Ver onde ajustar" (→ `PLAN-04` sorted by how far ahead of
   pace) and the piggy bank in trouble; no "por dia".
@@ -114,7 +114,7 @@ sobrou pode ir para a reserva."
 período." A 100% bar with "Gasto", "Comprometido", "Livre" (percent and amount); "A comissão de
 R$ X fica fora desta conta." when the base is fixed income.
 
-**RF-HOME-16 Bills due in the next 7 days** (`billsDue` *(planned)*): "{n} contas · R$ X até
+**RF-HOME-16 Bills due in the next 7 days** (`billsDue`): "{n} contas · R$ X até
 {dd/mm}, e {k} atrasada(s)." Rows with a date block, description, amount and "{Dia} · em {n}
 dias"; an overdue row is tinted danger-soft with "Atrasada há {n} dias" and "Registrar" on the same
 line (`entries:create`). "Ver contas fixas" → `PLAN-03`. None: "Nenhuma conta vence nos próximos 7

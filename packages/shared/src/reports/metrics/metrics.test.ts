@@ -101,6 +101,7 @@ function household(overrides: Partial<PeriodFacts> = {}): PeriodFacts {
     occurrences: [
       {
         id: 'occurrence-1',
+        description: 'Bill',
         sourceAccountId: 'checking',
         dueOn: '2026-10-20',
         amountCents: 400_000,
@@ -110,6 +111,7 @@ function household(overrides: Partial<PeriodFacts> = {}): PeriodFacts {
       },
       {
         id: 'occurrence-2',
+        description: 'Bill',
         sourceAccountId: 'checking',
         dueOn: '2026-10-30',
         amountCents: 100_000,
@@ -119,6 +121,7 @@ function household(overrides: Partial<PeriodFacts> = {}): PeriodFacts {
       },
       {
         id: 'occurrence-3',
+        description: 'Bill',
         sourceAccountId: 'checking',
         dueOn: '2026-10-13',
         amountCents: 200_000,
@@ -128,6 +131,7 @@ function household(overrides: Partial<PeriodFacts> = {}): PeriodFacts {
       },
       {
         id: 'occurrence-4',
+        description: 'Bill',
         sourceAccountId: 'card',
         dueOn: '2026-10-25',
         amountCents: 4_000,
@@ -137,6 +141,7 @@ function household(overrides: Partial<PeriodFacts> = {}): PeriodFacts {
       },
       {
         id: 'occurrence-5',
+        description: 'Bill',
         sourceAccountId: 'checking',
         dueOn: '2026-10-08',
         amountCents: 15_000,
@@ -146,6 +151,7 @@ function household(overrides: Partial<PeriodFacts> = {}): PeriodFacts {
       },
       {
         id: 'occurrence-6',
+        description: 'Bill',
         sourceAccountId: 'checking',
         dueOn: '2026-10-09',
         amountCents: 9_000,
@@ -155,6 +161,7 @@ function household(overrides: Partial<PeriodFacts> = {}): PeriodFacts {
       },
       {
         id: 'occurrence-7',
+        description: 'Bill',
         sourceAccountId: 'checking',
         dueOn: '2026-11-10',
         amountCents: 200_000,
@@ -164,6 +171,7 @@ function household(overrides: Partial<PeriodFacts> = {}): PeriodFacts {
       },
       {
         id: 'occurrence-8',
+        description: 'Bill',
         sourceAccountId: 'checking',
         dueOn: '2026-11-20',
         amountCents: 400_000,
@@ -369,6 +377,66 @@ describe('periodPace', () => {
   })
 })
 
+describe('billsDue', () => {
+  it('lists the overdue bills and the ones due in the next seven days, today included', () => {
+    const base = household()
+    const withBillsAhead = household({
+      occurrences: [
+        ...base.occurrences,
+        {
+          id: 'water',
+          description: 'Água',
+          sourceAccountId: 'checking',
+          dueOn: '2026-10-21',
+          amountCents: 8_000,
+          entryType: 'expense',
+          status: 'pending',
+          categoryAccountId: 'housing',
+        },
+        {
+          id: 'gas',
+          description: 'Gás',
+          sourceAccountId: 'checking',
+          dueOn: '2026-10-22',
+          amountCents: 9_000,
+          entryType: 'expense',
+          status: 'pending',
+          categoryAccountId: 'housing',
+        },
+      ],
+    })
+    expect(computeMetrics(withBillsAhead).billsDue).toEqual({
+      until: '2026-10-21',
+      count: 1,
+      totalCents: 8_000,
+      overdueCount: 1,
+      items: [
+        {
+          occurrenceId: 'occurrence-3',
+          description: 'Bill',
+          dueOn: '2026-10-13',
+          amountCents: 200_000,
+          daysFromToday: -2,
+        },
+        {
+          occurrenceId: 'water',
+          description: 'Água',
+          dueOn: '2026-10-21',
+          amountCents: 8_000,
+          daysFromToday: 6,
+        },
+      ],
+    })
+  })
+
+  it('leaves out income, card subscriptions and bills already paid or skipped', () => {
+    const descriptions = computeMetrics(household({ today: '2026-10-08' })).billsDue.items.map(
+      (bill) => bill.occurrenceId,
+    )
+    expect(descriptions).toEqual(['occurrence-3'])
+  })
+})
+
 describe('spendingAverage', () => {
   it('averages the last three periods that had any activity', () => {
     expect(computeMetrics(household()).spendingAverage).toEqual({
@@ -471,6 +539,7 @@ describe('nextInvoice', () => {
         ...base.occurrences,
         {
           id: 'extra-1',
+          description: 'Bill',
           sourceAccountId: 'card',
           dueOn: '2026-11-05',
           amountCents: 7_000,
@@ -480,6 +549,7 @@ describe('nextInvoice', () => {
         },
         {
           id: 'extra-2',
+          description: 'Bill',
           sourceAccountId: 'card',
           dueOn: '2026-10-27',
           amountCents: 6_000,
@@ -489,6 +559,7 @@ describe('nextInvoice', () => {
         },
         {
           id: 'extra-3',
+          description: 'Bill',
           sourceAccountId: 'other-card',
           dueOn: '2026-10-26',
           amountCents: 5_000,
@@ -534,6 +605,7 @@ describe('balanceForecast', () => {
         ...base.occurrences.filter((occurrence) => occurrence.dueOn !== '2026-10-20'),
         {
           id: 'salary-november',
+          description: 'Bill',
           sourceAccountId: 'checking',
           dueOn: '2026-11-12',
           amountCents: 400_000,
@@ -561,6 +633,7 @@ describe('balanceForecast', () => {
         ...base.occurrences.filter((occurrence) => occurrence.dueOn !== '2026-10-20'),
         {
           id: 'salary-november',
+          description: 'Bill',
           sourceAccountId: 'checking',
           dueOn: '2026-11-12',
           amountCents: 400_000,
@@ -588,6 +661,7 @@ describe('balanceForecast', () => {
         ...base.occurrences,
         {
           id: 'save',
+          description: 'Bill',
           sourceAccountId: 'checking',
           dueOn: '2026-10-22',
           amountCents: 50_000,
