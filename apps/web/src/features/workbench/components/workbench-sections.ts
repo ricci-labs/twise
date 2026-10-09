@@ -6,13 +6,20 @@ import { logoExamples } from '@web/components/brand/logo'
 import { owlEntranceExamples } from '@web/components/brand/owl-entrance'
 import { owlKitExamples } from '@web/components/brand/owl-kit'
 import { owlSceneExamples } from '@web/components/brand/owl-scene'
+import { amountExamples } from '@web/components/display/amount'
 import { avatarExamples } from '@web/components/display/avatar'
+import { cardExamples } from '@web/components/display/card'
 import { dividerExamples } from '@web/components/display/divider'
+import { kpiCardExamples } from '@web/components/display/kpi-card'
+import { kpiCarouselExamples } from '@web/components/display/kpi-carousel'
 import { nextStepCardExamples } from '@web/components/display/next-step-card'
 import { richTextExamples } from '@web/components/display/rich-text'
 import { stepTrackExamples } from '@web/components/display/step-track'
 import { alertExamples } from '@web/components/feedback/alert'
 import { bannerExamples } from '@web/components/feedback/banner'
+import { emptyStateExamples } from '@web/components/feedback/empty-state'
+import { sectionErrorExamples } from '@web/components/feedback/section-error'
+import { sectionSkeletonExamples } from '@web/components/feedback/section-skeleton'
 import { spinnerExamples } from '@web/components/feedback/spinner'
 import { tipExamples } from '@web/components/feedback/tip'
 import { toastExamples } from '@web/components/feedback/toast'
@@ -29,6 +36,13 @@ import type { ComponentExamples } from '@web/lib/examples.types'
 
 export const workbenchSections: readonly ComponentExamples[] = [
   buttonExamples,
+  amountExamples,
+  cardExamples,
+  kpiCardExamples,
+  kpiCarouselExamples,
+  sectionSkeletonExamples,
+  sectionErrorExamples,
+  emptyStateExamples,
   actionMenuExamples,
   sheetExamples,
   avatarExamples,

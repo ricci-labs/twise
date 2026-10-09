@@ -16,6 +16,10 @@
   --text-amount-hero--line-height: 3rem;
   --text-amount-hero--font-weight: 750;
   --text-amount-hero--letter-spacing: -0.02em;
+  --text-amount-kpi: 1.875rem;
+  --text-amount-kpi--line-height: 2.25rem;
+  --text-amount-kpi--font-weight: 750;
+  --text-amount-kpi--letter-spacing: -0.02em;
   --text-display: 2rem;
   --text-display--line-height: 2.375rem;
   --text-display--font-weight: 750;
@@ -251,4 +255,13 @@
 
 @utility max-h-sheet {
   max-height: 85dvh;
+}
+
+@utility text-cents {
+  font-size: 0.6em;
+  vertical-align: 0.55em;
+}
+
+@utility scrollbar-none {
+  scrollbar-width: none;
 }
