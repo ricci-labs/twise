@@ -16,6 +16,8 @@ export default mergeConfig(
         '@tanstack/react-query',
         '@base-ui/react/use-render',
         '@base-ui/react/tooltip',
+        '@base-ui/react/menu',
+        '@base-ui/react/drawer',
         'class-variance-authority',
         'cn',
         'cn/config',

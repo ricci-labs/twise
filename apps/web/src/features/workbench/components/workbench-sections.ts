@@ -1,3 +1,4 @@
+import { actionMenuExamples } from '@web/components/actions/action-menu'
 import { buttonExamples } from '@web/components/actions/button'
 import { textLinkExamples } from '@web/components/actions/text-link'
 import { appSplashExamples } from '@web/components/brand/app-splash'
@@ -5,6 +6,7 @@ import { logoExamples } from '@web/components/brand/logo'
 import { owlEntranceExamples } from '@web/components/brand/owl-entrance'
 import { owlKitExamples } from '@web/components/brand/owl-kit'
 import { owlSceneExamples } from '@web/components/brand/owl-scene'
+import { avatarExamples } from '@web/components/display/avatar'
 import { dividerExamples } from '@web/components/display/divider'
 import { nextStepCardExamples } from '@web/components/display/next-step-card'
 import { richTextExamples } from '@web/components/display/rich-text'
@@ -20,12 +22,16 @@ import { passwordInputExamples } from '@web/components/inputs/password-input'
 import { textInputExamples } from '@web/components/inputs/text-input'
 import { authLayoutExamples } from '@web/components/layout/auth-layout'
 import { momentScreenExamples } from '@web/components/layout/moment-screen'
+import { sheetExamples } from '@web/components/layout/sheet'
 import { appSidebarExamples } from '@web/components/navigation/app-sidebar'
 import { bottomTabBarExamples } from '@web/components/navigation/bottom-tab-bar'
 import type { ComponentExamples } from '@web/lib/examples.types'
 
 export const workbenchSections: readonly ComponentExamples[] = [
   buttonExamples,
+  actionMenuExamples,
+  sheetExamples,
+  avatarExamples,
   textLinkExamples,
   textInputExamples,
   passwordInputExamples,

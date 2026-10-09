@@ -248,3 +248,7 @@
 @utility pb-safe {
   padding-bottom: max(--spacing(3), env(safe-area-inset-bottom));
 }
+
+@utility max-h-sheet {
+  max-height: 85dvh;
+}
