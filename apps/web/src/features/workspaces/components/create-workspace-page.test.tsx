@@ -13,7 +13,7 @@ import {
 } from '@web/testing/fake-api'
 import { fieldLabelled } from '@web/testing/fields'
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { userEvent } from 'vitest/browser'
+import { page, userEvent } from 'vitest/browser'
 import { render } from 'vitest-browser-react'
 
 const TITLE = 'Criar o espaço de vocês'
@@ -64,6 +64,7 @@ describe('WS-01 create a workspace', () => {
   })
 
   it('opens the new workspace with the "espaço criado" moment, only that once', async () => {
+    await page.viewport(1440, 900)
     const empty = demoOverview('current')
     fakeApi({
       '/api/auth/me': account,
@@ -96,6 +97,7 @@ describe('WS-01 create a workspace', () => {
       .element(screen.getByRole('heading', { name: 'Vamos montar o mês de vocês' }))
       .toBeVisible()
     expect(document.querySelector("[data-slot='first-run'][data-created]")).toBeNull()
+    await page.viewport(414, 896)
   })
 
   it('asks for a name before creating, with the catalog message', async () => {

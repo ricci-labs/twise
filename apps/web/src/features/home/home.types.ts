@@ -2,7 +2,7 @@ import type { Permission } from '@financas/shared'
 import type { TwiseIconName } from '@web/components/icons/twise-icon'
 import type { fetchOverview } from '@web/features/home/api/home.queries'
 import type { homeSearchSchema } from '@web/features/home/home.schemas'
-import type { ReactElement } from 'react'
+import type { ReactNode } from 'react'
 import type { z } from 'zod'
 
 export type HomeSearch = z.infer<typeof homeSearchSchema>
@@ -154,7 +154,22 @@ export type StepRowProps = {
   step: SetupStep
   position: number
   isNext: boolean
-  action: ReactElement
+  hasDivider: boolean
+  workspaceId: string
+}
+
+export type GhostTileProps = {
+  label: ReactNode
+  unlock: ReactNode
+}
+
+export type UnlocksProps = {
+  children: ReactNode
+}
+
+export type ResponsiveCopyProps = {
+  short: string
+  long: string
 }
 
 export type SetupState = {

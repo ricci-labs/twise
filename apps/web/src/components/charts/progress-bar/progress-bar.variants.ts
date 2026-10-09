@@ -11,3 +11,15 @@ export const progressBarVariants = cva('', {
   },
   defaultVariants: { tone: 'within' },
 })
+
+export const progressTrackVariants = cva('', {
+  variants: {
+    tone: {
+      within: 'fill-sunken',
+      ahead: 'fill-sunken',
+      over: 'fill-sunken',
+      onMint: 'fill-on-mint/15',
+    },
+  },
+  defaultVariants: { tone: 'within' },
+})
