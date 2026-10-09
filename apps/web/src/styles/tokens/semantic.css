@@ -46,11 +46,13 @@
 
   --duration-fast: 120ms;
   --duration-select: 150ms;
+  --duration-popover: 160ms;
   --duration-normal: 200ms;
   --duration-slow: 320ms;
   --duration-swap: 250ms;
   --duration-collapse: 250ms;
   --duration-raise: 300ms;
+  --duration-sheet: 280ms;
   --duration-enter: 350ms;
   --duration-chart: 800ms;
   --duration-fill: 500ms;

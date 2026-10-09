@@ -35,11 +35,14 @@ import type {
   SetupStep,
 } from '@web/features/home/home.types'
 import { useFirstTimeThisSession } from '@web/hooks/use-first-time-this-session'
+import { useMarkInView } from '@web/hooks/use-mark-in-view'
 import { usePageTitle } from '@web/hooks/use-page-title'
+import { useSwapPhase } from '@web/hooks/use-swap-phase'
 import { ApiError } from '@web/lib/api/api-error'
 import { cn } from '@web/lib/cn'
 import { errorMessageFor } from '@web/lib/errors/error-message'
 import { hasPermission } from '@web/lib/permissions'
+import { useRef } from 'react'
 
 const HOME_PAGE = 'mx-auto w-full max-w-400 px-4 py-6 lg:px-8 lg:pt-7 lg:pb-12'
 
@@ -154,9 +157,14 @@ function HomeContent({
 }: HomeContentProps) {
   const canWrite = hasPermission(permissions, 'entries', 'create')
   const stage = periodStageOf(data)
+  const swap = useSwapPhase(data.period.label)
+  const isEntrance = isFirstVisit && swap === undefined
+  const gridRef = useRef<HTMLDivElement>(null)
+  useMarkInView(gridRef, isEntrance)
   return (
     <div
-      data-entrance={isFirstVisit ? 'play' : undefined}
+      data-entrance={isEntrance ? 'play' : undefined}
+      data-swap={swap}
       data-stale={isStale ? '' : undefined}
       aria-busy={isStale || undefined}
       className={cn(HOME_PAGE, 'flex flex-col gap-5')}
@@ -173,7 +181,11 @@ function HomeContent({
         <HomeIndicators workspaceId={workspaceId} overview={data} stage={stage} />
       </div>
       {stage !== 'closed' && <CanIBuyCard workspaceId={workspaceId} />}
-      <div data-slot="home-grid" className="grid grid-cols-1 items-stretch gap-5 lg:grid-cols-12">
+      <div
+        ref={gridRef}
+        data-slot="home-grid"
+        className="grid grid-cols-1 items-stretch gap-5 lg:grid-cols-12"
+      >
         <InsightsCard
           workspaceId={workspaceId}
           overview={data}

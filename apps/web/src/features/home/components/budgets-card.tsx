@@ -44,7 +44,7 @@ export function BudgetsCard({
       footerStat={messages.paceNote(periodProgress.elapsedPercent)}
       footerAction={<TextLink render={planning}>{messages.seeAll}</TextLink>}
     >
-      <ul className="flex flex-col">
+      <ul data-slot="budget-rows" className="flex flex-col">
         {lines.map((line) => (
           <li
             key={line.categoryAccountId}

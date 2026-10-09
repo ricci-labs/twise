@@ -14,3 +14,14 @@ export const navLinkVariants = cva(
     defaultVariants: { layout: 'sidebar' },
   },
 )
+
+export const navLinkLabelVariants = cva('', {
+  variants: {
+    layout: {
+      sidebar: 'transition-opacity duration-fast ease-out group-data-fading/sidebar:opacity-0',
+      icon: '',
+      tab: '',
+    },
+  },
+  defaultVariants: { layout: 'sidebar' },
+})

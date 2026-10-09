@@ -1,7 +1,10 @@
 import { useRender } from '@base-ui/react/use-render'
 import { TwiseIcon } from '@web/components/icons/twise-icon'
 import type { NavLinkProps } from '@web/components/navigation/nav-link/nav-link.types'
-import { navLinkVariants } from '@web/components/navigation/nav-link/nav-link.variants'
+import {
+  navLinkLabelVariants,
+  navLinkVariants,
+} from '@web/components/navigation/nav-link/nav-link.variants'
 import { cn } from '@web/lib/cn'
 
 export function NavLink({ item, layout = 'sidebar', className, ...props }: NavLinkProps) {
@@ -21,7 +24,9 @@ export function NavLink({ item, layout = 'sidebar', className, ...props }: NavLi
             tone={isTab || item.isCurrent ? 'inherit' : 'muted'}
             size={isTab ? 'lg' : 'md'}
           />
-          {layout !== 'icon' && <span>{item.label}</span>}
+          {layout !== 'icon' && (
+            <span className={navLinkLabelVariants({ layout })}>{item.label}</span>
+          )}
         </>
       ),
     },

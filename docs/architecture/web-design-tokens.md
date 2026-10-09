@@ -115,6 +115,7 @@ hides the bar of a swipeable row (the KPI carousel).
 | `--duration-fast` / `--duration-normal` / `--duration-slow` | Hover and press / popovers and toasts / sheets and page transitions |
 | `--duration-select` | 150 ms: the colour change of the bottom tab bar's current item |
 | `--duration-collapse` | 250 ms: the sidebar collapsing and opening |
+| `--duration-popover` / `--duration-raise` / `--duration-sheet` | 160 ms help popover (scale .96 → 1 and fade) / 300 ms the KPI carousel dot / 280 ms a bottom sheet opening (it closes in `--duration-normal`) |
 | `--ease-standard`, `--ease-emphasized`, `--ease-out` | In `@theme` (`--ease-*` is a Tailwind namespace); `ease-out` is the design's `cubic-bezier(.2,.8,.2,1)` |
 | `--z-sticky` < `--z-overlay` < `--z-modal` < `--z-toast` | The only layers; no numeric `z-10` in components |
 

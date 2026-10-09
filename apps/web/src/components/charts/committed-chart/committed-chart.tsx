@@ -81,16 +81,14 @@ export function CommittedChart({
               stackId="committed"
               fill={INSTALLMENTS}
               maxBarSize={36}
-              animationDuration={400}
-              animationEasing="ease-out"
+              isAnimationActive={false}
             />
             <Bar
               dataKey="plannedPercent"
               stackId="committed"
               fill={PLANNED}
               maxBarSize={36}
-              animationDuration={400}
-              animationEasing="ease-out"
+              isAnimationActive={false}
               radius={[6, 6, 0, 0]}
             >
               <LabelList

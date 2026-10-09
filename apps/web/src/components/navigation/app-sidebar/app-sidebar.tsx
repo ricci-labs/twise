@@ -14,6 +14,7 @@ import {
   sidebarFootVariants,
   sidebarGroupVariants,
   sidebarHeadVariants,
+  sidebarLabelVariants,
   sidebarToggleVariants,
   sidebarTooltipVariants,
 } from '@web/components/navigation/app-sidebar/app-sidebar.variants'
@@ -27,6 +28,7 @@ export function AppSidebar({
   primaryAction,
   foot,
   isCollapsed,
+  isFading = false,
   onToggle,
   className,
 }: AppSidebarProps) {
@@ -36,6 +38,7 @@ export function AppSidebar({
       <nav
         data-slot="app-sidebar"
         data-collapsed={isCollapsed ? '' : undefined}
+        data-fading={isFading ? '' : undefined}
         aria-label={messages.label}
         className={cn(appSidebarVariants({ isCollapsed }), className)}
       >
@@ -65,7 +68,7 @@ export function AppSidebar({
             ) : (
               <Button width="full" render={primaryAction.render} className="mt-3 mb-2.5">
                 <TwiseIcon name="plus" size="md" />
-                {primaryAction.label}
+                <span className={sidebarLabelVariants()}>{primaryAction.label}</span>
               </Button>
             )}
           </Labelled>
@@ -75,7 +78,7 @@ export function AppSidebar({
           (isCollapsed ? (
             <hr className={sidebarDividerVariants()} />
           ) : (
-            <p className={sidebarGroupVariants()}>{messages.more}</p>
+            <p className={cn(sidebarGroupVariants(), sidebarLabelVariants())}>{messages.more}</p>
           ))}
         <NavList items={moreItems} isCollapsed={isCollapsed} />
         <div className={sidebarFootVariants()}>{foot}</div>

@@ -244,6 +244,18 @@
   transition-duration: var(--duration-collapse);
 }
 
+@utility duration-raise {
+  transition-duration: var(--duration-raise);
+}
+
+@utility duration-sheet {
+  transition-duration: var(--duration-sheet);
+}
+
+@utility duration-popover {
+  transition-duration: var(--duration-popover);
+}
+
 @utility duration-slow {
   transition-duration: var(--duration-slow);
 }

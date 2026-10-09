@@ -80,6 +80,23 @@ describe('AppSidebar', () => {
     },
   )
 
+  it('fades the names out first while collapsing', async () => {
+    const screen = await render(
+      <AppSidebar
+        items={ITEMS}
+        moreItems={MORE}
+        foot={<p>Casa</p>}
+        isCollapsed={false}
+        isFading
+        onToggle={vi.fn()}
+      />,
+    )
+
+    const label = screen.getByText('Lançamentos').element()
+    await expect.poll(() => getComputedStyle(label).opacity).toBe('0')
+    await expect.element(screen.getByText('Mais')).toHaveStyle({ opacity: '0' })
+  })
+
   it('collapses to icons that keep their names, and opens again', async () => {
     const onToggle = vi.fn()
     const screen = await renderSidebar(true, onToggle)
