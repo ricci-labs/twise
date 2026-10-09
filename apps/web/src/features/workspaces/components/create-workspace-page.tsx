@@ -19,6 +19,7 @@ import { ApiError } from '@web/lib/api/api-error'
 import { errorMessageFor } from '@web/lib/errors/error-message'
 import { useSchemaForm } from '@web/lib/forms/use-schema-form'
 import { rememberWorkspace } from '@web/lib/last-workspace'
+import { markWorkspaceCreated } from '@web/lib/workspace-created'
 import { useEffect, useState } from 'react'
 
 const messages = workspacesMessages.create
@@ -45,6 +46,7 @@ export function CreateWorkspacePage({ email, logOut }: CreateWorkspacePageProps)
     try {
       const { workspaceId } = await createWorkspace.mutateAsync(name)
       rememberWorkspace(workspaceId)
+      markWorkspaceCreated(workspaceId)
       showToast(messages.created)
       await navigate({ to: '/w/$workspaceId', params: { workspaceId } })
     } catch (error) {

@@ -18,6 +18,7 @@ export type OwlKitName =
   | 'entrance-together'
   | 'entrance-envelope'
   | 'entrance-space'
+  | 'space-created'
 
 export type OwlKitPhase = 'before' | 'after'
 

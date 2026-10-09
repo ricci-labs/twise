@@ -16,6 +16,9 @@ const KIT_FILES = import.meta.glob<string>('/src/assets/owl-kits/*.svg', {
   import: 'default',
 })
 const KIT_FOLDER = '/src/assets/owl-kits/'
+const SHARED_DRAWINGS: Readonly<Partial<Record<OwlKitName, OwlKitName>>> = {
+  'space-created': 'entrance-space',
+}
 const BOTTOM_ALIGNED = 'xMidYMax meet'
 
 const loaded = new Map<OwlKitName, string>()
@@ -39,6 +42,7 @@ export const OWL_KIT_STILLS: Readonly<Record<OwlKitName, OwlKitStills>> = {
   'entrance-together': { before: 'together', after: 'together' },
   'entrance-envelope': { before: 'envelope', after: 'envelope' },
   'entrance-space': { before: 'space', after: 'space' },
+  'space-created': { before: 'space', after: 'space' },
 }
 
 export function loadedOwlKit(kit: OwlKitName): string | undefined {
@@ -50,7 +54,7 @@ export function loadOwlKit(kit: OwlKitName): Promise<string> {
   if (pending) {
     return pending
   }
-  const load = KIT_FILES[`${KIT_FOLDER}${kit}.svg`]
+  const load = KIT_FILES[`${KIT_FOLDER}${SHARED_DRAWINGS[kit] ?? kit}.svg`]
   if (!load) {
     return Promise.reject(new Error(`Unknown owl kit ${kit}`))
   }
