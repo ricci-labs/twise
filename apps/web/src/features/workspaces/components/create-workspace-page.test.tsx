@@ -30,6 +30,15 @@ describe('WS-01 create a workspace', () => {
     localStorage.clear()
   })
 
+  it('builds the house around the owl as the screen opens', async () => {
+    fakeApi({ '/api/auth/me': account })
+    await openCreatePage()
+
+    await expect
+      .poll(() => document.querySelector("[data-owl-kit='entrance-space']"))
+      .not.toBeNull()
+  })
+
   it('creates the workspace, remembers it and opens it', async () => {
     const created: unknown[] = []
     fakeApi({

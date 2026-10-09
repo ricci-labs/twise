@@ -192,7 +192,7 @@ updated: 2026-10-09
   15. [x] Web: `HOME-01` mobile and desktop, with the demo household
   16. [x] Web: Home states (negative, closed + achievements, no alerts, no config, offline,
       viewer, section error) and first run
-  17. [ ] Web: Home motion (`../design/home/motion.md`)
+  17. [x] Web: Home motion (`../design/home/motion.md`)
 - [ ] Remaining project skills (`new-module`, `db-migration`, `domain-rule`, `pr`) and Claude Code hooks
 
 ## Phase 1: MVP

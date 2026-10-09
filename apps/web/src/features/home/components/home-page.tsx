@@ -26,6 +26,7 @@ import { ReceivablesCard } from '@web/features/home/components/receivables-card'
 import { ReserveGoalsCard } from '@web/features/home/components/reserve-goals-card'
 import { homeMessages } from '@web/features/home/home.messages'
 import type {
+  HomeContentProps,
   HomeFailedProps,
   HomePageProps,
   NameLookup,
@@ -33,6 +34,7 @@ import type {
   SetupState,
   SetupStep,
 } from '@web/features/home/home.types'
+import { useFirstTimeThisSession } from '@web/hooks/use-first-time-this-session'
 import { usePageTitle } from '@web/hooks/use-page-title'
 import { ApiError } from '@web/lib/api/api-error'
 import { errorMessageFor } from '@web/lib/errors/error-message'
@@ -53,6 +55,7 @@ export function HomePage({
   memberCount,
 }: HomePageProps) {
   usePageTitle(homeMessages.pageTitle)
+  const isFirstVisit = useFirstTimeThisSession('home')
   const overview = useQuery(overviewQueryOptions(workspaceId, period))
   const accountNames = useQuery(accountNamesQueryOptions(workspaceId)).data
   const setup = useQuery(setupQueryOptions(workspaceId)).data
@@ -62,7 +65,6 @@ export function HomePage({
   }).data
   const nameOf: NameLookup = (id) =>
     (id && (accountNames?.get(id) ?? contactNames?.get(id))) || homeMessages.unnamed
-  const canWrite = hasPermission(permissions, 'entries', 'create')
 
   if (!overview.data) {
     return overview.isError ? (
@@ -89,22 +91,86 @@ export function HomePage({
       </div>
     )
   }
+  return (
+    <HomeContent
+      workspaceId={workspaceId}
+      data={data}
+      displayName={displayName}
+      permissions={permissions}
+      nameOf={nameOf}
+      isFirstVisit={isFirstVisit}
+      isStale={overview.isPlaceholderData}
+      updatedAt={overview.dataUpdatedAt}
+    />
+  )
+}
+
+function HomeFailed({ error, isRetrying, onRetry }: HomeFailedProps) {
+  return (
+    <div className="mx-auto w-full max-w-274 px-4 py-6 lg:px-8">
+      <SectionError
+        message={errorMessageFor(error)}
+        errorRef={error instanceof ApiError ? error.ref : null}
+        isRetrying={isRetrying}
+        onRetry={onRetry}
+      />
+    </div>
+  )
+}
+
+function HomeLoading() {
+  return (
+    <div className="mx-auto grid w-full max-w-274 gap-5 px-4 py-6 lg:grid-cols-4 lg:px-8">
+      {['free', 'income', 'spent', 'committed'].map((key) => (
+        <SectionSkeleton key={key} lines={2} />
+      ))}
+      <SectionSkeleton hasChart className="lg:col-span-3" />
+      <SectionSkeleton />
+    </div>
+  )
+}
+
+function setupSteps(setup: SetupState, overview: Overview): SetupStep[] {
+  return [
+    { key: 'accounts', area: 'accounts', isDone: setup.hasMoneyAccount },
+    { key: 'cards', area: 'cards', isDone: setup.hasCard },
+    { key: 'income', area: 'planning', isDone: overview.metrics.fixedIncome > 0 },
+    { key: 'entries', area: 'new-entry', isDone: overview.metrics.spent > 0 },
+  ]
+}
+
+function HomeContent({
+  workspaceId,
+  data,
+  displayName,
+  permissions,
+  nameOf,
+  isFirstVisit,
+  isStale,
+  updatedAt,
+}: HomeContentProps) {
+  const canWrite = hasPermission(permissions, 'entries', 'create')
   const stage = periodStageOf(data)
   return (
-    <div className="mx-auto flex w-full max-w-274 flex-col gap-5 px-4 py-6 lg:px-8">
+    <div
+      data-entrance={isFirstVisit ? 'play' : undefined}
+      data-stale={isStale ? '' : undefined}
+      aria-busy={isStale || undefined}
+      className="mx-auto flex w-full max-w-274 flex-col gap-5 px-4 py-6 lg:px-8"
+    >
       <HomeHeader
         workspaceId={workspaceId}
         overview={data}
         stage={stage}
         displayName={displayName}
         hour={Number(SAO_PAULO_HOUR.format(new Date()))}
-        updatedAt={overview.dataUpdatedAt}
+        updatedAt={updatedAt}
       />
       <div className="-mx-4 lg:mx-0">
         <HomeIndicators workspaceId={workspaceId} overview={data} stage={stage} />
       </div>
       {stage !== 'closed' && <CanIBuyCard workspaceId={workspaceId} />}
-      <div className="grid grid-cols-1 items-stretch gap-5 lg:grid-cols-12">
+      <div data-slot="home-grid" className="grid grid-cols-1 items-stretch gap-5 lg:grid-cols-12">
         <InsightsCard
           workspaceId={workspaceId}
           overview={data}
@@ -184,38 +250,4 @@ export function HomePage({
       </div>
     </div>
   )
-}
-
-function HomeFailed({ error, isRetrying, onRetry }: HomeFailedProps) {
-  return (
-    <div className="mx-auto w-full max-w-274 px-4 py-6 lg:px-8">
-      <SectionError
-        message={errorMessageFor(error)}
-        errorRef={error instanceof ApiError ? error.ref : null}
-        isRetrying={isRetrying}
-        onRetry={onRetry}
-      />
-    </div>
-  )
-}
-
-function HomeLoading() {
-  return (
-    <div className="mx-auto grid w-full max-w-274 gap-5 px-4 py-6 lg:grid-cols-4 lg:px-8">
-      {['free', 'income', 'spent', 'committed'].map((key) => (
-        <SectionSkeleton key={key} lines={2} />
-      ))}
-      <SectionSkeleton hasChart className="lg:col-span-3" />
-      <SectionSkeleton />
-    </div>
-  )
-}
-
-function setupSteps(setup: SetupState, overview: Overview): SetupStep[] {
-  return [
-    { key: 'accounts', area: 'accounts', isDone: setup.hasMoneyAccount },
-    { key: 'cards', area: 'cards', isDone: setup.hasCard },
-    { key: 'income', area: 'planning', isDone: overview.metrics.fixedIncome > 0 },
-    { key: 'entries', area: 'new-entry', isDone: overview.metrics.spent > 0 },
-  ]
 }

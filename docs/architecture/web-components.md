@@ -236,6 +236,18 @@ stretches in the danger colour. Each chart is a `figure` whose drawing is `aria-
   (income used, time gone; one ring and a `sm` size for the reserve), the budget bar with the pace mark (`within`, `ahead`, `over`), and the
   100% bar of where the income goes with its legend.
 
+## Home motion
+`docs/design/home/motion.md`. CSS only (`styles/home-motion.css`, timings from `semantic.css`:
+`--duration-enter`, `--stagger`, `--duration-chart`, `--duration-fill`, `--duration-sway`); charts
+use Recharts' own animation. The page sets `data-entrance="play"` only on the first Home of the
+session (`useFirstTimeThisSession`): the KPIs rise one after another (60 ms apart), then the cards
+together. Rings sweep and budget bars fill whenever they mount. While another period loads, the
+old numbers stay at reduced opacity (`data-stale`, `aria-busy`). A red "Livre para gastar" sways its
+piggy bank once. `prefers-reduced-motion` zeroes all of it (`globals.css`).
+- The WS-01 owl plays the design's "Construir" entrance (`entrance-space`, generated from
+  `docs/design/home/animations/Animacao-criar-espaco.html` by `pnpm gen:owl-motion`, which now reads
+  demos from both design folders).
+
 ## Menus, sheets and avatars
 - `ActionMenu` (`components/actions/action-menu`, Base UI `Menu`): a `trigger` element and `groups`
   of items (separators between groups), each a link (`render`) or an action (`onSelect`), with an
