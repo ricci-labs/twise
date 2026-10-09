@@ -14,6 +14,33 @@ export const workspacesMessages = {
     signedInAs: 'Entrou como {email}',
     created: 'Espaço criado.',
   },
+  shell: {
+    nav: {
+      home: 'Início',
+      entries: 'Lançamentos',
+      cards: 'Cartões',
+      planning: 'Planejamento',
+      more: 'Mais',
+      contacts: 'Contatos e cobranças',
+      accounts: 'Contas e categorias',
+      members: 'Membros',
+      settings: 'Configurações',
+      history: 'Histórico',
+      trash: 'Lixeira',
+    },
+    newEntry: 'Novo lançamento',
+    workspace: 'Espaço',
+    switchWorkspace: (name: string) => `Trocar de espaço. Atual: ${name}`,
+    roleAndPeople: (role: string, people: number) =>
+      `${role} · ${people} ${new Intl.PluralRules('pt-BR').select(people) === 'one' ? 'pessoa' : 'pessoas'}`,
+    readOnly: 'Você está vendo este espaço sem poder alterar nada.',
+  },
+  comingSoon: {
+    pageTitle: 'Em breve',
+    title: 'Em breve',
+    text: 'Esta parte do Twise ainda está sendo construída.',
+    backHome: 'Voltar ao início',
+  },
   picker: {
     pageTitle: 'Seus espaços',
     title: 'Seus espaços',

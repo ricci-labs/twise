@@ -49,12 +49,29 @@ export function workspaceList(
   )
 }
 
+const MODULES = ['entries', 'accounts', 'cards', 'contacts', 'planning', 'budgets', 'reports']
+const ADMIN_MODULES = ['settings', 'members', 'audit', 'attachments']
+const ACTIONS = ['view', 'create', 'update', 'delete']
+
+export const OWNER_PERMISSIONS = [...MODULES, ...ADMIN_MODULES].flatMap((module) =>
+  ACTIONS.map((action) => ({ module, action })),
+)
+
+export const VIEWER_PERMISSIONS = MODULES.map((module) => ({ module, action: 'view' }))
+
 export function workspaceAccess(): Response {
+  return accessAs('Dono', OWNER_PERMISSIONS)
+}
+
+export function accessAs(
+  roleName: string,
+  permissions: { module: string; action: string }[],
+): Response {
   return Response.json({
     workspace: { workspaceId: WORKSPACE_ID, name: 'Casa', isArchived: false },
     membershipId: 'membership-a',
-    role: { roleId: 'role-owner', name: 'Dono', systemKey: 'owner' },
-    permissions: [],
+    role: { roleId: `role-${roleName}`, name: roleName, systemKey: null },
+    permissions,
     memberNames: ['Member A', 'Member B'],
   })
 }

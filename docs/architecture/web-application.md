@@ -32,7 +32,8 @@ tests build their own with a memory history.
 | `_app/index.tsx` | Picks the workspace (`chooseWorkspace`): the last one used on this device if it is still theirs, else the only one, else `/workspaces`; none → `/workspaces/new` |
 | `_app/workspaces/index.tsx` | "Seus espaços": every workspace with the role, and "Criar espaço"; `?lost=true` adds "Você não tem mais acesso a este espaço." |
 | `_app/workspaces/new.tsx` | `WS-01`: create a workspace, remember it and open it ("Espaço criado.") |
-| `_app/w/$workspaceId/route.tsx` | `openWorkspace`: loads the workspace, the member's permissions and `memberNames`, and remembers it on the device; `WORKSPACE_NOT_FOUND` → `/workspaces?lost=true` |
+| `_app/w/$workspaceId/route.tsx` | `openWorkspace`: loads the workspace, the member's permissions and `memberNames`, and remembers it on the device; `WORKSPACE_NOT_FOUND` → `/workspaces?lost=true`. Renders `WorkspaceShell` (sidebar, bottom bar, "Mais" sheet, top bar, switcher, account menu from `features/auth`) around the page |
+| `_app/w/$workspaceId/$area.tsx` | Areas not built yet (`entries`, `cards`, `planning`, `contacts`, `accounts`, `members`, `settings`, `history`, `trash`, `account`, `new-entry`): a calm "Em breve" page inside the shell; each real area's route replaces it |
 | `_app/w/$workspaceId/entries/index.tsx`... | One folder per area: `entries`, `cards`, `planning`, `contacts`, `accounts`, `members`, `settings`, `history`, `trash` |
 | `_app/account.tsx` | My account and preferences (`ME-01`) |
 | `dev/components.tsx` | Workbench, development only (`web-components.md`) |
@@ -140,13 +141,17 @@ tests build their own with a memory history.
   second one that would clear the cache under the page. After joining, the moment stays 1.5 s and
   opens the joined workspace (`/w/$workspaceId`).
 - Nothing personal is stored in the browser. `localStorage` holds only `theme`
-  (`web-design-tokens.md` → Dark mode) and `lastWorkspaceId` (`lib/last-workspace.ts`), the
+  (`web-design-tokens.md` → Dark mode), `sidebarCollapsed` (the desktop sidebar, toggled by its
+  button or Ctrl/⌘ + B, `hooks/use-sidebar-collapsed.ts`) and `lastWorkspaceId` (`lib/last-workspace.ts`), the
   workspace opened last on this device, as the design asks; an id the person no longer has is
-  ignored, and both survive a failing storage (private mode).
+  ignored, and all of them survive a failing storage (private mode).
 
 ## Permissions in the UI
-`useCan(module, action)` (`lib/permissions.ts`) reads the workspace query. Buttons and navigation
-items are hidden with it (`../product/requirements/ui-standards.md` → Permissions); the API still enforces everything
+`hasPermission(permissions, module, action)` and `isReadOnly(permissions)` (`lib/permissions.ts`)
+read the workspace access query. The shell shows each menu item only with its module's `view`
+(Lixeira with `entries:delete`, "Novo lançamento" with `entries:create`), and a role that can only
+view gets "Você está vendo este espaço sem poder alterar nada.". Buttons and navigation items are
+hidden, not disabled (`../product/requirements/ui-standards.md` → Permissions); the API still enforces everything
 (RNF-SEC-7).
 
 ## Dates and money
