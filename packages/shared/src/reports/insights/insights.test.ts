@@ -45,7 +45,7 @@ const FACTS: PeriodFacts = {
     },
   ],
   budgets: [],
-  reserve: null,
+  goals: [],
   cards: [],
   invoices: [],
   allocation: null,

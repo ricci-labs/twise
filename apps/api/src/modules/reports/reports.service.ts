@@ -17,7 +17,6 @@ import {
   readBudgetFacts,
   readGoalFacts,
   readOccurrenceFacts,
-  readReserveFact,
   workspaceToday,
 } from '@api/modules/planning'
 import type { PeriodTimeline } from '@api/modules/reports/reports.types'
@@ -155,7 +154,7 @@ async function loadPeriodFacts(
     postings: await readPostingFacts(tx, earliest, latest),
     occurrences: await readOccurrenceFacts(tx, { from: occurrencesFrom, to: latest }, today),
     budgets: await readBudgetFacts(tx, period.label),
-    reserve: await readReserveFact(tx),
+    goals: await readGoalFacts(tx),
     cards: await readCardFacts(tx),
     invoices: await readInvoiceFacts(tx, cycleStart),
     allocation: await loadAllocationFact(tx),

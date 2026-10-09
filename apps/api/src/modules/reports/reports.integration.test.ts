@@ -182,6 +182,30 @@ describe('getPeriodOverview', () => {
     expect(metrics.receivables).toMatchObject({ owedCents: 4_000, contactCount: 1 })
   })
 
+  it('reads every goal with its deadline and balance, and keeps the reserve on its own card', async () => {
+    const { workspaceId, context, account } = await household()
+    const tripAccount = await account({ kind: 'savings', name: 'Poupança da viagem' })
+    const { goalId } = await createGoal(databases.app, context, {
+      name: 'Viagem',
+      targetCents: 500_000,
+      targetOn: '2027-03-31',
+      accountId: tripAccount,
+    })
+    const { metrics } = await getPeriodOverview(databases.app, workspaceId, {}, MID_OCTOBER)
+
+    expect(metrics.goalProgress).toEqual([
+      {
+        goalId,
+        name: 'Viagem',
+        savedCents: 0,
+        targetCents: 500_000,
+        targetOn: '2027-03-31',
+        percent: 0,
+      },
+    ])
+    expect(metrics.reserveCoverage).toMatchObject({ savedCents: 300_000, percent: 30 })
+  })
+
   it('lists the bills of the next seven days with the description of their rule', async () => {
     const { workspaceId } = await household()
     const fiveDaysBefore = { now: () => new Date('2026-10-20T12:00:00Z') }
@@ -254,6 +278,7 @@ describe('getPeriodOverview', () => {
     expect(overview.metrics.reserveCoverage).toEqual({
       savedCents: 300_000,
       targetCents: 1_000_000,
+      percent: 30,
       monthlySpendingCents: 40_000,
       months: 7.5,
     })

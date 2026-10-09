@@ -19,6 +19,8 @@ export const DEMO_IDS = {
   reserve: '00000000-0000-4000-8000-000000000103',
   cardX: '00000000-0000-4000-8000-000000000104',
   cardY: '00000000-0000-4000-8000-000000000105',
+  tripSavings: '00000000-0000-4000-8000-000000000106',
+  laptopSavings: '00000000-0000-4000-8000-000000000107',
   salaryA: '00000000-0000-4000-8000-000000000201',
   salaryB: '00000000-0000-4000-8000-000000000202',
   commission: '00000000-0000-4000-8000-000000000203',
@@ -47,6 +49,9 @@ export const DEMO_IDS = {
   contactC: '00000000-0000-4000-8000-000000000501',
   contactD: '00000000-0000-4000-8000-000000000502',
   contactE: '00000000-0000-4000-8000-000000000503',
+  reserveGoal: '00000000-0000-4000-8000-000000000601',
+  tripGoal: '00000000-0000-4000-8000-000000000602',
+  laptopGoal: '00000000-0000-4000-8000-000000000603',
 } as const
 
 export const DEMO_NAMES: Readonly<Record<string, string>> = {
@@ -55,6 +60,8 @@ export const DEMO_NAMES: Readonly<Record<string, string>> = {
   [DEMO_IDS.reserve]: 'Reserva de emergência',
   [DEMO_IDS.cardX]: 'Cartão X',
   [DEMO_IDS.cardY]: 'Cartão Y',
+  [DEMO_IDS.tripSavings]: 'Poupança da viagem',
+  [DEMO_IDS.laptopSavings]: 'Poupança do notebook',
   [DEMO_IDS.salaryA]: 'Salário A',
   [DEMO_IDS.salaryB]: 'Salário B',
   [DEMO_IDS.commission]: 'Comissão',
@@ -83,4 +90,7 @@ export const DEMO_NAMES: Readonly<Record<string, string>> = {
   [DEMO_IDS.contactC]: 'Member C',
   [DEMO_IDS.contactD]: 'Member D',
   [DEMO_IDS.contactE]: 'Member E',
+  [DEMO_IDS.reserveGoal]: 'Reserva de emergência',
+  [DEMO_IDS.tripGoal]: 'Viagem',
+  [DEMO_IDS.laptopGoal]: 'Notebook',
 }

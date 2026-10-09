@@ -126,7 +126,7 @@ before and the 6 after it, the budget view and base, the accounts (`ledger.readA
 period by `effective_on` or by the entry's `occurred_on` (`ledger.readPostingFacts`), and the
 occurrences due in the period with their rule's description (`planning.readOccurrenceFacts`, which
 tops up the horizon first),
-the budgets in force (`planning.readBudgetFacts`), the reserve (`planning.readReserveFact`), the
+the budgets in force (`planning.readBudgetFacts`), the goals with their deadline and saved balance, the reserve among them (`planning.readGoalFacts`), the
 cards with their payment account (`ledger.readCardFacts`), the invoices closing from a month ago on
 with the part fronted for contacts (`ledger.readInvoiceFacts`), the account balances (`ledger.readBalanceFacts`) and the commission
 waterfall's destinations. Occurrences also load from a month before today when the period starts
@@ -178,10 +178,14 @@ next_invoice      = per card, the invoice a purchase made today goes to (`invoic
                     `GET /cards/:id/invoices`)
 receivables       = what contacts owe (only those with a positive balance): total, overdue, how
                     many, and the next due amount among them → null when nobody owes
+variable_vs_average = this period's commission against `variable_average`, as a whole % difference
+                    (positive = above); null before any commission this period or without history
+goal_progress     = goals with a deadline (the reserve left out: it has its own card), soonest
+                    first, with saved / target as a whole % capped at 100
 variable_average  = variable income averaged over the 6 previous periods that have any posting
                     (a new household isn't averaged with empty months); null without history.
                     Information only: never part of the budget, household policy
-reserve_coverage  = the reserve goal's balance and target, `spending_average` and how many months the reserve covers
+reserve_coverage  = the reserve goal's balance and target, its % (capped at 100), `spending_average` and how many months the reserve covers
                     (one decimal); null without a reserve, months null without spending history
 ```
 

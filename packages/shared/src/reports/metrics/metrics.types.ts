@@ -70,8 +70,13 @@ export type FactAllocation = {
   coversOverspent: boolean
 }
 
-export type FactReserve = {
+export type FactGoal = {
+  goalId: string
+  name: string
+  accountId: string
   targetCents: number
+  targetOn: IsoDate | null
+  isReserve: boolean
   savedCents: number
 }
 
@@ -86,7 +91,7 @@ export type PeriodFacts = {
   postings: readonly FactPosting[]
   occurrences: readonly FactOccurrence[]
   budgets: readonly FactBudget[]
-  reserve: FactReserve | null
+  goals: readonly FactGoal[]
   cards: readonly FactCard[]
   invoices: readonly FactInvoice[]
   allocation: FactAllocation | null
@@ -158,9 +163,23 @@ export type Receivables = {
   next: NextReceivable | null
 }
 
+export type GoalProgress = {
+  goalId: string
+  name: string
+  savedCents: number
+  targetCents: number
+  targetOn: IsoDate
+  percent: number
+}
+
+export type VariableVsAverage = {
+  percent: number
+}
+
 export type ReserveCoverage = {
   savedCents: number
   targetCents: number
+  percent: number
   monthlySpendingCents: number
   months: number | null
 }

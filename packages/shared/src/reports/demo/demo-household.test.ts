@@ -16,7 +16,8 @@ describe('demo household', () => {
       freeToSpend: 234_000,
       dailyAllowance: 14_625,
       variableAverage: 120_000,
-      reserveCoverage: { monthlySpendingCents: 630_000, months: 2.4 },
+      reserveCoverage: { percent: 67, monthlySpendingCents: 630_000, months: 2.4 },
+      variableVsAverage: { percent: 25 },
       periodProgress: { left: 16, elapsedPercent: 52 },
       spendingAverage: { monthlyCents: 630_000, periods: 3 },
       incomeShare: { spentPercent: 43, committedPercent: 31, freePercent: 26 },
@@ -78,6 +79,15 @@ describe('demo household', () => {
       contactCount: 3,
       next: { contactId: DEMO_IDS.contactC, dueOn: '2026-10-25', amountCents: 12_000 },
     })
+  })
+
+  it('shows the goals with a deadline, soonest first', () => {
+    const goals = demoOverview('current').metrics.goalProgress
+
+    expect(goals.map((goal) => [goal.name, goal.percent, goal.targetOn])).toEqual([
+      ['Notebook', 30, '2026-12-31'],
+      ['Viagem', 40, '2027-03-31'],
+    ])
   })
 
   it('keeps the main account positive until the next salary', () => {

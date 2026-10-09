@@ -95,10 +95,9 @@ line under the chart for the first month at or above 70%: "{Mês} já tem {n}% d
 comprometida." Help: "Quanto da renda fixa dos próximos meses já está comprometido."
 
 **RF-HOME-9 Reserve and goals:** "A reserva vem primeiro; depois, as metas com prazo."
-- reserve (`reserveCoverage`, when a reserve goal exists): radial "{p}%" (`reserveCoverage.percent`
-  *(planned)*), "R$ X de R$ Y", "Cobre {months} meses de gastos" (one decimal; "—" without spending
+- reserve (`reserveCoverage`, when a reserve goal exists): radial "{p}%" (`reserveCoverage.percent`), "R$ X de R$ Y", "Cobre {months} meses de gastos" (one decimal; "—" without spending
   history);
-- goals with a deadline (`goals` *(planned)*): "{nome} · R$ X de R$ Y · {p}% · até {mês/aa}". "Ver
+- goals with a deadline (`goalProgress`, soonest deadline first): "{nome} · R$ X de R$ Y · {p}% · até {mês/aa}". "Ver
   metas" → `PLAN-05`. No reserve and no goals: an invitation line with the link (`goals:create`).
 
 **RF-HOME-10 Shortcuts:** "Novo lançamento" (floating on mobile, sidebar button on desktop;
@@ -129,7 +128,7 @@ is left out. A period that closed negative shows no highlight.
 
 **RF-HOME-18 Commissions** (`variableIncome`, `variableAverage`): "Renda variável deste período."
 "Este período R$ X", "Média dos últimos meses R$ Y" ("—" when null) and "+{p}% acima da média" /
-"{p}% abaixo da média" (`variableVsAverage` *(planned)*); "Dividir" → `HOME-03` when there is
+"{p}% abaixo da média" (`variableVsAverage`); "Dividir" → `HOME-03` when there is
 commission (`entries:create`).
 
 **RF-HOME-19 Receivables** (`receivables`): "A receber de contatos · De quem usa os

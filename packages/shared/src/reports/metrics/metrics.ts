@@ -7,6 +7,7 @@ import { committedAhead } from '@shared/reports/metrics/committed-ahead'
 import { dailyAllowance } from '@shared/reports/metrics/daily-allowance'
 import { fixedIncome } from '@shared/reports/metrics/fixed-income'
 import { freeToSpend } from '@shared/reports/metrics/free-to-spend'
+import { goalProgress } from '@shared/reports/metrics/goal-progress'
 import { incomeShare } from '@shared/reports/metrics/income-share'
 import type { PeriodFacts } from '@shared/reports/metrics/metrics.types'
 import { nextInvoice } from '@shared/reports/metrics/next-invoice'
@@ -18,6 +19,7 @@ import { spendingAverage } from '@shared/reports/metrics/spending-average'
 import { spent } from '@shared/reports/metrics/spent'
 import { variableAverage } from '@shared/reports/metrics/variable-average'
 import { variableIncome } from '@shared/reports/metrics/variable-income'
+import { variableVsAverage } from '@shared/reports/metrics/variable-vs-average'
 
 export const METRICS = {
   fixedIncome,
@@ -33,7 +35,9 @@ export const METRICS = {
   periodPace,
   budgetPace,
   variableAverage,
+  variableVsAverage,
   reserveCoverage,
+  goalProgress,
   committedAhead,
   nextInvoice,
   balanceForecast,
