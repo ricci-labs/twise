@@ -49,7 +49,7 @@ export function workspaceNavigation(
     main: [home, ...MAIN_AREAS.filter(visible).map(areaItem)],
     more: MORE_AREAS.filter(visible).map(areaItem),
     newEntry: can('entries', 'create') ? (
-      <Link to="/w/$workspaceId/$area" params={{ workspaceId, area: 'new-entry' }} />
+      <Link to="/w/$workspaceId/$area" params={{ workspaceId, area: 'new-entry' }} data-write="" />
     ) : null,
   }
 }

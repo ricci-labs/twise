@@ -22,11 +22,6 @@ export function HomeHeader({ overview, stage, displayName, hour, updatedAt }: Ho
             formatDayMonthLong(today),
             stage === 'open' ? metrics.periodProgress.left : 0,
           )}
-          {!isOnline && (
-            <span className="font-semibold">
-              {messages.updatedAt(UPDATED_TIME.format(updatedAt))}
-            </span>
-          )}
           {stage !== 'open' && (
             <>
               <Badge tone={stage === 'closed' ? 'neutral' : 'info'}>
@@ -69,6 +64,11 @@ export function HomeHeader({ overview, stage, displayName, hour, updatedAt }: Ho
           <ChevronRight className="size-5" aria-hidden="true" />
         </Link>
       </nav>
+      {!isOnline && (
+        <p className="-mt-2 text-center text-body-sm text-ink-muted lg:hidden">
+          {messages.updatedAt(UPDATED_TIME.format(updatedAt))}
+        </p>
+      )}
     </header>
   )
 }

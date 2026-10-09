@@ -93,7 +93,7 @@ function BillRow({ workspaceId, bill, canWrite, hasDivider }: BillRowProps) {
             {whenOf(bill)}
           </span>
           {late && canWrite && (
-            <Button variant="subtle" size="xs" render={recordLink(workspaceId)}>
+            <Button variant="subtle" size="xs" data-write="" render={recordLink(workspaceId)}>
               {messages.record}
             </Button>
           )}

@@ -21,6 +21,7 @@ Where the design and the requirement docs disagree, the design wins and the doc 
 | Mobile tab bar | — | Attached white bar; current item = `--mint-ink` stroke and bold label, no fill, no background, no mark under the label |
 | Icons | Lucide | Own icon set (`../assets/icones`); Lucide only for small utility glyphs |
 | First run | Checklist of 4 steps | Mint hero with owl and house, numbered steps with the next one open, ghost preview of the KPIs saying which step unlocks each |
+| Offline | — | Shell band "Sem conexão. Você pode ver seus dados, mas não salvar." with "Atualizado às HH:MM" (the last fetch) at its right on the desktop and under the period picker on the phone. Write actions (Novo lançamento, Registrar, Dividir, Cobrar; marked `data-write`) show "Sem conexão. Dá para salvar quando a internet voltar." instead of opening. The account screens keep "Sem conexão. Verifique a internet e tente de novo." |
 | Viewer | — | Menu hides Membros, Configurações, Histórico, Lixeira (role matrix) |
 
 ## Proposals (approved by the user on 2026-10-09; now in the requirements)
