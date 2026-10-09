@@ -94,6 +94,23 @@ describe('GET /api/workspaces/:workspaceId', () => {
     })
   })
 
+  it('names the people of the workspace to every member, a viewer included', async () => {
+    const { app } = testApp()
+    const owner = await userWithSession(app, 'access-names-owner')
+    const viewer = await userWithSession(app, 'access-names-viewer')
+    const { workspaceId } = await workspaceOwnedBy(owner.userId, 'Names')
+    await addViewer(workspaceId, viewer.userId)
+
+    const response = await get(app, `/api/workspaces/${workspaceId}`, viewer.cookie)
+
+    expect(response.status).toBe(200)
+    const { memberNames } = (await response.json()) as { memberNames: string[] }
+    expect(memberNames).toHaveLength(2)
+    expect(memberNames).toEqual(
+      expect.arrayContaining(['Member access-names-owner', 'Member access-names-viewer']),
+    )
+  })
+
   it('answers 404 to someone who is not a member, as if it did not exist', async () => {
     const { app } = testApp()
     const owner = await userWithSession(app, 'access-owner-2')

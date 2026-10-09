@@ -57,6 +57,10 @@ export async function listMembers(db: Database, workspaceId: string): Promise<Me
   })
 }
 
+export async function listMemberNames(db: Database, workspaceId: string): Promise<string[]> {
+  return (await listMembers(db, workspaceId)).map((member) => member.displayName)
+}
+
 export async function changeMemberRole(
   db: Database,
   { actor, membershipId, roleId }: ChangeMemberRoleInput,

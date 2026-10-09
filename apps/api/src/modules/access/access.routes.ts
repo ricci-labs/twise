@@ -11,6 +11,7 @@ import {
   changeRole,
   createRole,
   deleteRole,
+  listMemberNames,
   listMembers,
   listRoles,
   listWorkspacesOfUser,
@@ -45,7 +46,7 @@ export function accessRoutes({ db }: AccessRouteDeps) {
         workspaceId,
         userId: currentSession(c).userId,
       })
-      return c.json(access)
+      return c.json({ ...access, memberNames: await listMemberNames(db, workspaceId) })
     })
     .get('/members', authorize('members', 'view'), async (c) => {
       return c.json(await listMembers(db, currentWorkspace(c).workspaceId))

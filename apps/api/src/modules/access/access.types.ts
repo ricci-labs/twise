@@ -21,6 +21,10 @@ export type WorkspaceAccess = {
   permissions: Permission[]
 }
 
+export type WorkspaceAccessDetails = WorkspaceAccess & {
+  memberNames: string[]
+}
+
 export type AccessRouteDeps = {
   db: Database
 }

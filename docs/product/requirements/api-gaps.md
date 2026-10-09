@@ -46,6 +46,7 @@ the Home round (`../roadmap.md`). Field names are the plan; the PR that adds one
 | G32 | Reserve radial and goals with a deadline | **Done:** `reserveCoverage.percent`; `goalProgress[]` (`goalId`, `name`, `savedCents`, `targetCents`, `targetOn`, `percent`), soonest first |
 | G33 | "+25% acima da média" on commissions | **Done:** `variableVsAverage`: `percent` (null before any commission in the period) |
 | G34 | Achievements of a closed period | **Done:** `periodSummary` (null unless the period is closed): `leftCents`, `positiveStreak` (this period + up to the 6 loaded before) + `streakCapped`, `budgetsWithin` / `budgetsTotal`, `billsOnTime` / `billsTotal`, `reserveAddedCents`, `goals[]` (`goalId`, `startPercent`, `endPercent`) |
+| G36 | The shell shows who shares the space ("Dono · 2 pessoas", avatars on the phone), but only `GET /members` names them, and viewers can't call it | **Done:** `GET /api/workspaces/:id` adds `memberNames` for every member |
 | G35 | Found by the demo household: in a **future** period nothing has elapsed, so a budget with an installment already recorded there reads `ahead` (expected R$ 0,00) and raises `budget_ahead` | **Done:** `budgetPace` reads `within` until the period starts (still `over` past the limit) |
 
 ## Behaviours to decide
