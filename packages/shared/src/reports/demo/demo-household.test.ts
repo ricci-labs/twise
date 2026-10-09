@@ -43,8 +43,14 @@ describe('demo household', () => {
 
     expect(committedAhead.map((month) => month.percentOfIncome)).toEqual([52, 52, 72, 43, 43, 43])
     expect(nextInvoice).toMatchObject([
-      { closingOn: '2026-10-25', dueOn: '2026-11-04', postedCents: 184_000, plannedCents: 11_000 },
-      { closingOn: '2026-11-02', dueOn: '2026-11-10', postedCents: 62_000, plannedCents: 0 },
+      {
+        closingOn: '2026-10-25',
+        dueOn: '2026-11-04',
+        postedCents: 184_000,
+        plannedCents: 11_000,
+        frontedCents: 34_000,
+      },
+      { closingOn: '2026-11-02', dueOn: '2026-11-10', postedCents: 62_000, frontedCents: 0 },
     ])
   })
 
@@ -63,6 +69,15 @@ describe('demo household', () => {
       ['Condomínio', 5],
       ['Academia', 6],
     ])
+  })
+
+  it('has R$ 840,00 to receive from three contacts, R$ 120,00 next', () => {
+    expect(demoOverview('current').metrics.receivables).toEqual({
+      owedCents: 84_000,
+      overdueCents: 20_000,
+      contactCount: 3,
+      next: { contactId: DEMO_IDS.contactC, dueOn: '2026-10-25', amountCents: 12_000 },
+    })
   })
 
   it('keeps the main account positive until the next salary', () => {

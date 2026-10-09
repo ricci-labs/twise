@@ -41,8 +41,8 @@ the Home round (`../roadmap.md`). Field names are the plan; the PR that adds one
 | G27 | "% da renda" under Gasto and Comprometido; the 100% bar | **Done:** `incomeShare`: `spentPercent`, `committedPercent`, `freePercent` (null without budget income) |
 | G28 | Pace radial | **Done:** `periodPace`: `usedPercent`, `elapsedPercent`, `pointsAhead` |
 | G29 | Bills due in 7 days and the count under Comprometido | **Done:** `billsDue`: `until`, `count`, `totalCents` (coming ones), `overdueCount`, `items[]` (`occurrenceId`, `description`, `dueOn`, `amountCents`, `daysFromToday`), expenses only |
-| G30 | "R$ X são de outras pessoas" on each invoice | `nextInvoice[].frontedCents` |
-| G31 | Receivables card | `receivables`: `owedCents`, `overdueCents`, `contactCount`, `next` (`contactId`, `dueOn`, `amountCents`) |
+| G30 | "R$ X são de outras pessoas" on each invoice | **Done:** `nextInvoice[].frontedCents` |
+| G31 | Receivables card | **Done:** `receivables` (null when nobody owes): `owedCents`, `overdueCents`, `contactCount`, `next` (`contactId`, `dueOn`, `amountCents`) |
 | G32 | Reserve radial and goals with a deadline | `reserveCoverage.percent`; `goals[]` (`goalId`, `name`, `savedCents`, `targetCents`, `targetOn`, `percent`) |
 | G33 | "+25% acima da média" on commissions | `variableVsAverage`: `percent` |
 | G34 | Achievements of a closed period | `periodSummary` (null unless the period is closed): `leftCents`, `positiveStreak` (up to the 6 loaded periods) + `streakCapped`, `budgetsWithin` / `budgetsTotal`, `billsOnTime` / `billsTotal`, `reserveAddedCents`, `goals[]` (`goalId`, `startPercent`, `endPercent`) |

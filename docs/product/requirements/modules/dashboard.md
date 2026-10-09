@@ -79,7 +79,7 @@ link (`budgets:update`; others see only the line).
 
 **RF-HOME-6 Next invoices** (`nextInvoice`, one per card): card name, "Fecha {dd/mm} · vence
 {dd/mm}", "Total previsto" (`forecastCents`), "R$ X lançado · R$ Y previsto" (`postedCents`,
-`plannedCents`) and a chip "R$ X são de outras pessoas" (`frontedCents` *(planned)*) or "Tudo de
+`plannedCents`) and a chip "R$ X são de outras pessoas" (`frontedCents`) or "Tudo de
 vocês". Tap → `CARD-03`; "Ver cartões" → `CARD-01`.
 
 **RF-HOME-7 Balance forecast** (`balanceForecast`, one per money account, account tabs inside the
@@ -132,7 +132,7 @@ is left out. A period that closed negative shows no highlight.
 "{p}% abaixo da média" (`variableVsAverage` *(planned)*); "Dividir" → `HOME-03` when there is
 commission (`entries:create`).
 
-**RF-HOME-19 Receivables** (`receivables` *(planned)*): "A receber de contatos · De quem usa os
+**RF-HOME-19 Receivables** (`receivables`): "A receber de contatos · De quem usa os
 cartões de vocês." "R$ X de {n} contatos · R$ Y em atraso", "Próximo a receber: {contato}, R$ Z em
 {dd/mm}", "Cobrar" (`charges:create`) and "Ver contatos" → `CON-01`. Hidden when nobody owes.
 

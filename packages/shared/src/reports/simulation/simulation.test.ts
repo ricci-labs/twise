@@ -195,6 +195,7 @@ describe('simulatePurchase', () => {
           dueOn: '2026-11-10',
           totalCents: 50_000,
           paidCents: 0,
+          frontedCents: 0,
         },
       ],
       today: '2026-10-15',
@@ -212,6 +213,7 @@ describe('simulatePurchase', () => {
         dueOn: '2026-11-10',
         totalCents: 150_000,
         paidCents: 0,
+        frontedCents: 0,
       },
       {
         cardAccountId: 'card',
@@ -219,6 +221,7 @@ describe('simulatePurchase', () => {
         dueOn: '2026-12-10',
         totalCents: 100_000,
         paidCents: 0,
+        frontedCents: 0,
       },
       {
         cardAccountId: 'card',
@@ -226,6 +229,7 @@ describe('simulatePurchase', () => {
         dueOn: '2027-01-10',
         totalCents: 100_000,
         paidCents: 0,
+        frontedCents: 0,
       },
     ])
   })

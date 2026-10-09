@@ -93,6 +93,7 @@ function onCard(facts: PeriodFacts, purchase: SimulatedPurchase, card: FactCard)
       dueOn: invoice.dueOn,
       totalCents: amountCents,
       paidCents: 0,
+      frontedCents: 0,
     }))
   const updatedInvoices = [...updated, ...created]
   return { ...facts, postings: [...facts.postings, ...postings], invoices: updatedInvoices }

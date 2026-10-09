@@ -73,6 +73,7 @@ export function demoFacts(scenario: DemoScenario): PeriodFacts {
         dueOn: '2026-11-04',
         totalCents: 184_000,
         paidCents: 0,
+        frontedCents: 34_000,
       },
       {
         cardAccountId: ids.cardY,
@@ -80,6 +81,7 @@ export function demoFacts(scenario: DemoScenario): PeriodFacts {
         dueOn: '2026-11-10',
         totalCents: 62_000,
         paidCents: 0,
+        frontedCents: 0,
       },
     ],
     allocation: { destinationAccountIds: [ids.reserve], coversOverspent: false },

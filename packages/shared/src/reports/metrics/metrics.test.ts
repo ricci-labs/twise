@@ -198,6 +198,7 @@ function household(overrides: Partial<PeriodFacts> = {}): PeriodFacts {
         dueOn: '2026-10-10',
         totalCents: 30_000,
         paidCents: 30_000,
+        frontedCents: 0,
       },
       {
         cardAccountId: 'card',
@@ -205,6 +206,7 @@ function household(overrides: Partial<PeriodFacts> = {}): PeriodFacts {
         dueOn: '2026-11-10',
         totalCents: 45_000,
         paidCents: 10_000,
+        frontedCents: 15_000,
       },
     ],
     balances: [{ accountId: 'checking', balanceCents: 600_000 }],
@@ -437,6 +439,44 @@ describe('billsDue', () => {
   })
 })
 
+describe('receivables', () => {
+  const owing = (
+    contactId: string,
+    owedCents: number,
+    overdueCents: number,
+    nextDueOn: string | null,
+  ) => ({
+    contactId,
+    owedCents,
+    overdueCents,
+    nextDueOn,
+    nextDueCents: nextDueOn ? 5_000 : 0,
+  })
+
+  it('adds up what contacts owe and points at the next amount to receive', () => {
+    const facts = household({
+      contactBalances: [
+        owing('contact-a', 30_000, 0, '2026-10-30'),
+        owing('contact-b', 20_000, 20_000, null),
+        owing('contact-c', 10_000, 0, '2026-10-25'),
+        owing('settled', 0, 0, null),
+      ],
+    })
+    expect(computeMetrics(facts).receivables).toEqual({
+      owedCents: 60_000,
+      overdueCents: 20_000,
+      contactCount: 3,
+      next: { contactId: 'contact-c', dueOn: '2026-10-25', amountCents: 5_000 },
+    })
+  })
+
+  it('has nothing when nobody owes, and no next one when all is overdue', () => {
+    expect(computeMetrics(household()).receivables).toBeNull()
+    const overdueOnly = household({ contactBalances: [owing('contact-b', 20_000, 20_000, null)] })
+    expect(computeMetrics(overdueOnly).receivables?.next).toBeNull()
+  })
+})
+
 describe('spendingAverage', () => {
   it('averages the last three periods that had any activity', () => {
     expect(computeMetrics(household()).spendingAverage).toEqual({
@@ -519,7 +559,7 @@ describe('committedAhead', () => {
 })
 
 describe('nextInvoice', () => {
-  it('forecasts the open invoice: what is on it plus the subscriptions before it closes', () => {
+  it('forecasts the open invoice: what is on it plus the subscriptions before it closes, and the part of other people', () => {
     expect(computeMetrics(household()).nextInvoice).toEqual([
       {
         cardAccountId: 'card',
@@ -528,6 +568,7 @@ describe('nextInvoice', () => {
         postedCents: 45_000,
         plannedCents: 4_000,
         forecastCents: 49_000,
+        frontedCents: 15_000,
       },
     ])
   })
@@ -574,7 +615,12 @@ describe('nextInvoice', () => {
 
   it('starts empty for a card with nothing on its open invoice yet', () => {
     const forecast = computeMetrics(household({ invoices: [], occurrences: [] })).nextInvoice
-    expect(forecast[0]).toMatchObject({ postedCents: 0, plannedCents: 0, forecastCents: 0 })
+    expect(forecast[0]).toMatchObject({
+      postedCents: 0,
+      plannedCents: 0,
+      forecastCents: 0,
+      frontedCents: 0,
+    })
   })
 })
 

@@ -159,6 +159,29 @@ async function household() {
 }
 
 describe('getPeriodOverview', () => {
+  it('tells the part of the open invoice that belongs to contacts, and what they owe', async () => {
+    const { workspaceId, context, card, groceries } = await household()
+    const { contactId } = await createContact(databases.app, context, { name: 'Contact F' })
+    await recordEntry(
+      databases.app,
+      { ...context, source: 'web' },
+      {
+        entryType: 'card_purchase',
+        occurredOn: '2026-10-15',
+        description: 'Jantar',
+        amountCents: 10_000,
+        cardAccountId: card,
+        categoryId: groceries,
+        shares: [{ contactId, amountCents: 4_000 }],
+      },
+      MID_OCTOBER,
+    )
+    const { metrics } = await getPeriodOverview(databases.app, workspaceId, {}, MID_OCTOBER)
+
+    expect(metrics.nextInvoice[0]).toMatchObject({ postedCents: 40_000, frontedCents: 4_000 })
+    expect(metrics.receivables).toMatchObject({ owedCents: 4_000, contactCount: 1 })
+  })
+
   it('lists the bills of the next seven days with the description of their rule', async () => {
     const { workspaceId } = await household()
     const fiveDaysBefore = { now: () => new Date('2026-10-20T12:00:00Z') }
@@ -209,6 +232,7 @@ describe('getPeriodOverview', () => {
         postedCents: 30_000,
         plannedCents: 3_990,
         forecastCents: 33_990,
+        frontedCents: 0,
       },
     ])
     expect(
