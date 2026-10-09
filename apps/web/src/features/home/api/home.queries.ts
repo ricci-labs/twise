@@ -1,3 +1,4 @@
+import { MONEY_ACCOUNT_KINDS } from '@financas/shared'
 import { queryOptions } from '@tanstack/react-query'
 import { unwrap } from '@web/lib/api/unwrap'
 import { apiClient } from '@web/lib/api-client'
@@ -13,11 +14,32 @@ export function overviewQueryOptions(workspaceId: string, period: string | undef
   })
 }
 
-export function accountNamesQueryOptions(workspaceId: string) {
+export function accountsQueryOptions(workspaceId: string) {
   return queryOptions({
     queryKey: [...queryKeys.workspace(workspaceId), 'accounts'] as const,
     queryFn: () => unwrap(workspaceApi.accounts.$get({ param: { workspaceId } })),
+  })
+}
+
+export function accountNamesQueryOptions(workspaceId: string) {
+  return queryOptions({
+    ...accountsQueryOptions(workspaceId),
     select: (accounts) => new Map(accounts.map((account) => [account.id, account.name])),
+  })
+}
+
+export function setupQueryOptions(workspaceId: string) {
+  return queryOptions({
+    ...accountsQueryOptions(workspaceId),
+    select: (accounts) => {
+      const kinds = new Set(
+        accounts.filter((account) => !account.isSystem).map((account) => account.kind),
+      )
+      return {
+        hasMoneyAccount: MONEY_ACCOUNT_KINDS.some((kind) => kinds.has(kind)),
+        hasCard: kinds.has('credit_card'),
+      }
+    },
   })
 }
 

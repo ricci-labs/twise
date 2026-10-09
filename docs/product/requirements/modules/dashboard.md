@@ -151,7 +151,8 @@ HH:MM"; write actions say it can't be done now. Viewer: banner "Você está vend
 poder alterar nada.", no "Novo lançamento", no "Registrar", "Dividir", "Cobrar"; the "Ver…" links
 and "Posso comprar?" stay.
 
-**First run** (no accounts yet): a mint welcome band with the owl and the house, the title, why in
+**First run** (no money account yet; the Home opens normally once one exists, each section with its
+own empty state): a mint welcome band with the owl and the house, the title, why in
 one sentence, the progress ("{a} de 5 feitos") and a button for the next step; then the numbered
 steps, the next one open with its action, done ones checked and collapsed: "Cadastre suas contas",
 "Cadastre seus cartões", "Cadastre salário e contas fixas", "Registre os primeiros gastos" and, in

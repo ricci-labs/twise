@@ -3,10 +3,19 @@ import { Badge } from '@web/components/display/badge'
 import { neighbourPeriod } from '@web/features/home/components/period-stage'
 import { homeMessages as messages } from '@web/features/home/home.messages'
 import type { HomeHeaderProps } from '@web/features/home/home.types'
+import { useIsOnline } from '@web/hooks/use-is-online'
 import { formatDayMonthLong, formatMonthLabel, formatRange } from '@web/lib/format/calendar'
 import { CalendarDays, ChevronLeft, ChevronRight } from 'lucide-react'
 
-export function HomeHeader({ workspaceId, overview, stage, displayName, hour }: HomeHeaderProps) {
+export function HomeHeader({
+  workspaceId,
+  overview,
+  stage,
+  displayName,
+  hour,
+  updatedAt,
+}: HomeHeaderProps) {
+  const isOnline = useIsOnline()
   const { today, period, metrics } = overview
   const step = (direction: -1 | 1) => neighbourPeriod(period.label, direction)
   return (
@@ -19,6 +28,11 @@ export function HomeHeader({ workspaceId, overview, stage, displayName, hour }: 
           {messages.today(
             formatDayMonthLong(today),
             stage === 'open' ? metrics.periodProgress.left : 0,
+          )}
+          {!isOnline && (
+            <span className="font-semibold">
+              {messages.updatedAt(UPDATED_TIME.format(updatedAt))}
+            </span>
           )}
           {stage !== 'open' && (
             <>
@@ -68,6 +82,11 @@ export function HomeHeader({ workspaceId, overview, stage, displayName, hour }: 
   )
 }
 
+const UPDATED_TIME = new Intl.DateTimeFormat('pt-BR', {
+  timeZone: 'America/Sao_Paulo',
+  hour: '2-digit',
+  minute: '2-digit',
+})
 const MORNING_ENDS = 12
 const AFTERNOON_ENDS = 18
 

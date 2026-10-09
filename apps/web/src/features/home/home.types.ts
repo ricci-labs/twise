@@ -1,6 +1,8 @@
 import type { Permission } from '@financas/shared'
+import type { TwiseIconName } from '@web/components/icons/twise-icon'
 import type { fetchOverview } from '@web/features/home/api/home.queries'
 import type { homeSearchSchema } from '@web/features/home/home.schemas'
+import type { ReactElement } from 'react'
 import type { z } from 'zod'
 
 export type HomeSearch = z.infer<typeof homeSearchSchema>
@@ -18,6 +20,8 @@ export type HomePageProps = {
   period?: string
   displayName: string
   permissions: readonly Permission[]
+  workspaceName: string
+  memberCount: number
 }
 
 export type HomeSectionProps = {
@@ -43,6 +47,7 @@ export type HomeHeaderProps = HomeSectionProps & {
   stage: PeriodStage
   displayName: string
   hour: number
+  updatedAt: number
 }
 
 export type HomeIndicatorsProps = HomeSectionProps & {
@@ -117,4 +122,46 @@ export type CommissionsCardProps = HomeSectionProps & {
 export type ReceivablesCardProps = HomeSectionProps & {
   nameOf: NameLookup
   canCharge: boolean
+}
+
+export type AchievementsCardProps = HomeSectionProps
+
+export type AchievementTile = {
+  key: string
+  icon: TwiseIconName
+  value: string
+  label: string
+}
+
+export type SetupStepKey = 'accounts' | 'cards' | 'income' | 'entries'
+
+export type SetupStep = {
+  key: SetupStepKey
+  area: string
+  isDone: boolean
+}
+
+export type FirstRunProps = {
+  workspaceId: string
+  workspaceName: string
+  steps: readonly SetupStep[]
+  canInvite: boolean
+}
+
+export type StepRowProps = {
+  step: SetupStep
+  position: number
+  isNext: boolean
+  action: ReactElement
+}
+
+export type SetupState = {
+  hasMoneyAccount: boolean
+  hasCard: boolean
+}
+
+export type HomeFailedProps = {
+  error: unknown
+  isRetrying: boolean
+  onRetry: () => void
 }
