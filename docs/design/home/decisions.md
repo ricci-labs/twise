@@ -17,6 +17,7 @@ Where the design and the requirement docs disagree, the design wins and the doc 
 | Closed period | Hero with no "por dia" | First KPI turns white and reads "Sobrou no período encerrado"; Comprometido R$ 0,00 "Nada ficou para vencer"; the forecast card is replaced by the achievements (proposal); pace becomes "Como o período terminou" |
 | Negative "Livre para gastar" | danger style, "Passou R$ X do planejado" | danger-soft card, badge "Passou do planejado", the reason, "Ver onde ajustar" (proposal), and the worried piggy bank |
 | Desktop sidebar | — | Collapsible; workspace switcher moved to the sidebar foot, above the account. Current item on a `--mint` background with `--on-mint` stroke and label (open and collapsed); icons never filled |
+| Desktop content width | — | Fluid: fills the width next to the sidebar (content padding 28 / 32 / 48 px), up to 1600 px, then centered. 12 fluid columns, 20 px gaps, equal-height cards per row; charts take the card's width (forecast 330 px tall, coming months 230 px) |
 | Mobile tab bar | — | Attached white bar; current item = `--mint-ink` stroke and bold label, no fill, no background, no mark under the label |
 | Icons | Lucide | Own icon set (`../assets/icones`); Lucide only for small utility glyphs |
 | First run | Checklist of 4 steps | Mint hero with owl and house, numbered steps with the next one open, ghost preview of the KPIs saying which step unlocks each |

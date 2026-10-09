@@ -1,7 +1,7 @@
 ---
 summary: Overview of the designed app shell, workspace creation and Home (SHELL-01, WS-01, HOME-01): layouts, navigation, rules, build order and where each number comes from.
 read_when: Starting any work on SHELL-01, WS-01 or HOME-01, mobile or desktop.
-updated: 2026-10-07
+updated: 2026-10-09
 ---
 
 # Shell, workspace and Home
@@ -32,7 +32,7 @@ Requirements: `../../product/requirements/modules/dashboard.md` (HOME-01), `../.
 ## Layouts
 
 - **Mobile (< 1024 px):** top bar (workspace + people), greeting, period picker, then the cards in one column. The four KPIs are a **swipeable carousel** (next card peeks at the right, dots below). Bottom tab bar: Início, Lançamentos, Cartões, Planejamento, Mais. Floating "Novo lançamento" above it.
-- **Desktop (≥ 1024 px):** left sidebar (264 px, collapsible to 76 px) and a 12-column grid, max 1096 px, 20 px gaps. Every row has equal-height cards. Order: KPIs (4×3) · balance forecast (8) + alerts (4) · budgets (8) + pace (4) · coming months (8) + where income goes (4) · bills due in 7 days, next invoices, reserve and goals (4 each) · commissions and receivables (6 each).
+- **Desktop (≥ 1024 px):** left sidebar (264 px, collapsible to 76 px) and a 12-column fluid grid that fills the width next to the sidebar, 32 px side padding, up to 1600 px (margins appear only beyond that, equal on both sides), 20 px gaps. Collapsing the sidebar widens the content with it. Every row has equal-height cards. Order: KPIs (4×3) · balance forecast (8) + alerts (4) · budgets (8) + pace (4) · coming months (8) + where income goes (4) · bills due in 7 days, next invoices, reserve and goals (4 each) · commissions and receivables (6 each).
 - The sidebar is fixed to the window height; only the content scrolls. Workspace switcher and account sit at the sidebar foot. Collapsed: icons only, tooltips on hover, logo becomes the owl, "Novo lançamento" a round "+".
 
 ## Rules for every screen here

@@ -113,7 +113,8 @@ hides the bar of a swipeable row (the KPI carousel).
 |---|---|
 | `--duration-fast` / `--duration-normal` / `--duration-slow` | Hover and press / popovers and toasts / sheets and page transitions |
 | `--duration-select` | 150 ms: the colour change of the bottom tab bar's current item |
-| `--ease-standard`, `--ease-emphasized` | In `@theme` (`--ease-*` is a Tailwind namespace) |
+| `--duration-collapse` | 250 ms: the sidebar collapsing and opening |
+| `--ease-standard`, `--ease-emphasized`, `--ease-out` | In `@theme` (`--ease-*` is a Tailwind namespace); `ease-out` is the design's `cubic-bezier(.2,.8,.2,1)` |
 | `--z-sticky` < `--z-overlay` < `--z-modal` < `--z-toast` | The only layers; no numeric `z-10` in components |
 
 `prefers-reduced-motion: reduce` sets every duration to `0ms` in `@layer base` (RNF-A11Y-6).

@@ -1,7 +1,7 @@
 import { cva } from 'class-variance-authority'
 
 export const cardVariants = cva(
-  'flex min-w-0 flex-col rounded-lg border border-border bg-surface px-5 py-5 lg:px-6',
+  'flex h-full min-w-0 flex-col rounded-lg border border-border bg-surface px-5 py-5 lg:px-6',
   {
     variants: {
       layout: {

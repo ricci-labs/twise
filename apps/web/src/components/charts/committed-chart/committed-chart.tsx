@@ -18,7 +18,7 @@ const PLANNED = 'var(--color-chart-2)'
 const WARNING = 'var(--color-warning)'
 const AXIS = { fontSize: 12, fill: 'var(--color-ink-muted)' }
 const TICKS = [0, 25, 50, 75, 100]
-const CHART_HEIGHT = 260
+const CHART_HEIGHT = 230
 
 export function CommittedChart({
   months,

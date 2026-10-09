@@ -18,7 +18,7 @@ const LINE = 'var(--color-mint-ink)'
 const FILL = 'var(--color-mint)'
 const NEGATIVE = 'var(--color-danger)'
 const AXIS = { fontSize: 12, fill: 'var(--color-ink-muted)' }
-const CHART_HEIGHT = 280
+const CHART_HEIGHT = 330
 
 export function ForecastChart({
   points,

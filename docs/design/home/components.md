@@ -18,8 +18,8 @@ Existing design-system components (`../design-system/components`) are reused: Bu
 | 6 | `Card` | `Card` | Title, description, body, footer with a stat on the left and a link on the right; rows stretch to equal height |
 | 7 | `KpiCard` + `KpiCarousel` | `Card`, `Carousel` | First card mint ("Livre para gastar", with the piggy bank). Negative: danger-soft card, red value, badge "Passou do planejado", the reason and "Ver onde ajustar", piggy bank in trouble (`cofrinho-alerta.svg`). Closed period: white card, "Sobrou no período encerrado". Carousel: 300 px cards, 12 px gap, next one peeks, dots are buttons, each slide read as "2 de 4" |
 | 8 | `SectionSkeleton`, `SectionError`, `EmptyState` | `Skeleton` | Per section. Empty state: icon in a soft circle + text, on the card itself |
-| 9 | `BalanceForecastChart` | `ChartContainer` + `AreaChart` (step) | Account tabs inside the card (`ToggleGroup`), zero line dashed, lowest point marked with a tooltip, negative stretch in danger |
-| 10 | `CommittedAheadChart` | `BarChart` stacked + `ReferenceLine` at 70% | Parcelas blue, Contas previstas green, % above each bar, ≥ 70% in warning |
+| 9 | `BalanceForecastChart` | `ChartContainer` + `AreaChart` (step) | `ResponsiveContainer` 100% wide, 330 px tall. Account tabs inside the card (`ToggleGroup`), zero line dashed, lowest point marked with a tooltip, negative stretch in danger |
+| 10 | `CommittedAheadChart` | `BarChart` stacked + `ReferenceLine` at 70% | `ResponsiveContainer` 100% wide, 230 px tall. Parcelas blue, Contas previstas green, % above each bar, ≥ 70% in warning |
 | 11 | `PaceRadial` | `RadialBarChart` | Income used vs period elapsed (proposal metric) |
 | 12 | `BudgetRows` | `BudgetProgress` | Desktop: aligned table (category, bar with pace mark, amount, status). Mobile: stacked rows |
 | 13 | `IncomeBar` | — | 100% bar: spent, committed, free (proposal metric) |

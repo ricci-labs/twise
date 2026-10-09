@@ -31,7 +31,7 @@ Demo: `animations/Movimento-inicio.html` (one loop per piece), `animations/Anima
 | Budgets | bars fill from the left; pace mark fades in after | 500 ms, 60 ms stagger |
 | KPI carousel | snaps one card; active dot stretches | 300 ms |
 | Bottom tab bar | only the color changes | 150 ms |
-| Sidebar collapse | width 264 → 76 px; labels fade first | 250 ms (labels 120 ms) |
+| Sidebar collapse | width 264 → 76 px, ease-out; the content widens with it; labels fade first | 250 ms (labels 120 ms) |
 | Sheets (Mais, workspaces, period) | scrim fades; sheet slides up; closes faster | 200 + 280 ms; close 200 ms |
 | Help "?" popover | scale .96 → 1 and fade | 160 ms |
 | Period change | numbers leave 6 px sideways, new ones enter from the other side | 200 ms |
