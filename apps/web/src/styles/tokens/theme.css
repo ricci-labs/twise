@@ -57,6 +57,9 @@
   --text-button: 1rem;
   --text-button--line-height: 1.5rem;
   --text-button--font-weight: 650;
+  --text-button-sm: 0.8125rem;
+  --text-button-sm--line-height: 1.125rem;
+  --text-button-sm--font-weight: 650;
   --text-caption: 0.75rem;
   --text-caption--line-height: 1rem;
   --text-caption--font-weight: 600;
@@ -100,6 +103,7 @@
   --spacing-touch: 2.75rem;
   --spacing-control: 3rem;
   --spacing-control-sm: 2.25rem;
+  --spacing-control-xs: 1.875rem;
   --spacing-fab: 3.5rem;
 
   --aspect-owl: 6 / 5;

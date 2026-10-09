@@ -76,6 +76,7 @@ export type BillRowProps = {
   workspaceId: string
   bill: OverviewBill
   canWrite: boolean
+  hasDivider: boolean
 }
 
 export type CanIBuyCardProps = {

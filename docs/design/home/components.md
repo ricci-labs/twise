@@ -23,7 +23,7 @@ Existing design-system components (`../design-system/components`) are reused: Bu
 | 11 | `PaceRadial` | `RadialBarChart` | Income used vs period elapsed (proposal metric) |
 | 12 | `BudgetRows` | `BudgetProgress` | Desktop: aligned table (category, bar with pace mark, amount, status). Mobile: stacked rows |
 | 13 | `IncomeBar` | — | 100% bar: spent, committed, free (proposal metric) |
-| 14 | `BillsDueList` | — | Next 7 days; date block; overdue row tinted danger-soft with "Atrasada há N dias" and a "Registrar" button on the same line |
+| 14 | `BillsDueList` | — | Next 7 days. Each row: date block (`--bg-sunken`, 42×46) · name left and amount right (bold, tabular) · second line in grey with the weekday and how long ("Quinta · em 2 dias"); rows split by a divider. Overdue row: `--danger-soft`, `--radius-md`, 10 px padding, bleeding 10 px into the card sides, no divider above or below; white date block with the day in `--danger`; second line = alert icon + "Atrasada há N dias" (`--danger`, 600) on the left and the small secondary "Registrar" button (30 px, white, `--border-control`) on the right of the same line. No "Atrasada" badge, nothing stacked. Viewer: no "Registrar" |
 | 15 | `InvoiceList` | — | Card, dates, total, posted/planned, chip "R$ X são de outras pessoas" |
 | 16 | `ReserveGoalsCard` | `Progress` | Reserve radial + goals with deadline |
 | 17 | `ReceivablesCard`, `CommissionsCard` | — | Next receivable line; commission vs average bars |

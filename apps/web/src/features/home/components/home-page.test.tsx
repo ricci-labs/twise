@@ -2,6 +2,7 @@ import { createMemoryHistory } from '@tanstack/react-router'
 import { AppProviders } from '@web/app/providers'
 import { createApp } from '@web/app/router'
 import { expectNoAccessibilityViolations } from '@web/testing/accessibility'
+import { backgroundOfClass } from '@web/testing/colors'
 import { demoAnswers } from '@web/testing/demo-api'
 import {
   accessAs,
@@ -37,6 +38,9 @@ function kpi(screen: Awaited<ReturnType<typeof openHome>>['screen'], label: stri
   const heading = screen.getByRole('heading', { name: label, exact: true }).element()
   return heading.closest('[data-slot=kpi-card]')?.textContent ?? ''
 }
+
+const CARD_PADDING = 24
+const SMALL_BUTTON = 30
 
 describe('HOME-01 period overview', () => {
   afterEach(async () => {
@@ -86,6 +90,28 @@ describe('HOME-01 period overview', () => {
     await expect.element(bills.getByText('Atrasada há 2 dias')).toBeVisible()
     await expect.element(bills.getByText('Quinta · em 2 dias')).toBeVisible()
     await expect.element(bills.getByRole('link', { name: 'Registrar' }).last()).toBeVisible()
+  })
+
+  it('draws the late bill as a danger-soft row: name and amount, then the delay and "Registrar"', async () => {
+    await page.viewport(1440, 900)
+    const { screen } = await openHome()
+    const bills = screen.getByRole('region', { name: 'Vencem nos próximos 7 dias' })
+    await expect.element(bills.getByText('Atrasada há 2 dias')).toBeVisible()
+
+    const rows = [...bills.element().querySelectorAll('li')]
+    const late = rows.find((row) => row.hasAttribute('data-late'))
+    const card = bills.element().getBoundingClientRect()
+    const record = bills.getByRole('link', { name: 'Registrar' }).last().element()
+    const delay = bills.getByText('Atrasada há 2 dias').element()
+    expect(late && getComputedStyle(late).backgroundColor).toBe(backgroundOfClass('bg-danger-soft'))
+    expect(late?.getBoundingClientRect().width).toBeGreaterThan(card.width - 2 * CARD_PADDING)
+    expect(record.getBoundingClientRect().height).toBe(SMALL_BUTTON)
+    expect(Math.round(record.getBoundingClientRect().top)).toBeLessThan(
+      Math.round(delay.getBoundingClientRect().bottom),
+    )
+    expect(late?.querySelector('[data-slot=badge]')).toBeNull()
+    expect(rows[1] && getComputedStyle(rows[1]).borderTopWidth).toBe('0px')
+    expect(rows[2] && getComputedStyle(rows[2]).borderTopWidth).toBe('1px')
   })
 
   it('hides the write actions from a viewer', async () => {
