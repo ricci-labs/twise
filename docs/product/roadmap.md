@@ -171,12 +171,12 @@ updated: 2026-10-09
 - [ ] **Home round: shell, workspace and Home** (design `../design/home/`, every proposal approved
   by the user on 2026-10-09; order docs → API → web; one PR each, merged by Claude when CI is green):
   1. [x] Design package in `docs/design/home/` (#180)
-  2. [ ] Requirements: `HOME-01`, `SHELL-01`, `WS-01`, navigation, API gaps G25–G34 (this list)
-  3. [ ] Demo household: a typed fixture in `packages/shared` (period 5 out – 4 nov, today 20 out,
+  2. [x] Requirements: `HOME-01`, `SHELL-01`, `WS-01`, navigation, API gaps G25–G34 (#181)
+  3. [x] Demo household: a typed fixture in `packages/shared` (period 5 out – 4 nov, today 20 out,
      budget income R$ 9.000,00, the design's numbers) with scenarios (current, overspent, closed,
      no alerts, first run); a test proves `computeMetrics` gives the design's numbers. The web
      tests and workbench use it, and later the public demo page
-  4. [ ] Overview: `periodDays`, `spendingAverage` (G25, G26)
+  4. [ ] Overview: `periodDays`, `spendingAverage`, no pace alarm before a period starts (G25, G26, G35)
   5. [ ] Overview: `incomeShare`, `periodPace` (G27, G28)
   6. [ ] Overview: `billsDue` + occurrence description in `occurrence_overdue` (G29, G9)
   7. [ ] Overview: `frontedCents` on next invoices, `receivables` (G30, G31)

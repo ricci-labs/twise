@@ -1,7 +1,7 @@
 ---
 summary: Coding conventions — naming, money, dates, IDs, errors, validation, tests, migrations, commits.
 read_when: Writing or reviewing any code.
-updated: 2026-10-01
+updated: 2026-10-09
 ---
 
 # Conventions
@@ -198,6 +198,12 @@ without comments.
 - For a DB rule (trigger, policy, constraint), prove the test can fail: disable the rule locally, see the test go red, re-enable.
 - **Races must be tested deterministically.** Firing concurrent calls and hoping they overlap passes by luck. Hold a lock from the owner connection (e.g. `lock table ... in exclusive mode`) so the racing calls queue up, wait for them with `waitForBlockedQueries()`, then release. Example: the invitation race test in `members.integration.test.ts`.
 - `pnpm test` never needs a database.
+- **Demo household** (`packages/shared/src/reports/demo/`): one fictional couple whose period facts
+  give the Home design's numbers (`../design/home/`: today 20 out, period 5 out – 4 nov, budget income
+  R$ 9.000,00), in four scenarios (`current`, `overspent`, `closed`, `future`). `demoOverview()` runs
+  the real metrics and insights over it, so web tests and the workbench mock `GET /overview` with it,
+  and the public demo page reuses it later. A new metric or fact extends the household and its test
+  instead of inventing numbers in a web test.
 - **Web:** `*.test.ts` runs in Node (pure logic); `*.test.tsx` runs in Chromium through Vitest
   browser mode (`apps/web/vitest.config.ts`), with `vitest-browser-react`. Every component test file
   ends with an `expectNoAccessibilityViolations()` check (`apps/web/src/testing/accessibility.ts`,
