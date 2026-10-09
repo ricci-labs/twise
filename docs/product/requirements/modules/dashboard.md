@@ -28,7 +28,7 @@ Fields marked *(planned)* are added to `/overview` by the Home round (`../api-ga
 until a field exists its widget stays hidden.
 
 **RF-HOME-1 Period header.** Greeting "Bom dia / Boa tarde / Boa noite, {nome}" and "Hoje é {data} ·
-faltam {n} dias para o fim do período" (`periodDays.left` *(planned)*). Period picker (previous /
+faltam {n} dias para o fim do período" (`periodProgress.left`). Period picker (previous /
 next, and the label opens the months of the year with their ranges; the current one in mint,
 future ones dashed); the period goes in the URL (`?period=2026-10`). A past period shows the badge
 "Período encerrado" and "Ir para o período atual"; a future one "Período futuro".
@@ -39,7 +39,7 @@ future ones dashed); the period goes in the URL (`?period=2026-10`). A past peri
 |---|---|---|---|
 | "Livre para gastar" (mint, piggy bank) | `freeToSpend` | "R$ X por dia" (`dailyAllowance`) · "Até {fim} · faltam {n} dias" | "Renda fixa do período, menos o que já foi gasto, menos as contas que ainda vão vencer." |
 | "Renda do orçamento" | `budgetIncome` | "Comissão à parte: R$ X" (`variableIncome`, when the base is fixed income) | "Salários recebidos e previstos no período." |
-| "Gasto" | `spent` | "{p}% da renda" (`incomeShare.spentPercent` *(planned)*) · "Média mensal (3 meses): R$ X" (`spendingAverage` *(planned)*) | "Despesas e parcelas que caem neste período." |
+| "Gasto" | `spent` | "{p}% da renda" (`incomeShare.spentPercent` *(planned)*) · "Média mensal (3 meses): R$ X" (`spendingAverage.monthlyCents`) | "Despesas e parcelas que caem neste período." |
 | "Comprometido" | `committed` | "{p}% da renda" (`incomeShare.committedPercent`) · "{n} contas vencem nos próximos 7 dias" (`billsDue.count` *(planned)*) | "Contas fixas previstas que ainda não foram pagas, incluindo atrasadas." |
 - **Negative** `freeToSpend`: the first card turns danger-soft, value in red, badge "Passou do
   planejado", the reason in one line, "Ver onde ajustar" (→ `PLAN-04` sorted by how far ahead of
@@ -73,7 +73,7 @@ jump) with the same line centered and the green check icon.
 **RF-HOME-5 Budgets** (`budgetPace`): "Os 5 mais adiantados em relação ao ritmo do período." Top 5
 by how far ahead of pace; desktop as an aligned table (category, bar with the pace mark, "R$ X de
 R$ Y", status "Estourou" / "Adiantado" / "No ritmo"), mobile as stacked rows. Note: "Traço = onde o
-gasto deveria estar hoje ({p}% do período)." (`periodDays.elapsedPercent` *(planned)*). "Ver
+gasto deveria estar hoje ({p}% do período)." (`periodProgress.elapsedPercent`). "Ver
 todos" → `PLAN-04`. No budgets: "Defina orçamentos para acompanhar o ritmo dos gastos." with the
 link (`budgets:update`; others see only the line).
 

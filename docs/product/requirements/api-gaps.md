@@ -36,8 +36,8 @@ never computes a metric, so every number, percent and day count on `HOME-01` com
 the Home round (`../roadmap.md`). Field names are the plan; the PR that adds one fixes it here.
 | # | Widget | Proposed field |
 |---|---|---|
-| G25 | "faltam {n} dias", pace mark on budgets | `periodDays`: `total`, `elapsed`, `left`, `elapsedPercent` |
-| G26 | "Média mensal (3 meses)" under Gasto (today only inside `reserveCoverage`, null without a reserve) | `spendingAverage`: `monthlyCents`, `periods` |
+| G25 | "faltam {n} dias", pace mark on budgets | **Done:** `periodProgress`: `total`, `elapsed`, `left`, `elapsedPercent` |
+| G26 | "Média mensal (3 meses)" under Gasto (was only inside `reserveCoverage`, null without a reserve) | **Done:** `spendingAverage`: `monthlyCents`, `periods` |
 | G27 | "% da renda" under Gasto and Comprometido; the 100% bar | `incomeShare`: `spentPercent`, `committedPercent`, `freePercent` (null without budget income) |
 | G28 | Pace radial | `periodPace`: `usedPercent`, `elapsedPercent`, `pointsAhead` |
 | G29 | Bills due in 7 days and the count under Comprometido | `billsDue`: `until`, `count`, `totalCents`, `overdueCount`, `items[]` (`occurrenceId`, `description`, `entryType`, `dueOn`, `amountCents`, `daysFromToday`) |
@@ -46,7 +46,7 @@ the Home round (`../roadmap.md`). Field names are the plan; the PR that adds one
 | G32 | Reserve radial and goals with a deadline | `reserveCoverage.percent`; `goals[]` (`goalId`, `name`, `savedCents`, `targetCents`, `targetOn`, `percent`) |
 | G33 | "+25% acima da média" on commissions | `variableVsAverage`: `percent` |
 | G34 | Achievements of a closed period | `periodSummary` (null unless the period is closed): `leftCents`, `positiveStreak` (up to the 6 loaded periods) + `streakCapped`, `budgetsWithin` / `budgetsTotal`, `billsOnTime` / `billsTotal`, `reserveAddedCents`, `goals[]` (`goalId`, `startPercent`, `endPercent`) |
-| G35 | Found by the demo household: in a **future** period nothing has elapsed, so a budget with an installment already recorded there reads `ahead` (expected R$ 0,00) and raises `budget_ahead` | `budgetPace` reads `within` until the period starts (still `over` past the limit) |
+| G35 | Found by the demo household: in a **future** period nothing has elapsed, so a budget with an installment already recorded there reads `ahead` (expected R$ 0,00) and raises `budget_ahead` | **Done:** `budgetPace` reads `within` until the period starts (still `over` past the limit) |
 
 ## Behaviours to decide
 | # | Today | Options |

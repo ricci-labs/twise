@@ -17,6 +17,8 @@ describe('demo household', () => {
       dailyAllowance: 14_625,
       variableAverage: 120_000,
       reserveCoverage: { monthlySpendingCents: 630_000, months: 2.4 },
+      periodProgress: { left: 16, elapsedPercent: 52 },
+      spendingAverage: { monthlyCents: 630_000, periods: 3 },
     })
   })
 
@@ -95,5 +97,12 @@ describe('demo household', () => {
 
     expect(period).toEqual({ label: '2026-11', start: '2026-11-05', end: '2026-12-04' })
     expect(metrics).toMatchObject({ spent: 84_000, committed: 385_000, variableIncome: 0 })
+  })
+
+  it('raises no pace alarm for a period that has not started', () => {
+    const { metrics, insights } = demoOverview('future')
+
+    expect(metrics.budgetPace.map((line) => line.status)).not.toContain('ahead')
+    expect(insights.map((insight) => insight.code)).not.toContain('budget_ahead')
   })
 })
