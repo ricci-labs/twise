@@ -179,7 +179,7 @@ updated: 2026-10-09
   4. [x] Overview: `periodProgress`, `spendingAverage`, no pace alarm before a period starts (G25, G26, G35)
   5. [x] Overview: `incomeShare`, `periodPace` (G27, G28)
   6. [x] Overview: `billsDue` + occurrence description in `occurrence_overdue` (G29, G9)
-  7. [ ] Overview: `frontedCents` on next invoices, `receivables` (G30, G31)
+  7. [x] Overview: `frontedCents` on next invoices, `receivables` (G30, G31)
   8. [ ] Overview: reserve percent, `goals`, `variableVsAverage` (G32, G33)
   9. [ ] Overview: `periodSummary`, part 1: left over and positive streak (G34)
   10. [ ] Overview: `periodSummary`, part 2: budgets within limit, bills on time, reserve added,

@@ -12,6 +12,7 @@ import type { PeriodFacts } from '@shared/reports/metrics/metrics.types'
 import { nextInvoice } from '@shared/reports/metrics/next-invoice'
 import { periodPace } from '@shared/reports/metrics/period-pace'
 import { periodProgress } from '@shared/reports/metrics/period-progress'
+import { receivables } from '@shared/reports/metrics/receivables'
 import { reserveCoverage } from '@shared/reports/metrics/reserve-coverage'
 import { spendingAverage } from '@shared/reports/metrics/spending-average'
 import { spent } from '@shared/reports/metrics/spent'
@@ -37,6 +38,7 @@ export const METRICS = {
   nextInvoice,
   balanceForecast,
   billsDue,
+  receivables,
 } as const
 
 export type PeriodMetrics = { [Key in keyof typeof METRICS]: ReturnType<(typeof METRICS)[Key]> }

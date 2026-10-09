@@ -8,10 +8,10 @@ export function nextInvoice(facts: PeriodFacts): InvoiceForecast[] {
 
 function forecastOf(facts: PeriodFacts, card: FactCard): InvoiceForecast {
   const { closingOn, dueOn } = invoiceForPurchase(facts.today, card)
-  const postedCents =
-    facts.invoices.find(
-      (invoice) => invoice.cardAccountId === card.accountId && invoice.closingOn === closingOn,
-    )?.totalCents ?? 0
+  const invoice = facts.invoices.find(
+    (candidate) => candidate.cardAccountId === card.accountId && candidate.closingOn === closingOn,
+  )
+  const postedCents = invoice?.totalCents ?? 0
   const plannedCents = sumCents(
     facts.occurrences
       .filter(
@@ -30,5 +30,6 @@ function forecastOf(facts: PeriodFacts, card: FactCard): InvoiceForecast {
     postedCents,
     plannedCents,
     forecastCents: postedCents + plannedCents,
+    frontedCents: invoice?.frontedCents ?? 0,
   }
 }

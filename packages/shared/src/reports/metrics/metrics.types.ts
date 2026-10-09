@@ -57,6 +57,7 @@ export type FactInvoice = {
   dueOn: IsoDate
   totalCents: number
   paidCents: number
+  frontedCents: number
 }
 
 export type FactBalance = {
@@ -144,6 +145,19 @@ export type BillsDue = {
   items: BillDue[]
 }
 
+export type NextReceivable = {
+  contactId: string
+  dueOn: IsoDate
+  amountCents: number
+}
+
+export type Receivables = {
+  owedCents: number
+  overdueCents: number
+  contactCount: number
+  next: NextReceivable | null
+}
+
 export type ReserveCoverage = {
   savedCents: number
   targetCents: number
@@ -167,6 +181,7 @@ export type InvoiceForecast = {
   postedCents: number
   plannedCents: number
   forecastCents: number
+  frontedCents: number
 }
 
 export type BalancePoint = {

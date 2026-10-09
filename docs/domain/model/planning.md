@@ -128,7 +128,7 @@ occurrences due in the period with their rule's description (`planning.readOccur
 tops up the horizon first),
 the budgets in force (`planning.readBudgetFacts`), the reserve (`planning.readReserveFact`), the
 cards with their payment account (`ledger.readCardFacts`), the invoices closing from a month ago on
-(`ledger.readInvoiceFacts`), the account balances (`ledger.readBalanceFacts`) and the commission
+with the part fronted for contacts (`ledger.readInvoiceFacts`), the account balances (`ledger.readBalanceFacts`) and the commission
 waterfall's destinations. Occurrences also load from a month before today when the period starts
 later, so the open invoice's subscriptions are there.
 Postings are loaded from the start of the oldest previous period to the end of the last coming
@@ -174,7 +174,10 @@ committed_ahead   = for each of the next 6 periods: installments already posted 
 next_invoice      = per card, the invoice a purchase made today goes to (`invoiceForPurchase`):
                     its total so far + the pending subscriptions of that card whose due date lands
                     on the same invoice → { closingOn, dueOn, postedCents, plannedCents,
-                    forecastCents }
+                    forecastCents, frontedCents } (fronted = the contacts' shares on it, as in
+                    `GET /cards/:id/invoices`)
+receivables       = what contacts owe (only those with a positive balance): total, overdue, how
+                    many, and the next due amount among them → null when nobody owes
 variable_average  = variable income averaged over the 6 previous periods that have any posting
                     (a new household isn't averaged with empty months); null without history.
                     Information only: never part of the budget, household policy

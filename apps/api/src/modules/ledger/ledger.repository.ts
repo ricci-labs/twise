@@ -525,6 +525,7 @@ export function selectPostingFacts(tx: WorkspaceTransaction, from: IsoDate, to: 
 export function selectInvoiceFacts(tx: WorkspaceTransaction, closingFrom: IsoDate) {
   return tx
     .select({
+      invoiceId: invoiceTotals.invoiceId,
       cardAccountId: invoiceTotals.cardAccountId,
       closingOn: invoiceTotals.closingOn,
       dueOn: invoiceTotals.dueOn,
@@ -551,7 +552,11 @@ export function selectContactPostings(tx: WorkspaceTransaction, contactId?: stri
     .where(and(...conditions))
 }
 
-export function selectFrontedByInvoice(tx: WorkspaceTransaction, cardAccountId: string) {
+export function selectFrontedByInvoice(tx: WorkspaceTransaction, cardAccountId?: string) {
+  const conditions = [isNull(journalEntries.deletedAt), isNotNull(postings.invoiceId)]
+  if (cardAccountId) {
+    conditions.push(eq(postings.accountId, cardAccountId))
+  }
   return tx
     .select({
       invoiceId: sql<string>`${postings.invoiceId}`,
@@ -559,7 +564,7 @@ export function selectFrontedByInvoice(tx: WorkspaceTransaction, cardAccountId: 
     })
     .from(postings)
     .innerJoin(journalEntries, eq(journalEntries.id, postings.entryId))
-    .where(and(eq(postings.accountId, cardAccountId), isNull(journalEntries.deletedAt)))
+    .where(and(...conditions))
     .groupBy(postings.invoiceId)
 }
 

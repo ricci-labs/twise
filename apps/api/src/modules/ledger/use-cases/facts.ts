@@ -6,6 +6,7 @@ import {
   selectActiveEntryIds,
   selectContactItems,
   selectContactPostings,
+  selectFrontedByInvoice,
   selectInvoiceFacts,
   selectInvoicesDueBetween,
   selectPostingDetails,
@@ -51,11 +52,17 @@ export async function readCardFacts(tx: WorkspaceTransaction): Promise<FactCard[
   }))
 }
 
-export function readInvoiceFacts(
+export async function readInvoiceFacts(
   tx: WorkspaceTransaction,
   closingFrom: IsoDate,
 ): Promise<FactInvoice[]> {
-  return selectInvoiceFacts(tx, closingFrom)
+  const fronted = new Map(
+    (await selectFrontedByInvoice(tx)).map((row) => [row.invoiceId, row.frontedCents]),
+  )
+  return (await selectInvoiceFacts(tx, closingFrom)).map(({ invoiceId, ...invoice }) => ({
+    ...invoice,
+    frontedCents: fronted.get(invoiceId) ?? 0,
+  }))
 }
 
 export async function readBalanceFacts(tx: WorkspaceTransaction): Promise<FactBalance[]> {
