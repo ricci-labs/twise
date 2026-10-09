@@ -74,9 +74,7 @@ export function ForecastChart({
               stroke={scale.bottom < 0 ? `url(#${gradientId}-stroke)` : LINE}
               strokeWidth={2}
               fill={`url(#${gradientId}-fill)`}
-              isAnimationActive
-              animationDuration={700}
-              animationEasing="ease-out"
+              isAnimationActive={false}
             />
             {lowest && (
               <ReferenceDot

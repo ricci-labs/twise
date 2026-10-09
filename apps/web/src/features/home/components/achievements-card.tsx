@@ -28,19 +28,30 @@ export function AchievementsCard({ overview, className }: AchievementsCardProps)
   return (
     <Card className={className} title={messages.title(month)} description={messages.description}>
       {summary.leftCents >= 0 && (
-        <div className="flex items-center justify-between gap-4 rounded-lg bg-mint px-5 py-4.5 text-on-mint">
+        <div
+          data-slot="achievement-highlight"
+          className="flex items-center justify-between gap-4 rounded-lg bg-mint px-5 py-4.5 text-on-mint"
+        >
           <div className="flex flex-col items-start">
             <p className="text-label">{messages.closedPositive(month)}</p>
             <p className="mt-0.5 mb-2 flex items-baseline gap-2 font-display text-amount-kpi whitespace-nowrap">
               {messages.left} <Amount cents={summary.leftCents} size="kpi" isCentsRaised />
             </p>
             {summary.positiveStreak >= FIRST_STREAK_WORTH_SAYING && (
-              <span className="inline-flex h-6.5 items-center gap-1.5 rounded-full bg-on-mint px-2.5 text-caption font-semibold text-mint">
+              <span
+                data-slot="achievement-streak"
+                className="inline-flex h-6.5 items-center gap-1.5 rounded-full bg-on-mint px-2.5 text-caption font-semibold text-mint"
+              >
                 {messages.streak(summary.positiveStreak, summary.streakCapped)}
               </span>
             )}
           </div>
-          <img src={piggyBank} alt="" className="size-18 shrink-0 rounded-full lg:size-24" />
+          <img
+            data-slot="achievement-art"
+            src={piggyBank}
+            alt=""
+            className="size-18 shrink-0 rounded-full lg:size-24"
+          />
         </div>
       )}
       {tiles.length > 0 && (

@@ -1,7 +1,7 @@
 import { cva } from 'class-variance-authority'
 
 export const appSidebarVariants = cva(
-  'sticky top-0 flex h-dvh shrink-0 flex-col gap-0.5 overflow-y-auto border-r border-border bg-surface py-5 transition-all duration-collapse ease-out',
+  'group/sidebar sticky top-0 flex h-dvh shrink-0 flex-col gap-0.5 overflow-y-auto border-r border-border bg-surface py-5 transition-all duration-collapse ease-out',
   {
     variants: {
       isCollapsed: {
@@ -39,4 +39,8 @@ export const sidebarFootVariants = cva(
 
 export const sidebarTooltipVariants = cva(
   'z-overlay rounded-md bg-ink px-2.5 py-1.5 text-body-sm text-surface shadow-float',
+)
+
+export const sidebarLabelVariants = cva(
+  'transition-opacity duration-fast ease-out group-data-fading/sidebar:opacity-0',
 )

@@ -12,6 +12,7 @@ export type AppSidebarProps = {
   primaryAction?: SidebarAction
   foot: ReactNode
   isCollapsed: boolean
+  isFading?: boolean
   onToggle: () => void
   className?: string
 }

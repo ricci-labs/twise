@@ -7,7 +7,7 @@ export const kpiCarouselTrackVariants = cva(
 export const kpiCarouselSlideVariants = cva('w-75 shrink-0 snap-start lg:w-auto')
 
 export const kpiCarouselDotVariants = cva(
-  'h-2 cursor-pointer rounded-full transition-all duration-fast',
+  'h-2 cursor-pointer rounded-full transition-all duration-raise ease-out',
   {
     variants: {
       isCurrent: { true: 'w-5 bg-ink', false: 'w-2 bg-border' },

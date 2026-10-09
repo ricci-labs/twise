@@ -5,5 +5,5 @@ export const helpTriggerVariants = cva(
 )
 
 export const helpPopupVariants = cva(
-  'z-overlay max-w-72 rounded-lg border border-border bg-surface px-4 py-3 text-body-sm text-ink shadow-dialog outline-none',
+  'z-overlay max-w-72 rounded-lg border border-border bg-surface px-4 py-3 text-body-sm text-ink shadow-dialog transition duration-popover ease-out outline-none data-ending-style:scale-96 data-ending-style:opacity-0 data-starting-style:scale-96 data-starting-style:opacity-0',
 )

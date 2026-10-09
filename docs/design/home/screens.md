@@ -97,7 +97,7 @@ Looped demos; in the app each plays once. Details in `motion.md`.
 |---|---|---|---|
 | Animação · Início desktop | animation | [html](animations/Animacao-inicio-desktop.html) | Como a Início chega na primeira vez da sessão: os 4 indicadores sobem um a um (60 ms de diferença), os cartões entram juntos logo depois, a linha da previsão se desenha da esquerda para a direita (0,5–1,2 s) e o degradê aparece por baixo, as barras crescem da base, as barras de orçamento enchem e o anel do ritmo dá a volta. Tudo pronto em 1,3 s. Trocar de período NÃO repete isso: só os números trocam com um esmaecer de 200 ms. Em loop só aqui no canvas. |
 | Animação · Início celular | animation | [html](animations/Animacao-inicio-celular.html) | A mesma entrada no celular: indicadores do carrossel sobem, "Posso comprar?" e os avisos entram logo depois, e cada gráfico se desenha quando aparece na tela ao rolar (não antes). Em loop só aqui no canvas. |
-| Movimento · Início | animation | [html](animations/Movimento-inicio.html) | Plano de movimento para o time, com os tempos de cada peça. No código: gráficos com a animação do próprio Recharts (isAnimationActive, animationDuration, animationEasing ease-out), o resto em CSS (transições e keyframes), sem biblioteca nova. Tudo desligado com prefers-reduced-motion. |
+| Movimento · Início | animation | [html](animations/Movimento-inicio.html) | Plano de movimento para o time, com os tempos de cada peça. No código: tudo em CSS (transições e keyframes), inclusive os gráficos, desenhados pelo Recharts com a animação dele desligada (revisto em 2026-10-09, ver `motion.md`), sem biblioteca nova. Tudo desligado com prefers-reduced-motion. |
 
 ## Reference sheets
 

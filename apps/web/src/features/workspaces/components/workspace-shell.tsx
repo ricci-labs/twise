@@ -55,6 +55,7 @@ export function WorkspaceShell({
               : undefined
           }
           isCollapsed={sidebar.isCollapsed}
+          isFading={sidebar.isFading}
           onToggle={sidebar.toggle}
           foot={
             sidebar.isCollapsed ? null : (
