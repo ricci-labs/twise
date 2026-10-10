@@ -105,6 +105,8 @@ export type BudgetPace = {
   limitCents: number
   spentCents: number
   expectedCents: number
+  overCents: number
+  aheadPoints: number
   status: 'within' | 'ahead' | 'over'
 }
 

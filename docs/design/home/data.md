@@ -15,7 +15,7 @@ The web never computes a metric (`../../product/requirements/modules/dashboard.m
 | KPIs: livre para gastar, por dia, renda, gasto, comprometido | `GET /overview` → `freeToSpend`, `dailyAllowance`, `budgetIncome`, `spent`, `committed` |
 | "Média mensal (3 meses)" under Gasto | `reserveCoverage.monthlySpendingCents` |
 | Balance forecast | `balanceForecast[]` (`points`, `lowestCents`, `lowestOn`, `until`) |
-| Budgets | `budgetPace[]` |
+| Budgets | `budgetPace[]` (`overCents`, `aheadPoints` for the phone notes); illustrations from the accounts' `icon` |
 | Coming months | `committedAhead[]` |
 | Next invoices | `nextInvoice[]` |
 | Reserve | `reserveCoverage` |

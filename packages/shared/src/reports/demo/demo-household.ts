@@ -3,6 +3,7 @@ import { addMonths, parseIsoDate } from '@shared/core/calendar/dates'
 import { periodSettingsOf, periodStartingIn } from '@shared/core/calendar/period'
 import type { RecurringEntryType } from '@shared/planning/recurrence/recurrence.constants'
 import {
+  DEMO_ICONS,
   DEMO_IDS,
   DEMO_NAMES,
   DEMO_PERIOD_DAY,
@@ -41,6 +42,7 @@ export function demoDirectory(): DemoDirectory {
     accounts: ACCOUNTS.map((account) => ({
       ...account,
       name: DEMO_NAMES[account.id] ?? account.id,
+      icon: DEMO_ICONS[account.id] ?? null,
     })),
     contacts: [ids.contactC, ids.contactD, ids.contactE].map((id) => ({
       id,

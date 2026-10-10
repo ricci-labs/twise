@@ -60,7 +60,7 @@ describe('HOME-01 charts', () => {
   it('lists the budgets most ahead of pace first, with their status', async () => {
     const screen = await openHome()
     const budgets = screen.getByRole('region', { name: 'Orçamentos' })
-    const names = [...budgets.element().querySelectorAll('li > span:first-child')].map(
+    const names = [...budgets.element().querySelectorAll('[data-slot=budget-name]')].map(
       (cell) => cell.textContent,
     )
 
@@ -70,6 +70,17 @@ describe('HOME-01 charts', () => {
     await expect
       .element(budgets.getByText('Traço = onde o gasto deveria estar hoje (52% do período).'))
       .toBeVisible()
+  })
+
+  it('tells on the phone how far each budget is over or ahead', async () => {
+    const screen = await openHome()
+    await page.viewport(390, 844)
+    const budgets = screen.getByRole('region', { name: 'Orçamentos' })
+
+    await expect.element(budgets.getByText('Passou R$ 60,00')).toBeVisible()
+    await expect.element(budgets.getByText('Adiantado: 16% acima do ritmo')).toBeVisible()
+    await expect.element(budgets.getByText('ritmo de hoje').last()).toBeVisible()
+    await page.viewport(1440, 900)
   })
 
   it('warns about the first month at 70% or more of the fixed income', async () => {

@@ -113,3 +113,24 @@ export const DEMO_NAMES: Readonly<Record<string, string>> = {
   [DEMO_IDS.tripGoal]: 'Viagem',
   [DEMO_IDS.laptopGoal]: 'Notebook',
 }
+
+export const DEMO_ICONS: Readonly<Record<string, string>> = {
+  [DEMO_IDS.checkingA]: 'wallet',
+  [DEMO_IDS.checkingB]: 'wallet',
+  [DEMO_IDS.reserve]: 'piggy-bank',
+  [DEMO_IDS.cardX]: 'card',
+  [DEMO_IDS.cardY]: 'card',
+  [DEMO_IDS.tripSavings]: 'travel',
+  [DEMO_IDS.laptopSavings]: 'piggy-bank',
+  [DEMO_IDS.salaryA]: 'coin',
+  [DEMO_IDS.salaryB]: 'coin',
+  [DEMO_IDS.commission]: 'coin',
+  [DEMO_IDS.groceries]: 'groceries',
+  [DEMO_IDS.leisure]: 'leisure',
+  [DEMO_IDS.transport]: 'transport',
+  [DEMO_IDS.home]: 'house',
+  [DEMO_IDS.health]: 'health',
+  [DEMO_IDS.rent]: 'house',
+  [DEMO_IDS.bills]: 'calendar',
+  [DEMO_IDS.car]: 'transport',
+}

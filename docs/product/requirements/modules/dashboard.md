@@ -71,8 +71,12 @@ aqui." On mobile a calm success line, not a card; on desktop the card stays (the
 jump) with the same line centered and the green check icon.
 
 **RF-HOME-5 Budgets** (`budgetPace`): "Os 5 mais adiantados em relação ao ritmo do período." Top 5
-by how far ahead of pace; desktop as an aligned table (category, bar with the pace mark, "R$ X de
-R$ Y", status "Estourou" / "Adiantado" / "No ritmo"), mobile as stacked rows. Note: "Traço = onde o
+by how far ahead of pace; each row with the category illustration (the account's `icon`, else its
+initial). Desktop as an aligned table under a header row ("Categoria · ritmo de hoje · Gasto de
+limite · Situação": category, bar with the pace mark, "R$ X de R$ Y", status icon + "Estourou" /
+"Adiantado" / "No ritmo"), mobile as stacked rows (name and "R$ X de R$ Y", the bar, then "Passou
+R$ 60,00" from `overCents`, "Adiantado: 16% acima do ritmo" from `aheadPoints`, or "No ritmo"; the
+footer is the legend "ritmo de hoje"). Note: "Traço = onde o
 gasto deveria estar hoje ({p}% do período)." (`periodProgress.elapsedPercent`). "Ver
 todos" → `PLAN-04`. No budgets: "Defina orçamentos para acompanhar o ritmo dos gastos." with the
 link (`budgets:update`; others see only the line).

@@ -15,6 +15,7 @@ import { progressBarExamples } from '@web/components/charts/progress-bar'
 import { amountExamples } from '@web/components/display/amount'
 import { avatarExamples } from '@web/components/display/avatar'
 import { cardExamples } from '@web/components/display/card'
+import { categoryArtExamples } from '@web/components/display/category-art'
 import { dividerExamples } from '@web/components/display/divider'
 import { kpiCardExamples } from '@web/components/display/kpi-card'
 import { kpiCarouselExamples } from '@web/components/display/kpi-carousel'
@@ -80,6 +81,7 @@ export const workbenchSections: readonly ComponentExamples[] = [
   richTextExamples,
   responsiveTextExamples,
   dividerExamples,
+  categoryArtExamples,
   authLayoutExamples,
   momentScreenExamples,
   appSplashExamples,
