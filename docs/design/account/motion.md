@@ -1,7 +1,7 @@
 ---
 summary: How the owl scenes animate: the fixed-scene rule, the 17 named entrances with timing and easing, which scene uses which, and the layered SVG ids.
 read_when: Animating an owl scene, a screen transition in the account area, or the app opening.
-updated: 2026-10-02
+updated: 2026-10-09
 ---
 
 # Owl motion
@@ -83,3 +83,5 @@ Ids beyond the common ones: `k-brilho-1..3` (one per sparkle stroke), `k-espiral
 | [`Animacao-entrada-envelope`](animations/Animacao-entrada-envelope.html) | `kit-email` | Surgir + Flutuar; sparkle fades in with it | envelope 0.3 s, float 0.65–1.45 s, text 0.4 s, actions 0.8 s |
 
 Form screens (`/_auth`): play the entrance only on the first opening in the session; when moving between auth screens the owl stays mounted and uses the transition rules above instead.
+
+In the app: when the scene changes under a mounted owl (another auth screen, or the same screen going offline or waiting), the old scene's kit is drawn still and its object shrinks away (Sair, 300 ms, ease-in-out: every top-level group except `k-base`, `k-olhos-abertos`, `k-chao`, `k-olhos-sono` and `k-piscadinha`); then the new scene's entrance plays. With `prefers-reduced-motion` the new scene appears at once.

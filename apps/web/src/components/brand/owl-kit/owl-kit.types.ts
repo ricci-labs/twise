@@ -27,7 +27,10 @@ export type OwlKitProps = {
   phase?: OwlKitPhase
   scene?: OwlSceneName
   hidesStillWhileLoading?: boolean
+  motion?: OwlKitMotion
   className?: string
 }
+
+export type OwlKitMotion = 'play' | 'still' | 'leave'
 
 export type OwlKitStills = Readonly<Record<OwlKitPhase, OwlSceneName>>
