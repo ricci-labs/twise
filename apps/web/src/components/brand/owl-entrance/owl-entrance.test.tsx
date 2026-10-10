@@ -33,7 +33,7 @@ describe('OwlEntrance', () => {
   it('plays the entrance of a scene that comes in later, such as waiting', async () => {
     const screen = await render(<OwlEntrance scene="signUp" isOncePerSession />)
     await screen.rerender(<OwlEntrance scene="wait" isOncePerSession />)
-    expect(drawn()).toBe('entrance-wait')
+    await expect.poll(drawn).toBe('entrance-wait')
   })
 
   it('stays still when asked, and for a scene with no entrance', async () => {

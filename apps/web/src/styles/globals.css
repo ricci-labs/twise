@@ -8,6 +8,7 @@
 @import "./tokens/theme.css";
 @import "./owl-motion.gen.css";
 @import "./home-motion.css";
+@import "./owl-transitions.css";
 
 @layer base {
   * {

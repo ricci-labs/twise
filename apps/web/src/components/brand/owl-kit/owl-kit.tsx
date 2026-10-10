@@ -87,6 +87,7 @@ export function OwlKit({
   phase = 'after',
   scene,
   hidesStillWhileLoading = false,
+  motion = 'play',
   className,
 }: OwlKitProps) {
   const host = useRef<HTMLDivElement>(null)
@@ -115,7 +116,8 @@ export function OwlKit({
   return (
     <div
       data-slot="owl-kit"
-      data-owl-kit={kit}
+      data-owl-kit={motion === 'play' ? kit : undefined}
+      data-owl-leaving={motion === 'leave' ? '' : undefined}
       data-phase={phase}
       data-scene={scene}
       aria-hidden="true"

@@ -10,7 +10,7 @@ describe('the owl of the account screens', () => {
     vi.restoreAllMocks()
   })
 
-  it('stays mounted from log in to sign up and back, changing only its object', async () => {
+  it('stays mounted from log in to sign up and back, the old object shrinking away first', async () => {
     fakeApi({
       'GET /api/auth/me': sessionRequired,
       'GET /api/auth/config': () => Response.json({ isSignupEnabled: true }),
@@ -25,6 +25,13 @@ describe('the owl of the account screens', () => {
     await expect.element(screen.getByRole('heading', { name: 'Criar sua conta' })).toBeVisible()
 
     expect(document.querySelector('[data-slot=logo]')?.parentElement).toBe(art)
+    await expect.poll(() => document.querySelector('[data-owl-leaving] #k-brilho-1')).not.toBeNull()
+    const leaving = document.querySelector('[data-owl-leaving]')
+    expect(leaving?.getAttribute('data-scene')).toBe('welcome')
+    const animationOf = (id: string) =>
+      getComputedStyle(leaving?.querySelector(id) as Element).animationName
+    expect(animationOf('#k-brilho-1')).toBe('owl-leave')
+    expect(animationOf('#k-base')).not.toBe('owl-leave')
     await expect
       .poll(() => document.querySelector('[data-owl-kit]')?.getAttribute('data-owl-kit'))
       .toBe('entrance-sign-up')

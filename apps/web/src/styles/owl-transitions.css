@@ -1,0 +1,12 @@
+@keyframes owl-leave {
+  to {
+    opacity: 0;
+    scale: 0;
+  }
+}
+
+[data-owl-leaving] svg > g:not(#k-base, #k-olhos-abertos, #k-chao, #k-olhos-sono, #k-piscadinha) {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: owl-leave 300ms ease-in-out both;
+}

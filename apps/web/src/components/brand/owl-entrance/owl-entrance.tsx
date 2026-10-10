@@ -1,7 +1,10 @@
 import type { OwlEntranceProps } from '@web/components/brand/owl-entrance/owl-entrance.types'
 import { OwlKit, type OwlKitName } from '@web/components/brand/owl-kit'
 import { OwlScene, type OwlSceneName } from '@web/components/brand/owl-scene'
+import { useLeavingValue } from '@web/hooks/use-leaving-value'
 import { useEffect, useState } from 'react'
+
+const LEAVE_MS = 300
 
 const ENTRANCES: Readonly<Partial<Record<OwlSceneName, OwlKitName>>> = {
   welcome: 'entrance-welcome',
@@ -26,11 +29,24 @@ export function OwlEntrance({
 }: OwlEntranceProps) {
   const [openingScene] = useState(scene)
   const [isFirstOpening] = useState(() => !playedThisSession.has(scene))
+  const leavingScene = useLeavingValue(scene, (previous) => Boolean(ENTRANCES[previous]), LEAVE_MS)
 
   useEffect(() => {
     playedThisSession.add(openingScene)
   }, [openingScene])
 
+  const leavingKit = leavingScene && ENTRANCES[leavingScene]
+  if (leavingScene && leavingKit) {
+    return (
+      <OwlKit
+        key={`leave-${leavingScene}`}
+        kit={leavingKit}
+        scene={leavingScene}
+        motion="leave"
+        className={className}
+      />
+    )
+  }
   const kit = ENTRANCES[scene]
   const hasChanged = scene !== openingScene
   const plays = !isStill && (hasChanged || !isOncePerSession || isFirstOpening)
