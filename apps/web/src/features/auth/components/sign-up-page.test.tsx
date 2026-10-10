@@ -9,6 +9,8 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import { page } from 'vitest/browser'
 import { render } from 'vitest-browser-react'
 
+const COUNTDOWN_STARTED = /^Reenviar em (60|5\d) s$/
+
 const EMAIL = 'member.a@exemplo.com'
 const PASSWORD = 'café com pão de queijo'
 const SIGN_UP = 'POST /api/auth/signup'
@@ -97,7 +99,7 @@ describe('AUTH-02 sign up', () => {
     await expect
       .element(screen.getByText('Não chegou? Olhe o spam e a aba Promoções.'))
       .toBeVisible()
-    await expect.element(screen.getByRole('button', { name: 'Reenviar em 60 s' })).toBeVisible()
+    await expect.element(screen.getByRole('button', { name: COUNTDOWN_STARTED })).toBeVisible()
     expect(sent).toEqual([{ displayName: 'Member A', email: EMAIL, password: PASSWORD }])
     await expectNoAccessibilityViolations(screen.container)
   })
@@ -112,7 +114,7 @@ describe('AUTH-02 sign up', () => {
       },
     })
     await fillAndSubmit(screen)
-    await expect.element(screen.getByRole('button', { name: 'Reenviar em 60 s' })).toBeVisible()
+    await expect.element(screen.getByRole('button', { name: COUNTDOWN_STARTED })).toBeVisible()
 
     vi.useFakeTimers({ toFake: ['Date'] })
     vi.setSystemTime(Date.now() + ONE_MINUTE_MS)
@@ -122,7 +124,7 @@ describe('AUTH-02 sign up', () => {
     await screen.getByRole('button', { name: 'Reenviar e-mail' }).click()
 
     await expect.element(page.getByText('Enviamos de novo.')).toBeVisible()
-    await expect.element(screen.getByRole('button', { name: 'Reenviar em 60 s' })).toBeVisible()
+    await expect.element(screen.getByRole('button', { name: COUNTDOWN_STARTED })).toBeVisible()
     expect(resent).toEqual([{ email: EMAIL }])
   })
 

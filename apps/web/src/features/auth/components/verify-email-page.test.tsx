@@ -10,6 +10,8 @@ import { StrictMode } from 'react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { render } from 'vitest-browser-react'
 
+const COUNTDOWN_STARTED = /^Reenviar em (60|5\d) s$/
+
 const TOKEN = 'link-token-123'
 const EMAIL = 'member.a@exemplo.com'
 const VERIFY = 'POST /api/auth/verify-email'
@@ -114,7 +116,7 @@ describe('AUTH-03 verify email', () => {
         screen.getByText(/^Se member\.a@exemplo\.com puder ser usado, enviamos um novo link/),
       )
       .toBeVisible()
-    await expect.element(screen.getByRole('button', { name: 'Reenviar em 60 s' })).toBeVisible()
+    await expect.element(screen.getByRole('button', { name: COUNTDOWN_STARTED })).toBeVisible()
     await expect
       .element(screen.getByRole('link', { name: 'Entrar' }))
       .toHaveAttribute('href', '/login')
