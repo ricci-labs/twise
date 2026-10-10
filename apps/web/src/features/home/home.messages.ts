@@ -122,6 +122,11 @@ export const homeMessages = {
     alternative: (account: string, start: string, end: string, lowest: string, lowestOn: string) =>
       `${account}: hoje ${start}, termina em ${end}, menor saldo ${lowest} em ${lowestOn}.`,
     seeAccounts: 'Ver contas',
+    all: 'Todas',
+    negative: (account: string, from: string, until: string) =>
+      `${account} fica negativa de ${from} a ${until}, até o salário entrar.`,
+    negativeAll: (from: string, until: string) =>
+      `O saldo somado fica negativo de ${from} a ${until}, até o salário entrar.`,
     thousands: (value: number) => `R$ ${value} mil`,
     reais: (value: number) => `R$ ${value}`,
   },

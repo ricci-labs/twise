@@ -94,6 +94,12 @@ export type BudgetLine = OverviewMetrics['budgetPace'][number]
 
 export type CommittedPeriod = OverviewMetrics['committedAhead'][number]
 
+export type ForecastSeries = {
+  key: string
+  label: string
+  forecast: Omit<OverviewMetrics['balanceForecast'][number], 'accountId'>
+}
+
 export type ForecastCardProps = HomeSectionProps & {
   nameOf: NameLookup
 }

@@ -1,10 +1,12 @@
 import type { IsoDate } from '@shared/core/calendar/calendar.types'
+import { addDays } from '@shared/core/calendar/dates'
 import { invoiceForPurchase } from '@shared/ledger/cards/billing-cycle'
 import { type AccountKind, MONEY_ACCOUNT_KINDS } from '@shared/ledger/ledger/ledger.constants'
 import { incomeNatureOf, sumCents } from '@shared/reports/metrics/facts'
 import type {
   BalanceForecast,
   BalanceMove,
+  BalancePoint,
   FactAccount,
   FactOccurrence,
   PeriodFacts,
@@ -13,13 +15,33 @@ import type {
 const MONEY_KINDS: ReadonlySet<AccountKind> = new Set(MONEY_ACCOUNT_KINDS)
 
 export function balanceForecast(facts: PeriodFacts): BalanceForecast[] {
-  return facts.accounts
-    .filter((account) => MONEY_KINDS.has(account.kind))
-    .map((account) => forecastOf(facts, account))
+  return moneyAccounts(facts).map((account) =>
+    forecastOf(facts, account, horizonOf(facts, account.id)),
+  )
 }
 
-function forecastOf(facts: PeriodFacts, account: FactAccount): BalanceForecast {
-  const until = horizonOf(facts, account.id)
+export function moneyAccounts(facts: PeriodFacts): FactAccount[] {
+  return facts.accounts.filter((account) => MONEY_KINDS.has(account.kind))
+}
+
+export function negativeStretch(
+  points: readonly BalancePoint[],
+  until: IsoDate,
+): Pick<BalanceForecast, 'negativeFrom' | 'negativeUntil'> {
+  const first = points.findIndex((point) => point.balanceCents < 0)
+  const start = points[first]
+  if (!start) {
+    return { negativeFrom: null, negativeUntil: null }
+  }
+  const recovery = points.slice(first + 1).find((point) => point.balanceCents >= 0)
+  return { negativeFrom: start.on, negativeUntil: recovery ? addDays(recovery.on, -1) : until }
+}
+
+export function forecastOf(
+  facts: PeriodFacts,
+  account: FactAccount,
+  until: IsoDate,
+): BalanceForecast {
   const moves = [
     ...plannedMoves(facts, account.id),
     ...invoicePayments(facts, account.id),
@@ -50,11 +72,12 @@ function forecastOf(facts: PeriodFacts, account: FactAccount): BalanceForecast {
     endCents: balanceCents,
     lowestCents: lowest.balanceCents,
     lowestOn: lowest.on,
+    ...negativeStretch(points, until),
     points,
   }
 }
 
-function horizonOf(facts: PeriodFacts, accountId: string): IsoDate {
+export function horizonOf(facts: PeriodFacts, accountId: string): IsoDate {
   const nextSalary = facts.occurrences
     .filter(
       (occurrence) =>

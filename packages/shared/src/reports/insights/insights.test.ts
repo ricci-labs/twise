@@ -243,6 +243,8 @@ describe('balance_going_negative', () => {
       endCents: 10_000,
       lowestCents,
       lowestOn: '2026-10-20',
+      negativeFrom: null,
+      negativeUntil: null,
       points: [],
     })
     const metrics = metricsWith({

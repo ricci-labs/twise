@@ -1,3 +1,4 @@
+import { demoOverview } from '@financas/shared'
 import { createMemoryHistory } from '@tanstack/react-router'
 import { AppProviders } from '@web/app/providers'
 import { createApp } from '@web/app/router'
@@ -10,19 +11,21 @@ import {
   workspaceAccess,
   workspaceList,
 } from '@web/testing/fake-api'
+import type { FakeAnswer } from '@web/testing/testing.types'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { page } from 'vitest/browser'
 import { render } from 'vitest-browser-react'
 
 const HOME = `/w/${WORKSPACE_ID}`
 
-async function openHome(path = HOME) {
+async function openHome(path = HOME, answers: Record<string, FakeAnswer> = {}) {
   await page.viewport(1440, 900)
   fakeApi({
     'GET /api/auth/me': account,
     'GET /api/workspaces': () => workspaceList(),
     [`GET /api/workspaces/${WORKSPACE_ID}`]: workspaceAccess,
     ...demoAnswers(),
+    ...answers,
   })
   const app = createApp(createMemoryHistory({ initialEntries: [path] }))
   const screen = await render(<AppProviders app={app} />)
@@ -46,7 +49,32 @@ describe('HOME-01 charts', () => {
       .toBeVisible()
     await forecast.getByRole('button', { name: 'Conta Y' }).click()
     await expect.element(forecast.getByText(/Hoje R\$\s3\.100,00/)).toBeVisible()
+    await forecast.getByRole('button', { name: 'Todas' }).click()
+    await expect.element(forecast.getByText(/Hoje R\$\s7\.300,00/)).toBeVisible()
     await expectNoAccessibilityViolations(screen.container)
+  })
+
+  it('says in red when an account goes below zero, and until when', async () => {
+    const overview = demoOverview('current')
+    const [first, ...rest] = overview.metrics.balanceForecast
+    const screen = await openHome(HOME, {
+      [`GET /api/workspaces/${WORKSPACE_ID}/overview`]: () =>
+        Response.json({
+          ...overview,
+          metrics: {
+            ...overview.metrics,
+            balanceForecast: [
+              { ...first, negativeFrom: '2026-11-03', negativeUntil: '2026-11-04' },
+              ...rest,
+            ],
+          },
+        }),
+    })
+    const forecast = screen.getByRole('region', { name: 'Previsão de saldo' })
+
+    await expect
+      .element(forecast.getByText('Conta X fica negativa de 03/11 a 04/11, até o salário entrar.'))
+      .toBeVisible()
   })
 
   it('compares the income used with the time gone', async () => {

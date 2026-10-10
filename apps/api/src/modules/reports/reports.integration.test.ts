@@ -320,6 +320,8 @@ describe('getPeriodOverview', () => {
       endCents: 510_000,
       lowestCents: 310_000,
       lowestOn: '2026-10-15',
+      negativeFrom: null,
+      negativeUntil: null,
       points: [
         { on: '2026-10-15', balanceCents: 310_000 },
         { on: '2026-10-20', balanceCents: 710_000 },
