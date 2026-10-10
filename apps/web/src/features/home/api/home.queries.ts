@@ -38,6 +38,13 @@ export function accountNamesQueryOptions(workspaceId: string) {
   })
 }
 
+export function accountIconsQueryOptions(workspaceId: string) {
+  return queryOptions({
+    ...accountsQueryOptions(workspaceId),
+    select: (accounts) => new Map(accounts.map((account) => [account.id, account.icon])),
+  })
+}
+
 export function setupQueryOptions(workspaceId: string) {
   return queryOptions({
     ...accountsQueryOptions(workspaceId),
@@ -82,7 +89,6 @@ function fetchAccounts(workspaceId: string) {
         isSystem: false,
         sortOrder,
         color: null,
-        icon: null,
         archivedAt: null,
       })),
     )

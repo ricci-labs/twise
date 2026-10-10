@@ -1,4 +1,11 @@
-import { DEMO_IDS, DEMO_NAMES, type DemoScenario, demoFacts, demoOverview } from '@financas/shared'
+import {
+  DEMO_ICONS,
+  DEMO_IDS,
+  DEMO_NAMES,
+  type DemoScenario,
+  demoFacts,
+  demoOverview,
+} from '@financas/shared'
 import { WORKSPACE_ID } from '@web/testing/fake-api'
 import type { FakeAnswer } from '@web/testing/testing.types'
 
@@ -28,7 +35,7 @@ function demoAccounts() {
     isSystem: false,
     sortOrder,
     color: null,
-    icon: null,
+    icon: DEMO_ICONS[account.id] ?? null,
     archivedAt: null,
   }))
 }

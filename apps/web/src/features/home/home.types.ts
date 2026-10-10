@@ -32,6 +32,8 @@ export type HomeSectionProps = {
 
 export type NameLookup = (id: string | null) => string
 
+export type IconLookup = (id: string) => string | null
+
 export type InsightText = {
   template: string
   values: Readonly<Record<string, string | number>>
@@ -106,7 +108,15 @@ export type PaceVerdictProps = {
 
 export type BudgetsCardProps = HomeSectionProps & {
   nameOf: NameLookup
+  iconOf: IconLookup
   canPlan: boolean
+}
+
+export type BudgetRowProps = {
+  line: BudgetLine
+  name: string
+  icon: string | null
+  elapsedPercent: number
 }
 
 export type ComingMonthsCardProps = HomeSectionProps
@@ -189,6 +199,7 @@ export type HomeContentProps = {
   displayName: string
   permissions: readonly Permission[]
   nameOf: NameLookup
+  iconOf: IconLookup
   isFirstVisit: boolean
   isStale: boolean
   updatedAt: number

@@ -3,6 +3,7 @@ import { SectionError } from '@web/components/feedback/section-error'
 import { SectionSkeleton } from '@web/components/feedback/section-skeleton'
 import { Tip } from '@web/components/feedback/tip'
 import {
+  accountIconsQueryOptions,
   accountNamesQueryOptions,
   contactNamesQueryOptions,
   overviewQueryOptions,
@@ -30,6 +31,7 @@ import type {
   HomeContentProps,
   HomeFailedProps,
   HomePageProps,
+  IconLookup,
   NameLookup,
   Overview,
   SetupState,
@@ -76,6 +78,8 @@ export function HomePage({
   }).data
   const nameOf: NameLookup = (id) =>
     (id && (accountNames?.get(id) ?? contactNames?.get(id))) || homeMessages.unnamed
+  const accountIcons = useQuery(accountIconsQueryOptions(workspaceId)).data
+  const iconOf: IconLookup = (id) => accountIcons?.get(id) ?? null
 
   if (!overview.data) {
     return overview.isError ? (
@@ -110,6 +114,7 @@ export function HomePage({
       displayName={displayName}
       permissions={permissions}
       nameOf={nameOf}
+      iconOf={iconOf}
       isFirstVisit={isFirstVisit}
       isStale={overview.isPlaceholderData}
       updatedAt={overview.dataUpdatedAt}
@@ -157,6 +162,7 @@ function HomeContent({
   displayName,
   permissions,
   nameOf,
+  iconOf,
   isFirstVisit,
   isStale,
   updatedAt,
@@ -236,6 +242,7 @@ function HomeContent({
           workspaceId={workspaceId}
           overview={data}
           nameOf={nameOf}
+          iconOf={iconOf}
           canPlan={hasPermission(permissions, 'budgets', 'update')}
           className="lg:order-3 lg:col-span-8"
         />

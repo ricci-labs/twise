@@ -76,6 +76,8 @@ describe('computeInsights', () => {
             limitCents: 100,
             spentCents: 50,
             expectedCents: 40,
+            overCents: 0,
+            aheadPoints: 10,
             status: 'ahead',
           },
           {
@@ -83,6 +85,8 @@ describe('computeInsights', () => {
             limitCents: 100,
             spentCents: 120,
             expectedCents: 40,
+            overCents: 20,
+            aheadPoints: 80,
             status: 'over',
           },
           {
@@ -90,6 +94,8 @@ describe('computeInsights', () => {
             limitCents: 100,
             spentCents: 10,
             expectedCents: 40,
+            overCents: 0,
+            aheadPoints: 0,
             status: 'within',
           },
         ],

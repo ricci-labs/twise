@@ -278,13 +278,15 @@ describe('computeMetrics', () => {
 })
 
 describe('budgetPace', () => {
-  it('compares what each budget spent with the share of the period gone, a parent covering its children', () => {
+  it('compares what each budget spent with the share of the period gone, how far over and ahead, a parent covering its children', () => {
     expect(computeMetrics(household()).budgetPace).toEqual([
       {
         categoryAccountId: 'food',
         limitCents: 20_000,
         spentCents: 30_000,
         expectedCents: 9_677,
+        overCents: 10_000,
+        aheadPoints: 102,
         status: 'over',
       },
       {
@@ -292,6 +294,8 @@ describe('budgetPace', () => {
         limitCents: 250_000,
         spentCents: 0,
         expectedCents: 120_968,
+        overCents: 0,
+        aheadPoints: 0,
         status: 'within',
       },
       {
@@ -299,6 +303,8 @@ describe('budgetPace', () => {
         limitCents: 40_000,
         spentCents: 30_000,
         expectedCents: 19_355,
+        overCents: 0,
+        aheadPoints: 27,
         status: 'ahead',
       },
     ])

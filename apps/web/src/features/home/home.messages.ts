@@ -145,8 +145,15 @@ export const homeMessages = {
   budgets: {
     title: 'Orçamentos',
     description: 'Os 5 mais adiantados em relação ao ritmo do período.',
+    descriptionShort: 'Os 5 mais adiantados em relação ao ritmo.',
     of: (spent: string, limit: string) => `${spent} de ${limit}`,
     status: { over: 'Estourou', ahead: 'Adiantado', within: 'No ritmo' },
+    note: {
+      over: (amount: string) => `Passou ${amount}`,
+      ahead: (points: number) => `Adiantado: ${points}% acima do ritmo`,
+    },
+    paceLegend: 'ritmo de hoje',
+    columns: { category: 'Categoria', amount: 'Gasto de limite', status: 'Situação' },
     paceNote: (percent: number) =>
       `Traço = onde o gasto deveria estar hoje (${percent}% do período).`,
     seeAll: 'Ver todos',
