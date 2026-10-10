@@ -32,9 +32,9 @@ export function AchievementsCard({ overview, className }: AchievementsCardProps)
           data-slot="achievement-highlight"
           className="flex items-center justify-between gap-4 rounded-lg bg-mint px-5 py-4.5 text-on-mint"
         >
-          <div className="flex flex-col items-start">
+          <div className="flex min-w-0 flex-col items-start">
             <p className="text-label">{messages.closedPositive(month)}</p>
-            <p className="mt-0.5 mb-2 flex items-baseline gap-2 font-display text-amount-kpi whitespace-nowrap">
+            <p className="mt-0.5 mb-2 flex flex-wrap items-baseline gap-x-2 font-display text-amount-kpi">
               {messages.left} <Amount cents={summary.leftCents} size="kpi" isCentsRaised />
             </p>
             {summary.positiveStreak >= FIRST_STREAK_WORTH_SAYING && (
@@ -50,7 +50,7 @@ export function AchievementsCard({ overview, className }: AchievementsCardProps)
             data-slot="achievement-art"
             src={piggyBank}
             alt=""
-            className="size-18 shrink-0 rounded-full lg:size-24"
+            className="size-14 shrink-0 rounded-full lg:size-24"
           />
         </div>
       )}

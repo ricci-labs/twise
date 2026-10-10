@@ -6,6 +6,7 @@ import { cn } from '@web/lib/cn'
 import {
   Bar,
   BarChart,
+  CartesianGrid,
   LabelList,
   ReferenceLine,
   ResponsiveContainer,
@@ -27,12 +28,16 @@ export function CommittedChart({
   installmentsLabel,
   plannedLabel,
   description,
+  legendClassName,
   className,
 }: CommittedChartProps) {
   const highLabels = new Set(months.filter((month) => month.isHigh).map((month) => month.label))
   return (
     <figure data-slot="committed-chart" className={cn('flex w-full flex-col gap-3', className)}>
-      <ul className="flex flex-wrap gap-4 text-body-sm text-ink-muted" aria-hidden="true">
+      <ul
+        className={cn('flex flex-wrap gap-4 text-body-sm text-ink-muted', legendClassName)}
+        aria-hidden="true"
+      >
         <li className="flex items-center gap-1.5">
           <span className="size-2.5 rounded-full bg-chart-4" />
           {installmentsLabel}
@@ -49,6 +54,7 @@ export function CommittedChart({
             data={[...months]}
             margin={{ top: 24, right: 8, bottom: 0, left: 0 }}
           >
+            <CartesianGrid vertical={false} stroke="var(--color-border)" />
             <XAxis
               dataKey="label"
               tickLine={false}
