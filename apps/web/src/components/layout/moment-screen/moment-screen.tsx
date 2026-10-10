@@ -1,5 +1,6 @@
 import { OwlEntrance } from '@web/components/brand/owl-entrance'
 import { OwlKit } from '@web/components/brand/owl-kit'
+import { useWithoutAuthArt } from '@web/components/layout/auth-layout'
 import type { MomentScreenProps } from '@web/components/layout/moment-screen/moment-screen.types'
 import {
   momentActionsVariants,
@@ -25,6 +26,7 @@ export function MomentScreen({
   banner,
   className,
 }: MomentScreenProps) {
+  useWithoutAuthArt()
   useLightTheme()
   return (
     <main
