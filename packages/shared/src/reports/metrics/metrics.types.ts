@@ -236,8 +236,12 @@ export type BalanceForecast = {
   endCents: number
   lowestCents: number
   lowestOn: IsoDate
+  negativeFrom: IsoDate | null
+  negativeUntil: IsoDate | null
   points: BalancePoint[]
 }
+
+export type BalanceForecastTotal = Omit<BalanceForecast, 'accountId'>
 
 export type BalanceMove = {
   on: IsoDate

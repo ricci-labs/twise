@@ -87,9 +87,13 @@ link (`budgets:update`; others see only the line).
 vocês". Tap → `CARD-03`; "Ver cartões" → `CARD-01`.
 
 **RF-HOME-7 Balance forecast** (`balanceForecast`, one per money account, account tabs inside the
-card): "Do dia de hoje até o próximo salário, com o que já está previsto." Step area chart from
-today to `until`, dashed zero line, the lowest point marked ("R$ X · {data} · menor saldo do
-período"), negative stretches in the danger style; footer "Hoje R$ A · termina em R$ B em {data}".
+card, plus "Todas" from `balanceForecastAll`: the everyday accounts (checking, wallet) added day by
+day to the latest salary, when there are at least two): "Do dia de hoje até o próximo salário, com
+o que já está previsto." Step area chart from today to `until`, dashed zero line, the lowest point
+marked ("R$ X" / "{data} · menor saldo do período"), negative stretches in the danger style; footer
+"Hoje R$ A · termina em R$ B em {data}", or in red "Conta X fica negativa de {dd/mm} a {dd/mm}, até
+o salário entrar." ("O saldo somado fica negativo…" for "Todas") from `negativeFrom` /
+`negativeUntil`.
 Text alternative: "Conta X: hoje R$ A, termina em R$ B, menor saldo R$ C em {data}." Hidden for a
 closed or future period (closed: replaced by RF-HOME-17).
 

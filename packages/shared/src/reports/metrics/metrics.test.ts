@@ -850,6 +850,8 @@ describe('balanceForecast', () => {
       endCents: 800_000,
       lowestCents: 400_000,
       lowestOn: '2026-10-15',
+      negativeFrom: null,
+      negativeUntil: null,
       points: [
         { on: '2026-10-15', balanceCents: 400_000 },
         { on: '2026-10-20', balanceCents: 800_000 },
@@ -940,6 +942,7 @@ describe('balanceForecast', () => {
     })
     const forecasts = computeMetrics(withSavings).balanceForecast
     expect(forecasts.find((forecast) => forecast.accountId === 'reserve')?.endCents).toBe(150_000)
+    expect(computeMetrics(withSavings).balanceForecastAll).toBeNull()
     expect(forecasts.find((forecast) => forecast.accountId === 'checking')).toMatchObject({
       startCents: 600_000,
       endCents: 600_000 - 200_000 - 10_000 + 400_000 - 50_000,
@@ -949,5 +952,51 @@ describe('balanceForecast', () => {
   it('finds the lowest point when the account goes below zero', () => {
     const tight = household({ balances: [{ accountId: 'checking', balanceCents: 100_000 }] })
     expect(checkingOf(tight)).toMatchObject({ lowestCents: -100_000, lowestOn: '2026-10-15' })
+  })
+
+  it('tells the stretch below zero, up to the day before the balance recovers', () => {
+    const tight = household({ balances: [{ accountId: 'checking', balanceCents: 100_000 }] })
+    expect(checkingOf(tight)).toMatchObject({
+      negativeFrom: '2026-10-15',
+      negativeUntil: '2026-10-19',
+    })
+  })
+
+  it('keeps the stretch open to the horizon when the balance never recovers', () => {
+    const broke = household({ balances: [{ accountId: 'checking', balanceCents: -900_000 }] })
+    expect(checkingOf(broke)).toMatchObject({
+      negativeFrom: '2026-10-15',
+      negativeUntil: '2026-10-31',
+    })
+  })
+})
+
+describe('balanceForecastAll', () => {
+  it('needs at least two everyday accounts to add up', () => {
+    expect(computeMetrics(household()).balanceForecastAll).toBeNull()
+  })
+
+  it('adds the everyday accounts day by day, to the latest salary', () => {
+    const base = household()
+    const withWallet = household({
+      accounts: [
+        ...base.accounts,
+        { id: 'wallet', parentId: null, kind: 'cash_wallet', class: 'asset', incomeNature: null },
+      ],
+      balances: [...base.balances, { accountId: 'wallet', balanceCents: 30_000 }],
+    })
+    const metrics = computeMetrics(withWallet)
+    const checking = metrics.balanceForecast.find((forecast) => forecast.accountId === 'checking')
+
+    expect(metrics.balanceForecastAll).toMatchObject({
+      until: checking?.until,
+      startCents: (checking?.startCents ?? 0) + 30_000,
+      endCents: (checking?.endCents ?? 0) + 30_000,
+      lowestCents: (checking?.lowestCents ?? 0) + 30_000,
+      negativeFrom: null,
+    })
+    expect(metrics.balanceForecastAll?.points.map((point) => point.balanceCents)).toEqual(
+      checking?.points.map((point) => point.balanceCents + 30_000),
+    )
   })
 })

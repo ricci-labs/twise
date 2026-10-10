@@ -6,8 +6,14 @@ import { ForecastChart } from '@web/components/charts/forecast-chart'
 import { Card } from '@web/components/display/card'
 import { ResponsiveText } from '@web/components/display/responsive-text'
 import { RichText } from '@web/components/display/rich-text'
+import { TwiseIcon } from '@web/components/icons/twise-icon'
 import { homeMessages } from '@web/features/home/home.messages'
-import type { ForecastCardProps } from '@web/features/home/home.types'
+import type {
+  ForecastCardProps,
+  ForecastSeries,
+  NameLookup,
+  Overview,
+} from '@web/features/home/home.types'
 import { formatDayMonth, formatShortDate } from '@web/lib/format/calendar'
 import { Info } from 'lucide-react'
 import { useState } from 'react'
@@ -15,17 +21,27 @@ import { useState } from 'react'
 const messages = homeMessages.forecast
 const CENTS_PER_THOUSAND = 100_000
 const CENTS_PER_REAL = 100
+const ALL = 'all'
+
+function seriesOf(overview: Overview, nameOf: NameLookup): ForecastSeries[] {
+  const accounts = overview.metrics.balanceForecast
+    .filter((forecast) => forecast.points.length > 1)
+    .map((forecast) => ({ key: forecast.accountId, label: nameOf(forecast.accountId), forecast }))
+  const all = overview.metrics.balanceForecastAll
+  if (accounts.length < 2 || !all || all.points.length < 2) {
+    return accounts
+  }
+  return [...accounts, { key: ALL, label: messages.all, forecast: all }]
+}
 
 export function ForecastCard({ workspaceId, overview, nameOf, className }: ForecastCardProps) {
-  const forecasts = overview.metrics.balanceForecast.filter(
-    (forecast) => forecast.points.length > 1,
-  )
-  const [chosen, setChosen] = useState(forecasts[0]?.accountId ?? '')
-  const forecast = forecasts.find((candidate) => candidate.accountId === chosen) ?? forecasts[0]
-  if (!forecast) {
+  const series = seriesOf(overview, nameOf)
+  const [chosen, setChosen] = useState(series[0]?.key ?? '')
+  const current = series.find((candidate) => candidate.key === chosen) ?? series[0]
+  if (!current) {
     return null
   }
-  const account = nameOf(forecast.accountId)
+  const { forecast, label: account } = current
   return (
     <Card
       id="forecast"
@@ -33,32 +49,45 @@ export function ForecastCard({ workspaceId, overview, nameOf, className }: Forec
       title={messages.title}
       description={<ResponsiveText short={messages.descriptionShort} long={messages.description} />}
       headerAction={
-        forecasts.length > 1 && (
+        series.length > 1 && (
           <SegmentedControl
             label={messages.account}
-            value={forecast.accountId}
+            value={current.key}
             onValueChange={setChosen}
-            options={forecasts.map((candidate) => ({
-              value: candidate.accountId,
-              label: nameOf(candidate.accountId),
-            }))}
+            options={series.map((candidate) => ({ value: candidate.key, label: candidate.label }))}
           />
         )
       }
       footerStat={
-        <span className="inline-flex items-center gap-1.5">
-          <Info className="size-4 shrink-0" aria-hidden="true" />
-          <span>
-            <RichText
-              text={messages.today}
-              values={{
-                start: formatBrl(forecast.startCents),
-                end: formatBrl(forecast.endCents),
-                until: formatShortDate(forecast.until),
-              }}
-            />
+        forecast.negativeFrom && forecast.negativeUntil ? (
+          <span className="inline-flex items-center gap-1.5 font-semibold text-danger">
+            <TwiseIcon name="alert" tone="danger" size="sm" />
+            {current.key === ALL
+              ? messages.negativeAll(
+                  formatShortDate(forecast.negativeFrom),
+                  formatShortDate(forecast.negativeUntil),
+                )
+              : messages.negative(
+                  account,
+                  formatShortDate(forecast.negativeFrom),
+                  formatShortDate(forecast.negativeUntil),
+                )}
           </span>
-        </span>
+        ) : (
+          <span className="inline-flex items-center gap-1.5">
+            <Info className="size-4 shrink-0" aria-hidden="true" />
+            <span>
+              <RichText
+                text={messages.today}
+                values={{
+                  start: formatBrl(forecast.startCents),
+                  end: formatBrl(forecast.endCents),
+                  until: formatShortDate(forecast.until),
+                }}
+              />
+            </span>
+          </span>
+        )
       }
       footerAction={
         <TextLink
