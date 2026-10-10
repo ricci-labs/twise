@@ -49,14 +49,16 @@ function FreeToSpendCard({ workspaceId, overview, stage }: HomeIndicatorsProps) 
         value={<Amount cents={metrics.freeToSpend} size="kpi" isCentsRaised />}
         badge={<KpiBadge tone="danger">{messages.free.over}</KpiBadge>}
         art={<img src={piggyBankAlert} alt="" className="size-15 rounded-full" />}
+        artAt="top"
       >
-        <p>{messages.free.overReason}</p>
-        <TextLink
-          tone="inherit"
-          render={<Link to="/w/$workspaceId/$area" params={{ workspaceId, area: 'planning' }} />}
-        >
-          {messages.free.adjust}
-        </TextLink>
+        <p>
+          {messages.free.overReason}{' '}
+          <TextLink
+            render={<Link to="/w/$workspaceId/$area" params={{ workspaceId, area: 'planning' }} />}
+          >
+            {messages.free.adjust}
+          </TextLink>
+        </p>
       </KpiCard>
     )
   }

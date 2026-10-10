@@ -204,6 +204,13 @@ function HomeContent({
         data-slot="home-grid"
         className="grid grid-cols-1 items-stretch gap-5 lg:grid-cols-12"
       >
+        {stage === 'closed' && (
+          <AchievementsCard
+            workspaceId={workspaceId}
+            overview={data}
+            className="lg:order-1 lg:col-span-8"
+          />
+        )}
         <InsightsCard
           workspaceId={workspaceId}
           overview={data}
@@ -217,13 +224,6 @@ function HomeContent({
           canWrite={canWrite}
           className="lg:order-7 lg:col-span-4"
         />
-        {stage === 'closed' && (
-          <AchievementsCard
-            workspaceId={workspaceId}
-            overview={data}
-            className="lg:order-1 lg:col-span-8"
-          />
-        )}
         {stage === 'open' && (
           <ForecastCard
             workspaceId={workspaceId}
@@ -246,16 +246,20 @@ function HomeContent({
           canPlan={hasPermission(permissions, 'budgets', 'update')}
           className="lg:order-3 lg:col-span-8"
         />
-        <ComingMonthsCard
-          workspaceId={workspaceId}
-          overview={data}
-          className="lg:order-5 lg:col-span-8"
-        />
-        <IncomeSplitCard
-          workspaceId={workspaceId}
-          overview={data}
-          className="lg:order-6 lg:col-span-4"
-        />
+        {stage !== 'closed' && (
+          <ComingMonthsCard
+            workspaceId={workspaceId}
+            overview={data}
+            className="lg:order-5 lg:col-span-8"
+          />
+        )}
+        {stage !== 'closed' && (
+          <IncomeSplitCard
+            workspaceId={workspaceId}
+            overview={data}
+            className="lg:order-6 lg:col-span-4"
+          />
+        )}
         <InvoicesCard
           workspaceId={workspaceId}
           overview={data}

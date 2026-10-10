@@ -35,7 +35,7 @@ export const homeMessages = {
         `Até ${end} · faltam ${left} ${plural(left, 'dia', 'dias')}`,
       closedLabel: 'Sobrou no período encerrado',
       over: 'Passou do planejado',
-      overReason: 'Os gastos e as contas deste período já passaram da renda.',
+      overReason: 'Gastos e contas a vencer já passam a renda do período.',
       adjust: 'Ver onde ajustar',
     },
     income: {
@@ -128,10 +128,12 @@ export const homeMessages = {
   pace: {
     title: 'Ritmo do período',
     description: 'Quanto da renda já foi usada, comparado ao tempo que passou.',
+    descriptionShort: 'Renda usada comparada ao tempo que passou.',
     ofIncome: 'da renda',
     used: 'Renda já usada',
     elapsed: 'Período passado',
     ahead: (points: number) => `Vocês estão ${points} pontos à frente do ritmo.`,
+    aheadShort: (points: number) => `${points} pontos à frente do ritmo.`,
     behind: (points: number) => `Vocês estão ${points} pontos atrás do ritmo.`,
     onPace: 'Vocês estão no ritmo.',
     alternative: (used: number, elapsed: number) =>
@@ -168,15 +170,18 @@ export const homeMessages = {
     limit: (percent: number) => `${percent}% da renda fixa`,
     high: (month: string, percent: number) =>
       `${month} já tem ${percent}% da renda fixa comprometida.`,
+    highShort: (month: string, percent: number) => `${month} já tem ${percent}% comprometido.`,
     calm: 'Nenhum mês passa de 70% da renda fixa.',
   },
   incomeSplit: {
     title: 'Para onde vai a renda',
     description: (income: string) => `Renda do orçamento de ${income} neste período.`,
+    descriptionShort: (income: string) => `Renda do orçamento de ${income}.`,
     spent: 'Gasto',
     committed: 'Comprometido',
     free: 'Livre',
     commissionApart: (amount: string) => `A comissão de ${amount} fica fora desta conta.`,
+    commissionApartShort: 'A comissão fica fora desta conta.',
   },
   invoices: {
     title: 'Próximas faturas',

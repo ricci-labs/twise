@@ -6,9 +6,13 @@ import {
 import { cn } from '@web/lib/cn'
 
 const GAP = 0.6
+const FULL = 100
 
 export function IncomeBar({ segments, className }: IncomeBarProps) {
-  const drawn = segments.filter((segment) => segment.percent > 0)
+  const visible = segments.filter((segment) => segment.percent > 0)
+  const total = visible.reduce((sum, segment) => sum + segment.percent, 0)
+  const scale = total > FULL ? FULL / total : 1
+  const drawn = visible.map((segment) => ({ ...segment, percent: segment.percent * scale }))
   const starts = drawn.map((_, position) =>
     drawn.slice(0, position).reduce((sum, segment) => sum + segment.percent, 0),
   )

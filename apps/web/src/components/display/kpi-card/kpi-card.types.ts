@@ -11,6 +11,7 @@ export type KpiCardProps = VariantProps<typeof kpiCardVariants> & {
   value: ReactNode
   badge?: ReactNode
   art?: ReactNode
+  artAt?: 'top' | 'bottom'
   className?: string
   children?: ReactNode
 }

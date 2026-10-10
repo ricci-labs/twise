@@ -11,6 +11,7 @@ export function KpiCard({
   value,
   badge,
   art,
+  artAt = 'bottom',
   tone,
   className,
   children,
@@ -22,7 +23,13 @@ export function KpiCard({
       className={cn(kpiCardVariants({ tone }), className)}
     >
       {art && (
-        <div data-slot="kpi-art" className="pointer-events-none absolute right-3.5 bottom-3.5">
+        <div
+          data-slot="kpi-art"
+          className={cn(
+            'pointer-events-none absolute right-3.5',
+            artAt === 'top' ? 'top-3.5' : 'bottom-3.5',
+          )}
+        >
           {art}
         </div>
       )}
@@ -38,7 +45,7 @@ export function KpiCard({
       <div
         className={cn(
           'relative mt-auto flex flex-col items-start gap-1.5 text-body-sm',
-          art && 'pr-14',
+          art && artAt === 'bottom' && 'pr-14',
         )}
       >
         {badge}

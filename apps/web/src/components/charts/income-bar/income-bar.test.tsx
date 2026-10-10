@@ -41,4 +41,36 @@ describe('IncomeBar', () => {
     expect(screen.container.querySelectorAll('rect')).toHaveLength(2)
     await expectNoAccessibilityViolations(screen.container)
   })
+
+  it('fits the segments in the bar when they add up to more than 100%', async () => {
+    const screen = await render(
+      <IncomeBar
+        segments={[
+          {
+            key: 'spent',
+            tone: 'spent',
+            label: 'Gasto',
+            percent: 73,
+            percentLabel: '73%',
+            amountLabel: 'R$ 6.580,00',
+          },
+          {
+            key: 'committed',
+            tone: 'committed',
+            label: 'Comprometido',
+            percent: 31,
+            percentLabel: '31%',
+            amountLabel: 'R$ 2.800,00',
+          },
+        ]}
+      />,
+    )
+    const rects = [...screen.container.querySelectorAll('rect')]
+    const end = (rect: Element) =>
+      Number.parseFloat(rect.getAttribute('x') ?? '0') +
+      Number.parseFloat(rect.getAttribute('width') ?? '0')
+
+    expect(Math.max(...rects.map(end))).toBeLessThanOrEqual(100)
+    await expect.element(screen.getByText('73%')).toBeVisible()
+  })
 })

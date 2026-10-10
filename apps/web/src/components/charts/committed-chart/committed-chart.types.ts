@@ -16,6 +16,7 @@ export type CommittedChartProps = {
   installmentsLabel: string
   plannedLabel: string
   description: string
+  legendClassName?: string
   className?: string
 }
 
