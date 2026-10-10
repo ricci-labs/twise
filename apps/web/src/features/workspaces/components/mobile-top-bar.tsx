@@ -6,13 +6,16 @@ import { workspacesQueryOptions } from '@web/features/workspaces/api/workspaces.
 import { WorkspaceList } from '@web/features/workspaces/components/workspace-list'
 import { workspacesMessages } from '@web/features/workspaces/workspaces.messages'
 import type { MobileTopBarProps } from '@web/features/workspaces/workspaces.types'
+import { demoWorkspace, isDemoWorkspace } from '@web/lib/demo'
 import { isReadOnly } from '@web/lib/permissions'
 import { ChevronDown } from 'lucide-react'
 
 const MAX_AVATARS = 3
 
 export function MobileTopBar({ access }: MobileTopBarProps) {
-  const workspaces = useQuery(workspacesQueryOptions()).data ?? []
+  const demo = isDemoWorkspace(access.workspace.workspaceId)
+  const listed = useQuery({ ...workspacesQueryOptions(), enabled: !demo }).data ?? []
+  const workspaces = demo ? [demoWorkspace(access.workspace.workspaceId)] : listed
   const { workspace, memberNames } = access
   return (
     <header className="flex items-center justify-between gap-3 px-4 pt-4 lg:hidden">

@@ -1,7 +1,5 @@
 import {
   DEMO_PERIOD_LABELS,
-  DEMO_WORKSPACE_IDS,
-  type DemoVariant,
   demoDirectory,
   demoOverviewFor,
   MONEY_ACCOUNT_KINDS,
@@ -9,10 +7,10 @@ import {
 import { queryOptions } from '@tanstack/react-query'
 import { unwrap } from '@web/lib/api/unwrap'
 import { apiClient } from '@web/lib/api-client'
+import { demoFreshness, demoVariantOf } from '@web/lib/demo'
 import { queryKeys } from '@web/lib/query-keys'
 
 const workspaceApi = apiClient.api.workspaces[':workspaceId']
-const DEMO_FOREVER = Number.POSITIVE_INFINITY
 
 export function overviewQueryOptions(workspaceId: string, period: string | undefined) {
   return queryOptions({
@@ -110,13 +108,4 @@ function fetchContacts(workspaceId: string) {
     )
   }
   return unwrap(workspaceApi.contacts.$get({ param: { workspaceId } }))
-}
-
-function demoFreshness(workspaceId: string) {
-  return demoVariantOf(workspaceId) ? { staleTime: DEMO_FOREVER } : {}
-}
-
-function demoVariantOf(workspaceId: string): DemoVariant | undefined {
-  const entry = Object.entries(DEMO_WORKSPACE_IDS).find(([, id]) => id === workspaceId)
-  return entry?.[0] as DemoVariant | undefined
 }

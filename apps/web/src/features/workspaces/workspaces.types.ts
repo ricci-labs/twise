@@ -54,6 +54,7 @@ export type WorkspaceShellProps = {
   workspaceId: string
   accountMenu: ReactNode
   accountActions: ReactNode
+  notice?: ReactNode
   children: ReactNode
 }
 

@@ -5,8 +5,11 @@ import type { z } from 'zod'
 
 export type DemoSearch = z.infer<typeof demoSearchSchema>
 
-export type DemoFrameProps = {
+export type DemoNoticeProps = {
   variant: DemoVariant
+}
+
+export type DemoGuardProps = {
   children: ReactNode
 }
 

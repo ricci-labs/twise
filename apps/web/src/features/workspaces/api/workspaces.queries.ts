@@ -3,6 +3,7 @@ import { redirect } from '@tanstack/react-router'
 import { ApiError } from '@web/lib/api/api-error'
 import { unwrap } from '@web/lib/api/unwrap'
 import { apiClient } from '@web/lib/api-client'
+import { demoFreshness, demoWorkspaceAccess, isDemoWorkspace } from '@web/lib/demo'
 import { rememberWorkspace } from '@web/lib/last-workspace'
 import { queryKeys } from '@web/lib/query-keys'
 
@@ -16,13 +17,16 @@ export function workspaceAccessQueryOptions(workspaceId: string) {
   return queryOptions({
     queryKey: [...queryKeys.workspace(workspaceId), 'access'] as const,
     queryFn: () => fetchWorkspaceAccess(workspaceId),
+    ...demoFreshness(workspaceId),
   })
 }
 
 export async function openWorkspace(queryClient: QueryClient, workspaceId: string) {
   try {
     const access = await queryClient.ensureQueryData(workspaceAccessQueryOptions(workspaceId))
-    rememberWorkspace(workspaceId)
+    if (!isDemoWorkspace(workspaceId)) {
+      rememberWorkspace(workspaceId)
+    }
     return { access }
   } catch (error) {
     if (error instanceof ApiError && error.code === WORKSPACE_NOT_FOUND) {
@@ -37,5 +41,8 @@ export function fetchWorkspaces() {
 }
 
 export function fetchWorkspaceAccess(workspaceId: string) {
+  if (isDemoWorkspace(workspaceId)) {
+    return Promise.resolve(demoWorkspaceAccess(workspaceId))
+  }
   return unwrap(apiClient.api.workspaces[':workspaceId'].$get({ param: { workspaceId } }))
 }

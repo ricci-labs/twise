@@ -8,12 +8,15 @@ import type {
   WorkspaceListItem,
   WorkspaceSwitcherProps,
 } from '@web/features/workspaces/workspaces.types'
+import { demoWorkspace, isDemoWorkspace } from '@web/lib/demo'
 import { ChevronsUpDown } from 'lucide-react'
 
 const messages = workspacesMessages.shell
 
 export function WorkspaceSwitcher({ access }: WorkspaceSwitcherProps) {
-  const workspaces = useQuery(workspacesQueryOptions()).data ?? []
+  const demo = isDemoWorkspace(access.workspace.workspaceId)
+  const listed = useQuery({ ...workspacesQueryOptions(), enabled: !demo }).data ?? []
+  const workspaces = demo ? [demoWorkspace(access.workspace.workspaceId)] : listed
   const { workspace, role, memberNames } = access
   return (
     <ActionMenu

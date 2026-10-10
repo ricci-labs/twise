@@ -1,4 +1,6 @@
-export { DemoFrame } from '@web/features/demo/components/demo-frame'
+export { DemoAccountActions, DemoAccountMenu } from '@web/features/demo/components/demo-account'
+export { DemoGuard } from '@web/features/demo/components/demo-guard'
 export { demoHomeProps } from '@web/features/demo/components/demo-home'
+export { DemoNotice } from '@web/features/demo/components/demo-notice'
 export { demoSearchSchema } from '@web/features/demo/demo.schemas'
 export type { DemoSearch } from '@web/features/demo/demo.types'
