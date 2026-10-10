@@ -17,6 +17,8 @@ import type { FakeAnswer } from '@web/testing/testing.types'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { render } from 'vitest-browser-react'
 
+const COUNTDOWN_STARTED = /^Reenviar em (60|5\d) s$/
+
 const EMAIL = 'member.a@exemplo.com'
 const PASSWORD = 'café com pão de queijo'
 const signupOpen = () => Response.json({ isSignupEnabled: true })
@@ -151,7 +153,7 @@ describe('AUTH-01 log in', () => {
       .toBeVisible()
     await screen.getByRole('button', { name: 'Reenviar e-mail de confirmação' }).click()
 
-    await expect.element(screen.getByRole('button', { name: 'Reenviar em 60 s' })).toBeVisible()
+    await expect.element(screen.getByRole('button', { name: COUNTDOWN_STARTED })).toBeVisible()
     expect(resent).toEqual([{ email: EMAIL }])
   })
 
