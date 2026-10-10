@@ -191,7 +191,8 @@ export const homeMessages = {
     title: 'Reserva e metas',
     description: 'A reserva vem primeiro; depois, as metas com prazo.',
     of: (saved: string, target: string) => `${saved} de ${target}`,
-    covers: (months: string) => `Cobre ${months} meses de gastos`,
+    ofTarget: (target: string) => `de ${target}`,
+    covers: 'Cobre **{months} meses** de gastos',
     noHistory: 'Cobre — meses de gastos',
     reserveAlternative: (percent: number, saved: string, target: string) =>
       `Reserva: ${percent}%, ${saved} de ${target}.`,
