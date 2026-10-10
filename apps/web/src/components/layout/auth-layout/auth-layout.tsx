@@ -64,6 +64,13 @@ export function AuthFrame({ banner, children }: AuthFrameProps) {
   )
 }
 
+export function useWithoutAuthArt(): void {
+  const frame = use(AuthFrameContext)
+  useLayoutEffect(() => {
+    frame?.hide()
+  }, [frame])
+}
+
 export function AuthLayout({ scene, banner, className, ...main }: AuthLayoutProps) {
   useLightTheme()
   const frame = use(AuthFrameContext)
@@ -73,7 +80,6 @@ export function AuthLayout({ scene, banner, className, ...main }: AuthLayoutProp
       return
     }
     frame.show(scene)
-    return () => frame.hide()
   }, [frame, scene])
 
   if (frame) {
