@@ -32,6 +32,7 @@ export function WorkspaceShell({
   workspaceId,
   accountMenu,
   accountActions,
+  notice,
   children,
 }: WorkspaceShellProps) {
   const { data: access } = useSuspenseQuery(workspaceAccessQueryOptions(workspaceId))
@@ -99,6 +100,7 @@ export function WorkspaceShell({
         }
       >
         <MobileTopBar access={access} />
+        {notice}
         {isReadOnly(access.permissions) && (!isDesktop || currentAreaOf(pathname) !== null) && (
           <Tip tone="readOnly" className="mx-4 mt-2 lg:mx-8 lg:mt-7 lg:self-start">
             {messages.readOnly}

@@ -69,4 +69,33 @@ describe('demo page', () => {
       .toBeVisible()
     expect(app.router.state.location.pathname).toBe('/demo')
   })
+
+  it('wears the real app shell: the menu, the workspace and an example account', async () => {
+    const { app, screen } = await openDemo()
+    const menu = screen.getByRole('navigation', { name: 'Menu principal' })
+
+    await expect
+      .element(menu.getByRole('link', { name: 'Início' }))
+      .toHaveAttribute('aria-current', 'page')
+    await expect.element(menu.getByText('Dono · 2 pessoas')).toBeVisible()
+    await expect
+      .element(menu.getByRole('button', { name: 'Conta de exemplo: Member A' }))
+      .toBeVisible()
+
+    await menu.getByRole('link', { name: 'Lançamentos' }).click()
+
+    await expect
+      .element(screen.getByText('Na demonstração, só a Início está aberta.'))
+      .toBeVisible()
+    expect(app.router.state.location.pathname).toBe('/demo')
+  })
+
+  it('keeps the bottom tab bar on the phone', async () => {
+    const { screen } = await openDemo()
+    await page.viewport(390, 844)
+
+    const tabs = screen.getByRole('navigation', { name: 'Navegação' })
+    await expect.element(tabs.getByRole('link', { name: 'Início' })).toBeVisible()
+    await expect.element(screen.getByRole('button', { name: /Trocar de espaço/ })).toBeVisible()
+  })
 })

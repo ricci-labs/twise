@@ -13,6 +13,12 @@ export const DEMO_WORKSPACE_IDS: Readonly<Record<DemoVariant, string>> = {
 
 export const DEMO_TODAY = '2026-10-20'
 
+export const DEMO_WORKSPACE_NAME = 'Casa'
+
+export const DEMO_ROLE_NAME = 'Dono'
+
+export const DEMO_MEMBER_NAMES = ['Member A', 'Member B'] as const
+
 export const DEMO_PERIOD_DAY = 5
 
 export const DEMO_PERIOD_LABELS: Readonly<Record<DemoScenario, string>> = {
