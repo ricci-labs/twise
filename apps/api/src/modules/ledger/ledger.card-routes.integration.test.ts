@@ -197,11 +197,12 @@ describe('GET /cards/:cardId/invoices/:invoiceId/lines', () => {
         line.installmentNo,
         line.installmentCount,
         line.amountCents,
+        line.counterpartAccountId,
       ]),
     ).toEqual([
-      ['Geladeira', 1, 3, 100_000],
-      ['Farmácia', 1, 1, 5_000],
-      ['Pagamento parcial', null, 1, -50_000],
+      ['Geladeira', 1, 3, 100_000, categoryId],
+      ['Farmácia', 1, 1, 5_000, categoryId],
+      ['Pagamento parcial', null, 1, -50_000, checkingAccountId],
     ])
   })
 

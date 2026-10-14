@@ -241,6 +241,7 @@ export type InvoiceLine = {
   installmentCount: number
   amountCents: number
   frontedCents: number
+  counterpartAccountId: string | null
 }
 
 export type CardInvoiceRef = WorkspaceCard & {

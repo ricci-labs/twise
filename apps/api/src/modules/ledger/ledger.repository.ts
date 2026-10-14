@@ -577,6 +577,7 @@ export function selectInvoiceLines(
       installmentCount: journalEntries.installmentCount,
       cardAmountCents: postings.amountCents,
       frontedCents: frontedOnTheSameInstallment(),
+      counterpartAccountId: counterpartOnTheSameInstallment(),
     })
     .from(postings)
     .innerJoin(journalEntries, eq(journalEntries.id, postings.entryId))
@@ -652,6 +653,19 @@ export function selectFrontedByInvoice(tx: WorkspaceTransaction, cardAccountId?:
     .innerJoin(journalEntries, eq(journalEntries.id, postings.entryId))
     .where(and(...conditions))
     .groupBy(postings.invoiceId)
+}
+
+function counterpartOnTheSameInstallment() {
+  return sql<string | null>`(
+    select other.account_id
+    from postings other
+    where other.entry_id = ${postings.entryId}
+      and other.account_id <> ${postings.accountId}
+      and other.account_kind <> 'receivable'
+      and (other.installment_no is null or other.installment_no = ${postings.installmentNo})
+    order by abs(other.amount_cents) desc, other.line_no
+    limit 1
+  )`
 }
 
 function frontedOnTheSameInstallment() {
