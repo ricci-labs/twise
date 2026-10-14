@@ -33,14 +33,14 @@ where it's used.
 | Family | Components (from the brief) |
 |---|---|
 | `actions/` | `Button`, `IconButton`, `SubmitButton`, `FloatingActionButton`, `ActionMenu`, `SegmentedControl` |
-| `inputs/` | `TextInput`, `PasswordInput`, `EmailInput`, `PhoneInput`, `SearchInput`, `TextArea`, `MoneyInput`, `ChoiceChips`, `PickerField`, `PickerSheet`, `Stepper`, `DateInput`, `PeriodPicker`, `Select`, `Combobox`, `Checkbox`, `RadioGroup`, `Switch`, `DayOfMonthPicker`, `FileUpload`, `ColorSwatch` |
+| `inputs/` | `TextInput`, `PasswordInput`, `EmailInput`, `PhoneInput`, `SearchInput`, `TextArea`, `MoneyInput`, `ChoiceChips`, `PickerField`, `PickerSheet`, `Stepper`, `RadioCardList`, `DateInput`, `PeriodPicker`, `Select`, `Combobox`, `Checkbox`, `RadioGroup`, `Switch`, `DayOfMonthPicker`, `FileUpload`, `ColorSwatch` |
 | `forms/` | `Form`, `FormField`, `FormErrorSummary`, `FormFooter`, `RequiredLegend` |
 | `feedback/` | `Toast`, `InlineAlert`, `Banner`, `ConfirmDialog`, `EmptyState`, `Skeleton`, `ErrorState` |
 | `display/` | `Amount`, `StatusBadge`, `Avatar`, `ListItem`, `Card`, `StatCard`, `ThresholdProgress`, `Tabs`, `Accordion`, `DataList` (table on desktop, list on mobile), `LoadMore`, `Tooltip`, `HelpPopover`, `FilterChips`, `CategoryIcon` |
 | `charts/` | `BarChart`, `ForecastChart`, `DonutChart`, each with its text alternative |
 | `navigation/` | `BottomBar`, `Sidebar`, `TopBar`, `WorkspaceSwitcher`, `BackLink`, `Breadcrumb` |
 | `layout/` | `AppShell`, `Page`, `PageHeader`, `Section`, `Stack`, `Grid` |
-| `finance/` | `StatHero`, `InsightCard`, `InvoiceCard`, `EntryRow`, `OccurrenceRow`, `ContactRow`, `ChargePreview`, `AmountSplitEditor` |
+| `finance/` | `StatHero`, `InsightCard`, `InvoiceCard`, `InvoicePreview`, `EntryRow`, `OccurrenceRow`, `ContactRow`, `ChargePreview`, `AmountSplitEditor` |
 | `brand/` | `Logo`, `OwlScene` (the layered owl scenes and their motion), `AppSplash` |
 | `icons/` | `TwiseIcon` and the icon registries (see Icons) |
 
@@ -323,6 +323,15 @@ component here, so the form, and later the account, card and planning forms, sha
 - `Switch` (`components/inputs/switch`, Base UI `Switch`, the design's `InProgressSwitch`): the
   label beside the switch, which the label also turns; on the desktop the switch sits right after
   its label, not at the far edge (`../product/requirements/ui-standards.md` → Visual rules).
+- `RadioCardList` (`components/inputs/radio-card-list`, Base UI `RadioGroup`, the design's
+  `InvoiceRadioList`): one choice among rows with a radio dot, a title, a detail with `**bold**`
+  ("Falta pagar **R$ 1.950,00**") and an optional status badge; the chosen row gets the ink outline.
+- `InvoicePreview` (`components/finance/invoice-preview`): the sunken box under the card with the
+  calendar drawing, the sentence ("A 1ª parcela entra na fatura que vence em **04/11**.") and, with
+  more than one installment or a closed invoice, one row per installment ("1/3 · vence 04/11 · R$
+  333,34", split by dividers, no leader); a closed one is struck through with "Fechada"; `more` adds
+  "+ N parcelas, até…". A `status` region, so changes are announced. The screen computes the rows
+  with the shared billing rules and passes them.
 - `CategoryArt` (`components/display/category-art`): the category drawing of an account's `icon`,
   never clipped in a circle (`../product/requirements/ui-standards.md` → Visual rules across
   screens). By default (`loose`) it is the drawing without its paper square, from
