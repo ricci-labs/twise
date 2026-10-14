@@ -261,7 +261,8 @@ updated: 2026-10-14
      and `CARD-03` as one desktop page (path, the wide month strip, four KPIs of the chosen
      invoice, the lines table with its filters); "Pagar fatura", the "2 contatos" badge (needs the
      contacts of each line) and opening an entry from its line come later. `CARD-04` as the
-     760 px dialog in two columns
+     760 px dialog in two columns. `ACC-04` with the path "Contas e categorias › Lixeira", the
+     page title and the list in a card
   8. [ ] Fixes to merged work from this round's review: no circles in the Home, the one selection
      style everywhere, the "Mais" sheet with the system illustrations
   9. [ ] G42 (archive a category with its subcategories) only if the product owner approves it

@@ -500,7 +500,8 @@ component here, so the form, and later the account, card and planning forms, sha
 - `TrashRow` (`components/finance/trash-row`): a deleted account, card or category: the drawing
   (or the initial), the name, the grey lines (kind, "dentro de {mãe}", "Excluída em {data} por
   {nome}"), the reason in ink, and the small secondary "Restaurar" with the restore arrow; the
-  button's name says what it restores ("Restaurar Conta antiga").
+  button's name says what it restores ("Restaurar Conta antiga"). The name sits 2 px over the
+  first grey line and the grey lines 4 px apart, as the design's `small + small`.
 - `CategoryRow` (`components/finance/category-row`, Base UI `Collapsible`): a category in the tree:
   the drawing, the name (and, for income, a small `Badge`: "Fixa" or "Variável"), a grey detail
   line when given, and the "2 subcategorias ⌄" pill that opens its chips below (mint while open;
