@@ -12,12 +12,14 @@ import {
 import type {
   AccountUpdate,
   CardDetailsUpdate,
+  FrequentDescriptionFilter,
   NewAccount,
   NewCardDetails,
   NewEntry,
   NewInvoice,
   NewLedgerAccount,
   NewPosting,
+  RecentDescriptionFilter,
 } from '@api/modules/ledger/ledger.types'
 import type {
   EntryListQuery,
@@ -27,6 +29,7 @@ import type {
   TrashQuery,
 } from '@financas/shared'
 import {
+  type AnyColumn,
   and,
   asc,
   between,
@@ -41,9 +44,14 @@ import {
   ne,
   notExists,
   or,
+  type SQL,
   sql,
 } from 'drizzle-orm'
 import { alias } from 'drizzle-orm/pg-core'
+
+const ACCENTED_LETTERS = 'ÁÀÂÃÄÉÈÊËÍÌÎÏÓÒÔÕÖÚÙÛÜÇáàâãäéèêëíìîïóòôõöúùûüç'
+
+const PLAIN_LETTERS = 'AAAAAEEEEIIIIOOOOOUUUUCaaaaaeeeeiiiiooooouuuuc'
 
 const ACCOUNT_COLUMNS = {
   id: ledgerAccounts.id,
@@ -436,6 +444,68 @@ export function selectTrashedEntries(tx: WorkspaceTransaction, query: TrashQuery
     .where(and(...conditions))
     .orderBy(desc(deletedAtToTheMillisecond(journalEntries)), desc(journalEntries.id))
     .limit(query.limit + 1)
+}
+
+export function selectRecentDescriptions(
+  tx: WorkspaceTransaction,
+  { entryType, search, limit }: RecentDescriptionFilter,
+) {
+  const { latest, columns } = latestEntryOfEachDescription(tx, [
+    eq(journalEntries.entryType, entryType),
+    sql`strpos(${foldedForSearch(journalEntries.description)}, ${foldedForSearch(sql`${search}`)}) > 0`,
+  ])
+  return tx
+    .select(columns)
+    .from(latest)
+    .where(eq(latest.rank, 1))
+    .orderBy(desc(latest.occurredOn), desc(latest.id))
+    .limit(limit)
+}
+
+export function selectFrequentDescriptions(
+  tx: WorkspaceTransaction,
+  { entryType, createdByUserId, since, minUses, limit }: FrequentDescriptionFilter,
+) {
+  const { latest, columns } = latestEntryOfEachDescription(tx, [
+    eq(journalEntries.entryType, entryType),
+    eq(journalEntries.createdByUserId, createdByUserId),
+    gte(journalEntries.occurredOn, since),
+  ])
+  return tx
+    .select(columns)
+    .from(latest)
+    .where(and(eq(latest.rank, 1), gte(latest.uses, minUses)))
+    .orderBy(desc(latest.uses), desc(latest.occurredOn), desc(latest.id))
+    .limit(limit)
+}
+
+function latestEntryOfEachDescription(tx: WorkspaceTransaction, conditions: SQL[]) {
+  const description = foldedForSearch(journalEntries.description)
+  const latest = tx
+    .select({
+      id: journalEntries.id,
+      description: journalEntries.description,
+      occurredOn: journalEntries.occurredOn,
+      paymentMethod: journalEntries.paymentMethod,
+      rank: sql<number>`(row_number() over (partition by ${description} order by ${journalEntries.occurredOn} desc, ${journalEntries.createdAt} desc))::int`.as(
+        'rank',
+      ),
+      uses: sql<number>`(count(*) over (partition by ${description}))::int`.as('uses'),
+    })
+    .from(journalEntries)
+    .where(and(isNull(journalEntries.deletedAt), ...conditions))
+    .as('latest')
+  const columns = {
+    id: latest.id,
+    description: latest.description,
+    occurredOn: latest.occurredOn,
+    paymentMethod: latest.paymentMethod,
+  }
+  return { latest, columns }
+}
+
+function foldedForSearch(text: SQL | AnyColumn) {
+  return sql`lower(translate(btrim(${text}), ${ACCENTED_LETTERS}, ${PLAIN_LETTERS}))`
 }
 
 export function selectTrashedAccounts(tx: WorkspaceTransaction) {

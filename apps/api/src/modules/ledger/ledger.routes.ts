@@ -16,6 +16,8 @@ import {
   listAccounts,
   listCards,
   listEntries,
+  listEntrySuggestions,
+  listFrequentEntries,
   listInvoiceLines,
   listInvoiceTotals,
   listTrashedAccounts,
@@ -37,6 +39,8 @@ import {
   entryInputSchema,
   entryListQuerySchema,
   entryParamsSchema,
+  entrySuggestionQuerySchema,
+  frequentEntryQuerySchema,
   invoiceParamsSchema,
   newAccountSchema,
   newCardSchema,
@@ -186,6 +190,27 @@ function entryRoutes({ db }: LedgerRouteDeps) {
       async (c) => {
         const { workspaceId } = currentWorkspace(c)
         return c.json(await listTrashedEntries(db, workspaceId, c.req.valid('query')))
+      },
+    )
+    .get(
+      '/suggestions',
+      authorize('entries', 'view'),
+      queryParams(entrySuggestionQuerySchema, 'ENTRY_SUGGESTION_QUERY_INVALID'),
+      async (c) => {
+        const { workspaceId } = currentWorkspace(c)
+        return c.json(await listEntrySuggestions(db, workspaceId, c.req.valid('query')))
+      },
+    )
+    .get(
+      '/frequent',
+      authorize('entries', 'view'),
+      queryParams(frequentEntryQuerySchema, 'FREQUENT_ENTRY_QUERY_INVALID'),
+      async (c) => {
+        const requester = {
+          workspaceId: currentWorkspace(c).workspaceId,
+          userId: currentSession(c).userId,
+        }
+        return c.json(await listFrequentEntries(db, requester, c.req.valid('query')))
       },
     )
     .get('/:entryId', authorize('entries', 'view'), entry, async (c) => {

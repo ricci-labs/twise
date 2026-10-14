@@ -4,6 +4,8 @@ import {
   entryDetailsChangeSchema,
   entryInputSchema,
   entryListQuerySchema,
+  entrySuggestionQuerySchema,
+  frequentEntryQuerySchema,
   newAccountSchema,
   newCardSchema,
 } from '@shared/ledger/ledger/ledger.schemas'
@@ -214,5 +216,31 @@ describe('entryListQuerySchema', () => {
     )
     expect(entryListQuerySchema.safeParse({ from: '2026-02-30' }).success).toBe(false)
     expect(entryListQuerySchema.safeParse({ limit: '501' }).success).toBe(false)
+  })
+})
+
+describe('entrySuggestionQuerySchema', () => {
+  it('trims the search and accepts the types that have a category', () => {
+    expect(entrySuggestionQuerySchema.parse({ type: 'card_purchase', q: '  merc ' })).toEqual({
+      type: 'card_purchase',
+      q: 'merc',
+    })
+  })
+
+  it('refuses a blank search and a type without a category', () => {
+    expect(entrySuggestionQuerySchema.safeParse({ type: 'expense', q: '   ' }).success).toBe(false)
+    expect(entrySuggestionQuerySchema.safeParse({ type: 'transfer', q: 'Pix' }).success).toBe(false)
+  })
+})
+
+describe('frequentEntryQuerySchema', () => {
+  it('defaults to 8 and reads the limit from the query string', () => {
+    expect(frequentEntryQuerySchema.parse({ type: 'income' })).toEqual({ type: 'income', limit: 8 })
+    expect(frequentEntryQuerySchema.parse({ type: 'expense', limit: '3' }).limit).toBe(3)
+  })
+
+  it('refuses a limit outside 1 to 8', () => {
+    expect(frequentEntryQuerySchema.safeParse({ type: 'expense', limit: '0' }).success).toBe(false)
+    expect(frequentEntryQuerySchema.safeParse({ type: 'expense', limit: '9' }).success).toBe(false)
   })
 })

@@ -106,6 +106,7 @@ message.
 | `ENTRY_INVALID` | 400 | Form invalid | per field (standard messages) | fields |
 | `ENTRY_QUERY_INVALID` | 400 | Invalid filters | "Os filtros eram inválidos e foram limpos." | toast |
 | `TRASH_QUERY_INVALID` | 400 | Invalid trash paging (guard) | "Não foi possível carregar a lixeira." | page |
+| `ENTRY_SUGGESTION_QUERY_INVALID`, `FREQUENT_ENTRY_QUERY_INVALID` | 400 | Invalid suggestion or "Repetir um recente" query (guard) | "Não foi possível carregar as sugestões." | not shown: the shortcut just stays hidden |
 | `ENTRY_NOT_FOUND` | 404 | Entry deleted or edited meanwhile | "Este lançamento foi excluído ou editado. Atualize a lista." | page / toast |
 | `ENTRY_ALREADY_DELETED` | 409 | Changing a deleted or replaced entry | "Este lançamento foi excluído ou já foi editado por outra pessoa. Atualize a lista." | form |
 | `ENTRY_ON_CLOSED_INVOICE` | 409 | Deleting or editing (new version) an entry with a line on a closed invoice | "Parte deste lançamento está em uma fatura fechada, então ele não pode ser excluído nem ter valores alterados. Só a descrição e as observações mudam." | toast |

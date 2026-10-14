@@ -15,8 +15,10 @@ import type {
   EntryInput,
   EntrySource,
   EntryType,
+  EntryTypeWithCategory,
   IncomeNature,
   InvoiceStatus,
+  IsoDate,
   PaymentMethod,
 } from '@financas/shared'
 
@@ -216,6 +218,48 @@ export type Deletion = {
 export type TrashedAccount = LedgerAccountItem & Deletion
 
 export type TrashedEntry = EntryItem & Deletion
+
+export type EntrySuggestion = {
+  description: string
+  categoryId: string | null
+  accountId: string | null
+  paymentMethod: PaymentMethod | null
+  lastAmountCents: number
+  lastUsedOn: string
+}
+
+export type LatestEntryOfDescription = {
+  id: string
+  description: string
+  occurredOn: string
+  paymentMethod: PaymentMethod | null
+}
+
+export type RecentDescriptionFilter = {
+  entryType: EntryTypeWithCategory
+  search: string
+  limit: number
+}
+
+export type FrequentDescriptionFilter = {
+  entryType: EntryTypeWithCategory
+  createdByUserId: string
+  since: IsoDate
+  minUses: number
+  limit: number
+}
+
+export type SuggestionLine = {
+  entryId: string
+  accountId: string
+  accountKind: AccountKind
+  amountCents: number
+}
+
+export type SuggestionRequester = {
+  workspaceId: string
+  userId: string
+}
 
 export type PostingDetails = Omit<ChargeableItem, 'amountCents'>
 

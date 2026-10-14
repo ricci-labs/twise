@@ -1,6 +1,7 @@
 import { parseIsoDate } from '@shared/core/calendar/dates'
 import { pageCursorSchema, pageLimitSchema } from '@shared/core/paging/paging.schemas'
 import {
+  ENTRY_TYPES_WITH_CATEGORY,
   INCOME_NATURES,
   MAX_INSTALLMENTS,
   PAYMENT_METHODS,
@@ -131,6 +132,27 @@ export const entryListQuerySchema = z
   })
 
 export type EntryListQuery = z.infer<typeof entryListQuerySchema>
+
+export const FREQUENT_ENTRIES_MAX_LIMIT = 8
+
+export const entrySuggestionQuerySchema = z.object({
+  type: z.enum(ENTRY_TYPES_WITH_CATEGORY),
+  q: z.string().trim().min(1).max(ENTRY_DESCRIPTION_MAX_LENGTH),
+})
+
+export type EntrySuggestionQuery = z.infer<typeof entrySuggestionQuerySchema>
+
+export const frequentEntryQuerySchema = z.object({
+  type: z.enum(ENTRY_TYPES_WITH_CATEGORY),
+  limit: z.coerce
+    .number()
+    .int()
+    .min(1)
+    .max(FREQUENT_ENTRIES_MAX_LIMIT)
+    .default(FREQUENT_ENTRIES_MAX_LIMIT),
+})
+
+export type FrequentEntryQuery = z.infer<typeof frequentEntryQuerySchema>
 
 export const trashQuerySchema = z.object({
   cursor: pageCursorSchema(z.iso.datetime()).optional(),

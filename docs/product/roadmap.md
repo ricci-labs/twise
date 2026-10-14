@@ -200,22 +200,21 @@ updated: 2026-10-14
   1. [x] Design package in `docs/design/entries/` and the loose illustrations
   2. [x] Requirements: `ENT-02` from the design, RF-ENT-13/14, API gaps G38–G39, the app-wide
      visual rules (no circles, desktop field heights, dotted leaders)
-  3. [ ] API: description suggestions (G38)
-  4. [ ] API: frequent entries of the current person (G39)
-  5. [ ] Web components: `MoneyField`, `TypeChips`, `DateShortcuts`
-  6. [ ] Web components: `PickerField` + `PickerSheet`, `CategoryGrid`
-  7. [ ] Web components: `WhoSpent`, `InstallmentStepper`, `InProgressSwitch`
-  8. [ ] Web components: `InvoicePreview`, `InvoiceRadioList`
-  9. [ ] Web components: `SharesList`
-  10. [ ] Web components: `RecentEntries`, `AutoFillTip`
-  11. [ ] Web: `ENT-02` expense on mobile, end to end (fields, pickers, errors, save, toast, discard,
+  3. [x] API: description suggestions (G38) and the current person's frequent entries (G39)
+  4. [ ] Web components: `MoneyField`, `TypeChips`, `DateShortcuts`
+  5. [ ] Web components: `PickerField` + `PickerSheet`, `CategoryGrid`
+  6. [ ] Web components: `WhoSpent`, `InstallmentStepper`, `InProgressSwitch`
+  7. [ ] Web components: `InvoicePreview`, `InvoiceRadioList`
+  8. [ ] Web components: `SharesList`
+  9. [ ] Web components: `RecentEntries`, `AutoFillTip`
+  10. [ ] Web: `ENT-02` expense on mobile, end to end (fields, pickers, errors, save, toast, discard,
       offline)
-  12. [ ] Web: card purchase with the invoice preview, the closed invoice and a purchase in progress
-  13. [ ] Web: shares with contacts
-  14. [ ] Web: income, transfer (and from `HOME-03`), invoice payment, settlement, opening balance
-  15. [ ] Web: the desktop dialog
-  16. [ ] Web: "Repetir um recente" and the suggestion that fills the rest
-  17. [ ] Web: the Home follows the app-wide rules (loose illustrations, no circles)
+  11. [ ] Web: card purchase with the invoice preview, the closed invoice and a purchase in progress
+  12. [ ] Web: shares with contacts
+  13. [ ] Web: income, transfer (and from `HOME-03`), invoice payment, settlement, opening balance
+  14. [ ] Web: the desktop dialog
+  15. [ ] Web: "Repetir um recente" and the suggestion that fills the rest
+  16. [ ] Web: the Home follows the app-wide rules (loose illustrations, no circles)
 - [ ] Remaining project skills (`new-module`, `db-migration`, `domain-rule`, `pr`) and Claude Code hooks
 
 ## Phase 1: MVP

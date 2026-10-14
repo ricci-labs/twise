@@ -48,6 +48,7 @@ export type {
   EntryContext,
   EntryItem,
   EntryRef,
+  EntrySuggestion,
   InvoiceDue,
   InvoiceLine,
   InvoiceTotal,

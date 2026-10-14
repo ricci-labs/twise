@@ -1418,6 +1418,68 @@
           ]
         },
         {
+          "name": "Suggestions for a description",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/workspaces/{{workspaceId}}/entries/suggestions?type=expense&q=merc",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "workspaces", "{{workspaceId}}", "entries", "suggestions"],
+              "query": [
+                {
+                  "key": "type",
+                  "value": "expense"
+                },
+                {
+                  "key": "q",
+                  "value": "merc"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": ["pm.test('answers 200', () => pm.response.to.have.status(200))"]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Frequent entries of the caller",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/workspaces/{{workspaceId}}/entries/frequent?type=expense&limit=8",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "workspaces", "{{workspaceId}}", "entries", "frequent"],
+              "query": [
+                {
+                  "key": "type",
+                  "value": "expense"
+                },
+                {
+                  "key": "limit",
+                  "value": "8"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": ["pm.test('answers 200', () => pm.response.to.have.status(200))"]
+              }
+            }
+          ]
+        },
+        {
           "name": "Change details",
           "request": {
             "method": "PATCH",
