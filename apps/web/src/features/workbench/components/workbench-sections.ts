@@ -26,6 +26,7 @@ import { stepTrackExamples } from '@web/components/display/step-track'
 import { alertExamples } from '@web/components/feedback/alert'
 import { autoFillTipExamples } from '@web/components/feedback/auto-fill-tip'
 import { bannerExamples } from '@web/components/feedback/banner'
+import { confirmDialogExamples } from '@web/components/feedback/confirm-dialog'
 import { emptyStateExamples } from '@web/components/feedback/empty-state'
 import { sectionErrorExamples } from '@web/components/feedback/section-error'
 import { sectionSkeletonExamples } from '@web/components/feedback/section-skeleton'
@@ -43,10 +44,13 @@ import { passwordInputExamples } from '@web/components/inputs/password-input'
 import { pickerFieldExamples } from '@web/components/inputs/picker-field'
 import { pickerSheetExamples } from '@web/components/inputs/picker-sheet'
 import { radioCardListExamples } from '@web/components/inputs/radio-card-list'
+import { selectExamples } from '@web/components/inputs/select'
 import { stepperExamples } from '@web/components/inputs/stepper'
 import { switchExamples } from '@web/components/inputs/switch'
+import { textAreaExamples } from '@web/components/inputs/text-area'
 import { textInputExamples } from '@web/components/inputs/text-input'
 import { authLayoutExamples } from '@web/components/layout/auth-layout'
+import { formOverlayExamples } from '@web/components/layout/form-overlay'
 import { momentScreenExamples } from '@web/components/layout/moment-screen'
 import { sheetExamples } from '@web/components/layout/sheet'
 import { appSidebarExamples } from '@web/components/navigation/app-sidebar'
@@ -67,6 +71,10 @@ export const workbenchSections: readonly ComponentExamples[] = [
   sharesListExamples,
   recentEntriesExamples,
   autoFillTipExamples,
+  selectExamples,
+  textAreaExamples,
+  confirmDialogExamples,
+  formOverlayExamples,
   amountExamples,
   cardExamples,
   kpiCardExamples,

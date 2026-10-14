@@ -1,11 +1,11 @@
-import type { ReactNode, Ref } from 'react'
-import type { FieldPath, FieldValues } from 'react-hook-form'
+import type { ReactNode } from 'react'
+import type { FieldPath, FieldValues, RefCallBack } from 'react-hook-form'
 
 export type FieldControlProps = {
   id: string
   name: string
   value: string
-  ref: Ref<HTMLInputElement>
+  ref: RefCallBack
   onChange: (event: { target: { value: string } }) => void
   onBlur: () => void
   readOnly: boolean

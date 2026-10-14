@@ -211,6 +211,7 @@ updated: 2026-10-14
   7. [x] Web components: `InvoicePreview` and `RadioCardList` (the invoices to pay)
   8. [x] Web components: `SharesList` (with its collapsed pill)
   9. [x] Web components: `RecentEntries`, `AutoFillTip`
+  9b. [x] Web components the screen also needs: `Select`, `TextArea`, `ConfirmDialog`, `FormOverlay`
   10. [ ] Web: `ENT-02` expense on mobile, end to end (fields, pickers, errors, save, toast, discard,
       offline)
   11. [ ] Web: card purchase with the invoice preview, the closed invoice and a purchase in progress
