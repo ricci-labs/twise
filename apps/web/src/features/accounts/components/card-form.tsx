@@ -109,7 +109,7 @@ export function CardForm({
       <FormOverlay
         title={isEditing ? messages.editTitle : messages.newTitle}
         closeLabel={messages.close}
-        size="md"
+        size="wide"
         actions="single"
         isOpen
         onRequestClose={requestClose}
@@ -132,7 +132,7 @@ export function CardForm({
           </span>{' '}
           {accountsMessages.form.requiredLegend}
         </p>
-        <div className="flex flex-col gap-4.5 px-4 pt-2.5 lg:px-8">
+        <div className="flex flex-col gap-4.5 px-4 pt-2.5 lg:grid lg:grid-cols-2 lg:items-start lg:gap-x-6 lg:px-8">
           {canRename && (
             <FormField<CardFormInput> name="name" label={messages.name} isRequired maxLength={80}>
               {(control) => (
@@ -151,64 +151,70 @@ export function CardForm({
           {canChangeCycle && (
             <>
               <CardDays isEditing={isEditing} />
-              <Controller
-                control={form.control}
-                name="purchaseOnClosingDayGoesNext"
-                render={({ field }) => (
-                  <Switch
-                    label={messages.goesNext}
-                    isChecked={field.value}
-                    onCheckedChange={field.onChange}
-                  />
-                )}
-              />
+              <div className="lg:col-span-2">
+                <Controller
+                  control={form.control}
+                  name="purchaseOnClosingDayGoesNext"
+                  render={({ field }) => (
+                    <Switch
+                      label={messages.goesNext}
+                      isChecked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  )}
+                />
+              </div>
               <FormField<CardFormInput> name="limit" label={messages.limit}>
                 {(control) => <MoneyInput size="lg" {...control} />}
               </FormField>
               <PaymentAccountField accounts={accounts} />
               {members && (
-                <Controller
-                  control={form.control}
-                  name="holderUserId"
-                  render={({ field, fieldState }) => (
-                    <FieldGroup
-                      label={messages.holder}
-                      help={messages.holderHelp}
-                      error={fieldState.error?.message}
-                    >
-                      <ChoiceChips
+                <div className="lg:col-span-2">
+                  <Controller
+                    control={form.control}
+                    name="holderUserId"
+                    render={({ field, fieldState }) => (
+                      <FieldGroup
                         label={messages.holder}
-                        variant="member"
-                        options={members.map((member) => ({
-                          value: member.userId,
-                          label: member.displayName,
-                          avatarName: member.displayName,
-                        }))}
-                        value={field.value}
-                        onSelect={field.onChange}
-                        onBlur={field.onBlur}
-                      />
-                    </FieldGroup>
-                  )}
-                />
+                        help={messages.holderHelp}
+                        error={fieldState.error?.message}
+                      >
+                        <ChoiceChips
+                          label={messages.holder}
+                          variant="member"
+                          options={members.map((member) => ({
+                            value: member.userId,
+                            label: member.displayName,
+                            avatarName: member.displayName,
+                          }))}
+                          value={field.value}
+                          onSelect={field.onChange}
+                          onBlur={field.onBlur}
+                        />
+                      </FieldGroup>
+                    )}
+                  />
+                </div>
               )}
             </>
           )}
           {canRename && (
-            <Controller
-              control={form.control}
-              name="color"
-              render={({ field }) => (
-                <FieldGroup label={messages.color} help={messages.colorHelp}>
-                  <ColorPicker
-                    label={messages.color}
-                    value={field.value}
-                    onSelect={field.onChange}
-                    onBlur={field.onBlur}
-                  />
-                </FieldGroup>
-              )}
-            />
+            <div className="lg:col-span-2">
+              <Controller
+                control={form.control}
+                name="color"
+                render={({ field }) => (
+                  <FieldGroup label={messages.color} help={messages.colorHelp}>
+                    <ColorPicker
+                      label={messages.color}
+                      value={field.value}
+                      onSelect={field.onChange}
+                      onBlur={field.onBlur}
+                    />
+                  </FieldGroup>
+                )}
+              />
+            </div>
           )}
         </div>
       </FormOverlay>
