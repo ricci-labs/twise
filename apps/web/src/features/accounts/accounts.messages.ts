@@ -410,6 +410,8 @@ export const accountsMessages = {
     pageTitle: 'Lixeira de contas',
     title: 'Lixeira de contas',
     description: 'Contas, cartões e categorias excluídos. Restaurar traz de volta com o histórico.',
+    crumb: 'Caminho',
+    crumbHere: 'Lixeira',
     back: 'Voltar para Contas',
     kinds: {
       expense_category: 'Categoria de despesa',

@@ -18,7 +18,7 @@ import {
   workspaceList,
 } from '@web/testing/fake-api'
 import type { FakeAnswer } from '@web/testing/testing.types'
-import { afterEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { page } from 'vitest/browser'
 import { render } from 'vitest-browser-react'
 
@@ -115,5 +115,33 @@ describe('ACC-04 accounts trash', () => {
     await openTrash({ [`GET ${BASE}/accounts/trash`]: () => Response.json([]) })
 
     await expect.element(page.getByText('A lixeira está vazia.')).toBeVisible()
+  })
+})
+
+describe('ACC-04 accounts trash on the desktop', () => {
+  beforeEach(async () => {
+    await page.viewport(1440, 900)
+  })
+
+  afterEach(async () => {
+    vi.restoreAllMocks()
+    await page.viewport(414, 896)
+  })
+
+  it('shows the path back to accounts above the title and the list in a card', async () => {
+    await openTrash()
+
+    await expect
+      .element(
+        page
+          .getByRole('navigation', { name: 'Caminho' })
+          .getByRole('link', { name: 'Contas e categorias' }),
+      )
+      .toHaveAttribute('href', `/w/${WORKSPACE_ID}/accounts`)
+    await expect
+      .element(page.getByRole('heading', { name: 'Lixeira de contas', level: 1 }))
+      .toBeVisible()
+    await expect.element(page.getByRole('link', { name: /^Voltar/ })).not.toBeInTheDocument()
+    await expectNoAccessibilityViolations(page.getByRole('main').element())
   })
 })

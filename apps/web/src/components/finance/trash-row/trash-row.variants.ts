@@ -9,7 +9,7 @@ export const trashRowMainVariants = cva(
 )
 
 export const trashRowTextVariants = cva(
-  'flex min-w-0 flex-1 flex-col gap-0.5 text-row-detail text-ink-muted',
+  'flex min-w-0 flex-1 flex-col gap-0.5 text-row-detail text-ink-muted [&>p+p+p]:mt-0.5',
 )
 
 export const trashRowNameVariants = cva('text-row text-ink')
