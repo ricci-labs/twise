@@ -25,13 +25,13 @@ import {
   invoiceForPurchase,
   invoiceStatusOn,
   isMoneyAccountKind,
+  parseIsoDate,
   todayIn,
+  toYearMonthLabel,
   type UpcomingInvoiceQuery,
 } from '@financas/shared'
 
 const PERCENT = 100
-
-const FIRST_DAY_SUFFIX = '-01'
 
 const CLOSED = 'closed'
 
@@ -154,7 +154,7 @@ function snapshotOf(
   )
   return {
     invoiceId: stored?.invoiceId ?? null,
-    referenceMonth: `${ref.referenceMonth}${FIRST_DAY_SUFFIX}`,
+    referenceMonth: ref.referenceMonth,
     closingOn: ref.closingOn,
     dueOn: ref.dueOn,
     status: invoiceStatusOn(ref, today, card),
@@ -165,7 +165,7 @@ function snapshotOf(
 
 function refOf(invoice: StoredInvoiceTotal): InvoiceRef {
   return {
-    referenceMonth: invoice.referenceMonth.slice(0, -FIRST_DAY_SUFFIX.length),
+    referenceMonth: toYearMonthLabel(parseIsoDate(invoice.referenceMonth)),
     closingOn: invoice.closingOn,
     dueOn: invoice.dueOn,
   }
