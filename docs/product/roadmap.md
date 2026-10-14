@@ -287,8 +287,9 @@ updated: 2026-10-14
      contacts of each line) and opening an entry from its line come later. `CARD-04` as the
      760 px dialog in two columns. `ACC-04` with the path "Contas e categorias › Lixeira", the
      page title and the list in a card
-  8. [ ] Fixes to merged work from this round's review: no circles in the Home, the one selection
-     style everywhere, the "Mais" sheet with the system illustrations
+  8. [x] Fixes to merged work from this round's review: no circles in the Home, the one selection
+     style everywhere (the type pills keep the mint fill, as the updated `ENT-mais.png` shows), the
+     "Mais" sheet with the system illustrations
   9. [ ] G42 (archive a category with its subcategories) only if the product owner approves it
 - [ ] Remaining project skills (`new-module`, `db-migration`, `domain-rule`, `pr`) and Claude Code hooks
 
