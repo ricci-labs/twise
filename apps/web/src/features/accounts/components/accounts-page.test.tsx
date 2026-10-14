@@ -2,7 +2,14 @@ import { createMemoryHistory } from '@tanstack/react-router'
 import { AppProviders } from '@web/app/providers'
 import { createApp } from '@web/app/router'
 import { expectNoAccessibilityViolations } from '@web/testing/accessibility'
-import { ACCOUNTS, accountsAnswers, CHECKING, MEMBER_A, SAVINGS } from '@web/testing/accounts-api'
+import {
+  ACCOUNTS,
+  accountsAnswers,
+  CARD,
+  CHECKING,
+  MEMBER_A,
+  SAVINGS,
+} from '@web/testing/accounts-api'
 import {
   accessAs,
   apiError,
@@ -61,6 +68,17 @@ describe('ACC-01 accounts', () => {
     await page.getByRole('button', { name: 'Arquivadas (1)' }).click()
 
     await expect.element(page.getByText('Conta antiga')).toBeVisible()
+  })
+
+  it('draws a card without its own illustration with the card drawing', async () => {
+    const withoutIcon = ACCOUNTS.map((account) =>
+      account.id === CARD ? { ...account, icon: null } : account,
+    )
+    await openAccounts({ answers: { [`GET ${BASE}/accounts`]: () => Response.json(withoutIcon) } })
+
+    const row = page.getByRole('listitem').filter({ hasText: 'Cartão X' })
+    await expect.element(row).toBeVisible()
+    expect(row.element().querySelector('[data-slot=category-art] img')).not.toBeNull()
   })
 
   it('has no accessibility violations', async () => {

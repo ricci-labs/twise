@@ -11,6 +11,7 @@ import type {
 import { formatShortDate } from '@web/lib/format/calendar'
 
 const CREDIT_CARD = 'credit_card'
+const CARD_ICON = 'card'
 
 export function listedAccountsOf(data: AccountsData): ListedAccount[] {
   return data.accounts
@@ -40,6 +41,7 @@ function listedCard(account: LedgerAccount, { balances, cards }: AccountsData): 
   const invoice = card?.currentInvoice
   return {
     ...common(account),
+    icon: account.icon ?? CARD_ICON,
     detail: invoice
       ? accountsMessages.cardDetail(
           formatShortDate(invoice.closingOn),
@@ -87,7 +89,7 @@ export function listedCardOf(card: CardSummary): ListedAccount {
   return {
     id: card.accountId,
     name: card.name,
-    icon: card.icon,
+    icon: card.icon ?? CARD_ICON,
     color: card.color,
     detail: '',
     kindLabel: accountsMessages.kinds.credit_card,
