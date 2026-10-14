@@ -91,9 +91,9 @@ message.
 | `PARENT_OF_ANOTHER_CLASS` | 400 | Parent of another class | "Escolha uma categoria do mesmo tipo." | field parent |
 | `ACCOUNT_CHANGE_REFUSED` | 409 | Cycle, self-parent, or a system account | "Essa mudança não é permitida: uma categoria não pode ficar dentro dela mesma, e contas do sistema não mudam." | form |
 | `ACCOUNT_DELETED` | 409 | The account is in the trash | "Esta conta está na lixeira. Restaure para alterar." | toast |
-| `ACCOUNT_CANNOT_BE_DELETED` | 409 | Used by entries, has children, or system | "Esta conta tem lançamentos ou subcategorias. Arquive em vez de excluir." + "Arquivar" | dialog |
+| `ACCOUNT_CANNOT_BE_DELETED` | 409 | Used by entries, has children, or system | "Esta conta tem lançamentos ou subcategorias. Arquive em vez de excluir." + "Arquivar" (account or card). The web picks the text by kind and by what the list shows, in a dialog titled "Não dá para excluir {nome}" with "Cancelar" and the way out: a subcategory "{nome} tem lançamentos. Arquive em vez de excluir: ela sai das escolhas e o histórico continua." + "Arquivar"; a category with subcategories "{nome} tem 2 subcategorias: Feira e Padaria. Mova ou exclua as duas antes, ou arquive {nome} com elas." (more than 3: "{nome} tem 5 subcategorias, como Feira e Padaria.") + "Arquivar as {n}" | dialog |
 | `ACCOUNT_NOT_DELETED` | 409 | Restoring an active account | "Esta conta já está ativa." | toast |
-| `ACCOUNT_CANNOT_BE_RESTORED` | 409 | Its parent is in the trash | "A conta mãe está na lixeira. Restaure ela primeiro." | toast |
+| `ACCOUNT_CANNOT_BE_RESTORED` | 409 | Its parent is in the trash | "A conta mãe está na lixeira. Restaure ela primeiro." The trash names the parent from its row instead: "{mãe}, a categoria mãe, está na lixeira." ("conta mãe" for accounts) + "Restaurar as duas" (the parent, then the child) | error toast |
 | `CARD_INVALID` | 400 | Card form invalid | per field | fields |
 | `CARD_NOT_FOUND` | 404 | Card gone | "Este cartão não existe mais." | page |
 | `PAYMENT_ACCOUNT_NOT_AVAILABLE` | 400 | Payment account not an active money account | "Escolha uma conta ativa de dinheiro." | field payment account |

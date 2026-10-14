@@ -223,6 +223,26 @@ updated: 2026-10-14
   15. [ ] Web: "Repetir um recente" and the suggestion that fills the rest
   16. [ ] Web: the Home follows the app-wide rules (loose illustrations, no circles; the budgets
       already do, through `CategoryArt`)
+- [ ] **Accounts round: ACC-01..04 and CARD-01..04** (design `../design/accounts/`, exported
+  2026-10-14; the user asked for the same flow as the new entry round: one PR per step, merged by
+  Claude when CI is green, every screen checked side by side with its PNG):
+  1. [ ] Design package in `docs/design/accounts/`, the system illustrations, the updated "Mais"
+     sheet; requirements from `../design/accounts/decisions.md`
+     (`requirements/modules/accounts-and-cards.md`, `requirements/error-messages.md`,
+     `requirements/ui-standards.md`), API gaps G40–G42
+  2. [ ] API: the accounts summary (G40) and the cards summary and upcoming invoices (G41)
+  3. [ ] Web components 1–8 of `../design/accounts/components.md` (rows, groups, KPI carousel,
+     action sheet and menu, undo toast, refused-action dialog, archived toggle, list states)
+  4. [ ] Web: `ACC-01` with every state, `ACC-03` (account), `ACC-04`; "Cadastrar conta" in the new
+     entry's empty sheet
+  5. [ ] Web: `ACC-02` with subcategories and every subcategory action, `ACC-03` (category, edit,
+     move)
+  6. [ ] Web: `CARD-01`, `CARD-02` (strip, year sheet), `CARD-03`, `CARD-04` (days); "Cadastrar
+     cartão" in the new entry's empty sheet
+  7. [ ] Web: the desktop versions (tables, menus, dialogs)
+  8. [ ] Fixes to merged work from this round's review: no circles in the Home, the one selection
+     style everywhere, the "Mais" sheet with the system illustrations
+  9. [ ] G42 (archive a category with its subcategories) only if the product owner approves it
 - [ ] Remaining project skills (`new-module`, `db-migration`, `domain-rule`, `pr`) and Claude Code hooks
 
 ## Phase 1: MVP

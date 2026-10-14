@@ -129,7 +129,8 @@ Every screen spec defines each of these:
 
 ## Visual rules across screens
 Decided with the new-entry design (2026-10-10, version 2 on 2026-10-14,
-`../../design/entries/decisions.md`); they hold for every screen, the Home included.
+`../../design/entries/decisions.md`) and the accounts design (2026-10-14,
+`../../design/accounts/decisions.md`); they hold for every screen, the Home included.
 
 - **Illustrations are never clipped in a circle** (it cut the details at the corners). On white or
   light surfaces (picker fields, list rows, sheets, previews, banners, cards) use the loose versions
@@ -139,8 +140,24 @@ Decided with the new-entry design (2026-10-10, version 2 on 2026-10-14,
   every other selection in the app (no full mint tile, which hides the mint inside the drawing, and
   no check mark); and in the dark theme, where the loose drawing's black ink would vanish on a dark
   surface (found while building, 2026-10-14).
+- **One selection style:** a 2 px `ink` outline and a bold label for every selected or pressed item
+  (tiles, chips, month pills, days, member buttons, the tapped chip while its menu is open). No mint
+  fill and no check mark. The pills that pick a type or a list (the new entry's types, "Despesas |
+  Receitas") and the sidebar's current item keep their mint fill, as the designs draw them.
+- **System illustrations:** entries and actions made by the system use drawings in the same hand
+  drawn style, never line icons: `fatura-paga`, `transferencia`, `saldo-inicial`, `recebimento`
+  (`../../design/assets/ilustracoes/`, paper and loose). Line icons stay for interface controls.
+- **KPIs on the phone:** where the desktop shows three or more KPI cards in a row, the phone shows
+  the same cards as a carousel with dots, the first at the 16 px margin and the next one peeking
+  (Home, Contas, later Planning).
 - **Desktop forms:** fields side by side share one height (48 px, the `control` size); only money
   fields are taller. A switch sits beside its label, not at the far edge of the row.
+- **Desktop grids:** cards in a row have the same height, their footer at the bottom.
+- **Messages name things:** a refused action says which item and why, and offers the way out; the
+  web picks the copy by the kind of item (`error-messages.md`).
+- **Every list is designed with** loading, empty, error, viewer, many items, archived, its actions
+  (sheet on the phone, menu on the desktop, same items in the same order), the undo toast and the
+  refused case.
 - **Name-to-value lists** (the shares of an entry, who owes what): a dotted leader between the name
   and the value when rows are separated only by a gap; values in one column, the total aligned to
   them. Lists whose rows are split by dividers (the installments) have no leader. On desktop these
