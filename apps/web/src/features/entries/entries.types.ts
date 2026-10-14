@@ -11,6 +11,7 @@ import type {
   fetchBalances,
   fetchCardInvoices,
   fetchCards,
+  fetchContactBalances,
   fetchContacts,
   fetchLatestEntries,
   fetchMembers,
@@ -37,7 +38,7 @@ export type CardInvoice = Awaited<ReturnType<typeof fetchCardInvoices>>[number]
 
 export type AmountFieldProps = {
   isOpeningBalance: boolean
-  isOverpaid: boolean
+  warning: string | undefined
   inputRef: RefObject<HTMLInputElement | null>
 }
 
@@ -48,6 +49,12 @@ export type InvoiceFieldProps = {
 export type PaymentAccountFieldProps = {
   workspaceId: string
   canCreateAccounts: boolean
+}
+
+export type ContactBalance = Awaited<ReturnType<typeof fetchContactBalances>>[number]
+
+export type ContactFieldProps = {
+  workspaceId: string
 }
 
 export type EntryContact = Awaited<ReturnType<typeof fetchContacts>>[number]
@@ -130,6 +137,12 @@ export type CardFieldProps = {
   canCreateCards: boolean
 }
 
+export type LeadFieldsProps = {
+  entryType: FormEntryType
+  workspaceId: string
+  canCreateAccounts: boolean
+}
+
 export type MoneyFieldsProps = {
   entryType: FormEntryType
   workspaceId: string
@@ -160,12 +173,19 @@ export type CardInstallmentsProps = {
 
 export type TypePillsProps = {
   value: FormEntryType
+  canSeeContacts: boolean
   onChange: (entryType: FormEntryType) => void
 }
 
 export type FormEntryType = EntryFormInput['entryType']
 
 export type EntryInputFields = (values: EntryFormValues) => Record<string, unknown>
+
+export type ChosenArtProps = {
+  item: PickerItem
+  label: string
+  icon: string | null | undefined
+}
 
 export type EntryPickerProps = {
   control: FieldControlProps

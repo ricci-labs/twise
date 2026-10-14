@@ -4,6 +4,7 @@ export type PickerFieldProps = Omit<ComponentProps<'button'>, 'value' | 'childre
   value: string | null
   parentLabel?: string
   detail?: string
+  isDetailStrong?: boolean
   badge?: string
   art?: ReactNode
   placeholder: string

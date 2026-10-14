@@ -236,7 +236,10 @@ updated: 2026-10-14
         chosen, the amount and description filled from it, "Pago com" on the card's account,
         the amber warning when paying more) and "Pagar fatura" on `CARD-01` (desktop "Pagar"),
         `CARD-02` and `CARD-03`, which open it on that invoice
-      - [ ] Settlement
+      - [x] Settlement ("Contato" first, each contact with what they owe and when it is due or
+        the red "em atraso" badge, the amount and "{nome} pagou" filled from it, an amber warning
+        when receiving more). Waiting on the contacts round: "Novo contato" (`CON-05`) and
+        opening it from `CON-02`
   14. [ ] Web: the desktop dialog for the other types (the type pills in one row)
   15. [ ] Web: "Repetir um recente" and the suggestion that fills the rest
   16. [ ] Web: the Home follows the app-wide rules (loose illustrations, no circles; the budgets

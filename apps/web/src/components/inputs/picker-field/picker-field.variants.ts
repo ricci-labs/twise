@@ -23,7 +23,15 @@ export const pickerValueVariants = cva('truncate', {
 
 export const pickerSeparatorVariants = cva('mx-1.5 font-medium text-ink-subtle')
 
-export const pickerDetailVariants = cva('truncate text-caption font-normal text-ink-muted')
+export const pickerDetailVariants = cva('truncate text-caption', {
+  variants: {
+    isStrong: {
+      true: 'font-semibold text-ink',
+      false: 'font-normal text-ink-muted',
+    },
+  },
+  defaultVariants: { isStrong: false },
+})
 
 export const pickerEmptyArtVariants = cva(
   'grid size-8.5 shrink-0 place-items-center rounded-sm border-stroke border-dashed border-border-control text-ink-muted [&_svg]:size-4',

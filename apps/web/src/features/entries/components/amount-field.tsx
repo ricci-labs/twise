@@ -7,7 +7,7 @@ import { Controller, useFormContext, useWatch } from 'react-hook-form'
 
 const fields = entriesMessages.fields
 
-export function AmountField({ isOpeningBalance, isOverpaid, inputRef }: AmountFieldProps) {
+export function AmountField({ isOpeningBalance, warning, inputRef }: AmountFieldProps) {
   const { control } = useFormContext<EntryFormInput>()
   const isNegative = useWatch<EntryFormInput, 'isNegative'>({ name: 'isNegative' })
 
@@ -16,7 +16,7 @@ export function AmountField({ isOpeningBalance, isOverpaid, inputRef }: AmountFi
       <FormField<EntryFormInput>
         name="amount"
         label={isOpeningBalance ? fields.balance : fields.amount}
-        warning={isOverpaid ? entriesMessages.invoices.overpaid : undefined}
+        warning={warning}
         isRequired
       >
         {(field) => (

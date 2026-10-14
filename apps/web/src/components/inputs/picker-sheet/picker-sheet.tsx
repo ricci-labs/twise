@@ -1,6 +1,7 @@
 import { Popover } from '@base-ui/react/popover'
 import { Button } from '@web/components/actions/button'
 import { Avatar } from '@web/components/display/avatar'
+import { Badge } from '@web/components/display/badge'
 import { CategoryArt } from '@web/components/display/category-art'
 import { TwiseIcon } from '@web/components/icons/twise-icon'
 import { ChoiceChips } from '@web/components/inputs/choice-chips'
@@ -11,6 +12,7 @@ import type {
   PickerContentProps,
   PickerEmptyStateProps,
   PickerItem,
+  PickerItemEndProps,
   PickerRowArtProps,
   PickerSheetProps,
 } from '@web/components/inputs/picker-sheet/picker-sheet.types'
@@ -24,6 +26,7 @@ import {
   pickerPopupVariants,
   pickerPositionerVariants,
   pickerRowDetailVariants,
+  pickerRowEndVariants,
   pickerRowTextVariants,
   pickerRowVariants,
   pickerSearchInputVariants,
@@ -174,12 +177,28 @@ function PickerChoice({ item, layout, isCurrent, onPress }: PickerChoiceProps) {
       <PickerRowArt item={item} />
       <span className={pickerRowTextVariants()}>
         {item.label}
-        {detail && <span className={pickerRowDetailVariants()}>{detail}</span>}
+        {detail && (
+          <span className={pickerRowDetailVariants({ isStrong: item.isDetailStrong })}>
+            {detail}
+          </span>
+        )}
       </span>
+      {item.end && <PickerEnd end={item.end} />}
       {item.hasChevron && <ChevronRight data-slot="picker-chevron" aria-hidden="true" />}
       {isCurrent && !item.hasChevron && <Check data-slot="picker-check" aria-hidden="true" />}
     </button>
   )
+}
+
+function PickerEnd({ end }: PickerItemEndProps) {
+  if (end.tone) {
+    return (
+      <Badge tone={end.tone} size="status" hasDot>
+        {end.label}
+      </Badge>
+    )
+  }
+  return <span className={pickerRowEndVariants()}>{end.label}</span>
 }
 
 function PickerRowArt({ item }: PickerRowArtProps) {

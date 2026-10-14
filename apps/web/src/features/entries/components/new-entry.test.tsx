@@ -177,6 +177,25 @@ function entryAnswers(
     [`GET ${BASE}/members`]: () => Response.json([]),
     [`GET ${BASE}/cards`]: () => Response.json(cards),
     [`GET ${BASE}/cards/${CARD_X}/invoices`]: () => Response.json(CARD_X_INVOICES),
+    [`GET ${BASE}/contacts/balances`]: () =>
+      Response.json([
+        {
+          contactId: MEMBER_C,
+          name: 'Member C',
+          owedCents: 12_000,
+          overdueCents: 0,
+          nextDueOn: '2026-10-25',
+          nextDueCents: 12_000,
+        },
+        {
+          contactId: MEMBER_D,
+          name: 'Member D',
+          owedCents: 52_000,
+          overdueCents: 20_000,
+          nextDueOn: null,
+          nextDueCents: 0,
+        },
+      ]),
     [`GET ${BASE}/contacts`]: () =>
       Response.json([contact(MEMBER_C, 'Member C'), contact(MEMBER_D, 'Member D')]),
     [`GET ${BASE}/entries`]: () =>
@@ -745,5 +764,48 @@ describe('ENT-02 invoice payment', () => {
     await expect
       .element(page.getByLabelText(/^Descrição/))
       .toHaveValue('Fatura Cartão X · vence 04/12')
+  })
+})
+
+describe('ENT-02 settlement', () => {
+  afterEach(async () => {
+    vi.restoreAllMocks()
+    await page.viewport(414, 896)
+  })
+
+  it('receives what a contact owes, saying what is due or overdue', async () => {
+    const { recorded } = await openNewEntry()
+    await page.getByRole('radio', { name: 'Mais' }).click()
+    await page.getByRole('button', { name: /^Recebimento de contato/ }).click()
+    await page.getByRole('button', { name: /^Contato/ }).click()
+
+    const sheet = page.getByRole('dialog', { name: 'Contato' })
+    await expect.element(sheet.getByText('Vence 25/10')).toBeVisible()
+    await expect.element(sheet.getByText('R$ 200,00 em atraso')).toBeVisible()
+    await page.getByRole('button', { name: /^Member C/ }).click()
+
+    await expectText(
+      page.getByRole('button', { name: /^Contato/ }),
+      /deve R\$\s120,00 · vence 25\/10/,
+    )
+    await expect.element(page.getByLabelText(/^Valor/)).toHaveValue('120,00')
+    await expect.element(page.getByLabelText(/^Descrição/)).toHaveValue('Member C pagou')
+    await page.getByLabelText(/^Valor/).fill('150')
+    await expect.element(page.getByText('O valor é maior do que Member C deve.')).toBeVisible()
+    await page.getByLabelText(/^Valor/).fill('120')
+    await page.getByRole('button', { name: /^Recebido em/ }).click()
+    await page.getByRole('button', { name: /^Conta X/ }).click()
+    await page.getByRole('button', { name: 'Salvar lançamento' }).click()
+
+    await expect.element(page.getByText('Lançamento registrado.')).toBeVisible()
+    expect(recorded).toEqual([
+      expect.objectContaining({
+        entryType: 'settlement',
+        amountCents: 12_000,
+        contactId: MEMBER_C,
+        receivedInAccountId: CHECKING,
+        description: 'Member C pagou',
+      }),
+    ])
   })
 })

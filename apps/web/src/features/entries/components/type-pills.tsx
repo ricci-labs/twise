@@ -6,9 +6,14 @@ import { useState } from 'react'
 
 const messages = entriesMessages.newEntry
 const MAIN_TYPES: readonly FormEntryType[] = ['expense', 'card_purchase', 'income', 'transfer']
-const MORE_TYPES = ['invoice_payment', 'opening_balance'] as const
+const MORE_TYPES = ['invoice_payment', 'settlement', 'opening_balance'] as const
 const MORE = 'more'
-const DRAWINGS = { invoice_payment: 'invoice-paid', opening_balance: 'opening-balance' } as const
+const DRAWINGS = {
+  invoice_payment: 'invoice-paid',
+  settlement: 'settlement',
+  opening_balance: 'opening-balance',
+} as const
+const NEEDS_CONTACTS = 'settlement'
 const MORE_ITEMS = MORE_TYPES.map((entryType) => ({
   value: entryType,
   label: messages.types[entryType],
@@ -17,7 +22,7 @@ const MORE_ITEMS = MORE_TYPES.map((entryType) => ({
   hasChevron: true,
 }))
 
-export function TypePills({ value, onChange }: TypePillsProps) {
+export function TypePills({ value, canSeeContacts, onChange }: TypePillsProps) {
   const [isChoosingMore, setIsChoosingMore] = useState(false)
   const moreType = MORE_TYPES.find((entryType) => entryType === value)
   const options: ChoiceChip[] = [
@@ -48,7 +53,7 @@ export function TypePills({ value, onChange }: TypePillsProps) {
       />
       <PickerSheet
         title={messages.more.title}
-        items={MORE_ITEMS}
+        items={MORE_ITEMS.filter((item) => canSeeContacts || item.value !== NEEDS_CONTACTS)}
         value={moreType ?? null}
         isOpen={isChoosingMore}
         onOpenChange={setIsChoosingMore}

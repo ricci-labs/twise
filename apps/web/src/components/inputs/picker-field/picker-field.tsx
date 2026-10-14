@@ -17,6 +17,7 @@ export function PickerField({
   value,
   parentLabel,
   detail,
+  isDetailStrong = false,
   badge,
   art,
   placeholder,
@@ -54,7 +55,9 @@ export function PickerField({
             </Badge>
           )}
         </span>
-        {!isEmpty && detail && <span className={pickerDetailVariants()}>{detail}</span>}
+        {!isEmpty && detail && (
+          <span className={pickerDetailVariants({ isStrong: isDetailStrong })}>{detail}</span>
+        )}
       </span>
       <ChevronDown data-slot="picker-chevron" aria-hidden="true" />
     </button>

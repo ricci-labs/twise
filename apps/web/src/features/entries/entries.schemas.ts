@@ -22,11 +22,14 @@ const FORM_ENTRY_TYPES = [
   'transfer',
   'opening_balance',
   'invoice_payment',
+  'settlement',
 ] as const
 
 const CARD_TYPES: readonly string[] = ['card_purchase', 'invoice_payment']
 
 const INVOICE_PAYMENT = 'invoice_payment'
+
+const SETTLEMENT = 'settlement'
 
 export const newEntrySearchSchema = z.object({
   entry: z.literal(NEW_ENTRY).optional().catch(undefined),
@@ -55,6 +58,7 @@ export const entryFormSchema = z
     toAccountId: z.string(),
     cardAccountId: z.string(),
     invoiceId: z.string(),
+    contactId: z.string(),
     installmentCount: installmentSchema,
     isInProgress: z.boolean(),
     isNegative: z.boolean(),
@@ -89,6 +93,11 @@ export const entryFormSchema = z
   .refine((values) => !CARD_TYPES.includes(values.entryType) || Boolean(values.cardAccountId), {
     path: ['cardAccountId'],
     message: entriesMessages.required.cardAccountId,
+    when: () => true,
+  })
+  .refine((values) => values.entryType !== SETTLEMENT || Boolean(values.contactId), {
+    path: ['contactId'],
+    message: entriesMessages.required.contactId,
     when: () => true,
   })
   .refine((values) => values.entryType !== INVOICE_PAYMENT || Boolean(values.invoiceId), {
