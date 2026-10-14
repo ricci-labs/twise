@@ -1,4 +1,5 @@
 import { addDays, type IsoDate } from '@financas/shared'
+import { FieldGroup } from '@web/components/forms/field-group'
 import { ChoiceChips } from '@web/components/inputs/choice-chips'
 import { entriesMessages } from '@web/features/entries/entries.messages'
 import type {
@@ -29,13 +30,7 @@ export function DateField({ today }: DateFieldProps) {
   }
 
   return (
-    <div className="flex flex-col gap-2">
-      <span className="text-label text-ink">
-        {entriesMessages.fields.date}
-        <span aria-hidden="true" className="ml-0.5 text-danger">
-          {entriesMessages.newEntry.requiredMark}
-        </span>
-      </span>
+    <FieldGroup label={entriesMessages.fields.date} isRequired>
       <ChoiceChips
         label={entriesMessages.fields.date}
         variant="outline"
@@ -66,7 +61,7 @@ export function DateField({ today }: DateFieldProps) {
           }
         }}
       />
-    </div>
+    </FieldGroup>
   )
 }
 

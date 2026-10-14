@@ -51,7 +51,11 @@ export function CreateWorkspacePage({ email, logOut }: CreateWorkspacePageProps)
       await navigate({ to: '/w/$workspaceId', params: { workspaceId } })
     } catch (error) {
       if (error instanceof ApiError && error.code === NAME_INVALID) {
-        form.setError('name', { message: errorMessageFor(error) }, { shouldFocus: true })
+        form.setError(
+          'name',
+          { type: 'server', message: errorMessageFor(error) },
+          { shouldFocus: true },
+        )
         return
       }
       setProblem(errorMessageFor(error))

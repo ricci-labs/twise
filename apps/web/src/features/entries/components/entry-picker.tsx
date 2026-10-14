@@ -51,7 +51,15 @@ export function EntryPicker({
           }
         }}
         onSelect={(value) => control.onChange({ target: { value } })}
-        empty={empty}
+        empty={
+          empty && {
+            ...empty,
+            onAction: () => {
+              setIsOpen(false)
+              empty.onAction?.()
+            },
+          }
+        }
       />
     </>
   )

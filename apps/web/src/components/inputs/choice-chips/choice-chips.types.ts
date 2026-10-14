@@ -1,3 +1,4 @@
+import type { TwiseIconName } from '@web/components/icons/twise-icon'
 import type { choiceChipsVariants } from '@web/components/inputs/choice-chips/choice-chips.variants'
 import type { VariantProps } from 'class-variance-authority'
 
@@ -8,6 +9,7 @@ export type ChoiceChip = {
   label: string
   icon?: ChoiceChipIcon
   avatarName?: string
+  avatarIcon?: TwiseIconName
   opensDialog?: boolean
 }
 
@@ -19,4 +21,9 @@ export type ChoiceChipsProps = VariantProps<typeof choiceChipsVariants> & {
   onBlur?: () => void
   isDisabled?: boolean
   className?: string
+}
+
+export type ChipContentProps = {
+  option: ChoiceChip
+  avatarSize: 'xs' | 'sm'
 }

@@ -25,6 +25,8 @@ export function FormOverlay({
   children,
   onSubmit,
   initialFocus,
+  size,
+  actions,
 }: FormOverlayProps) {
   return (
     <Dialog.Root
@@ -40,7 +42,7 @@ export function FormOverlay({
         <Dialog.Popup
           data-slot="form-overlay"
           initialFocus={initialFocus}
-          className={formOverlayPopupVariants()}
+          className={formOverlayPopupVariants({ size })}
         >
           {banner}
           <FormOverlayContent onSubmit={onSubmit}>
@@ -58,7 +60,7 @@ export function FormOverlay({
               </div>
               {children}
             </div>
-            <div className={formOverlayFootVariants()}>{footer}</div>
+            <div className={formOverlayFootVariants({ actions })}>{footer}</div>
           </FormOverlayContent>
         </Dialog.Popup>
       </Dialog.Portal>

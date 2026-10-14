@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
+import { FieldGroup } from '@web/components/forms/field-group'
 import { ChoiceChips } from '@web/components/inputs/choice-chips'
 import { membersQueryOptions } from '@web/features/entries/api/entries.queries'
 import { entriesMessages } from '@web/features/entries/entries.messages'
@@ -14,8 +15,7 @@ export function MembersField({ workspaceId }: MembersFieldProps) {
     return null
   }
   return (
-    <div className="flex flex-col gap-2">
-      <span className="text-label text-ink">{entriesMessages.fields.spentBy}</span>
+    <FieldGroup label={entriesMessages.fields.spentBy}>
       <ChoiceChips
         label={entriesMessages.fields.spentBy}
         variant="card"
@@ -28,6 +28,6 @@ export function MembersField({ workspaceId }: MembersFieldProps) {
           avatarName: member.displayName,
         }))}
       />
-    </div>
+    </FieldGroup>
   )
 }

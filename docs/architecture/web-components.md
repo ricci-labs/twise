@@ -34,7 +34,7 @@ where it's used.
 |---|---|
 | `actions/` | `Button`, `IconButton`, `SubmitButton`, `FloatingActionButton`, `ActionMenu`, `ItemActions`, `SegmentedControl` |
 | `inputs/` | `TextInput`, `PasswordInput`, `EmailInput`, `PhoneInput`, `SearchInput`, `TextArea`, `MoneyInput`, `ChoiceChips`, `PickerField`, `PickerSheet`, `Stepper`, `RadioCardList`, `DateInput`, `PeriodPicker`, `Select`, `Combobox`, `Checkbox`, `RadioGroup`, `Switch`, `DayOfMonthPicker`, `FileUpload`, `ColorSwatch` |
-| `forms/` | `Form`, `FormField`, `FormErrorSummary`, `FormFooter`, `RequiredLegend` |
+| `forms/` | `Form`, `FormField`, `FieldGroup`, `LockedField`, `FormErrorSummary`, `FormFooter`, `RequiredLegend` |
 | `feedback/` | `Toast`, `InlineAlert`, `AutoFillTip`, `Banner`, `ConfirmDialog`, `EmptyState`, `EmptyBlock`, `Skeleton`, `ListSkeleton`, `KpiSkeleton`, `ErrorState` |
 | `display/` | `Amount`, `StatusBadge`, `Avatar`, `ListItem`, `Card`, `StatCard`, `ThresholdProgress`, `Tabs`, `Accordion`, `DataList` (table on desktop, list on mobile), `LoadMore`, `Tooltip`, `HelpPopover`, `FilterChips`, `CategoryIcon`, `ArchivedToggle` |
 | `charts/` | `BarChart`, `ForecastChart`, `DonutChart`, each with its text alternative |
@@ -137,7 +137,17 @@ React Hook Form v7 + `zodResolver` with the **schemas from `@financas/shared`** 
   `requiresChange`, on edit forms) with `aria-disabled` and no hint sentence; pressing it then runs
   `trigger(undefined, { shouldFocus: true })`, which marks the missing fields and focuses the first.
   The spinner with the gerund label while submitting, one request per press, and `isBlocked` for
-  outside reasons (offline). Waiting is the `Button`'s `waitUntil` prop.
+  outside reasons (offline). Waiting is the `Button`'s `waitUntil` prop. A field error the server
+  sent (`setError(name, { type: 'server' })`, e.g. a name already taken) does not disable it: the
+  form stays as it was and the person can fix the name or send it again.
+- `FieldGroup` (`components/forms/field-group`): the label, "*", help and error of a field that is
+  a group of choices (`ChoiceChips`, the pickers below), as a `fieldset` named by its visible label.
+  The help sits 8 px under the label ("O tipo não pode ser mudado depois.").
+- `LockedField` (`components/forms/locked-field`): a value that can't change on this form (an
+  account's kind on edit): the label, a grey box with the lock and the value in bold, and the reason
+  under it.
+- Text inputs keep the design's 2 px inner padding on the `input` (18 px from the border to the
+  text).
 - `PasswordInput`'s toggle is named "Mostrar senha" / "Ocultar senha" (visible "Mostrar"/"Ocultar"
   plus a screen-reader-only "senha"), so its accessible name always contains its visible label
   (WCAG 2.5.3); it doesn't take the focus from the field.
@@ -327,8 +337,10 @@ component here, so the form, and later the account, card and planning forms, sha
   control contract (`value` text, `onChange({ target: { value } })`, `onBlur`).
 - `ChoiceChips` (`components/inputs/choice-chips`, Base UI `RadioGroup`): one choice among a few,
   all visible, as radios (arrow keys move the choice). `variant` `pill` (the entry types, chosen in
-  `mint`), `outline` (the date shortcuts, chosen with an ink outline; 48 px from 1024 px) and `card`
-  (who spent, two cards with an initial). An option can open a dialog (`opensDialog`,
+  `mint`), `outline` (the date shortcuts, chosen with an ink outline; 48 px from 1024 px), `card`
+  (who spent, two 48 px cards with a 30 px initial, `choice` text) and `member` (the account form's
+  "De quem é": 44 px buttons that wrap, a 26 px initial and 14 px names; an option with `avatarIcon`
+  shows that icon on paper instead of the initial, "Da casa"). An option can open a dialog (`opensDialog`,
   `aria-haspopup`) and carry an icon (`calendar` before the label, `chevron` after it); `onSelect`
   fires for every press, even on the chosen option, so "Mais" and "Outra data" reopen their sheet.
 - `PickerField` (`components/inputs/picker-field`): the field of an account, card, category or
@@ -345,7 +357,8 @@ component here, so the form, and later the account, card and planning forms, sha
   pressing it opens the row "Em {mãe}" below the grid with "Só {mãe}" and the children as chips.
   `searchLabel` adds a 44 px search (with its icon) that ignores case and accents and also finds children,
   shown "em {mãe}" with the parent's drawing; `empty` replaces the list with the drawing, a sentence
-  and, when it has `actionLabel` and `onAction`, the primary action ("Cadastrar conta"). A pick calls
+  and, when it has `actionLabel` and `onAction`, the primary action with a "+" ("Cadastrar conta"),
+  which closes the sheet before it runs. A pick calls
   `onSelect` and closes. On the desktop the popover sits on the `modal` layer, over a `FormOverlay`.
 - `Stepper` (`components/inputs/stepper`, the design's `InstallmentStepper`): "−  3×  +" between
   `min` and `max` (the ends disable their button), the shown value given by the caller ("À vista"
@@ -397,7 +410,16 @@ component here, so the form, and later the account, card and planning forms, sha
   phone the header scrolls away with it, on the desktop it stays on top. "X", Escape and a press outside all call `onRequestClose`, so the screen decides
   whether to ask before discarding. With `onSubmit` the body and footer are a `form` inside the
   dialog (submit buttons in the footer and Enter submit it); `initialFocus` names the field that
-  takes the focus when it opens (the amount).
+  takes the focus when it opens (the amount). `size="md"` is the one-column 560 px dialog, 60 px from
+  the top and as tall as its content (up to 820 px), for the account and category forms;
+  `actions="single"` gives the phone footer of one button its 20 px bottom.
+- `IllustrationPicker` (`components/inputs/illustration-picker`, Base UI `RadioGroup`): the 13
+  drawings on paper tiles, 5 per row on the phone and 7 from 1024 px, after the first tile, the
+  name's initial ("Sem ilustração: a inicial"); the chosen tile keeps its paper and gets the 2 px
+  sketch-ink outline. Values are the `icon` keys of `CategoryArt`.
+- `ColorPicker` (`components/inputs/color-picker`, Base UI `RadioGroup`): "Sem cor" (a crossed
+  circle) and the palette of `styles/account-colors.ts` as 36 px `ColorSwatch`es named by colour
+  ("Petróleo"); the chosen one gets a 2 px ink ring 3 px away.
 - `CategoryArt` (`components/display/category-art`): the category drawing of an account's `icon`,
   never clipped in a circle (`../product/requirements/ui-standards.md` → Visual rules across
   screens). By default (`loose`) it is the drawing without its paper square, from

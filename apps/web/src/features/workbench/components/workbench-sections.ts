@@ -43,10 +43,14 @@ import { accountRowExamples } from '@web/components/finance/account-row'
 import { invoicePreviewExamples } from '@web/components/finance/invoice-preview'
 import { recentEntriesExamples } from '@web/components/finance/recent-entries'
 import { sharesListExamples } from '@web/components/finance/shares-list'
+import { fieldGroupExamples } from '@web/components/forms/field-group'
 import { formFieldExamples } from '@web/components/forms/form-field'
+import { lockedFieldExamples } from '@web/components/forms/locked-field'
 import { twiseIconExamples } from '@web/components/icons/twise-icon'
 import { choiceChipsExamples } from '@web/components/inputs/choice-chips'
+import { colorPickerExamples } from '@web/components/inputs/color-picker'
 import { colorSwatchExamples } from '@web/components/inputs/color-swatch'
+import { illustrationPickerExamples } from '@web/components/inputs/illustration-picker'
 import { moneyInputExamples } from '@web/components/inputs/money-input'
 import { passwordInputExamples } from '@web/components/inputs/password-input'
 import { pickerFieldExamples } from '@web/components/inputs/picker-field'
@@ -96,6 +100,10 @@ export const workbenchSections: readonly ComponentExamples[] = [
   emptyStateExamples,
   emptyBlockExamples,
   kpiSkeletonExamples,
+  illustrationPickerExamples,
+  colorPickerExamples,
+  lockedFieldExamples,
+  fieldGroupExamples,
   forecastChartExamples,
   committedChartExamples,
   paceRingExamples,

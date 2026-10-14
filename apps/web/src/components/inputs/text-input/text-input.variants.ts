@@ -10,7 +10,7 @@ export const inputBoxVariants = cva([
 
 export const inputVariants = cva(
   [
-    'min-w-0 flex-1 bg-transparent text-body text-ink outline-none placeholder:text-ink-subtle',
+    'min-w-0 flex-1 bg-transparent px-0.5 text-body text-ink outline-none placeholder:text-ink-subtle',
     'read-only:text-ink-muted disabled:text-ink-muted',
     '[&::-webkit-search-cancel-button]:appearance-none',
   ],
