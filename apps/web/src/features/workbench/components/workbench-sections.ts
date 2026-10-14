@@ -62,6 +62,7 @@ import { fieldGroupExamples } from '@web/components/forms/field-group'
 import { formFieldExamples } from '@web/components/forms/form-field'
 import { lockedFieldExamples } from '@web/components/forms/locked-field'
 import { twiseIconExamples } from '@web/components/icons/twise-icon'
+import { calendarSheetExamples } from '@web/components/inputs/calendar-sheet'
 import { choiceChipsExamples } from '@web/components/inputs/choice-chips'
 import { colorPickerExamples } from '@web/components/inputs/color-picker'
 import { colorSwatchExamples } from '@web/components/inputs/color-swatch'
@@ -108,6 +109,7 @@ export const workbenchSections: readonly ComponentExamples[] = [
   accountGroupExamples,
   archivedToggleExamples,
   autoFillTipExamples,
+  calendarSheetExamples,
   selectExamples,
   textAreaExamples,
   confirmDialogExamples,

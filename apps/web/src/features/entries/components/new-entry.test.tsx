@@ -498,7 +498,9 @@ describe('ENT-02 card purchase', () => {
     await fillCardPurchase('1000')
     await page.getByRole('button', { name: 'Mais uma parcela' }).click()
     await page.getByRole('button', { name: 'Mais uma parcela' }).click()
-    await page.getByLabelText('Escolher outra data').fill('2026-09-20')
+    await page.getByRole('radio', { name: 'Outra data' }).click()
+    await page.getByRole('button', { name: 'Mês anterior' }).click()
+    await page.getByRole('radio', { name: '20 de setembro' }).click()
 
     await expect
       .element(page.getByText('A fatura de outubro já fechou. Registre a partir da parcela 2.'))
