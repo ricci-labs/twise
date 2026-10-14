@@ -149,6 +149,15 @@ export type LedgerAccountItem = {
   archivedAt: Date | null
 }
 
+export type ArchivedAccounts = {
+  childAccountIds: string[]
+}
+
+export type LockedAccount = {
+  id: string
+  archivedAt: Date | null
+}
+
 export type LedgerRouteDeps = {
   db: Database
 }

@@ -41,6 +41,7 @@ export type {
   AccountBalance,
   AccountsById,
   AccountsSummary,
+  ArchivedAccounts,
   CardItem,
   CardSummary,
   ContactItems,

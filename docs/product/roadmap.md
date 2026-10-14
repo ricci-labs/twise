@@ -290,7 +290,7 @@ updated: 2026-10-14
   8. [x] Fixes to merged work from this round's review: no circles in the Home, the one selection
      style everywhere (the type pills keep the mint fill, as the updated `ENT-mais.png` shows), the
      "Mais" sheet with the system illustrations
-  9. [ ] G42 (archive a category with its subcategories) only if the product owner approves it
+  9. [x] G42 (archive a category with its subcategories), approved by the product owner
 - [ ] Remaining project skills (`new-module`, `db-migration`, `domain-rule`, `pr`) and Claude Code hooks
 
 ## Phase 1: MVP

@@ -157,7 +157,7 @@ Use cases live in `modules/ledger/use-cases/` (`accounts.ts`, `cards.ts`, `entri
 | `createAccount(db, context, input)` | Validates with `newAccountSchema` (user kinds only: no system accounts, cards come with `card_details`), checks the parent (same class, not deleted) and takes the currency from `workspace_settings` |
 | `changeAccount(db, ref, change)` | Rename, move (never under a descendant), owner, color, icon, order. System accounts accept only color, icon and order |
 | `createCard(db, context, input)` / `changeCard(db, card, change)` | A `credit_card` account plus its `card_details` (`newCardSchema` / `cardChangeSchema`). Errors: `CARD_INVALID`, `CARD_NOT_FOUND`, `PAYMENT_ACCOUNT_NOT_AVAILABLE`, `ACCOUNT_NAME_TAKEN` |
-| `archiveAccount` / `unarchiveAccount` | Archive keeps history; archived accounts leave the pickers and take no new postings |
+| `archiveAccount` / `unarchiveAccount` | Archive keeps history; archived accounts leave the pickers and take no new postings. Archiving a parent archives its active children in the same transaction, with the same `archivedAt`; unarchiving it brings back the children with that `archivedAt` (the ones archived with it), not those archived before. Archiving an archived account keeps its first `archivedAt`. Both return the children's ids |
 | `deleteAccount(db, input, clock)` / `restoreAccount` | Soft delete (refused for system accounts, accounts with active children or used by active entries) and restore (refused under a deleted parent or when the name was taken meanwhile) |
 | `recordEntry(db, context, input)` | Validates with `entryInputSchema`, loads the accounts (same workspace, not archived, not deleted), plans the postings with `planPostings()` (`packages/shared/src/ledger/ledger/postings.ts`) and writes the entry with its postings |
 | `changeEntryDetails(db, ref, change)` | Description and notes in place |
@@ -212,7 +212,7 @@ A malformed or unknown id, or one from another workspace, is `404 ACCOUNT_NOT_FO
 | `GET /accounts` | `accounts:view` | `listAccounts`: active accounts (archived included, deleted not), system ones flagged `isSystem`, by `sortOrder` then name |
 | `POST /accounts` | `accounts:create` | `createAccount` → `201 { accountId }` |
 | `PATCH /accounts/:accountId` | `accounts:update` | `changeAccount` → `204` |
-| `POST /accounts/:accountId/archive`, `/unarchive` | `accounts:update` | `archiveAccount`, `unarchiveAccount` → `204` |
+| `POST /accounts/:accountId/archive`, `/unarchive` | `accounts:update` | `archiveAccount`, `unarchiveAccount` → `200 { childAccountIds }` |
 | `DELETE /accounts/:accountId` (optional `{ reason }`) | `accounts:delete` | `deleteAccount` → `204` |
 | `POST /accounts/:accountId/restore` | `accounts:delete` | `restoreAccount` → `204` |
 | `GET /accounts/trash` | `accounts:delete` | `listTrashedAccounts`: deleted accounts (cards included) with `deletedAt`, `deletedByUserId` and `deleteReason`, latest deletion first |

@@ -206,12 +206,33 @@ export async function lockAccount(tx: WorkspaceTransaction, accountId: string) {
     .select({
       id: ledgerAccounts.id,
       class: ledgerAccounts.class,
+      archivedAt: ledgerAccounts.archivedAt,
       deletedAt: ledgerAccounts.deletedAt,
     })
     .from(ledgerAccounts)
     .where(eq(ledgerAccounts.id, accountId))
     .for('update')
   return account
+}
+
+export async function lockChildAccountIds(
+  tx: WorkspaceTransaction,
+  parentId: string,
+  archivedAt: Date | null,
+): Promise<string[]> {
+  const children = await tx
+    .select({ id: ledgerAccounts.id })
+    .from(ledgerAccounts)
+    .where(
+      and(
+        eq(ledgerAccounts.parentId, parentId),
+        isNull(ledgerAccounts.deletedAt),
+        archivedAt ? eq(ledgerAccounts.archivedAt, archivedAt) : isNull(ledgerAccounts.archivedAt),
+      ),
+    )
+    .orderBy(asc(ledgerAccounts.id))
+    .for('update')
+  return children.map((child) => child.id)
 }
 
 export async function updateAccount(

@@ -10,6 +10,7 @@ import {
   insertAccount,
   insertAccounts,
   lockAccount,
+  lockChildAccountIds,
   markAccountDeleted,
   markAccountRestored,
   selectActiveAccounts,
@@ -17,10 +18,12 @@ import {
   updateAccount,
 } from '@api/modules/ledger/ledger.repository'
 import type {
+  ArchivedAccounts,
   CreatedAccount,
   DeleteAccountInput,
   LedgerAccountItem,
   LedgerContext,
+  LockedAccount,
   TrashedAccount,
   WorkspaceAccount,
 } from '@api/modules/ledger/ledger.types'
@@ -112,12 +115,12 @@ export async function changeAccount(
   )
 }
 
-export async function archiveAccount(
+export function archiveAccount(
   db: Database,
   ref: WorkspaceAccount,
   clock: Clock = systemClock,
-) {
-  await setArchived(db, ref, clock.now())
+): Promise<ArchivedAccounts> {
+  return setArchived(db, ref, clock.now())
 }
 
 export function listAccounts(db: Database, workspaceId: string): Promise<LedgerAccountItem[]> {
@@ -128,8 +131,8 @@ export function listTrashedAccounts(db: Database, workspaceId: string): Promise<
   return withWorkspace(db, workspaceId, (tx) => selectTrashedAccounts(tx))
 }
 
-export async function unarchiveAccount(db: Database, ref: WorkspaceAccount) {
-  await setArchived(db, ref, null)
+export function unarchiveAccount(db: Database, ref: WorkspaceAccount): Promise<ArchivedAccounts> {
+  return setArchived(db, ref, null)
 }
 
 export async function deleteAccount(
@@ -170,22 +173,41 @@ export async function restoreAccount(db: Database, { workspaceId, accountId }: W
   )
 }
 
-async function setArchived(
+function setArchived(
   db: Database,
   { workspaceId, accountId }: WorkspaceAccount,
   archivedAt: Date | null,
-) {
-  await refusingBrokenRules('ACCOUNT_CHANGE_REFUSED', () =>
+): Promise<ArchivedAccounts> {
+  return refusingBrokenRules('ACCOUNT_CHANGE_REFUSED', () =>
     withWorkspace(db, workspaceId, async (tx) => {
-      await lockActiveAccount(tx, accountId)
-      await audited(
-        tx,
-        accountAuditTarget(workspaceId, accountId),
-        archivedAt ? 'archive' : 'unarchive',
-        () => updateAccount(tx, accountId, { archivedAt }),
-      )
+      const account = await lockActiveAccount(tx, accountId)
+      const since = archivedAt && (account.archivedAt ?? archivedAt)
+      const childAccountIds = await childrenFollowing(tx, account, since)
+      for (const id of [accountId, ...childAccountIds]) {
+        await audited(
+          tx,
+          accountAuditTarget(workspaceId, id),
+          since ? 'archive' : 'unarchive',
+          () => updateAccount(tx, id, { archivedAt: since }),
+        )
+      }
+      return { childAccountIds }
     }),
   )
+}
+
+function childrenFollowing(
+  tx: WorkspaceTransaction,
+  account: LockedAccount,
+  archivedAt: Date | null,
+): Promise<string[]> {
+  if (archivedAt) {
+    return lockChildAccountIds(tx, account.id, null)
+  }
+  if (!account.archivedAt) {
+    return Promise.resolve([])
+  }
+  return lockChildAccountIds(tx, account.id, account.archivedAt)
 }
 
 async function lockActiveAccount(tx: WorkspaceTransaction, accountId: string) {

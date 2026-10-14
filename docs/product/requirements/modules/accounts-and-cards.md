@@ -126,10 +126,11 @@ a subcategory with entries "Não dá para excluir {nome}" / "{nome} tem lançame
 de excluir: ela sai das escolhas e o histórico continua." ("Arquivar"); a category with active
 subcategories "{nome} tem 2 subcategorias: Feira e Padaria. Mova ou exclua as duas antes, ou
 arquive {nome} com elas." (more than three: "{nome} tem 5 subcategorias, como Feira e Padaria.")
-with "Arquivar as {n+1}", which archives each child and then the parent (until G42).
-Archiving a main category that has active subcategories archives them too (each child, then the
-parent, as the web does for "Arquivar as {n}" until G42), with the toast "Mercado e 2
-subcategorias arquivadas." and "Desfazer" (the parent, then the children).
+with "Arquivar as {n+1}", which archives the parent and its subcategories in one call.
+Archiving a main category that has active subcategories archives them too, in one call that does
+all or nothing (G42), with the toast "Mercado e 2 subcategorias arquivadas." and "Desfazer", which
+unarchives the parent and brings back the subcategories archived with it (not those archived
+before).
 Archived, opened at the end: a parent shows its children as faded chips; a lone archived
 subcategory says "Subcategoria · em {mãe}". Unarchiving a child whose parent is archived: toast
 "{mãe} está arquivada. Desarquive {mãe} primeiro." with "Desarquivar {mãe}". Reordering by
