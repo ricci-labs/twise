@@ -15,11 +15,19 @@ const NEW_ENTRY = 'new'
 
 const NO_CHOICE = ''
 
+const FORM_ENTRY_TYPES = [
+  'expense',
+  'card_purchase',
+  'income',
+  'transfer',
+  'opening_balance',
+] as const
+
 export const newEntrySearchSchema = z.object({
   entry: z.literal(NEW_ENTRY).optional().catch(undefined),
+  entryType: z.enum(FORM_ENTRY_TYPES).optional().catch(undefined),
+  entryAccount: z.uuid().optional().catch(undefined),
 })
-
-const FORM_ENTRY_TYPES = ['expense', 'card_purchase', 'income', 'transfer'] as const
 
 const CARD_PURCHASE = 'card_purchase'
 
@@ -41,6 +49,7 @@ export const entryFormSchema = z
     cardAccountId: z.string(),
     installmentCount: installmentSchema,
     isInProgress: z.boolean(),
+    isNegative: z.boolean(),
     firstInstallment: installmentSchema,
     categoryId: z.string(),
     occurredOn: isoDateSchema,

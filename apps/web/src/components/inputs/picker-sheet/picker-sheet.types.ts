@@ -11,6 +11,7 @@ export type PickerItem = {
   icon?: string | null
   placeholderIcon?: TwiseIconName
   isPerson?: boolean
+  hasChevron?: boolean
   children?: readonly PickerItem[]
 }
 

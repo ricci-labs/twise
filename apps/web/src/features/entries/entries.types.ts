@@ -47,6 +47,8 @@ export type NewEntryProps = {
   currentUserName: string
   permissions: readonly Permission[]
   isOpen: boolean
+  initialType?: FormEntryType
+  initialAccountId?: string
   onClose: () => void
 }
 
@@ -59,6 +61,8 @@ export type EntryFormProps = {
   canCreateAccounts: boolean
   canCreateCards: boolean
   today: IsoDate
+  initialType?: FormEntryType
+  initialAccountId?: string
   onClose: () => void
 }
 
@@ -73,6 +77,7 @@ export type AccountFieldProps = {
   canCreateAccounts: boolean
   name?: 'accountId' | 'toAccountId'
   label: string
+  detail?: 'balance' | 'kind'
 }
 
 export type CategoryFieldProps = {
@@ -117,11 +122,14 @@ export type CardInstallmentsProps = {
   today: IsoDate
 }
 
-export type EntryTypePillsProps = {
+export type TypePillsProps = {
+  value: FormEntryType
   onChange: (entryType: FormEntryType) => void
 }
 
 export type FormEntryType = EntryFormInput['entryType']
+
+export type EntryInputFields = (values: EntryFormValues) => Record<string, unknown>
 
 export type EntryPickerProps = {
   control: FieldControlProps

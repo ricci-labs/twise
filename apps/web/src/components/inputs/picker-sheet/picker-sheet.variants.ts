@@ -27,6 +27,7 @@ export const pickerRowVariants = cva([
   'hover:bg-sunken focus-visible:ring-2 focus-visible:ring-focus-ring',
   '[&>[data-slot=category-art]]:-m-0.75',
   'aria-current:bg-mint-soft [&>[data-slot=picker-check]]:size-5 [&>[data-slot=picker-check]]:text-mint-ink',
+  '[&>[data-slot=picker-chevron]]:size-4 [&>[data-slot=picker-chevron]]:shrink-0 [&>[data-slot=picker-chevron]]:text-ink-muted',
 ])
 
 export const pickerRowTextVariants = cva('flex min-w-0 flex-1 flex-col font-medium')

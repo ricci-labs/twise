@@ -19,7 +19,17 @@ export const Route = createFileRoute('/_app/w/$workspaceId')({
   beforeLoad: ({ context, params }) => openWorkspace(context.queryClient, params.workspaceId),
   component: function WorkspaceRoute() {
     const { workspaceId } = Route.useParams()
-    const { entry, account: accountParam, category, parent, kind, card, part } = Route.useSearch()
+    const {
+      entry,
+      entryType,
+      entryAccount,
+      account: accountParam,
+      category,
+      parent,
+      kind,
+      card,
+      part,
+    } = Route.useSearch()
     const { account, access } = Route.useRouteContext()
     const navigate = useNavigate()
     const accountLink = (
@@ -45,8 +55,18 @@ export const Route = createFileRoute('/_app/w/$workspaceId')({
           currentUserName={account.displayName}
           permissions={access.permissions}
           isOpen={entry === 'new'}
+          initialType={entryType}
+          initialAccountId={entryAccount}
           onClose={() =>
-            navigate({ to: '.', search: (previous) => ({ ...previous, entry: undefined }) })
+            navigate({
+              to: '.',
+              search: (previous) => ({
+                ...previous,
+                entry: undefined,
+                entryType: undefined,
+                entryAccount: undefined,
+              }),
+            })
           }
         />
         <AccountEditor

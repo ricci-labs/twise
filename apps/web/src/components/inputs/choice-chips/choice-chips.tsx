@@ -11,7 +11,7 @@ import {
   choiceChipVariants,
 } from '@web/components/inputs/choice-chips/choice-chips.variants'
 import { cn } from '@web/lib/cn'
-import { CalendarDays, ChevronDown } from 'lucide-react'
+import { Calendar, ChevronDown } from 'lucide-react'
 
 export function ChoiceChips({
   label,
@@ -64,7 +64,7 @@ function ChipContent({ option, avatarSize }: ChipContentProps) {
           size={avatarSize}
         />
       )}
-      {option.icon === 'calendar' && <CalendarDays data-slot="chip-icon" aria-hidden="true" />}
+      {option.icon === 'calendar' && <Calendar data-slot="chip-icon" aria-hidden="true" />}
       <span className={choiceChipLabelVariants()}>{option.label}</span>
       {option.icon === 'chevron' && <ChevronDown data-slot="chip-icon" aria-hidden="true" />}
     </>

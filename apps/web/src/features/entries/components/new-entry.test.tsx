@@ -169,10 +169,12 @@ async function openNewEntry({
   recordAnswer,
   access = workspaceAccess,
   cards,
+  search = '',
 }: {
   recordAnswer?: FakeAnswer
   access?: FakeAnswer
   cards?: readonly unknown[]
+  search?: string
 } = {}) {
   const recorded: unknown[] = []
   fakeApi({
@@ -187,7 +189,9 @@ async function openNewEntry({
     ...demoAnswers(),
     ...entryAnswers(recorded, recordAnswer, cards),
   })
-  const app = createApp(createMemoryHistory({ initialEntries: [`/w/${WORKSPACE_ID}?entry=new`] }))
+  const app = createApp(
+    createMemoryHistory({ initialEntries: [`/w/${WORKSPACE_ID}?entry=new${search}`] }),
+  )
   await render(<AppProviders app={app} />)
   return { app, recorded }
 }
@@ -617,5 +621,47 @@ describe('ENT-02 income and transfer', () => {
         toAccountId: CHECKING,
       }),
     ])
+  })
+})
+
+describe('ENT-02 opening balance', () => {
+  afterEach(async () => {
+    vi.restoreAllMocks()
+    await page.viewport(414, 896)
+  })
+
+  it('is one of the other types under "Mais" and records a negative balance', async () => {
+    const { recorded } = await openNewEntry()
+    await page.getByRole('radio', { name: 'Mais' }).click()
+    await expect.element(page.getByText('O saldo de partida de uma conta')).toBeVisible()
+    await expect.element(page.getByText(/^Informe um valor/)).not.toBeInTheDocument()
+    await page.getByRole('button', { name: /^Saldo inicial/ }).click()
+
+    await expect.element(page.getByRole('radio', { name: 'Saldo inicial' })).toBeChecked()
+    await expect.element(page.getByLabelText(/^Descrição/)).toHaveValue('Saldo inicial')
+    await expect.element(page.getByLabelText('Forma de pagamento')).not.toBeInTheDocument()
+    await page.getByRole('button', { name: /^Conta/ }).click()
+    await page.getByRole('button', { name: /^Conta X/ }).click()
+    await expectText(page.getByRole('button', { name: /^Conta/ }), /Conta corrente/)
+    await page.getByLabelText(/^Saldo/).fill('350')
+    await page.getByRole('switch', { name: 'Negativo (cheque especial)' }).click()
+    await page.getByRole('button', { name: 'Salvar lançamento' }).click()
+
+    await expect.element(page.getByText('Lançamento registrado.')).toBeVisible()
+    expect(recorded).toEqual([
+      expect.objectContaining({
+        entryType: 'opening_balance',
+        accountId: CHECKING,
+        balanceCents: -35_000,
+        description: 'Saldo inicial',
+      }),
+    ])
+  })
+
+  it('opens on an account from a link', async () => {
+    await openNewEntry({ search: `&entryType=opening_balance&entryAccount=${CHECKING}` })
+
+    await expect.element(page.getByRole('radio', { name: 'Saldo inicial' })).toBeChecked()
+    await expectText(page.getByRole('button', { name: /^Conta/ }), /Conta XConta corrente/)
   })
 })

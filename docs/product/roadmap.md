@@ -228,7 +228,10 @@ updated: 2026-10-14
         transfer ("De" and "Para", never the same account); waiting on `HOME-03`: the "Ver
         sugestão de divisão" toast after a variable income and the transfer prefilled from the
         split
-      - [ ] "Mais" and the opening balance
+      - [x] "Mais" ("Outros tipos" with their drawings; the pill then shows the chosen type) and
+        the opening balance ("Conta" first with its kind, "Saldo" with "Negativo (cheque
+        especial)", description "Saldo inicial"); opens on an account from
+        `?entry=new&entryType=opening_balance&entryAccount={id}`
       - [ ] Invoice payment (and "Pagar fatura" on `CARD-02/03`)
       - [ ] Settlement
   14. [ ] Web: the desktop dialog for the other types (the type pills in one row)

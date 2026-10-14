@@ -13,15 +13,21 @@ import looseHealth from '@web/assets/illustrations/loose/health.svg'
 import looseHouse from '@web/assets/illustrations/loose/house.svg'
 import looseInvoicePaid from '@web/assets/illustrations/loose/invoice-paid.svg'
 import looseLeisure from '@web/assets/illustrations/loose/leisure.svg'
+import looseOpeningBalance from '@web/assets/illustrations/loose/opening-balance.svg'
 import loosePiggyBank from '@web/assets/illustrations/loose/piggy-bank.svg'
 import looseReceipt from '@web/assets/illustrations/loose/receipt.svg'
+import looseSettlement from '@web/assets/illustrations/loose/settlement.svg'
 import looseTogether from '@web/assets/illustrations/loose/together.svg'
+import looseTransfer from '@web/assets/illustrations/loose/transfer.svg'
 import looseTransport from '@web/assets/illustrations/loose/transport.svg'
 import looseTravel from '@web/assets/illustrations/loose/travel.svg'
 import looseWallet from '@web/assets/illustrations/loose/wallet.svg'
+import openingBalance from '@web/assets/illustrations/opening-balance.svg'
 import piggyBank from '@web/assets/illustrations/piggy-bank.svg'
 import receipt from '@web/assets/illustrations/receipt.svg'
+import settlement from '@web/assets/illustrations/settlement.svg'
 import together from '@web/assets/illustrations/together.svg'
+import transfer from '@web/assets/illustrations/transfer.svg'
 import transport from '@web/assets/illustrations/transport.svg'
 import travel from '@web/assets/illustrations/travel.svg'
 import wallet from '@web/assets/illustrations/wallet.svg'
@@ -45,9 +51,12 @@ const LOOSE_ART: Readonly<Record<string, string>> = {
   house: looseHouse,
   'invoice-paid': looseInvoicePaid,
   leisure: looseLeisure,
+  'opening-balance': looseOpeningBalance,
   'piggy-bank': loosePiggyBank,
   receipt: looseReceipt,
+  settlement: looseSettlement,
   together: looseTogether,
+  transfer: looseTransfer,
   transport: looseTransport,
   travel: looseTravel,
   wallet: looseWallet,
@@ -61,9 +70,12 @@ const ON_PAPER_ART: Readonly<Record<string, string>> = {
   health,
   house,
   leisure,
+  'opening-balance': openingBalance,
   'piggy-bank': piggyBank,
   receipt,
+  settlement,
   together,
+  transfer,
   transport,
   travel,
   wallet,
