@@ -1,7 +1,9 @@
+import { Link } from '@tanstack/react-router'
 import { ArchivedToggle } from '@web/components/display/archived-toggle'
 import { Badge } from '@web/components/display/badge'
 import { AccountGroup } from '@web/components/finance/account-group'
 import { CategoryRow } from '@web/components/finance/category-row'
+import { SubcategoryAddChip } from '@web/components/finance/subcategory-add-chip'
 import { SubcategoryChip } from '@web/components/finance/subcategory-chip'
 import { accountsMessages } from '@web/features/accounts/accounts.messages'
 import type {
@@ -12,15 +14,41 @@ import type {
 import { CategoryActions } from '@web/features/accounts/components/category-actions'
 import { useRememberedIds } from '@web/hooks/use-remembered-ids'
 import { hasPermission } from '@web/lib/permissions'
+import { useState } from 'react'
 
 const messages = accountsMessages.categories
 
-export function CategoryList({ workspaceId, permissions, tree, kind }: CategoryListProps) {
+export function CategoryList({
+  workspaceId,
+  permissions,
+  tree,
+  kind,
+  createdId,
+}: CategoryListProps) {
   const open = useRememberedIds(`openCategories:${workspaceId}`)
+  const canCreate = hasPermission(permissions, 'accounts', 'create')
+  const createdParent = tree.active.find((main) =>
+    main.children.some((child) => child.id === createdId),
+  )
+  const [openedFor, setOpenedFor] = useState<string | undefined>()
+  if (createdId && createdId !== openedFor && createdParent) {
+    setOpenedFor(createdId)
+    open.setRemembered(createdParent.id, true)
+  }
   const shared = { workspaceId, permissions, tree }
   return (
     <>
-      <AccountGroup title={messages.groups[kind]}>
+      <AccountGroup
+        title={messages.groups[kind]}
+        add={
+          canCreate
+            ? {
+                label: accountsMessages.categoryForm.newCategory,
+                link: <Link to="." search={(previous) => ({ ...previous, category: 'new' })} />,
+              }
+            : undefined
+        }
+      >
         {tree.active.map((node) => (
           <CategoryRow
             key={node.id}
@@ -35,6 +63,17 @@ export function CategoryList({ workspaceId, permissions, tree, kind }: CategoryL
             {node.children.map((child) => (
               <Subcategory key={child.id} {...shared} node={child} />
             ))}
+            {canCreate && (
+              <SubcategoryAddChip
+                label={accountsMessages.categoryForm.addSubcategory(node.name)}
+                link={
+                  <Link
+                    to="."
+                    search={(previous) => ({ ...previous, category: 'new', parent: node.id })}
+                  />
+                }
+              />
+            )}
           </CategoryRow>
         ))}
       </AccountGroup>

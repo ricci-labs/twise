@@ -5,8 +5,15 @@ export const Route = createFileRoute('/_app/w/$workspaceId/categories')({
   validateSearch: categoriesSearchSchema,
   component: function CategoriesRoute() {
     const { workspaceId } = Route.useParams()
-    const { kind = 'expense' } = Route.useSearch()
+    const { kind = 'expense', created } = Route.useSearch()
     const { access } = Route.useRouteContext()
-    return <CategoriesPage workspaceId={workspaceId} permissions={access.permissions} kind={kind} />
+    return (
+      <CategoriesPage
+        workspaceId={workspaceId}
+        permissions={access.permissions}
+        kind={kind}
+        createdId={created}
+      />
+    )
   },
 })

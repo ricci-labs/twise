@@ -1,6 +1,6 @@
 import type { NewAccountInput, Permission } from '@financas/shared'
 import type { ItemAction } from '@web/components/actions/item-actions'
-import type { accountFormSchema } from '@web/features/accounts/accounts.schemas'
+import type { accountFormSchema, categoryFormSchema } from '@web/features/accounts/accounts.schemas'
 import type {
   fetchAccounts,
   fetchAccountsSummary,
@@ -129,6 +129,7 @@ export type AccountFormFooterProps = {
   isOnline: boolean
   problem: string | null
   onCancel: () => void
+  labels?: { create: string; creating: string }
 }
 
 export type SaveAccountRequest =
@@ -137,6 +138,7 @@ export type SaveAccountRequest =
 
 export type AccountChangeRequest = {
   name?: string
+  parentId?: string | null
   ownerUserId?: string | null
   icon?: string | null
   color?: string | null
@@ -188,6 +190,7 @@ export type CategoryNode = {
   id: string
   name: string
   icon: string | null
+  color: string | null
   kind: CategoryKind
   parentId: string | null
   incomeNature: string | null
@@ -209,6 +212,7 @@ export type CategoriesPageProps = {
   workspaceId: string
   permissions: readonly Permission[]
   kind: CategoryKind
+  createdId?: string
 }
 
 export type CategoriesBodyProps = CategoriesPageProps
@@ -218,6 +222,7 @@ export type CategoryListProps = {
   permissions: readonly Permission[]
   tree: CategoryTree
   kind: CategoryKind
+  createdId?: string
 }
 
 export type NatureBadgeProps = {
@@ -253,4 +258,42 @@ export type MoveCategorySheetProps = {
 export type CategoryMove = {
   accountId: string
   parentId: string | null
+}
+
+export type CategoryFormInput = z.input<typeof categoryFormSchema>
+
+export type CategoryFormValues = z.output<typeof categoryFormSchema>
+
+export type CategoryFormMode = { kind: 'create' } | { kind: 'edit'; node: CategoryNode }
+
+export type CategoryEditorProps = {
+  workspaceId: string
+  permissions: readonly Permission[]
+  param: string | undefined
+  parentParam: string | undefined
+  kindParam: CategoryKind | undefined
+  onClose: () => void
+  onCreated: (accountId: string, kind: CategoryKind) => void
+}
+
+export type CategoryFormProps = {
+  workspaceId: string
+  mode: CategoryFormMode
+  mains: Readonly<Record<CategoryKind, readonly CategoryNode[]>>
+  defaults: CategoryFormInput
+  onClose: () => void
+  onCreated: (accountId: string, kind: CategoryKind) => void
+}
+
+export type ParentFieldProps = {
+  kind: CategoryKind
+  mains: readonly CategoryNode[]
+  help?: string
+}
+
+export type ParentSectionProps = {
+  mode: CategoryFormMode
+  kind: CategoryKind
+  mains: Readonly<Record<CategoryKind, readonly CategoryNode[]>>
+  name: string
 }

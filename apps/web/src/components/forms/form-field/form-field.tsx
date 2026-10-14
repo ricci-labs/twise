@@ -23,6 +23,7 @@ export function FormField<Values extends FieldValues>({
   name,
   label,
   help,
+  helpGap,
   isRequired = false,
   isReadOnly = false,
   maxLength,
@@ -42,7 +43,7 @@ export function FormField<Values extends FieldValues>({
     <div data-slot="form-field" className={fieldVariants()}>
       <FieldLabel htmlFor={id} label={label} isRequired={isRequired} />
       {help && (
-        <p id={ids.help} className={helpVariants()}>
+        <p id={ids.help} className={helpVariants({ gap: helpGap })}>
           {help}
         </p>
       )}

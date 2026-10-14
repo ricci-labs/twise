@@ -173,6 +173,46 @@ export const accountsMessages = {
     failed: 'Não foi possível carregar as categorias.',
     and: ' e ',
   },
+  categoryForm: {
+    newTitle: 'Nova categoria',
+    editTitle: 'Editar categoria',
+    kinds: {
+      expense: 'Despesa',
+      income: 'Receita',
+    },
+    namePlaceholder: {
+      expense: 'Ex.: Mercado',
+      income: 'Ex.: Salário',
+    },
+    nature: 'Natureza da receita',
+    natureHelp: 'O orçamento usa a renda fixa.',
+    natures: [
+      { value: 'fixed', label: 'Renda fixa', detail: 'ex.: salário' },
+      { value: 'variable', label: 'Renda variável', detail: 'ex.: comissão' },
+    ],
+    parent: 'Dentro de',
+    none: 'Nenhuma (principal)',
+    parentDetail: {
+      expense: 'Categoria de despesa',
+      income: 'Categoria de receita',
+    },
+    parentSubtitle: 'Só categorias principais do mesmo tipo',
+    parentHelp: (name: string) => `Escolha "Nenhuma" para ${name} virar uma categoria principal.`,
+    parentLocked: (name: string, children: string) =>
+      `${name} tem subcategorias, então continua principal. Para colocar ${name} dentro de outra, mova ou exclua ${children} antes.`,
+    create: 'Criar categoria',
+    creating: 'Criando categoria…',
+    created: (name: string) => `${name} criada.`,
+    failed: 'Não foi possível salvar a categoria. Código: {ref}.',
+    required: {
+      name: 'Informe o nome da categoria.',
+      incomeNature: 'Escolha a natureza da receita.',
+    },
+    discardText: 'O que você preencheu nesta categoria vai se perder.',
+    addSubcategory: (parent: string) => `Nova subcategoria em ${parent}`,
+    newSubcategory: 'Nova subcategoria',
+    newCategory: 'Nova categoria',
+  },
   trashPage: {
     pageTitle: 'Lixeira de contas',
     title: 'Lixeira de contas',

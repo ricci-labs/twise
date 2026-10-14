@@ -48,6 +48,7 @@ function nodeOf(account: LedgerAccount, kind: CategoryKind): CategoryNode {
     id: account.id,
     name: account.name,
     icon: account.icon,
+    color: account.color,
     kind,
     parentId: account.parentId,
     incomeNature: account.incomeNature,
