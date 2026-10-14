@@ -60,7 +60,6 @@ function NewCard({ workspaceId, currentUserId, permissions, onClose, onCreated }
 function ChangeCard({
   workspaceId,
   permissions,
-  part,
   cardId,
   canRename,
   canChangeCycle,
@@ -79,7 +78,7 @@ function ChangeCard({
     <CardForm
       key={card.accountId}
       workspaceId={workspaceId}
-      mode={{ kind: 'edit', card, part }}
+      mode={{ kind: 'edit', card }}
       accounts={accounts}
       members={members}
       defaults={defaultsOf(card)}

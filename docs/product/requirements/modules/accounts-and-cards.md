@@ -189,10 +189,11 @@ the next invoice). Desktop: a grid, half the width each with one or two cards, t
 more (a list that grows down, not a carousel), equal heights with the footer at the bottom, and a
 dashed "Novo cartão" tile in an incomplete last row; then "Próximas faturas" of all cards (soonest
 first) as a full-width table with "Pagar" on those with something due.
-Actions: "Novo cartão" (`cards:create`) → `CARD-04`; "⋯": "Ver faturas", "Editar ciclo"
-(`cards:update`, `CARD-04` with the days only), "Renomear e cor", "Arquivar", "Excluir"
-(`accounts:update` / `accounts:delete`, as in `ACC-01`; a member who can edit the cycle doesn't see
-these). Empty: "Nenhum cartão cadastrado." "Cadastre o cartão com os dias de fechamento e
+Actions: "Novo cartão" (`cards:create`) → `CARD-04`; "⋯": "Ver faturas", "Editar cartão"
+(`cards:update` or `accounts:update`, `CARD-04`), "Arquivar", "Excluir" (`accounts:update` /
+`accounts:delete`, as in `ACC-01`; a member who can edit only the cycle doesn't see these). The
+design had "Editar ciclo" and "Renomear e cor", but both opened the same form; the product owner
+merged them into one "Editar cartão" (2026-10-14). Empty: "Nenhum cartão cadastrado." "Cadastre o cartão com os dias de fechamento e
 vencimento para o app saber em que fatura cada compra entra." + "Novo cartão". Viewer: no "Novo
 cartão" and no "⋯".
 
@@ -259,9 +260,9 @@ entram na fatura que vence dia {vence}. Uma compra hoje entra na fatura que venc
 **RF-CARD-8** Editing the days warns: "Faturas já criadas mantêm as datas atuais; a mudança vale
 para as próximas."
 A new card starts with the switch on, the colour "Cinza", the first active money account as the
-payer and the person creating it as the holder. "Editar ciclo" and "Renomear e cor" open the same
-"Editar cartão" with what the person may change: name and colour with `accounts:update`, the rest
-with `cards:update`; "Renomear e cor" puts the focus on the name.
+payer and the person creating it as the holder. "Editar cartão" shows what the person may change:
+name and colour with `accounts:update` (the focus starts on the name), the rest with
+`cards:update`.
 Actions: "Criar cartão" / "Salvar" (when something changed). Errors: `CARD_INVALID`,
 `PAYMENT_ACCOUNT_NOT_AVAILABLE` (field payment account: "Escolha uma conta ativa de dinheiro."),
 `ACCOUNT_NAME_TAKEN` (field name), `CARD_NOT_FOUND` (page state). Opened from `ENT-02`'s empty

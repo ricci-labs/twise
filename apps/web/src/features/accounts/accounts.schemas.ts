@@ -61,8 +61,6 @@ export const categoryFormSchema = z
     }
   })
 
-const CARD_PARTS = ['cycle', 'name'] as const
-
 const DAY_OF_MONTH = /^([1-9]|[12]\d|3[01])$/
 
 export const cardSearchSchema = z.object({
@@ -70,7 +68,6 @@ export const cardSearchSchema = z.object({
     .union([z.literal(NEW_ACCOUNT), z.uuid()])
     .optional()
     .catch(undefined),
-  part: z.enum(CARD_PARTS).optional().catch(undefined),
 })
 
 export const cardFormSchema = z.object({
