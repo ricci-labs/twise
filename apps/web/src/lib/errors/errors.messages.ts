@@ -81,6 +81,8 @@ export const errorMessages: Readonly<Record<string, string>> = {
   ENTRY_INVALID: 'Não foi possível concluir. Código: {ref}.',
   ENTRY_QUERY_INVALID: 'Os filtros eram inválidos e foram limpos.',
   TRASH_QUERY_INVALID: 'Não foi possível carregar a lixeira.',
+  ENTRY_SUGGESTION_QUERY_INVALID: 'Não foi possível carregar as sugestões.',
+  FREQUENT_ENTRY_QUERY_INVALID: 'Não foi possível carregar as sugestões.',
   ENTRY_NOT_FOUND: 'Este lançamento foi excluído ou editado. Atualize a lista.',
   ENTRY_ALREADY_DELETED:
     'Este lançamento foi excluído ou já foi editado por outra pessoa. Atualize a lista.',

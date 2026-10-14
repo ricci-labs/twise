@@ -1,7 +1,7 @@
 ---
 summary: Canonical terms. Maps Portuguese words used by the user and the UI to English code names.
 read_when: Naming anything, or turning a Portuguese term from the user or a WhatsApp message into code.
-updated: 2026-09-26
+updated: 2026-10-14
 ---
 
 # Glossary
@@ -24,6 +24,8 @@ updated: 2026-09-26
 | lixeira | trash | Soft-deleted rows, visible with `delete` permission. |
 | arquivar | `archived_at` | Hidden from pickers but still counts in history. |
 | editar lançamento | replace (`replaces_entry_id`) | Old entry soft-deleted, new one replaces it. |
+| sugestão (da descrição) | `EntrySuggestion` | A recent description of the workspace, with the category, account and payment method of its last use, offered while typing (`GET /entries/suggestions`). |
+| repetir um recente | frequent entries (`listFrequentEntries`) | The descriptions the current person recorded at least twice in the last 90 days, the most repeated first (`GET /entries/frequent`). |
 | papel, perfil de acesso | `role` | A set of module × action permissions. |
 | permissão | `role_permission` | `(module, action)`: view, create, update, delete. |
 | salário | income category with `income_nature = fixed` | |

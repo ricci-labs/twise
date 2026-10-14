@@ -40,6 +40,10 @@ export const ENTRY_TYPES = [
 
 export type EntryType = (typeof ENTRY_TYPES)[number]
 
+export const ENTRY_TYPES_WITH_CATEGORY = ['expense', 'card_purchase', 'income'] as const
+
+export type EntryTypeWithCategory = (typeof ENTRY_TYPES_WITH_CATEGORY)[number]
+
 export const PAYMENT_METHODS = [
   'pix',
   'debit',

@@ -42,3 +42,7 @@ export {
   readPostingFacts,
 } from '@api/modules/ledger/use-cases/facts'
 export { loadAccounts as loadUsableAccounts } from '@api/modules/ledger/use-cases/lookups'
+export {
+  listEntrySuggestions,
+  listFrequentEntries,
+} from '@api/modules/ledger/use-cases/suggestions'
