@@ -381,7 +381,7 @@ component here, so the form, and later the account, card and planning forms, sha
   control contract (`value` text, `onChange({ target: { value } })`, `onBlur`).
 - `SuggestInput` (`components/inputs/suggest-input`, Base UI `Autocomplete`): a `TextInput` that
   offers the `suggestions` it is given (filtered by whoever gives them) in a list under it, as wide
-  as the field: 15 px muted rows with the typed part in ink 650, the highlighted one on `sunken`.
+  as the field (288–480 px, `../product/requirements/ui-standards.md`'s menu rule): 15 px muted rows with the typed part in ink 650, the highlighted one on `sunken`.
   Arrows and Enter pick; `onPick` says which (the entry's description suggestions).
 - `ChoiceChips` (`components/inputs/choice-chips`, Base UI `RadioGroup`): one choice among a few,
   all visible, as radios (arrow keys move the choice). `variant` `pill` (the entry types, chosen in
@@ -400,8 +400,8 @@ component here, so the form, and later the account, card and planning forms, sha
   `compact` `Badge` 8 px after the name (an income category's "Fixa" / "Variável").
 - `PickerSheet` (`components/inputs/picker-sheet`): what a `PickerField` opens. A bottom `Sheet`
   with "Fechar" on the phone; from 1024 px a popover anchored to the field (`anchor`), above a
-  dialog, 320 px wide (`popupWidth="wide"`: 384 px, for rows with a longer line, as "Outros
-  tipos" under the "Mais" pill, which `ChoiceChips` anchors through the option's `buttonRef`). `layout` `list` (rows with the drawing and the detail, 8 px from the sheet's sides, the
+  dialog, as wide as the field, at least 288 and at most 480 px (`popupWidth="wide"`: 384 px, for
+  a popover opened from a small button, as "Outros tipos" under the "Mais" pill, which `ChoiceChips` anchors through the option's `buttonRef`). `layout` `list` (rows with the drawing and the detail, 8 px from the sheet's sides, the
   current one on `mint-soft` with a check) or `grid` (the category tiles on paper; the current one keeps its paper and gets a 2 px
   sketch-ink outline and a bold label, no mint and no check). An item with `isPerson` shows the
   `lg` `Avatar` of its label instead of a drawing (the contact picker); one with `hasChevron` ends

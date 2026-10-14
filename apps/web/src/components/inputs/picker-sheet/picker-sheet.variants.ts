@@ -7,11 +7,11 @@ export const pickerPopupVariants = cva(
   {
     variants: {
       width: {
-        md: 'w-80',
+        field: 'w-anchor max-w-120 min-w-72',
         wide: 'w-96',
       },
     },
-    defaultVariants: { width: 'md' },
+    defaultVariants: { width: 'field' },
   },
 )
 

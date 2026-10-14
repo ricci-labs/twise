@@ -1,7 +1,8 @@
 import { PickerSheet } from '@web/components/inputs/picker-sheet/picker-sheet'
 import type { PickerSheetProps } from '@web/components/inputs/picker-sheet/picker-sheet.types'
 import { expectNoAccessibilityViolations } from '@web/testing/accessibility'
-import { describe, expect, it, vi } from 'vitest'
+import { useRef } from 'react'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import { page } from 'vitest/browser'
 import { render } from 'vitest-browser-react'
 
@@ -18,6 +19,31 @@ const CATEGORIES = [
   { value: 'health', label: 'Saúde', icon: 'health' },
   { value: 'transport', label: 'Transporte', icon: 'transport' },
 ]
+
+function AnchoredPicker({ className }: { className: string }) {
+  const field = useRef<HTMLDivElement>(null)
+  return (
+    <>
+      <div ref={field} className={className}>
+        Categoria
+      </div>
+      <PickerSheet
+        title="Categoria"
+        items={CATEGORIES}
+        value="health"
+        anchor={field}
+        isOpen
+        onOpenChange={() => undefined}
+        onSelect={() => undefined}
+      />
+    </>
+  )
+}
+
+function popupWidth() {
+  return (document.querySelector('[data-slot=picker-sheet]') as HTMLElement).getBoundingClientRect()
+    .width
+}
 
 function renderSheet(props: Partial<PickerSheetProps> = {}) {
   const onSelect = vi.fn()
@@ -40,6 +66,10 @@ function renderSheet(props: Partial<PickerSheetProps> = {}) {
 }
 
 describe('PickerSheet', () => {
+  afterEach(async () => {
+    await page.viewport(414, 896)
+  })
+
   it('opens as a titled dialog, marks the current choice, and closes on a pick', async () => {
     const { onSelect, onOpenChange } = renderSheet()
 
@@ -51,6 +81,18 @@ describe('PickerSheet', () => {
     expect(onSelect).toHaveBeenCalledWith('transport')
     expect(onOpenChange).toHaveBeenCalledWith(false)
     await expectNoAccessibilityViolations(document.body)
+  })
+
+  it('is as wide as its field on the desktop, between 288 and 480 px', async () => {
+    await page.viewport(1440, 900)
+    const { rerender } = await render(<AnchoredPicker className="w-100" />)
+    await expect.poll(popupWidth).toBe(400)
+
+    await rerender(<AnchoredPicker className="w-50" />)
+    await expect.poll(popupWidth).toBe(288)
+
+    await rerender(<AnchoredPicker className="w-175" />)
+    await expect.poll(popupWidth).toBe(480)
   })
 
   it('opens the subcategories of a parent below the grid, with the parent itself first', async () => {

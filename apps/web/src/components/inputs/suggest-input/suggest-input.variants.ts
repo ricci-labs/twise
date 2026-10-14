@@ -3,7 +3,7 @@ import { cva } from 'class-variance-authority'
 export const suggestPositionerVariants = cva('z-modal')
 
 export const suggestPopupVariants = cva(
-  'w-anchor rounded-md border border-border bg-surface p-1.5 shadow-dialog outline-none',
+  'w-anchor max-w-120 min-w-72 rounded-md border border-border bg-surface p-1.5 shadow-dialog outline-none',
 )
 
 export const suggestItemVariants = cva(
