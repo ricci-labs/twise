@@ -49,6 +49,7 @@ export function PickerSheet({
   isOpen,
   onOpenChange,
   anchor,
+  popupWidth,
   onSelect,
   ...content
 }: PickerSheetProps) {
@@ -69,7 +70,10 @@ export function PickerSheet({
             sideOffset={6}
             className={pickerPositionerVariants()}
           >
-            <Popover.Popup data-slot="picker-sheet" className={pickerPopupVariants()}>
+            <Popover.Popup
+              data-slot="picker-sheet"
+              className={pickerPopupVariants({ width: popupWidth })}
+            >
               <Popover.Title className="sr-only">{title}</Popover.Title>
               <PickerContent {...content} onSelect={choose} />
             </Popover.Popup>

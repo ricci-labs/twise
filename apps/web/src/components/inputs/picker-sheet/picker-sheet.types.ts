@@ -1,6 +1,9 @@
 import type { BadgeProps } from '@web/components/display/badge'
 import type { TwiseIconName } from '@web/components/icons/twise-icon'
-import type { pickerListVariants } from '@web/components/inputs/picker-sheet/picker-sheet.variants'
+import type {
+  pickerListVariants,
+  pickerPopupVariants,
+} from '@web/components/inputs/picker-sheet/picker-sheet.variants'
 import type { VariantProps } from 'class-variance-authority'
 import type { RefObject } from 'react'
 
@@ -36,6 +39,8 @@ export type PickerEmpty = {
   onAction?: () => void
 }
 
+export type PickerPopupWidth = NonNullable<VariantProps<typeof pickerPopupVariants>['width']>
+
 export type PickerLayout = NonNullable<VariantProps<typeof pickerListVariants>['layout']>
 
 export type PickerSheetProps = {
@@ -48,13 +53,14 @@ export type PickerSheetProps = {
   onOpenChange: (isOpen: boolean) => void
   anchor?: RefObject<HTMLElement | null>
   layout?: PickerLayout
+  popupWidth?: PickerPopupWidth
   searchLabel?: string
   empty?: PickerEmpty
 }
 
 export type PickerContentProps = Omit<
   PickerSheetProps,
-  'title' | 'isOpen' | 'onOpenChange' | 'anchor'
+  'title' | 'isOpen' | 'onOpenChange' | 'anchor' | 'popupWidth'
 >
 
 export type PickerChoiceProps = {

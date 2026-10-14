@@ -3,7 +3,16 @@ import { cva } from 'class-variance-authority'
 export const pickerPositionerVariants = cva('z-modal')
 
 export const pickerPopupVariants = cva(
-  'flex max-h-96 w-80 flex-col gap-2 overflow-y-auto rounded-lg border border-border bg-surface p-2 text-ink shadow-dialog outline-none transition duration-popover ease-out data-ending-style:scale-96 data-ending-style:opacity-0 data-starting-style:scale-96 data-starting-style:opacity-0',
+  'flex max-h-96 flex-col gap-2 overflow-y-auto rounded-lg border border-border bg-surface p-2 text-ink shadow-dialog outline-none transition duration-popover ease-out data-ending-style:scale-96 data-ending-style:opacity-0 data-starting-style:scale-96 data-starting-style:opacity-0',
+  {
+    variants: {
+      width: {
+        md: 'w-80',
+        wide: 'w-96',
+      },
+    },
+    defaultVariants: { width: 'md' },
+  },
 )
 
 export const pickerSearchVariants = cva('px-1 lg:px-0')

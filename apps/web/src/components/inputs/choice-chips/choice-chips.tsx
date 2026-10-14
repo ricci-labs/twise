@@ -37,7 +37,7 @@ export function ChoiceChips({
           key={option.value}
           value={option.value}
           nativeButton
-          render={<button type="button" onBlur={onBlur} />}
+          render={<button ref={option.buttonRef} type="button" onBlur={onBlur} />}
           aria-haspopup={option.opensDialog ? 'dialog' : undefined}
           onClick={() => {
             if (option.value === value) {
