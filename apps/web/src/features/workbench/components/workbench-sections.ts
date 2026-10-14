@@ -33,6 +33,8 @@ import { tipExamples } from '@web/components/feedback/tip'
 import { toastExamples } from '@web/components/feedback/toast'
 import { formFieldExamples } from '@web/components/forms/form-field'
 import { twiseIconExamples } from '@web/components/icons/twise-icon'
+import { choiceChipsExamples } from '@web/components/inputs/choice-chips'
+import { moneyInputExamples } from '@web/components/inputs/money-input'
 import { passwordInputExamples } from '@web/components/inputs/password-input'
 import { textInputExamples } from '@web/components/inputs/text-input'
 import { authLayoutExamples } from '@web/components/layout/auth-layout'
@@ -45,6 +47,8 @@ import type { ComponentExamples } from '@web/lib/examples.types'
 export const workbenchSections: readonly ComponentExamples[] = [
   buttonExamples,
   segmentedControlExamples,
+  moneyInputExamples,
+  choiceChipsExamples,
   amountExamples,
   cardExamples,
   kpiCardExamples,
