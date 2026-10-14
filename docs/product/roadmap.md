@@ -257,7 +257,10 @@ updated: 2026-10-14
      The chips keep the categories' order until usage counts exist ("most used first"), and "Ver
      lançamentos" joins the menus with the filtered `ENT-01`. `CARD-01` (two or three cards per
      row, the "Novo cartão" tile closing the last row, "Próximas faturas" from
-     `GET /cards/invoices/upcoming`); its "Pagar" comes with the invoice payment
+     `GET /cards/invoices/upcoming`); its "Pagar" comes with the invoice payment. `CARD-02`
+     and `CARD-03` as one desktop page (path, the wide month strip, four KPIs of the chosen
+     invoice, the lines table with its filters); "Pagar fatura", the "2 contatos" badge (needs the
+     contacts of each line) and opening an entry from its line come later
   8. [ ] Fixes to merged work from this round's review: no circles in the Home, the one selection
      style everywhere, the "Mais" sheet with the system illustrations
   9. [ ] G42 (archive a category with its subcategories) only if the product owner approves it

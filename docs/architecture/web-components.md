@@ -223,6 +223,9 @@ React Hook Form v7 + `zodResolver` with the **schemas from `@financas/shared`** 
 
 ## App shell
 `docs/design/home/` → Layouts. Presentational; the workspace feature gives them the items.
+- `Breadcrumb` (`components/navigation/breadcrumb`): the desktop path above a page title
+  ("Cartões › Cartão X"), a `nav` named by `label`; the levels above are mint underlined links,
+  the current one plain with `aria-current="page"`, 14 px, `›` between them.
 - `NavItem` (`components/navigation/nav-link`): `{ key, label, icon, render, isCurrent }`. `render`
   is the element that navigates (a router `Link`, or a `button` for "Mais"); `NavLink` draws it
   with the Twise icon (mint fill when current) and forwards any props, so it can be a tooltip
@@ -327,8 +330,9 @@ passes the overview's numbers.
 - `KpiCard` + `KpiBadge` (`components/display/kpi-card`): label (`h3`) with an optional help
   slot, the value, a badge and the foot lines (`children`); `tone` `plain`, `mint` (the first
   card) or `danger` (passed the plan); `art` sits at the bottom right and the foot keeps clear of
-  it. With `artAt="top"` (the accounts summary) the art sits at the top right and the label line
-  has no room reserved for a help button.
+  it. The label line keeps 26 px for the help button only when there is one (the Home cards);
+  without `help` it is the label's 20 px, as the card page's KPIs. With `artAt="top"` (the
+  accounts summary) the art sits at the top right.
 - `KpiCarousel` (`components/display/kpi-carousel`): on the phone a scroll-snap row of 300 px
   cards (the next one peeks), each slide a group read as "2 de 4", dots that are buttons and
   follow the swipe (the current one 22 px in ink, the others `indicator-idle`); the row takes the
@@ -530,7 +534,8 @@ component here, so the form, and later the account, card and planning forms, sha
   pills (month and status), the current one with the 2 px ink outline and `aria-current`; a small
   vertical year label before a January (`yearBefore`); "Todas" at the end calls `onAll`. It opens
   with the month after `anchor` (the open invoice) in view and a whole month at the left margin,
-  then keeps the chosen month in view.
+  then keeps the chosen month in view. `size="wide"` (the desktop card page): 96 px months, no
+  side margin, and it opens scrolled to the end so the latest months and "Todas" show.
 - `InvoiceYearSheet` (`components/finance/invoice-year-sheet`): the `Sheet` behind "Todas", with
   its close button: the year between arrows (no arrow when there is nowhere to go), the months in three columns with the
   status `Badge` and the total, and the footnote. Choosing a month closes it.

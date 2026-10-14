@@ -88,3 +88,47 @@ describe('CARD-02 invoices of a card', () => {
     await expect.element(page.getByRole('link', { name: 'Voltar para Cartões' })).toBeVisible()
   })
 })
+
+describe('CARD-02 and CARD-03 on the desktop', () => {
+  beforeEach(async () => {
+    vi.useFakeTimers({ toFake: ['Date'] })
+    vi.setSystemTime(new Date('2026-10-14T15:00:00.000Z'))
+    await page.viewport(1440, 900)
+  })
+
+  afterEach(async () => {
+    vi.useRealTimers()
+    vi.restoreAllMocks()
+    await page.viewport(414, 896)
+  })
+
+  it('shows the chosen invoice as four numbers and its lines in one table, filtered in place', async () => {
+    await openInvoices()
+
+    await expect
+      .element(
+        page.getByRole('navigation', { name: 'Caminho' }).getByRole('link', { name: 'Cartões' }),
+      )
+      .toBeVisible()
+    await expect
+      .element(
+        page.getByText(
+          /Fecha dia 25 · vence dia 4 · Member B · limite de R\$\s6\.000,00 \(48% usado\)/,
+        ),
+      )
+      .toBeVisible()
+    await expect.element(page.getByRole('heading', { name: 'Total da fatura' })).toBeVisible()
+    await expect.element(page.getByText('Pago até agora: R$ 0,00')).toBeVisible()
+    const table = page.getByRole('table', { name: 'Lançamentos da fatura' })
+    await expect.element(table.getByRole('cell', { name: '1/3', exact: true })).toBeVisible()
+    await expect.element(table.getByRole('cell', { name: 'R$ 160,00', exact: true })).toBeVisible()
+
+    await page.getByRole('radio', { name: 'Com terceiros' }).click()
+
+    await expect
+      .element(table.getByRole('cell', { name: '1/3', exact: true }))
+      .not.toBeInTheDocument()
+    await expect.element(table.getByRole('cell', { name: 'R$ 160,00', exact: true })).toBeVisible()
+    await expectNoAccessibilityViolations(page.getByRole('main').element())
+  })
+})
