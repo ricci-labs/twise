@@ -83,6 +83,7 @@ export function invoiceLinesOf(
       installment: installmentOf(line),
       detail: detailOf(line, isPayment, counterpart?.name),
       amountCents: line.amountCents,
+      frontedCents: line.frontedCents,
       isPayment,
       isFronted: line.frontedCents > 0,
     }

@@ -16,6 +16,7 @@ export function InvoiceMonthStrip({
   anchor,
   allLabel,
   onAll,
+  size = 'compact',
 }: InvoiceMonthStripProps) {
   const stripRef = useRef<HTMLElement>(null)
   const hasPlacedRef = useRef(false)
@@ -30,18 +31,21 @@ export function InvoiceMonthStrip({
     const chosen = items.find((item) => item.dataset.month === current)
     if (!hasPlacedRef.current) {
       const opening = items.findIndex((item) => item.dataset.month === (anchor ?? current))
-      strip.scrollLeft = scrollEndingWith(strip, items, items[opening + 1] ?? items[opening])
+      strip.scrollLeft =
+        size === 'wide'
+          ? strip.scrollWidth
+          : scrollEndingWith(strip, items, items[opening + 1] ?? items[opening])
       hasPlacedRef.current = true
     }
     strip.scrollLeft = scrollToShow(strip, chosen)
-  }, [current, anchor])
+  }, [current, anchor, size])
 
   return (
     <nav
       ref={stripRef}
       aria-label={label}
       data-slot="invoice-month-strip"
-      className={invoiceMonthStripVariants()}
+      className={invoiceMonthStripVariants({ size })}
     >
       {months.map((month) => (
         <Fragment key={month.key}>
@@ -57,7 +61,7 @@ export function InvoiceMonthStrip({
               'aria-current': month.isCurrent ? 'true' : undefined,
               'data-slot': 'invoice-month',
               'data-month': month.key,
-              className: invoiceMonthVariants({ isCurrent: month.isCurrent }),
+              className: invoiceMonthVariants({ size, isCurrent: month.isCurrent }),
             },
             <>
               <b className={invoiceMonthNameVariants()}>{month.month}</b>

@@ -1,5 +1,6 @@
 import type { CardChange, NewAccountInput, NewCardInput, Permission } from '@financas/shared'
 import type { ItemAction } from '@web/components/actions/item-actions'
+import type { InvoiceMonth } from '@web/components/finance/invoice-month-strip'
 import type { BackLinkProps } from '@web/components/layout/sub-page-header'
 import type {
   accountFormSchema,
@@ -387,6 +388,7 @@ export type InvoiceLineView = {
   installment?: string
   detail?: string
   amountCents: number
+  frontedCents: number
   isPayment: boolean
   isFronted: boolean
 }
@@ -407,6 +409,18 @@ export type CardInvoicesLoadedProps = CardsPageProps & {
   card: CardSummary
   stored: readonly StoredInvoice[]
   month?: string
+}
+
+export type InvoiceLinesTableProps = {
+  lines: readonly InvoiceLineView[] | undefined
+}
+
+export type CardInvoicesDesktopProps = CardsPageProps & {
+  card: CardSummary
+  invoice: CardInvoice
+  months: readonly InvoiceMonth[]
+  lines: readonly InvoiceLineView[] | undefined
+  onAll: () => void
 }
 
 export type PageMissingProps = {

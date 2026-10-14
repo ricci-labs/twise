@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query'
 import { Link } from '@tanstack/react-router'
 import { SectionError } from '@web/components/feedback/section-error'
 import { SectionSkeleton } from '@web/components/feedback/section-skeleton'
-import { InvoiceMonthStrip } from '@web/components/finance/invoice-month-strip'
+import { type InvoiceMonth, InvoiceMonthStrip } from '@web/components/finance/invoice-month-strip'
 import { InvoiceSummary, type InvoiceSummaryNote } from '@web/components/finance/invoice-summary'
 import { accountsMessages } from '@web/features/accounts/accounts.messages'
 import type {
@@ -30,13 +30,16 @@ import {
   stateToneOf,
   todayOnDevice,
 } from '@web/features/accounts/components/card-invoices'
+import { CardInvoicesDesktop } from '@web/features/accounts/components/card-invoices-desktop'
 import { CardMissing } from '@web/features/accounts/components/card-missing'
 import { CardPageFrame } from '@web/features/accounts/components/card-page-frame'
 import { CardPageHeader } from '@web/features/accounts/components/card-page-header'
 import { InvoiceLinesPreview } from '@web/features/accounts/components/invoice-lines-preview'
 import { InvoiceYearPicker } from '@web/features/accounts/components/invoice-year-picker'
+import { useMediaQuery } from '@web/hooks/use-media-query'
 import { usePageTitle } from '@web/hooks/use-page-title'
 import { ApiError } from '@web/lib/api/api-error'
+import { DESKTOP_QUERY } from '@web/lib/breakpoints'
 import { formatMonthName, formatShortDate, formatShortMonthName } from '@web/lib/format/calendar'
 import { useState } from 'react'
 
@@ -45,6 +48,8 @@ const messages = accountsMessages.invoicesPage
 const CARD_NOT_FOUND = 'CARD_NOT_FOUND'
 
 const JANUARY = 1
+
+const NO_LINES: never[] = []
 
 export function CardInvoicesPage({
   workspaceId,
@@ -109,6 +114,7 @@ function CardInvoicesLoaded({
   stored,
   month,
 }: CardInvoicesLoadedProps) {
+  const isDesktop = useMediaQuery(DESKTOP_QUERY)
   const [isYearOpen, setIsYearOpen] = useState(false)
   const invoices = cardInvoicesOf(card, stored, todayOnDevice())
   const chosen = chosenInvoiceOf(invoices, card, month) ?? invoices.at(-1)
@@ -120,8 +126,37 @@ function CardInvoicesLoaded({
   if (!chosen) {
     return null
   }
+  const months = monthsOf(workspaceId, card, invoices, chosen)
+  const lineViews =
+    lines.data && accounts.data ? invoiceLinesOf(lines.data, accounts.data) : undefined
+  const yearPicker = (
+    <InvoiceYearPicker
+      workspaceId={workspaceId}
+      card={card}
+      invoices={invoices}
+      chosen={chosen}
+      isOpen={isYearOpen}
+      onOpenChange={setIsYearOpen}
+    />
+  )
+  if (isDesktop) {
+    return (
+      <>
+        <CardInvoicesDesktop
+          workspaceId={workspaceId}
+          permissions={permissions}
+          card={card}
+          invoice={chosen}
+          months={months}
+          lines={chosen.invoiceId ? lineViews : NO_LINES}
+          onAll={() => setIsYearOpen(true)}
+        />
+        {yearPicker}
+      </>
+    )
+  }
   return (
-    <div className="mx-auto flex w-full max-w-160 flex-col gap-4 pb-6 lg:pt-7 lg:pb-12">
+    <div className="mx-auto flex w-full max-w-160 flex-col gap-4 pb-6">
       <div className="flex flex-col gap-3.5">
         <CardPageHeader
           workspaceId={workspaceId}
@@ -137,31 +172,10 @@ function CardInvoicesLoaded({
           anchor={card.currentInvoice.referenceMonth}
           allLabel={messages.all}
           onAll={() => setIsYearOpen(true)}
-          months={invoices.map((invoice, position) => ({
-            key: invoice.referenceMonth,
-            month: formatShortMonthName(invoice.referenceMonth),
-            status: stateLabelOf(invoice.state),
-            accessibleLabel: messages.month(
-              formatShortMonthName(invoice.referenceMonth),
-              yearOf(invoice.referenceMonth),
-              stateLabelOf(invoice.state),
-            ),
-            yearBefore: startsYear(invoice, position)
-              ? String(yearOf(invoice.referenceMonth))
-              : undefined,
-            isCurrent: invoice.referenceMonth === chosen.referenceMonth,
-            link: (
-              <Link
-                to="/w/$workspaceId/cards/$card"
-                params={{ workspaceId, card: card.accountId }}
-                search={{ month: invoice.referenceMonth }}
-                replace
-              />
-            ),
-          }))}
+          months={months}
         />
       </div>
-      <div className="flex flex-col gap-6 px-4 lg:px-8">
+      <div className="flex flex-col gap-6 px-4">
         <InvoiceSummary
           title={messages.title(formatMonthName(chosen.referenceMonth))}
           status={{ label: stateLabelOf(chosen.state), tone: stateToneOf(chosen.state) }}
@@ -178,21 +192,40 @@ function CardInvoicesLoaded({
           workspaceId={workspaceId}
           card={card}
           invoice={chosen}
-          lines={
-            lines.data && accounts.data ? invoiceLinesOf(lines.data, accounts.data) : undefined
-          }
+          lines={lineViews}
         />
       </div>
-      <InvoiceYearPicker
-        workspaceId={workspaceId}
-        card={card}
-        invoices={invoices}
-        chosen={chosen}
-        isOpen={isYearOpen}
-        onOpenChange={setIsYearOpen}
-      />
+      {yearPicker}
     </div>
   )
+}
+
+function monthsOf(
+  workspaceId: string,
+  card: CardSummary,
+  invoices: readonly CardInvoice[],
+  chosen: CardInvoice,
+): InvoiceMonth[] {
+  return invoices.map((invoice, position) => ({
+    key: invoice.referenceMonth,
+    month: formatShortMonthName(invoice.referenceMonth),
+    status: stateLabelOf(invoice.state),
+    accessibleLabel: messages.month(
+      formatShortMonthName(invoice.referenceMonth),
+      yearOf(invoice.referenceMonth),
+      stateLabelOf(invoice.state),
+    ),
+    yearBefore: startsYear(invoice, position) ? String(yearOf(invoice.referenceMonth)) : undefined,
+    isCurrent: invoice.referenceMonth === chosen.referenceMonth,
+    link: (
+      <Link
+        to="/w/$workspaceId/cards/$card"
+        params={{ workspaceId, card: card.accountId }}
+        search={{ month: invoice.referenceMonth }}
+        replace
+      />
+    ),
+  }))
 }
 
 function noteOf(
