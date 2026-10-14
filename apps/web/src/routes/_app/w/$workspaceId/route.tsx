@@ -42,6 +42,7 @@ export const Route = createFileRoute('/_app/w/$workspaceId')({
         <NewEntry
           workspaceId={workspaceId}
           currentUserId={account.userId}
+          currentUserName={account.displayName}
           permissions={access.permissions}
           isOpen={entry === 'new'}
           onClose={() =>

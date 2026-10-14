@@ -51,7 +51,7 @@ describe('SharesList', () => {
     expect(onAdd).toHaveBeenCalledOnce()
   })
 
-  it('says what is wrong under the rows, leaves your part blank and stops adding at the limit', async () => {
+  it('says what is wrong under the rows, shows a dash for your part and stops adding at the limit', async () => {
     const { screen } = renderShares({
       yoursCents: null,
       error: 'A soma das partes passa do valor total.',
@@ -60,6 +60,7 @@ describe('SharesList', () => {
     const view = await screen
 
     await expect.element(view.getByText('A soma das partes passa do valor total.')).toBeVisible()
+    await expect.element(view.getByText('—')).toBeVisible()
     await expect.element(view.getByRole('button', { name: 'Adicionar contato' })).toBeDisabled()
     await expectNoAccessibilityViolations(view.container)
   })

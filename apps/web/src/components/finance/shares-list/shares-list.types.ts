@@ -1,4 +1,5 @@
 import type { MoneyInputChange } from '@web/components/inputs/money-input'
+import type { Ref } from 'react'
 
 export type ShareRow = {
   key: string
@@ -13,6 +14,7 @@ export type SharesListProps = {
   yoursCents: number | null
   error?: string
   canAdd: boolean
+  addRef?: Ref<HTMLButtonElement>
   onAmountChange: (key: string, change: MoneyInputChange) => void
   onAmountBlur?: (key: string) => void
   onRemove: (key: string) => void
@@ -22,5 +24,6 @@ export type SharesListProps = {
 }
 
 export type SharesCollapsedProps = {
+  ref?: Ref<HTMLButtonElement>
   onOpen: () => void
 }

@@ -8,6 +8,7 @@ const TIME_ZONE = 'America/Sao_Paulo'
 export function NewEntry({
   workspaceId,
   currentUserId,
+  currentUserName,
   permissions,
   isOpen,
   onClose,
@@ -19,7 +20,9 @@ export function NewEntry({
     <EntryForm
       workspaceId={workspaceId}
       currentUserId={currentUserId}
+      currentUserName={currentUserName}
       canSeeMembers={hasPermission(permissions, 'members', 'view')}
+      canSeeContacts={hasPermission(permissions, 'contacts', 'view')}
       canCreateAccounts={hasPermission(permissions, 'accounts', 'create')}
       canCreateCards={hasPermission(permissions, 'cards', 'create')}
       today={todayIn(TIME_ZONE, new Date())}

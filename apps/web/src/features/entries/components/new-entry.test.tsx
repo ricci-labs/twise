@@ -25,6 +25,20 @@ const MARKET = '00000000-0000-4000-8000-0000000000e2'
 const LEISURE = '00000000-0000-4000-8000-0000000000e3'
 const CURRENT_USER = '00000000-0000-4000-8000-0000000000a1'
 const CARD_X = '00000000-0000-4000-8000-0000000000c3'
+const MEMBER_C = '00000000-0000-4000-8000-0000000000d1'
+const MEMBER_D = '00000000-0000-4000-8000-0000000000d2'
+
+function contact(id: string, name: string) {
+  return {
+    id,
+    name,
+    phoneE164: null,
+    pixKey: null,
+    notes: null,
+    isOptedOut: false,
+    isArchived: false,
+  }
+}
 
 const CARD_SUMMARY = {
   accountId: CARD_X,
@@ -131,6 +145,8 @@ function entryAnswers(
       ]),
     [`GET ${BASE}/members`]: () => Response.json([]),
     [`GET ${BASE}/cards`]: () => Response.json(cards),
+    [`GET ${BASE}/contacts`]: () =>
+      Response.json([contact(MEMBER_C, 'Member C'), contact(MEMBER_D, 'Member D')]),
     [`GET ${BASE}/entries`]: () =>
       Response.json({ items: [latestExpense(WALLET, GROCERIES)], nextCursor: null }),
     [`POST ${BASE}/entries`]: async (request: Request) => {
@@ -447,5 +463,86 @@ describe('ENT-02 card purchase', () => {
     await expect
       .poll(() => app.router.state.location.search)
       .toMatchObject({ entry: 'new', card: 'new' })
+  })
+})
+
+async function addShare(name: string) {
+  await page.getByRole('button', { name: /Dividir com contatos|Adicionar contato/ }).click()
+  await page.getByRole('button', { name }).click()
+}
+
+describe('ENT-02 shares with contacts', () => {
+  afterEach(async () => {
+    vi.restoreAllMocks()
+    await page.viewport(414, 896)
+  })
+
+  it('splits a dinner equally, keeps your part live and records the shares', async () => {
+    const { recorded } = await openNewEntry()
+    await fillExpense()
+    await page.getByLabelText(/^Valor/).fill('240')
+    await addShare('Member C')
+    await addShare('Member D')
+    await page.getByRole('button', { name: 'Dividir igualmente' }).click()
+
+    await expect
+      .element(page.getByRole('textbox', { name: 'Parte de Member C' }))
+      .toHaveValue('80,00')
+    await expect
+      .element(page.getByRole('textbox', { name: 'Parte de Member D' }))
+      .toHaveValue('80,00')
+    await expectText(
+      page.getByRole('region', { name: 'Dividir com contatos' }),
+      /Sua parte.*R\$\s80,00/,
+    )
+    await page.getByRole('button', { name: 'Salvar lançamento' }).click()
+
+    await expect.element(page.getByText('Lançamento registrado.')).toBeVisible()
+    expect(recorded).toEqual([
+      expect.objectContaining({
+        amountCents: 24_000,
+        shares: [
+          { contactId: MEMBER_C, amountCents: 8000 },
+          { contactId: MEMBER_D, amountCents: 8000 },
+        ],
+      }),
+    ])
+  })
+
+  it('blocks saving while the shares pass the total and leaves your part blank', async () => {
+    const { recorded } = await openNewEntry()
+    await fillExpense()
+    await page.getByLabelText(/^Valor/).fill('240')
+    await addShare('Member C')
+    await page.getByRole('textbox', { name: 'Parte de Member C' }).fill('270')
+
+    await expect.element(page.getByText('A soma das partes passa do valor total.')).toBeVisible()
+    await expect
+      .element(page.getByRole('textbox', { name: 'Parte de Member C' }))
+      .toHaveAttribute('aria-invalid', 'true')
+    await expect
+      .element(page.getByRole('button', { name: 'Salvar lançamento' }))
+      .toHaveAttribute('aria-disabled', 'true')
+    await page.getByRole('button', { name: 'Metade' }).click()
+
+    await expect
+      .element(page.getByRole('textbox', { name: 'Parte de Member C' }))
+      .toHaveValue('120,00')
+    await expect
+      .element(page.getByText('A soma das partes passa do valor total.'))
+      .not.toBeInTheDocument()
+    await page.getByRole('button', { name: 'Tirar Member C da divisão' }).click()
+    await expect.element(page.getByRole('button', { name: 'Dividir com contatos' })).toBeVisible()
+    expect(recorded).toEqual([])
+  })
+
+  it('asks for an amount in every share before saving', async () => {
+    const { recorded } = await openNewEntry()
+    await fillExpense()
+    await addShare('Member D')
+    await page.getByRole('button', { name: 'Salvar lançamento' }).click({ force: true })
+
+    await expect.element(page.getByText('Informe um valor maior que zero.')).toBeVisible()
+    expect(recorded).toEqual([])
   })
 })

@@ -27,9 +27,9 @@ import { MoneyInput } from '@web/components/inputs/money-input'
 import { CircleAlert, Plus, X } from 'lucide-react'
 import { useId } from 'react'
 
-export function SharesCollapsed({ onOpen }: SharesCollapsedProps) {
+export function SharesCollapsed({ ref, onOpen }: SharesCollapsedProps) {
   return (
-    <button type="button" onClick={onOpen} className={sharesCollapsedVariants()}>
+    <button ref={ref} type="button" onClick={onOpen} className={sharesCollapsedVariants()}>
       <Plus aria-hidden="true" />
       {messages.title}
     </button>
@@ -42,6 +42,7 @@ export function SharesList({
   yoursCents,
   error,
   canAdd,
+  addRef,
   onAmountChange,
   onAmountBlur,
   onRemove,
@@ -99,7 +100,13 @@ export function SharesList({
           </>
         )}
       </p>
-      <button type="button" onClick={onAdd} disabled={!canAdd} className={sharesAddVariants()}>
+      <button
+        ref={addRef}
+        type="button"
+        onClick={onAdd}
+        disabled={!canAdd}
+        className={sharesAddVariants()}
+      >
         <Plus aria-hidden="true" />
         {messages.add}
       </button>
@@ -108,7 +115,7 @@ export function SharesList({
         <span className={shareNameVariants({ isYours: true })}>{messages.yours}</span>
         <span aria-hidden="true" className={shareLeaderVariants()} />
         <span className={shareYoursValueVariants()}>
-          {yoursCents !== null && <Amount cents={yoursCents} size="md" />}
+          {yoursCents === null ? messages.blank : <Amount cents={yoursCents} size="inherit" />}
         </span>
         <span aria-hidden="true" className={shareGapVariants()} />
       </div>

@@ -4,6 +4,7 @@ export const sharesListMessages = {
   equally: 'Dividir igualmente',
   add: 'Adicionar contato',
   yours: 'Sua parte',
+  blank: '—',
   amountOf: (name: string) => `Parte de ${name}`,
   remove: (name: string) => `Tirar ${name} da divisão`,
 } as const

@@ -301,7 +301,8 @@ piggy bank once. `prefers-reduced-motion` zeroes all of it (`globals.css`).
   `description` goes under the title in `note`.
 - `Avatar` (`components/display/avatar`): the initial of a name in a circle (`mint` or `paper`),
   decorative: the name is always written next to it or in the control's label. `size="stacked"` is
-  the overlapping pair of the phone's top bar: 36 px with a 2 px ring of the page colour.
+  the overlapping pair of the phone's top bar: 36 px with a 2 px ring of the page colour; `lg`
+  (40 px) is the person in a picker row.
 
 ## Home building blocks
 `docs/design/home/` → Rules and `../design/home/components.md`. They take formatted pieces; the Home feature
@@ -386,7 +387,8 @@ component here, so the form, and later the account, card and planning forms, sha
   with "Fechar" on the phone; from 1024 px a popover anchored to the field (`anchor`), above a
   dialog. `layout` `list` (rows with the drawing and the detail, 8 px from the sheet's sides, the
   current one on `mint-soft` with a check) or `grid` (the category tiles on paper; the current one keeps its paper and gets a 2 px
-  sketch-ink outline and a bold label, no mint and no check). An item with `children` shows "N sub";
+  sketch-ink outline and a bold label, no mint and no check). An item with `isPerson` shows the
+  `lg` `Avatar` of its label instead of a drawing (the contact picker). An item with `children` shows "N sub";
   pressing it opens the row "Em {mãe}" below the grid with "Só {mãe}" and the children as chips.
   `searchLabel` adds a 44 px search (with its icon) that ignores case and accents and also finds children,
   shown "em {mãe}" with the parent's drawing; `empty` replaces the list with the drawing, a sentence
@@ -419,8 +421,9 @@ component here, so the form, and later the account, card and planning forms, sha
   Collapsed, a dashed pill. Open, the title with the quick fills "Metade" and "Dividir igualmente",
   one row per contact (initial, name, a dotted leader, a `sm` `MoneyInput` named "Parte de {nome}",
   "×" to take them out), the error under the rows, "Adicionar contato" (disabled at the limit), and,
-  after a dashed divider, "Sua parte" with its value in the same column (blank while the sum passes
-  the total). The screen owns the amounts and the rules; the list only shows them.
+  after a dashed divider, "Sua parte" with its value in the same column ("—" while the sum passes
+  the total). The screen owns the amounts and the rules; the list only shows them. `ref` (collapsed)
+  and `addRef` anchor the contact picker's popover on desktop.
 - `RecentEntries` (`components/finance/recent-entries`): "Repetir um recente", a row of cards that
   scrolls sideways from the 16 px margin (the last one peeking): the drawing, the description and
   the last amount; the picked card is `aria-pressed` with the ink outline. Nothing renders when

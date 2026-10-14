@@ -3,10 +3,11 @@ import {
   ENTRY_NOTES_MAX_LENGTH,
   isoDateSchema,
   MAX_INSTALLMENTS,
+  MAX_SHARES_PER_ENTRY,
   PAYMENT_METHODS,
 } from '@financas/shared'
 import { entriesMessages } from '@web/features/entries/entries.messages'
-import { centsOfTypedAmount } from '@web/lib/format/money'
+import { centsOfTypedAmount, sumOfTypedAmounts } from '@web/lib/format/money'
 import { z } from 'zod'
 
 const NEW_ENTRY = 'new'
@@ -22,6 +23,8 @@ const FORM_ENTRY_TYPES = ['expense', 'card_purchase'] as const
 const CARD_PURCHASE = 'card_purchase'
 
 const installmentSchema = z.number().int().min(1).max(MAX_INSTALLMENTS)
+
+export const entryShareSchema = z.object({ contactId: z.string().min(1), amount: z.string() })
 
 export const entryFormSchema = z
   .object({
@@ -39,6 +42,7 @@ export const entryFormSchema = z
     occurredOn: isoDateSchema,
     paymentMethod: z.union([z.enum(PAYMENT_METHODS), z.literal(NO_CHOICE)]),
     spentByUserId: z.string(),
+    shares: z.array(entryShareSchema).max(MAX_SHARES_PER_ENTRY),
     notes: z.string().trim().max(ENTRY_NOTES_MAX_LENGTH),
   })
   .refine((values) => values.entryType === CARD_PURCHASE || Boolean(values.paidFromAccountId), {
@@ -71,4 +75,19 @@ export const entryFormSchema = z
       message: entriesMessages.cards.firstAfterCount,
       when: () => true,
     },
+  )
+  .refine((values) => values.shares.every((share) => (centsOfTypedAmount(share.amount) ?? 0) > 0), {
+    path: ['shares'],
+    message: entriesMessages.shares.notPositive,
+    when: () => true,
+  })
+  .refine(
+    (values) => {
+      const totalCents = centsOfTypedAmount(values.amount)
+      return (
+        totalCents === null ||
+        sumOfTypedAmounts(values.shares.map((share) => share.amount)) <= totalCents
+      )
+    },
+    { path: ['shares'], message: entriesMessages.shares.exceed, when: () => true },
   )

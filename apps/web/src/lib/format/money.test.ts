@@ -2,6 +2,7 @@ import {
   centsOfTypedAmount,
   formatTypedAmount,
   formatWholeReais,
+  sumOfTypedAmounts,
   tidyTypedAmount,
 } from '@web/lib/format/money'
 import { describe, expect, it } from 'vitest'
@@ -31,5 +32,11 @@ describe('typed amounts', () => {
   it('tidies a valid amount on blur and leaves anything else as typed', () => {
     expect(tidyTypedAmount('1234,5')).toBe('1.234,50')
     expect(tidyTypedAmount('12,3,4')).toBe('12,3,4')
+  })
+})
+
+describe('sumOfTypedAmounts', () => {
+  it('adds what was typed, counting blanks and typos as zero', () => {
+    expect(sumOfTypedAmounts(['80,00', '1.000', '', 'abc'])).toBe(108_000)
   })
 })

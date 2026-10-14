@@ -27,6 +27,13 @@ export function cardsQueryOptions(workspaceId: string) {
   })
 }
 
+export function contactsQueryOptions(workspaceId: string) {
+  return queryOptions({
+    queryKey: [...queryKeys.workspace(workspaceId), 'contacts', 'list'] as const,
+    queryFn: () => fetchContacts(workspaceId),
+  })
+}
+
 export function membersQueryOptions(workspaceId: string) {
   return queryOptions({
     queryKey: [...queryKeys.workspace(workspaceId), 'members'] as const,
@@ -51,6 +58,10 @@ export function fetchBalances(workspaceId: string) {
 
 export function fetchCards(workspaceId: string) {
   return unwrap(workspaceApi.cards.$get({ param: { workspaceId } }))
+}
+
+export function fetchContacts(workspaceId: string) {
+  return unwrap(workspaceApi.contacts.$get({ param: { workspaceId } }))
 }
 
 export function fetchMembers(workspaceId: string) {

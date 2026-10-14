@@ -219,7 +219,10 @@ updated: 2026-10-14
   11. [x] Web: card purchase with the invoice preview, the closed invoice and a purchase in progress
       (the type pills show the types built so far; the shared `installmentPlan` puts each
       installment on its invoice; "Cadastrar cartão" in the empty sheet comes back to the entry)
-  12. [ ] Web: shares with contacts
+  12. [x] Web: shares with contacts (the contact picker with search; "Metade" gives the contacts
+      half and "Dividir igualmente" splits between you and them, the rounding cents staying in
+      "Sua parte" (shared `equalShares` / `halfShares`); saving waits while the sum passes the
+      total). Waiting on the contacts round: "Novo contato" in the picker (`CON-05`)
   13. [ ] Web: income, transfer (and from `HOME-03`), invoice payment, settlement, opening balance
   14. [ ] Web: the desktop dialog for the other types (the type pills in one row)
   15. [ ] Web: "Repetir um recente" and the suggestion that fills the rest
