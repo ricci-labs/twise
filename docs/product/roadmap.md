@@ -203,7 +203,8 @@ updated: 2026-10-14
   3. [x] API: description suggestions (G38) and the current person's frequent entries (G39)
   4. [x] Web components: `MoneyInput` (the design's `MoneyField`) and `ChoiceChips` (the type pills,
      the date shortcuts and who spent)
-  5. [ ] Web components: `PickerField` + `PickerSheet`, `CategoryGrid`
+  5. [x] Web components: `PickerField` + `PickerSheet` (the list, and the category grid as its
+     `grid` layout)
   6. [ ] Web components: `InstallmentStepper`, `InProgressSwitch`
   7. [ ] Web components: `InvoicePreview`, `InvoiceRadioList`
   8. [ ] Web components: `SharesList`
