@@ -215,7 +215,8 @@ updated: 2026-10-14
   13. [ ] Web: income, transfer (and from `HOME-03`), invoice payment, settlement, opening balance
   14. [ ] Web: the desktop dialog
   15. [ ] Web: "Repetir um recente" and the suggestion that fills the rest
-  16. [ ] Web: the Home follows the app-wide rules (loose illustrations, no circles)
+  16. [ ] Web: the Home follows the app-wide rules (loose illustrations, no circles; the budgets
+      already do, through `CategoryArt`)
 - [ ] Remaining project skills (`new-module`, `db-migration`, `domain-rule`, `pr`) and Claude Code hooks
 
 ## Phase 1: MVP

@@ -134,7 +134,9 @@ every screen, the Home included.
 - **Illustrations are never clipped in a circle** (it cut the details at the corners). On white or
   light surfaces (picker fields, list rows, sheets, previews, banners, cards) use the loose versions
   without the paper square (`../../design/assets/ilustracoes/soltas/`), 42–46 px. The paper square
-  stays only when the illustration *is* the button (the category grid).
+  stays only when the illustration *is* the button (the category grid), and in the dark theme,
+  where the loose drawing's black ink would vanish on a dark surface (found while building,
+  2026-10-14).
 - **Desktop forms:** fields side by side share one height (48 px, the `control` size); only money
   fields are taller. A switch sits beside its label, not at the far edge of the row.
 - **Name-to-value lists** (the shares of an entry, who owes what): a dotted leader between the name
