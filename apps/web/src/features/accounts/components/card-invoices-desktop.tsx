@@ -13,6 +13,7 @@ import { KpiBadge, KpiCard } from '@web/components/display/kpi-card'
 import { KpiCarousel } from '@web/components/display/kpi-carousel'
 import { InvoiceMonthStrip } from '@web/components/finance/invoice-month-strip'
 import { ChoiceChips } from '@web/components/inputs/choice-chips'
+import { PageFrame } from '@web/components/layout/page-frame'
 import { PageHeader } from '@web/components/layout/page-header'
 import { Breadcrumb } from '@web/components/navigation/breadcrumb'
 import { accountsMessages } from '@web/features/accounts/accounts.messages'
@@ -66,7 +67,7 @@ export function CardInvoicesDesktop({
     enabled: hasPermission(permissions, 'members', 'view'),
   })
   return (
-    <div className="mx-auto flex w-full max-w-296 flex-col px-8 pt-7 pb-12">
+    <PageFrame>
       <div className="mb-2">
         <Breadcrumb
           label={desktop.crumb}
@@ -144,7 +145,7 @@ export function CardInvoicesDesktop({
       <div className="mt-5">
         <InvoiceLinesTable lines={lines} />
       </div>
-    </div>
+    </PageFrame>
   )
 }
 

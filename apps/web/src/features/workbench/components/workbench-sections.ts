@@ -81,6 +81,7 @@ import { textInputExamples } from '@web/components/inputs/text-input'
 import { authLayoutExamples } from '@web/components/layout/auth-layout'
 import { formOverlayExamples } from '@web/components/layout/form-overlay'
 import { momentScreenExamples } from '@web/components/layout/moment-screen'
+import { pageFrameExamples } from '@web/components/layout/page-frame'
 import { pageHeaderExamples } from '@web/components/layout/page-header'
 import { sheetExamples } from '@web/components/layout/sheet'
 import { subPageHeaderExamples } from '@web/components/layout/sub-page-header'
@@ -134,6 +135,7 @@ export const workbenchSections: readonly ComponentExamples[] = [
   subcategoryAddChipExamples,
   cardBlockExamples,
   dataTableExamples,
+  pageFrameExamples,
   pageHeaderExamples,
   cyclePreviewExamples,
   invoiceMonthStripExamples,

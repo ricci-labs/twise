@@ -21,6 +21,7 @@ export type InvoiceYearSheetProps = {
   year: string
   months: readonly InvoiceYearMonth[]
   note: string
+  anchor?: Element | null
   isOpen: boolean
   onOpenChange: (isOpen: boolean) => void
   onPrevious?: () => void

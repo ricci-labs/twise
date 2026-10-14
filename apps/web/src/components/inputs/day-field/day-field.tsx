@@ -15,8 +15,9 @@ import {
 } from '@web/components/inputs/day-field/day-field.variants'
 import { Sheet } from '@web/components/layout/sheet'
 import { cn } from '@web/lib/cn'
+import { assignRef } from '@web/lib/refs'
 import { ChevronDown } from 'lucide-react'
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 
 const DAYS = Array.from({ length: 31 }, (_, index) => index + 1)
 
@@ -29,9 +30,18 @@ export function DayField({
   title,
   summary,
   className,
+  ref,
   ...props
 }: DayFieldProps) {
   const [isOpen, setIsOpen] = useState(false)
+  const [button, setButton] = useState<HTMLButtonElement | null>(null)
+  const keepButton = useCallback(
+    (node: HTMLButtonElement | null) => {
+      setButton(node)
+      assignRef(ref, node)
+    },
+    [ref],
+  )
   const day = value ? Number(value) : null
   return (
     <>
@@ -42,12 +52,14 @@ export function DayField({
         className={cn(dayFieldVariants(), className)}
         onClick={() => setIsOpen(true)}
         {...props}
+        ref={keepButton}
       >
         <TwiseIcon name="calendar" size="sm" />
         <span className="flex-1">{day ? messages.day(day) : messages.placeholder}</span>
         <ChevronDown aria-hidden="true" />
       </button>
       <DaySheet
+        anchor={button}
         title={title}
         value={day}
         summary={summary}
@@ -67,9 +79,23 @@ export function DayField({
   )
 }
 
-function DaySheet({ title, value, summary, isOpen, onOpenChange, onSelect }: DaySheetProps) {
+function DaySheet({
+  anchor,
+  title,
+  value,
+  summary,
+  isOpen,
+  onOpenChange,
+  onSelect,
+}: DaySheetProps) {
   return (
-    <Sheet title={title} closeLabel={messages.close} isOpen={isOpen} onOpenChange={onOpenChange}>
+    <Sheet
+      title={title}
+      closeLabel={messages.close}
+      anchor={anchor}
+      isOpen={isOpen}
+      onOpenChange={onOpenChange}
+    >
       <RadioGroup
         aria-label={title}
         value={value === null ? '' : String(value)}

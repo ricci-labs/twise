@@ -1,6 +1,6 @@
 import type { invoiceMonthStripVariants } from '@web/components/finance/invoice-month-strip/invoice-month-strip.variants'
 import type { VariantProps } from 'class-variance-authority'
-import type { ReactElement, ReactNode } from 'react'
+import type { MouseEvent, ReactElement, ReactNode } from 'react'
 
 export type MonthLinkProps = {
   className?: string
@@ -26,5 +26,5 @@ export type InvoiceMonthStripProps = VariantProps<typeof invoiceMonthStripVarian
   months: readonly InvoiceMonth[]
   anchor?: string
   allLabel: string
-  onAll: () => void
+  onAll: (event: MouseEvent<HTMLButtonElement>) => void
 }

@@ -4,6 +4,7 @@ import { EmptyBlock } from '@web/components/feedback/empty-block'
 import { SectionError } from '@web/components/feedback/section-error'
 import { AccountGroup } from '@web/components/finance/account-group'
 import { ChoiceChips } from '@web/components/inputs/choice-chips'
+import { PageFrame } from '@web/components/layout/page-frame'
 import { accountsMessages } from '@web/features/accounts/accounts.messages'
 import type {
   CategoriesBodyProps,
@@ -32,7 +33,7 @@ export function CategoriesPage({ workspaceId, permissions, kind, createdId }: Ca
   const navigate = useNavigate()
   const isDesktop = useMediaQuery(DESKTOP_QUERY)
   return (
-    <div className="mx-auto flex w-full max-w-160 flex-col gap-4 px-4 pt-2 pb-6 lg:max-w-296 lg:gap-5 lg:px-8 lg:pt-7 lg:pb-12">
+    <PageFrame className="gap-4 lg:gap-5">
       <AccountsAreaHeader
         workspaceId={workspaceId}
         current="categories"
@@ -69,7 +70,7 @@ export function CategoriesPage({ workspaceId, permissions, kind, createdId }: Ca
         createdId={createdId}
         isDesktop={isDesktop}
       />
-    </div>
+    </PageFrame>
   )
 }
 

@@ -20,13 +20,20 @@ export function InvoiceYearSheet({
   year,
   months,
   note,
+  anchor,
   isOpen,
   onOpenChange,
   onPrevious,
   onNext,
 }: InvoiceYearSheetProps) {
   return (
-    <Sheet title={title} closeLabel={messages.close} isOpen={isOpen} onOpenChange={onOpenChange}>
+    <Sheet
+      title={title}
+      closeLabel={messages.close}
+      anchor={anchor}
+      isOpen={isOpen}
+      onOpenChange={onOpenChange}
+    >
       <div className={invoiceYearHeadVariants()}>
         <h3 className={invoiceYearLabelVariants()}>{year}</h3>
         <div className="flex">

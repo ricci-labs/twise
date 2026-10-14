@@ -7,6 +7,7 @@ import { SectionError } from '@web/components/feedback/section-error'
 import { SectionSkeleton } from '@web/components/feedback/section-skeleton'
 import { InvoiceFacts } from '@web/components/finance/invoice-facts'
 import { ChoiceChips } from '@web/components/inputs/choice-chips'
+import { PageFrame } from '@web/components/layout/page-frame'
 import { accountsMessages } from '@web/features/accounts/accounts.messages'
 import type {
   CardInvoice,
@@ -107,7 +108,7 @@ function InvoiceDetail({ workspaceId, permissions, card, invoice, lines }: Invoi
   const [filter, setFilter] = useState<InvoiceFilter>('all')
   const shown = filteredLines(lines, filter)
   return (
-    <div className="mx-auto flex w-full max-w-160 flex-col gap-4 pb-6 lg:pt-7 lg:pb-12">
+    <PageFrame edge="bleed" className="gap-4">
       <CardPageHeader
         workspaceId={workspaceId}
         permissions={permissions}
@@ -154,7 +155,7 @@ function InvoiceDetail({ workspaceId, permissions, card, invoice, lines }: Invoi
           </p>
         )}
       </div>
-    </div>
+    </PageFrame>
   )
 }
 

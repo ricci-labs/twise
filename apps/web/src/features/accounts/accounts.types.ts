@@ -18,7 +18,7 @@ import type {
   fetchTrashedAccounts,
   fetchUpcomingInvoices,
 } from '@web/features/accounts/api/accounts.queries'
-import type { ReactElement, ReactNode } from 'react'
+import type { MouseEvent, ReactElement, ReactNode } from 'react'
 import type { z } from 'zod'
 
 export type LedgerAccount = Awaited<ReturnType<typeof fetchAccounts>>[number]
@@ -435,7 +435,7 @@ export type CardInvoicesDesktopProps = CardsPageProps & {
   invoice: CardInvoice
   months: readonly InvoiceMonth[]
   lines: readonly InvoiceLineView[] | undefined
-  onAll: () => void
+  onAll: (event: MouseEvent<HTMLButtonElement>) => void
 }
 
 export type PageMissingProps = {
@@ -468,6 +468,7 @@ export type InvoiceYearPickerProps = {
   card: CardSummary
   invoices: readonly CardInvoice[]
   chosen: CardInvoice
+  anchor: Element | null
   isOpen: boolean
   onOpenChange: (isOpen: boolean) => void
 }

@@ -5,6 +5,7 @@ import { SectionError } from '@web/components/feedback/section-error'
 import { SectionSkeleton } from '@web/components/feedback/section-skeleton'
 import { type InvoiceMonth, InvoiceMonthStrip } from '@web/components/finance/invoice-month-strip'
 import { InvoiceSummary, type InvoiceSummaryNote } from '@web/components/finance/invoice-summary'
+import { PageFrame } from '@web/components/layout/page-frame'
 import { accountsMessages } from '@web/features/accounts/accounts.messages'
 import type {
   CardInvoice,
@@ -42,7 +43,7 @@ import { usePageTitle } from '@web/hooks/use-page-title'
 import { ApiError } from '@web/lib/api/api-error'
 import { DESKTOP_QUERY } from '@web/lib/breakpoints'
 import { formatMonthName, formatShortDate, formatShortMonthName } from '@web/lib/format/calendar'
-import { useState } from 'react'
+import { type MouseEvent, useState } from 'react'
 
 const messages = accountsMessages.invoicesPage
 
@@ -117,6 +118,11 @@ function CardInvoicesLoaded({
 }: CardInvoicesLoadedProps) {
   const isDesktop = useMediaQuery(DESKTOP_QUERY)
   const [isYearOpen, setIsYearOpen] = useState(false)
+  const [yearAnchor, setYearAnchor] = useState<Element | null>(null)
+  const openYear = (event: MouseEvent<HTMLButtonElement>) => {
+    setYearAnchor(event.currentTarget)
+    setIsYearOpen(true)
+  }
   const invoices = cardInvoicesOf(card, stored, todayOnDevice())
   const chosen = chosenInvoiceOf(invoices, card, month) ?? invoices.at(-1)
   const accounts = useQuery(accountsQueryOptions(workspaceId))
@@ -136,6 +142,7 @@ function CardInvoicesLoaded({
       card={card}
       invoices={invoices}
       chosen={chosen}
+      anchor={yearAnchor}
       isOpen={isYearOpen}
       onOpenChange={setIsYearOpen}
     />
@@ -150,14 +157,14 @@ function CardInvoicesLoaded({
           invoice={chosen}
           months={months}
           lines={chosen.invoiceId ? lineViews : NO_LINES}
-          onAll={() => setIsYearOpen(true)}
+          onAll={openYear}
         />
         {yearPicker}
       </>
     )
   }
   return (
-    <div className="mx-auto flex w-full max-w-160 flex-col gap-4 pb-6">
+    <PageFrame edge="bleed" className="gap-4">
       <div className="flex flex-col gap-3.5">
         <CardPageHeader
           workspaceId={workspaceId}
@@ -172,7 +179,7 @@ function CardInvoicesLoaded({
           label={messages.strip(card.name)}
           anchor={card.currentInvoice.referenceMonth}
           allLabel={messages.all}
-          onAll={() => setIsYearOpen(true)}
+          onAll={openYear}
           months={months}
         />
       </div>
@@ -200,7 +207,7 @@ function CardInvoicesLoaded({
         />
       </div>
       {yearPicker}
-    </div>
+    </PageFrame>
   )
 }
 

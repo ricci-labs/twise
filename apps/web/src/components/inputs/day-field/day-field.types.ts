@@ -11,6 +11,7 @@ export type DayFieldProps = Omit<ComponentProps<'button'>, 'value' | 'onChange' 
 }
 
 export type DaySheetProps = {
+  anchor: Element | null
   title: string
   value: number | null
   summary: (day: number) => string
