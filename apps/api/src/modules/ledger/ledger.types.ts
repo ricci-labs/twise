@@ -168,6 +168,44 @@ export type CardItem = {
   paymentAccountId: string | null
 }
 
+export type InvoiceSnapshot = {
+  invoiceId: string | null
+  referenceMonth: string
+  closingOn: string
+  dueOn: string
+  status: InvoiceStatus
+  totalCents: number
+  dueCents: number
+}
+
+export type CardSummary = CardItem & {
+  openCents: number
+  limitUsedPercent: number | null
+  currentInvoice: InvoiceSnapshot
+}
+
+export type UpcomingInvoice = InvoiceSnapshot & {
+  cardAccountId: string
+}
+
+export type StoredInvoiceTotal = {
+  invoiceId: string
+  cardAccountId: string
+  referenceMonth: string
+  closingOn: string
+  dueOn: string
+  totalCents: number
+  dueCents: number
+}
+
+export type AccountsSummary = {
+  moneyTotalCents: number
+  moneyAccountCount: number
+  cardsOpenCents: number
+  cardCount: number
+  nextInvoice: UpcomingInvoice | null
+}
+
 export type PostingItem = {
   lineNo: number
   accountId: string

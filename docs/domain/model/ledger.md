@@ -216,7 +216,9 @@ A malformed or unknown id, or one from another workspace, is `404 ACCOUNT_NOT_FO
 | `DELETE /accounts/:accountId` (optional `{ reason }`) | `accounts:delete` | `deleteAccount` → `204` |
 | `POST /accounts/:accountId/restore` | `accounts:delete` | `restoreAccount` → `204` |
 | `GET /accounts/trash` | `accounts:delete` | `listTrashedAccounts`: deleted accounts (cards included) with `deletedAt`, `deletedByUserId` and `deleteReason`, latest deletion first |
-| `GET /cards` | `cards:view` | `listCards`: active card accounts with their cycle, limit, holder and payment account |
+| `GET /accounts/summary` | `accounts:view` | `readAccountsSummary` (G40): `moneyTotalCents` and `moneyAccountCount` over the active money accounts (system and archived out), `cardsOpenCents` and `cardCount` over the active cards, and `nextInvoice`, the first upcoming invoice with something due (`null` when none) |
+| `GET /cards` | `cards:view` | `listCardSummaries` (G41): card accounts that aren't deleted (archived included) with their cycle, limit, holder and payment account, plus `openCents` (what the card owes, future installments included), `limitUsedPercent` (rounded, `null` without a limit) and `currentInvoice`: the invoice a purchase made today goes to (`invoiceId`, `null` while it has no line yet; `referenceMonth`, `closingOn`, `dueOn`, `status` computed for today, `totalCents`, `dueCents`) |
+| `GET /cards/invoices/upcoming?limit` | `cards:view` | `listUpcomingInvoices` (G41): for every active card, closed invoices still owing, the current invoice and the next one (the next even before it has any line: `invoiceId` `null`, zeros), the soonest due first; `limit` 1–24, default 6 |
 | `POST /cards` | `cards:create` | `createCard` → `201 { accountId }` |
 | `PATCH /cards/:cardId` | `cards:update` | `changeCard` (cycle, limit, holder, payment account) → `204` |
 | `GET /cards/:cardId/invoices` | `cards:view` | `listInvoiceTotals`: invoices with total, paid and due, and how much of the total others owe (`frontedCents`) vs the household's own (`ownCents`), by reference month |

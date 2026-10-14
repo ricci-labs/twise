@@ -14,7 +14,7 @@ import {
   getEntry,
   listAccountBalances,
   listAccounts,
-  listCards,
+  listCardSummaries,
   listEntries,
   listEntrySuggestions,
   listFrequentEntries,
@@ -22,6 +22,8 @@ import {
   listInvoiceTotals,
   listTrashedAccounts,
   listTrashedEntries,
+  listUpcomingInvoices,
+  readAccountsSummary,
   recordEntry,
   replaceEntry,
   restoreAccount,
@@ -45,6 +47,7 @@ import {
   newAccountSchema,
   newCardSchema,
   trashQuerySchema,
+  upcomingInvoiceQuerySchema,
 } from '@financas/shared'
 import { type Context, Hono } from 'hono'
 
@@ -73,6 +76,9 @@ function accountRoutes({ db }: LedgerRouteDeps) {
     })
     .get('/trash', authorize('accounts', 'delete'), async (c) => {
       return c.json(await listTrashedAccounts(db, currentWorkspace(c).workspaceId))
+    })
+    .get('/summary', authorize('accounts', 'view'), async (c) => {
+      return c.json(await readAccountsSummary(db, currentWorkspace(c).workspaceId))
     })
     .post(
       '/',
@@ -133,8 +139,17 @@ function cardRoutes({ db }: LedgerRouteDeps) {
 
   return new Hono<AppEnv>()
     .get('/', authorize('cards', 'view'), async (c) => {
-      return c.json(await listCards(db, currentWorkspace(c).workspaceId))
+      return c.json(await listCardSummaries(db, currentWorkspace(c).workspaceId))
     })
+    .get(
+      '/invoices/upcoming',
+      authorize('cards', 'view'),
+      queryParams(upcomingInvoiceQuerySchema, 'UPCOMING_INVOICE_QUERY_INVALID'),
+      async (c) => {
+        const { workspaceId } = currentWorkspace(c)
+        return c.json(await listUpcomingInvoices(db, workspaceId, c.req.valid('query')))
+      },
+    )
     .post('/', authorize('cards', 'create'), jsonBody(newCardSchema, 'CARD_INVALID'), async (c) => {
       const { workspaceId } = currentWorkspace(c)
       const { userId } = currentSession(c)
