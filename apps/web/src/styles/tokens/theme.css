@@ -158,6 +158,9 @@
   --text-form-title-lg--line-height: 2rem;
   --text-form-title-lg--font-weight: 750;
   --text-form-title-lg--letter-spacing: -0.02em;
+  --text-moment-title: 1.375rem;
+  --text-moment-title--line-height: 1.75rem;
+  --text-moment-title--font-weight: 750;
   --text-message: 0.9375rem;
   --text-message--line-height: 1.3125rem;
   --text-message--font-weight: 400;
@@ -427,6 +430,10 @@
 
 @utility pb-safe {
   padding-bottom: max(--spacing(3), env(safe-area-inset-bottom));
+}
+
+@utility pb-safe-md {
+  padding-bottom: max(--spacing(4), env(safe-area-inset-bottom));
 }
 
 @utility pb-safe-roomy {

@@ -52,6 +52,11 @@ export type AccountsPageProps = {
   onCreatedSeen: () => void
 }
 
+export type CreatedAccountMomentProps = {
+  workspaceId: string
+  createdId: string | undefined
+}
+
 export type AccountsAreaHeaderProps = {
   workspaceId: string
   current: 'accounts' | 'categories'
@@ -101,7 +106,9 @@ export type AccountsData = {
 
 export type AccountActionHandlers = {
   edit: NonNullable<ItemAction['render']>
+  openingBalance: NonNullable<ItemAction['render']>
   canUpdate: boolean
+  canRecord: boolean
   canDelete: boolean
   archive: () => void
   unarchive: () => void

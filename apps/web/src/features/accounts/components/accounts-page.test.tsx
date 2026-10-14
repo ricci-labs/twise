@@ -22,9 +22,11 @@ const BASE = `/api/workspaces/${WORKSPACE_ID}`
 async function openAccounts({
   access = workspaceAccess,
   answers = {},
+  search = '',
 }: {
   access?: FakeAnswer
   answers?: Record<string, FakeAnswer>
+  search?: string
 } = {}) {
   fakeApi({
     'GET /api/auth/me': () =>
@@ -33,7 +35,9 @@ async function openAccounts({
     [`GET ${BASE}`]: access,
     ...accountsAnswers(answers),
   })
-  const app = createApp(createMemoryHistory({ initialEntries: [`/w/${WORKSPACE_ID}/accounts`] }))
+  const app = createApp(
+    createMemoryHistory({ initialEntries: [`/w/${WORKSPACE_ID}/accounts${search}`] }),
+  )
   await render(<AppProviders app={app} />)
   return app
 }
@@ -87,6 +91,28 @@ describe('ACC-01 accounts', () => {
     await expect
       .poll(() => posted)
       .toEqual([`${BASE}/accounts/${CHECKING}/archive`, `${BASE}/accounts/${CHECKING}/unarchive`])
+  })
+
+  it("opens the new entry as the account's opening balance from its actions", async () => {
+    const app = await openAccounts()
+
+    await page.getByRole('button', { name: 'Ações de Conta X' }).click()
+    await page.getByText('Informar saldo inicial').click()
+
+    await expect
+      .poll(() => app.router.state.location.search)
+      .toMatchObject({ entry: 'new', entryType: 'opening_balance', entryAccount: CHECKING })
+  })
+
+  it('offers the opening balance of a money account just created', async () => {
+    const app = await openAccounts({ search: `?created=${CHECKING}` })
+
+    await expect.element(page.getByRole('dialog', { name: 'Conta X criada' })).toBeVisible()
+    await page.getByRole('button', { name: 'Informar saldo inicial' }).click()
+
+    await expect
+      .poll(() => app.router.state.location.search)
+      .toMatchObject({ entry: 'new', entryType: 'opening_balance', entryAccount: CHECKING })
   })
 
   it('offers to archive when the account cannot be deleted', async () => {

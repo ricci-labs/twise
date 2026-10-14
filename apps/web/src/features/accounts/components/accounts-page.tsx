@@ -21,6 +21,7 @@ import {
 import { AccountsAreaHeader } from '@web/features/accounts/components/accounts-area-header'
 import { AccountsLists } from '@web/features/accounts/components/accounts-lists'
 import { AccountsSummaryCards } from '@web/features/accounts/components/accounts-summary-cards'
+import { CreatedAccountMoment } from '@web/features/accounts/components/created-account-moment'
 import { listedAccountsOf } from '@web/features/accounts/components/listed-accounts'
 import { usePageTitle } from '@web/hooks/use-page-title'
 import { ApiError } from '@web/lib/api/api-error'
@@ -62,6 +63,9 @@ export function AccountsPage({
         }
       />
       <AccountsBody workspaceId={workspaceId} permissions={permissions} highlightedId={createdId} />
+      {hasPermission(permissions, 'entries', 'create') && (
+        <CreatedAccountMoment workspaceId={workspaceId} createdId={createdId} />
+      )}
     </div>
   )
 }
