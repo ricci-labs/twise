@@ -30,6 +30,7 @@ const TEXT_PAIRS = [
   ['on-action-primary', 'action-primary'],
   ['on-action-primary', 'action-primary-hover'],
   ['accent-on-primary', 'action-primary'],
+  ['danger-on-primary', 'action-primary'],
   ['ink', 'action-secondary'],
   ['ink', 'action-secondary-hover'],
   ['transfer', 'bg-surface'],

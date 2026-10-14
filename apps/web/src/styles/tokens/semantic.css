@@ -17,6 +17,7 @@
   --action-primary-hover: #33373d;
   --on-action-primary: #ffffff;
   --accent-on-primary: #80dca5;
+  --danger-on-primary: #ff9a8f;
   --action-secondary-hover: #e4e1d9;
   --income: #1a7a48;
   --income-soft: #e4f5ea;
@@ -84,6 +85,7 @@
   --action-primary-hover: #d6d3cb;
   --on-action-primary: #17191c;
   --accent-on-primary: #1d7a4c;
+  --danger-on-primary: #b42318;
   --action-secondary-hover: #2d3236;
   --income: #5fd394;
   --income-soft: #16301f;

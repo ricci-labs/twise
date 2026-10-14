@@ -32,15 +32,15 @@ where it's used.
 
 | Family | Components (from the brief) |
 |---|---|
-| `actions/` | `Button`, `IconButton`, `SubmitButton`, `FloatingActionButton`, `ActionMenu`, `SegmentedControl` |
+| `actions/` | `Button`, `IconButton`, `SubmitButton`, `FloatingActionButton`, `ActionMenu`, `ItemActions`, `SegmentedControl` |
 | `inputs/` | `TextInput`, `PasswordInput`, `EmailInput`, `PhoneInput`, `SearchInput`, `TextArea`, `MoneyInput`, `ChoiceChips`, `PickerField`, `PickerSheet`, `Stepper`, `RadioCardList`, `DateInput`, `PeriodPicker`, `Select`, `Combobox`, `Checkbox`, `RadioGroup`, `Switch`, `DayOfMonthPicker`, `FileUpload`, `ColorSwatch` |
 | `forms/` | `Form`, `FormField`, `FormErrorSummary`, `FormFooter`, `RequiredLegend` |
-| `feedback/` | `Toast`, `InlineAlert`, `AutoFillTip`, `Banner`, `ConfirmDialog`, `EmptyState`, `Skeleton`, `ErrorState` |
-| `display/` | `Amount`, `StatusBadge`, `Avatar`, `ListItem`, `Card`, `StatCard`, `ThresholdProgress`, `Tabs`, `Accordion`, `DataList` (table on desktop, list on mobile), `LoadMore`, `Tooltip`, `HelpPopover`, `FilterChips`, `CategoryIcon` |
+| `feedback/` | `Toast`, `InlineAlert`, `AutoFillTip`, `Banner`, `ConfirmDialog`, `EmptyState`, `Skeleton`, `ListSkeleton`, `ErrorState` |
+| `display/` | `Amount`, `StatusBadge`, `Avatar`, `ListItem`, `Card`, `StatCard`, `ThresholdProgress`, `Tabs`, `Accordion`, `DataList` (table on desktop, list on mobile), `LoadMore`, `Tooltip`, `HelpPopover`, `FilterChips`, `CategoryIcon`, `ArchivedToggle` |
 | `charts/` | `BarChart`, `ForecastChart`, `DonutChart`, each with its text alternative |
 | `navigation/` | `BottomBar`, `Sidebar`, `TopBar`, `WorkspaceSwitcher`, `BackLink`, `Breadcrumb` |
 | `layout/` | `AppShell`, `FormOverlay`, `Page`, `PageHeader`, `Section`, `Stack`, `Grid` |
-| `finance/` | `StatHero`, `InsightCard`, `InvoiceCard`, `InvoicePreview`, `SharesList`, `RecentEntries`, `EntryRow`, `OccurrenceRow`, `ContactRow`, `ChargePreview`, `AmountSplitEditor` |
+| `finance/` | `StatHero`, `InsightCard`, `InvoiceCard`, `InvoicePreview`, `SharesList`, `RecentEntries`, `AccountRow`, `AccountGroup`, `EntryRow`, `OccurrenceRow`, `ContactRow`, `ChargePreview`, `AmountSplitEditor` |
 | `brand/` | `Logo`, `OwlScene` (the layered owl scenes and their motion), `AppSplash` |
 | `icons/` | `TwiseIcon` and the icon registries (see Icons) |
 
@@ -159,8 +159,10 @@ React Hook Form v7 + `zodResolver` with the **schemas from `@financas/shared`** 
   underlined in `accent-on-primary`; `tone: 'success'` adds the mint check before the text. On phones
   at the bottom, 16 px from the sides, lifted over the tab bar and, while a `FormOverlay` is open,
   over its buttons (`styles/toast-placement.css`, which also lifts the floating "+" while a toast
-  shows); top-right and 400 px wide from 1024 px. 4 s, or 8 s with an action. Toasts with the same
-  message replace each other (never two about the same thing).
+  shows); top-right and 400 px wide from 1024 px. 4 s, or 8 s with an action ("Desfazer").
+  `tone: 'danger'` is a refusal: the alert icon in `danger-on-primary`, `role="alert"`, and it stays
+  until answered (its action, as "Restaurar as duas", or a new toast). Toasts with the same message
+  replace each other (never two about the same thing).
 
 ## Brand and illustrations
 - The owl scenes and the logo are SVG files in `apps/web/src/assets/` (`owls/`, `brand/`), copied
@@ -255,12 +257,22 @@ piggy bank once. `prefers-reduced-motion` zeroes all of it (`globals.css`).
 ## Menus, sheets and avatars
 - `ActionMenu` (`components/actions/action-menu`, Base UI `Menu`): a `trigger` element and `groups`
   of items (separators between groups), each a link (`render`) or an action (`onSelect`), with an
-  optional Twise icon, a `detail` line and `isCurrent` (check mark). Keyboard and Escape come from
-  Base UI. Desktop popovers of the shell: the account menu and the workspace switcher.
+  optional Twise icon (18 px, muted), a `detail` line, `isCurrent` (check mark) and `tone: 'danger'`
+  for the destructive item. The accounts design's dropdown: 240 px, 40 px items in 14 px medium,
+  the highlighted one on `page`. `align` (`start`, or `end` for a row's "⋯") and `onOpenChange`.
+  Keyboard and Escape come from Base UI. Desktop popovers of the shell: the account menu and the
+  workspace switcher.
+- `ItemActions` (`components/actions/item-actions`): the actions of one item, the same items in
+  the same order as a sheet on the phone and an `ActionMenu` on the desktop
+  (`../design/accounts/components.md` item 4). The sheet is titled with the item's name and an optional `description`
+  ("Subcategoria de Mercado"); rows of 52 px with a 22 px icon, the destructive one last in
+  `danger`. The default trigger is a 36 px "⋯" named by `triggerLabel` ("Ações de Conta X"); a
+  `trigger` replaces it (a subcategory chip). Renders nothing when the person may do nothing.
 - `Sheet` (`components/layout/sheet`, Base UI `Drawer`): a titled dialog from the bottom with a
   handle, a dimmed backdrop and the safe area; the phone's "Mais" and workspace switcher. The
   content keeps 16 px from the sides, the title 20 px; a list may bleed to 8 px (the picker rows).
-  With `closeLabel`, the title is the display `title` and "X" sits 8 px from the edge.
+  With `closeLabel`, the title is the display `title` and "X" sits 8 px from the edge; an optional
+  `description` goes under the title in `note`.
 - `Avatar` (`components/display/avatar`): the initial of a name in a circle (`mint` or `paper`),
   decorative: the name is always written next to it or in the control's label.
 
@@ -361,8 +373,8 @@ component here, so the form, and later the account, card and planning forms, sha
 - `Select` (`components/inputs/select`): a native `select` drawn like the fields (the phone's own
   picker opens), with an optional empty first choice; `TextArea` (`components/inputs/text-area`):
   the notes field, two lines to start. Both take the `FormField` control.
-- `ConfirmDialog` (`components/feedback/confirm-dialog`, Base UI `AlertDialog`): the title, what
-  will happen, the secondary "keep" action and the danger one side by side (keep on the left; they
+- `ConfirmDialog` (`components/feedback/confirm-dialog`, Base UI `AlertDialog`): the title
+  (`dialog-title`), what will happen (`dialog-text`), the secondary "keep" action and the danger one side by side (keep on the left; they
   share the width on the phone and sit at the right, 440 px wide, on the desktop), as
   `../product/requirements/ui-standards.md` → Destructive actions and the discard rule ask
   ("Descartar as alterações?").
@@ -381,9 +393,35 @@ component here, so the form, and later the account, card and planning forms, sha
   `assets/illustrations/loose/` (copied from `docs/design/assets/ilustracoes/soltas/`), for white
   surfaces; in the dark theme it switches to the drawing on its paper square, since the loose black
   ink would vanish. `onLight` keeps the loose drawing in both themes, for a surface that is always
-  light (the paper or mint tiles of the category grid). Sizes `sm` 32, `md` 42, `lg` 46, `xl` 64 and
-  `2xl` 88 px. A drawing with no loose version uses its paper one; no icon shows the
+  light (the paper or mint tiles of the category grid). Sizes `sm` 32, `md` 42, `list` 44 (a list
+  row), `lg` 46, `xl` 64 and `2xl` 88 px. A drawing with no loose version uses its paper one; no icon shows the
   initial on a paper square.
+
+## Accounts building blocks
+`../design/accounts/components.md` items 1–8; the accounts, categories and cards screens share them.
+- `ColorSwatch` (`components/inputs/color-swatch`): the colour an account or category stores, as a
+  decorative 9 px `dot` beside a name or a 36 px `swatch` in the picker. One of the two components
+  allowed a `style` prop: it sets `--data-color` (and `--data-color-on-dark` for a palette choice
+  that needs a lighter dark-theme shade) for the `bg-data-color` utility (`web-design-tokens.md` →
+  Data colours). No colour, no swatch.
+- `AccountRow` (`components/finance/account-row`): an account, card or category in a list: the
+  loose drawing (44 px, overhanging the padding), the name with its colour dot, the balance on the
+  right of the first line (`Amount`), the grey second line under both ("Conta corrente · Member
+  A"), and the `actions` slot at the end. The `link` element (the entries filtered by it) wraps
+  drawing, name and value; without it they are plain text. `isArchived` fades the content;
+  `isHighlighted` puts a new item on `mint-soft`. 61 px with a divider, as the design.
+- `AccountGroup` (`components/finance/account-group`): a titled region ("Dinheiro", `section-title`)
+  with its add link on the right ("+ Nova conta", hidden for who can't create), the rows in a white
+  card with dividers, and an optional note under it.
+- `ArchivedToggle` (`components/display/archived-toggle`, Base UI `Collapsible`): the dashed
+  "Arquivadas (n)" row at the end of a list, with the archive icon and a chevron; it opens the
+  archived items below. Nothing when none is archived.
+- `ListSkeleton` (`components/feedback/list-skeleton`): skeleton rows shaped like `AccountRow` in
+  the same white card, a `status` that says "Carregando…".
+- The refused action is a `ConfirmDialog` with `confirmVariant="primary"` and `confirmIcon`: the
+  title names the item ("Não dá para excluir a Conta Y"), the text says why, "Cancelar" and the way
+  out ("Arquivar"). The undo is a toast with "Desfazer"; a refusal that needs an answer, a `danger`
+  toast. Empty and error states use `EmptyState` and `SectionError`.
 
 ## Account layouts
 - `AuthLayout` (`components/layout/auth-layout`): the auth screen of
@@ -421,7 +459,9 @@ component here, so the form, and later the account, card and planning forms, sha
   it (`selected`: ink stroke, mint fill; `danger`, `warning`, `info`, `success`: the alert colour
   and its soft fill; `muted` and `inherit`: no fill). Always decorative (`aria-hidden`); the
   control around it carries the name. A new design icon is added to its shape map by hand from the
-  SVG, keeping the two layers.
+  SVG, keeping the two layers. Drawn icons use a 1.75 stroke; the plain line icons of the action
+  sheets and menus (`edit`, `flag`, `archive`, `unarchive`, `calendar`, `subcategory`, `move`,
+  `more`) keep the design's 2 (`weight` in the shape).
 - `lucide-react` only for small utility glyphs (chevrons, close, the period calendar, the sidebar
   collapse), named imports only (each icon is its own module). Never the `icons` namespace or
   `DynamicIcon`, which pull in the whole set.

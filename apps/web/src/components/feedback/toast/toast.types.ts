@@ -3,7 +3,7 @@ export type ToastAction = {
   onPress: () => void
 }
 
-export type ToastTone = 'neutral' | 'success'
+export type ToastTone = 'neutral' | 'success' | 'danger'
 
 export type ToastOptions = {
   action?: ToastAction

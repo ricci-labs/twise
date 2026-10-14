@@ -231,7 +231,7 @@ updated: 2026-10-14
      (`requirements/modules/accounts-and-cards.md`, `requirements/error-messages.md`,
      `requirements/ui-standards.md`), API gaps G40–G42
   2. [x] API: the accounts summary (G40) and the cards summary and upcoming invoices (G41)
-  3. [ ] Web components 1–8 of `../design/accounts/components.md` (rows, groups, KPI carousel,
+  3. [x] Web components 1–8 of `../design/accounts/components.md` (rows, groups, KPI carousel,
      action sheet and menu, undo toast, refused-action dialog, archived toggle, list states)
   4. [ ] Web: `ACC-01` with every state, `ACC-03` (account), `ACC-04`; "Cadastrar conta" in the new
      entry's empty sheet

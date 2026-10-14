@@ -7,7 +7,7 @@ import { twiseIconVariants } from '@web/components/icons/twise-icon/twise-icon.v
 import { cn } from '@web/lib/cn'
 
 export function TwiseIcon({ name, tone, size, className }: TwiseIconProps) {
-  const { fill, stroke } = TWISE_ICON_SHAPES[name]
+  const { fill, stroke, weight = DRAWN_WEIGHT } = TWISE_ICON_SHAPES[name]
   return (
     <svg
       data-slot="icon"
@@ -15,7 +15,7 @@ export function TwiseIcon({ name, tone, size, className }: TwiseIconProps) {
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth={1.75}
+      strokeWidth={weight}
       strokeLinecap="round"
       strokeLinejoin="round"
       aria-hidden="true"
@@ -32,6 +32,10 @@ export function TwiseIcon({ name, tone, size, className }: TwiseIconProps) {
   )
 }
 
+const DRAWN_WEIGHT = 1.75
+
+const LINE_WEIGHT = 2
+
 const TWISE_ICON_SHAPES: Record<TwiseIconName, TwiseIconShape> = {
   alert: {
     fill: (
@@ -43,6 +47,15 @@ const TWISE_ICON_SHAPES: Record<TwiseIconName, TwiseIconShape> = {
       <>
         <circle cx="12" cy="12" r="9" />
         <path d="M12 7.6v5.1M12 16.3h.01" />
+      </>
+    ),
+  },
+  archive: {
+    weight: LINE_WEIGHT,
+    stroke: (
+      <>
+        <rect x="2" y="4" width="20" height="5" rx="1" />
+        <path d="M4 9v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9M10 13h4" />
       </>
     ),
   },
@@ -59,6 +72,15 @@ const TWISE_ICON_SHAPES: Record<TwiseIconName, TwiseIconShape> = {
       </>
     ),
   },
+  calendar: {
+    weight: LINE_WEIGHT,
+    stroke: (
+      <>
+        <rect x="3" y="4" width="18" height="18" rx="2" />
+        <path d="M16 2v4M8 2v4M3 10h18" />
+      </>
+    ),
+  },
   card: {
     fill: (
       <>
@@ -69,6 +91,23 @@ const TWISE_ICON_SHAPES: Record<TwiseIconName, TwiseIconShape> = {
       <>
         <rect x="2.8" y="5.5" width="18.4" height="13" rx="2.8" />
         <path d="M2.8 10h18.4M6.5 14.8h3.5" />
+      </>
+    ),
+  },
+  edit: {
+    weight: LINE_WEIGHT,
+    stroke: (
+      <>
+        <path d="M12 20h9" />
+        <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z" />
+      </>
+    ),
+  },
+  flag: {
+    weight: LINE_WEIGHT,
+    stroke: (
+      <>
+        <path d="M4 22V4M4 4h12l-2 4 2 4H4" />
       </>
     ),
   },
@@ -128,6 +167,24 @@ const TWISE_ICON_SHAPES: Record<TwiseIconName, TwiseIconShape> = {
     stroke: (
       <>
         <path d="M4.5 7h15M4.5 12h15M4.5 17h9" />
+      </>
+    ),
+  },
+  more: {
+    weight: LINE_WEIGHT,
+    stroke: (
+      <>
+        <circle cx="5" cy="12" r="1.2" />
+        <circle cx="12" cy="12" r="1.2" />
+        <circle cx="19" cy="12" r="1.2" />
+      </>
+    ),
+  },
+  move: {
+    weight: LINE_WEIGHT,
+    stroke: (
+      <>
+        <path d="M5 9 2 12l3 3M9 5l3-3 3 3M15 19l-3 3-3-3M19 9l3 3-3 3M2 12h20M12 2v20" />
       </>
     ),
   },
@@ -206,6 +263,15 @@ const TWISE_ICON_SHAPES: Record<TwiseIconName, TwiseIconShape> = {
       </>
     ),
   },
+  subcategory: {
+    weight: LINE_WEIGHT,
+    stroke: (
+      <>
+        <path d="M6 3v12a3 3 0 0 0 3 3h11" />
+        <path d="m16 14 4 4-4 4" />
+      </>
+    ),
+  },
   trash: {
     fill: (
       <>
@@ -215,6 +281,15 @@ const TWISE_ICON_SHAPES: Record<TwiseIconName, TwiseIconShape> = {
     stroke: (
       <>
         <path d="M4 6.5h16M9.5 6.5V4.8c0-.6.4-1 1-1h3c.6 0 1 .4 1 1v1.7M6.2 6.5l.9 12.4a1.8 1.8 0 0 0 1.8 1.6h6.2a1.8 1.8 0 0 0 1.8-1.6l.9-12.4M10.2 10.5v6M13.8 10.5v6" />
+      </>
+    ),
+  },
+  unarchive: {
+    weight: LINE_WEIGHT,
+    stroke: (
+      <>
+        <rect x="2" y="4" width="20" height="5" rx="1" />
+        <path d="M4 9v9a2 2 0 0 0 2 2h3M20 9v9a2 2 0 0 1-2 2h-3M9 16l3-3 3 3M12 13v8" />
       </>
     ),
   },

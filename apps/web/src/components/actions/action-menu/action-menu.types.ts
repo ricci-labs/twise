@@ -9,6 +9,7 @@ export type ActionMenuItem = {
   render?: ReactElement
   onSelect?: () => void
   isCurrent?: boolean
+  tone?: 'neutral' | 'danger'
 }
 
 export type ActionMenuProps = {
@@ -16,6 +17,8 @@ export type ActionMenuProps = {
   groups: readonly (readonly ActionMenuItem[])[]
   header?: ReactNode
   side?: 'top' | 'bottom' | 'right'
+  align?: 'start' | 'end'
+  onOpenChange?: (isOpen: boolean) => void
 }
 
 export type ActionMenuEntryProps = {

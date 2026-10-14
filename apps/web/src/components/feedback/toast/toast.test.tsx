@@ -29,6 +29,21 @@ describe('Toast', () => {
     expect(toast.element().parentElement?.querySelector('[data-icon=ok]')).not.toBeNull()
   })
 
+  it('says a refusal out loud and waits for an answer', async () => {
+    const onPress = vi.fn()
+    await render(<Toaster />)
+    showToast('Saúde, a categoria mãe, está na lixeira.', {
+      tone: 'danger',
+      action: { label: 'Restaurar as duas', onPress },
+    })
+    const alert = page.getByRole('alert')
+
+    await expect.element(alert.getByText('Saúde, a categoria mãe, está na lixeira.')).toBeVisible()
+    expect(alert.element().querySelector('[data-icon=alert]')).not.toBeNull()
+    await page.getByRole('button', { name: 'Restaurar as duas' }).click()
+    expect(onPress).toHaveBeenCalledOnce()
+  })
+
   it('runs its action once and closes', async () => {
     const onPress = vi.fn()
     await render(<Toaster />)

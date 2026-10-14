@@ -1,5 +1,6 @@
 import { actionMenuExamples } from '@web/components/actions/action-menu'
 import { buttonExamples } from '@web/components/actions/button'
+import { itemActionsExamples } from '@web/components/actions/item-actions'
 import { segmentedControlExamples } from '@web/components/actions/segmented-control'
 import { textLinkExamples } from '@web/components/actions/text-link'
 import { appSplashExamples } from '@web/components/brand/app-splash'
@@ -13,6 +14,7 @@ import { incomeBarExamples } from '@web/components/charts/income-bar'
 import { paceRingExamples } from '@web/components/charts/pace-ring'
 import { progressBarExamples } from '@web/components/charts/progress-bar'
 import { amountExamples } from '@web/components/display/amount'
+import { archivedToggleExamples } from '@web/components/display/archived-toggle'
 import { avatarExamples } from '@web/components/display/avatar'
 import { cardExamples } from '@web/components/display/card'
 import { categoryArtExamples } from '@web/components/display/category-art'
@@ -28,17 +30,21 @@ import { autoFillTipExamples } from '@web/components/feedback/auto-fill-tip'
 import { bannerExamples } from '@web/components/feedback/banner'
 import { confirmDialogExamples } from '@web/components/feedback/confirm-dialog'
 import { emptyStateExamples } from '@web/components/feedback/empty-state'
+import { listSkeletonExamples } from '@web/components/feedback/list-skeleton'
 import { sectionErrorExamples } from '@web/components/feedback/section-error'
 import { sectionSkeletonExamples } from '@web/components/feedback/section-skeleton'
 import { spinnerExamples } from '@web/components/feedback/spinner'
 import { tipExamples } from '@web/components/feedback/tip'
 import { toastExamples } from '@web/components/feedback/toast'
+import { accountGroupExamples } from '@web/components/finance/account-group'
+import { accountRowExamples } from '@web/components/finance/account-row'
 import { invoicePreviewExamples } from '@web/components/finance/invoice-preview'
 import { recentEntriesExamples } from '@web/components/finance/recent-entries'
 import { sharesListExamples } from '@web/components/finance/shares-list'
 import { formFieldExamples } from '@web/components/forms/form-field'
 import { twiseIconExamples } from '@web/components/icons/twise-icon'
 import { choiceChipsExamples } from '@web/components/inputs/choice-chips'
+import { colorSwatchExamples } from '@web/components/inputs/color-swatch'
 import { moneyInputExamples } from '@web/components/inputs/money-input'
 import { passwordInputExamples } from '@web/components/inputs/password-input'
 import { pickerFieldExamples } from '@web/components/inputs/picker-field'
@@ -70,6 +76,9 @@ export const workbenchSections: readonly ComponentExamples[] = [
   invoicePreviewExamples,
   sharesListExamples,
   recentEntriesExamples,
+  accountRowExamples,
+  accountGroupExamples,
+  archivedToggleExamples,
   autoFillTipExamples,
   selectExamples,
   textAreaExamples,
@@ -80,6 +89,7 @@ export const workbenchSections: readonly ComponentExamples[] = [
   kpiCardExamples,
   kpiCarouselExamples,
   sectionSkeletonExamples,
+  listSkeletonExamples,
   sectionErrorExamples,
   emptyStateExamples,
   forecastChartExamples,
@@ -88,6 +98,7 @@ export const workbenchSections: readonly ComponentExamples[] = [
   progressBarExamples,
   incomeBarExamples,
   actionMenuExamples,
+  itemActionsExamples,
   sheetExamples,
   avatarExamples,
   textLinkExamples,
@@ -112,6 +123,7 @@ export const workbenchSections: readonly ComponentExamples[] = [
   responsiveTextExamples,
   dividerExamples,
   categoryArtExamples,
+  colorSwatchExamples,
   authLayoutExamples,
   momentScreenExamples,
   appSplashExamples,
