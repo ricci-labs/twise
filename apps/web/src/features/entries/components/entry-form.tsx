@@ -10,13 +10,15 @@ import { TextArea } from '@web/components/inputs/text-area'
 import { TextInput } from '@web/components/inputs/text-input'
 import { FormOverlay } from '@web/components/layout/form-overlay'
 import { useRecordEntry } from '@web/features/entries/api/use-record-entry'
-import { AccountField } from '@web/features/entries/components/account-field'
-import { CardField } from '@web/features/entries/components/card-field'
-import { CardInstallments } from '@web/features/entries/components/card-installments'
-import { CategoryField } from '@web/features/entries/components/category-field'
 import { DateField } from '@web/features/entries/components/date-field'
+import {
+  hasCategory,
+  hasPaymentMethod,
+  isSpending,
+} from '@web/features/entries/components/entry-kind'
 import { FormFooter } from '@web/features/entries/components/form-footer'
 import { MembersField } from '@web/features/entries/components/members-field'
+import { MoneyFields } from '@web/features/entries/components/money-fields'
 import { SharesField } from '@web/features/entries/components/shares-field'
 import { entriesMessages } from '@web/features/entries/entries.messages'
 import { entryFormSchema } from '@web/features/entries/entries.schemas'
@@ -42,7 +44,9 @@ import { FormProvider, useFormState, useWatch } from 'react-hook-form'
 const messages = entriesMessages.newEntry
 const fields = entriesMessages.fields
 const FIELD_OF_CODE: Readonly<Record<string, keyof EntryFormInput>> = {
-  NOT_A_MONEY_ACCOUNT: 'paidFromAccountId',
+  NOT_A_MONEY_ACCOUNT: 'accountId',
+  SAME_ACCOUNT: 'toAccountId',
+  NOT_AN_INCOME_CATEGORY: 'categoryId',
   NOT_A_CARD: 'cardAccountId',
   CARD_NOT_SET_UP: 'cardAccountId',
   NOT_AN_EXPENSE_CATEGORY: 'categoryId',
@@ -56,10 +60,12 @@ const ACCOUNT_NOT_AVAILABLE = 'ACCOUNT_NOT_AVAILABLE'
 const INVOICE_CLOSED = 'INVOICE_CLOSED'
 const CARD_PURCHASE = 'card_purchase'
 const CREDIT = 'credit'
-const TYPE_OPTIONS = (['expense', CARD_PURCHASE] as const).map((entryType) => ({
-  value: entryType,
-  label: messages.types[entryType],
-}))
+const TYPE_OPTIONS = (['expense', CARD_PURCHASE, 'income', 'transfer'] as const).map(
+  (entryType) => ({
+    value: entryType,
+    label: messages.types[entryType],
+  }),
+)
 const PAYMENT_OPTIONS = PAYMENT_METHODS.map((method) => ({
   value: method,
   label: entriesMessages.paymentMethods[method],
@@ -91,6 +97,7 @@ export function EntryForm({
   const entryType = useWatch({ control: form.control, name: 'entryType' })
   const plan = useCardPlan(form.control, workspaceId, today)
   const isCardPurchase = entryType === CARD_PURCHASE
+  const isSpendingEntry = isSpending(entryType)
   const shareTotals = useShareTotals(form.control)
 
   function requestClose() {
@@ -112,7 +119,8 @@ export function EntryForm({
             ...blank,
             entryType: values.entryType,
             occurredOn: values.occurredOn,
-            paidFromAccountId: values.paidFromAccountId,
+            accountId: values.accountId,
+            toAccountId: values.toAccountId,
             cardAccountId: values.cardAccountId,
             paymentMethod: values.entryType === CARD_PURCHASE ? CREDIT : '',
           },
@@ -129,6 +137,9 @@ export function EntryForm({
 
   function changeType(next: FormEntryType) {
     const paymentMethod = form.getValues('paymentMethod')
+    if (categoryKindOf(next) !== categoryKindOf(entryType)) {
+      form.setValue('categoryId', '')
+    }
     form.setValue('entryType', next, { shouldDirty: true })
     if (next === CARD_PURCHASE && paymentMethod === '') {
       form.setValue('paymentMethod', CREDIT)
@@ -143,7 +154,7 @@ export function EntryForm({
       return undefined
     }
     if (error.code === ACCOUNT_NOT_AVAILABLE) {
-      return isCardPurchase ? 'cardAccountId' : 'paidFromAccountId'
+      return isCardPurchase ? 'cardAccountId' : 'accountId'
     }
     return FIELD_OF_CODE[error.code]
   }
@@ -189,7 +200,7 @@ export function EntryForm({
         footer={
           <FormFooter
             isOnline={isOnline}
-            isBlocked={Boolean(plan?.closedAt) || shareTotals.isOver}
+            isBlocked={Boolean(plan?.closedAt) || (isSpendingEntry && shareTotals.isOver)}
             problem={problem}
             onCancel={requestClose}
           />
@@ -232,27 +243,28 @@ export function EntryForm({
               />
             )}
           </FormField>
-          {isCardPurchase ? (
-            <>
-              <CardField workspaceId={workspaceId} canCreateCards={canCreateCards} />
-              <CardInstallments plan={plan} today={today} />
-            </>
-          ) : (
-            <AccountField workspaceId={workspaceId} canCreateAccounts={canCreateAccounts} />
-          )}
-          <CategoryField workspaceId={workspaceId} />
+          <MoneyFields
+            entryType={entryType}
+            workspaceId={workspaceId}
+            canCreateAccounts={canCreateAccounts}
+            canCreateCards={canCreateCards}
+            plan={plan}
+            today={today}
+          />
           <DateField today={today} />
-          <FormField<EntryFormInput> name="paymentMethod" label={fields.paymentMethod}>
-            {(control) => (
-              <Select
-                options={PAYMENT_OPTIONS}
-                placeholder={fields.paymentMethodPlaceholder}
-                {...control}
-              />
-            )}
-          </FormField>
-          {canSeeMembers && <MembersField workspaceId={workspaceId} />}
-          {canSeeContacts && (
+          {hasPaymentMethod(entryType) && (
+            <FormField<EntryFormInput> name="paymentMethod" label={fields.paymentMethod}>
+              {(control) => (
+                <Select
+                  options={PAYMENT_OPTIONS}
+                  placeholder={fields.paymentMethodPlaceholder}
+                  {...control}
+                />
+              )}
+            </FormField>
+          )}
+          {isSpendingEntry && canSeeMembers && <MembersField workspaceId={workspaceId} />}
+          {isSpendingEntry && canSeeContacts && (
             <div className="lg:col-span-2">
               <SharesField
                 workspaceId={workspaceId}
@@ -291,7 +303,8 @@ function blankExpense(today: string, spentByUserId: string): EntryFormInput {
     entryType: 'expense',
     amount: '',
     description: '',
-    paidFromAccountId: '',
+    accountId: '',
+    toAccountId: '',
     cardAccountId: '',
     installmentCount: 1,
     isInProgress: false,
@@ -305,15 +318,25 @@ function blankExpense(today: string, spentByUserId: string): EntryFormInput {
   }
 }
 
+function categoryKindOf(entryType: FormEntryType): string | undefined {
+  if (!hasCategory(entryType)) {
+    return undefined
+  }
+  return entryType === 'income' ? 'income' : 'expense'
+}
+
 function toEntryInput(values: EntryFormValues): EntryInput {
   const details = {
     amountCents: centsOfTypedAmount(values.amount),
     description: values.description,
     occurredOn: values.occurredOn,
+    notes: values.notes || null,
+  }
+  const spending = {
+    ...details,
     categoryId: values.categoryId,
     paymentMethod: values.paymentMethod || null,
     spentByUserId: values.spentByUserId || null,
-    notes: values.notes || null,
     shares: values.shares.map((share) => ({
       contactId: share.contactId,
       amountCents: centsOfTypedAmount(share.amount),
@@ -321,16 +344,33 @@ function toEntryInput(values: EntryFormValues): EntryInput {
   }
   if (values.entryType === CARD_PURCHASE) {
     return entryInputSchema.parse({
-      ...details,
+      ...spending,
       entryType: CARD_PURCHASE,
       cardAccountId: values.cardAccountId,
       installmentCount: values.installmentCount,
       firstInstallment: values.isInProgress ? values.firstInstallment : 1,
     })
   }
+  if (values.entryType === 'income') {
+    return entryInputSchema.parse({
+      ...details,
+      entryType: 'income',
+      receivedInAccountId: values.accountId,
+      categoryId: values.categoryId,
+      paymentMethod: values.paymentMethod || null,
+    })
+  }
+  if (values.entryType === 'transfer') {
+    return entryInputSchema.parse({
+      ...details,
+      entryType: 'transfer',
+      fromAccountId: values.accountId,
+      toAccountId: values.toAccountId,
+    })
+  }
   return entryInputSchema.parse({
-    ...details,
+    ...spending,
     entryType: 'expense',
-    paidFromAccountId: values.paidFromAccountId,
+    paidFromAccountId: values.accountId,
   })
 }

@@ -31,6 +31,7 @@ export function EntryPicker({
         value={chosen?.label ?? null}
         parentLabel={chosen?.parent?.label}
         detail={chosen?.item.detail}
+        badge={chosen?.item.badge}
         art={chosen && <CategoryArt name={chosen.label} icon={chosen.icon} />}
         placeholder={placeholder}
         onClick={() => setIsOpen(true)}

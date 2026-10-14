@@ -71,11 +71,31 @@ export type FieldsProps = {
 export type AccountFieldProps = {
   workspaceId: string
   canCreateAccounts: boolean
+  name?: 'accountId' | 'toAccountId'
+  label: string
 }
+
+export type CategoryFieldProps = {
+  workspaceId: string
+  kind: CategoryKind
+}
+
+export type CategoryKind = 'expense_category' | 'income_category'
+
+export type CategoryNature = Pick<PickerItem, 'badge' | 'detail'>
 
 export type CardFieldProps = {
   workspaceId: string
   canCreateCards: boolean
+}
+
+export type MoneyFieldsProps = {
+  entryType: FormEntryType
+  workspaceId: string
+  canCreateAccounts: boolean
+  canCreateCards: boolean
+  plan: CardPlan | undefined
+  today: IsoDate
 }
 
 export type CardPlan = {
@@ -102,10 +122,6 @@ export type EntryTypePillsProps = {
 }
 
 export type FormEntryType = EntryFormInput['entryType']
-
-export type CategoryFieldProps = {
-  workspaceId: string
-}
 
 export type EntryPickerProps = {
   control: FieldControlProps

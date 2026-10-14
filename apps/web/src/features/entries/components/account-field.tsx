@@ -23,7 +23,12 @@ import { useFormContext } from 'react-hook-form'
 const messages = entriesMessages.accounts
 const MONEY_KINDS: readonly string[] = MONEY_ACCOUNT_KINDS
 
-export function AccountField({ workspaceId, canCreateAccounts }: AccountFieldProps) {
+export function AccountField({
+  workspaceId,
+  canCreateAccounts,
+  name = 'accountId',
+  label,
+}: AccountFieldProps) {
   const navigate = useNavigate()
   const accounts = useQuery(accountsQueryOptions(workspaceId)).data ?? []
   const balances = useQuery(balancesQueryOptions(workspaceId)).data ?? []
@@ -34,20 +39,16 @@ export function AccountField({ workspaceId, canCreateAccounts }: AccountFieldPro
     detail: balanceText(account.id, balances),
   }))
   usePreferredAccount(
-    items.map((item) => item.value),
+    name === 'accountId' ? items.map((item) => item.value) : [],
     useQuery(latestEntriesQueryOptions(workspaceId)).data?.items,
   )
 
   return (
-    <FormField<EntryFormInput>
-      name="paidFromAccountId"
-      label={entriesMessages.fields.paidFrom}
-      isRequired
-    >
+    <FormField<EntryFormInput> name={name} label={label} isRequired>
       {(control) => (
         <EntryPicker
           control={control}
-          title={entriesMessages.fields.paidFrom}
+          title={label}
           subtitle={messages.subtitle}
           placeholder={messages.placeholder}
           items={items}
@@ -75,8 +76,8 @@ function usePreferredAccount(
   const preferred = latestEntries && preferredAccountOf(usableAccountIds, latestEntries)
 
   useEffect(() => {
-    if (preferred && getValues('paidFromAccountId') === '') {
-      resetField('paidFromAccountId', { defaultValue: preferred })
+    if (preferred && getValues('accountId') === '') {
+      resetField('accountId', { defaultValue: preferred })
     }
   }, [preferred, getValues, resetField])
 }

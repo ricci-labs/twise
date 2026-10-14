@@ -224,6 +224,13 @@ updated: 2026-10-14
       "Sua parte" (shared `equalShares` / `halfShares`); saving waits while the sum passes the
       total). Waiting on the contacts round: "Novo contato" in the picker (`CON-05`)
   13. [ ] Web: income, transfer (and from `HOME-03`), invoice payment, settlement, opening balance
+      - [x] Income ("Recebido em", the income categories with their "Fixa" / "Variável" badge) and
+        transfer ("De" and "Para", never the same account); waiting on `HOME-03`: the "Ver
+        sugestão de divisão" toast after a variable income and the transfer prefilled from the
+        split
+      - [ ] "Mais" and the opening balance
+      - [ ] Invoice payment (and "Pagar fatura" on `CARD-02/03`)
+      - [ ] Settlement
   14. [ ] Web: the desktop dialog for the other types (the type pills in one row)
   15. [ ] Web: "Repetir um recente" and the suggestion that fills the rest
   16. [ ] Web: the Home follows the app-wide rules (loose illustrations, no circles; the budgets

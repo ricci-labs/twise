@@ -72,10 +72,10 @@ function ledgerAccount(id: string, kind: string, name: string, parentId: string 
     id,
     parentId,
     kind,
-    class: kind.endsWith('category') ? 'expense' : 'asset',
+    class: CLASS_OF_KIND[kind] ?? 'asset',
     name,
     currency: 'BRL',
-    incomeNature: null,
+    incomeNature: kind === 'income_category' ? 'variable' : null,
     ownerUserId: null,
     isSystem: false,
     sortOrder: 0,
@@ -85,12 +85,19 @@ function ledgerAccount(id: string, kind: string, name: string, parentId: string 
   }
 }
 
+const CLASS_OF_KIND: Readonly<Record<string, string>> = {
+  expense_category: 'expense',
+  income_category: 'income',
+}
+const COMMISSION = '00000000-0000-4000-8000-0000000000f1'
+
 const ACCOUNTS = [
   ledgerAccount(CHECKING, 'checking', 'Conta X'),
   ledgerAccount(WALLET, 'cash_wallet', 'Carteira'),
   ledgerAccount(LEISURE, 'expense_category', 'Lazer'),
   ledgerAccount(GROCERIES, 'expense_category', 'Mercado'),
   ledgerAccount(MARKET, 'expense_category', 'Feira', GROCERIES),
+  ledgerAccount(COMMISSION, 'income_category', 'Comissão'),
 ]
 
 function latestExpense(accountId: string, categoryId: string) {
@@ -544,5 +551,71 @@ describe('ENT-02 shares with contacts', () => {
 
     await expect.element(page.getByText('Informe um valor maior que zero.')).toBeVisible()
     expect(recorded).toEqual([])
+  })
+})
+
+describe('ENT-02 income and transfer', () => {
+  afterEach(async () => {
+    vi.restoreAllMocks()
+    await page.viewport(414, 896)
+  })
+
+  it('records an income in the account it was received in, with its nature on the category', async () => {
+    const { recorded } = await openNewEntry()
+    await page.getByRole('radio', { name: 'Receita' }).click()
+    await page.getByLabelText(/^Valor/).fill('1500')
+    await page.getByLabelText(/^Descrição/).fill('Comissão de outubro')
+    await page.getByRole('button', { name: /^Recebido em/ }).click()
+    await page.getByRole('button', { name: /^Conta X/ }).click()
+    await page.getByRole('button', { name: /^Categoria/ }).click()
+    await page.getByRole('button', { name: /^Comissão/ }).click()
+
+    await expectText(
+      page.getByRole('button', { name: /^Categoria/ }),
+      /ComissãoVariávelRenda variável/,
+    )
+    await expect
+      .element(page.getByRole('radiogroup', { name: 'Quem gastou' }))
+      .not.toBeInTheDocument()
+    await expect
+      .element(page.getByRole('button', { name: 'Dividir com contatos' }))
+      .not.toBeInTheDocument()
+    await page.getByRole('button', { name: 'Salvar lançamento' }).click()
+
+    await expect.element(page.getByText('Lançamento registrado.')).toBeVisible()
+    expect(recorded).toEqual([
+      expect.objectContaining({
+        entryType: 'income',
+        amountCents: 150_000,
+        receivedInAccountId: CHECKING,
+        categoryId: COMMISSION,
+      }),
+    ])
+  })
+
+  it('moves money between two different accounts', async () => {
+    const { recorded } = await openNewEntry()
+    await page.getByRole('radio', { name: 'Transferência' }).click()
+    await page.getByLabelText(/^Valor/).fill('500')
+    await page.getByLabelText(/^Descrição/).fill('Guardar para a viagem')
+    await page.getByRole('button', { name: /^Para/ }).click()
+    await page.getByRole('button', { name: /^Carteira/ }).click()
+
+    await expect.element(page.getByText('Escolha uma conta diferente da de origem.')).toBeVisible()
+    await expect.element(page.getByRole('button', { name: /^Categoria/ })).not.toBeInTheDocument()
+    await expect.element(page.getByLabelText('Forma de pagamento')).not.toBeInTheDocument()
+    await page.getByRole('button', { name: /^Para/ }).click()
+    await page.getByRole('button', { name: /^Conta X/ }).click()
+    await page.getByRole('button', { name: 'Salvar lançamento' }).click()
+
+    await expect.element(page.getByText('Lançamento registrado.')).toBeVisible()
+    expect(recorded).toEqual([
+      expect.objectContaining({
+        entryType: 'transfer',
+        amountCents: 50_000,
+        fromAccountId: WALLET,
+        toAccountId: CHECKING,
+      }),
+    ])
   })
 })
