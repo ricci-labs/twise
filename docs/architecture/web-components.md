@@ -39,7 +39,7 @@ where it's used.
 | `display/` | `Amount`, `StatusBadge`, `Avatar`, `ListItem`, `Card`, `StatCard`, `ThresholdProgress`, `Tabs`, `Accordion`, `DataList` (table on desktop, list on mobile), `LoadMore`, `Tooltip`, `HelpPopover`, `FilterChips`, `CategoryIcon` |
 | `charts/` | `BarChart`, `ForecastChart`, `DonutChart`, each with its text alternative |
 | `navigation/` | `BottomBar`, `Sidebar`, `TopBar`, `WorkspaceSwitcher`, `BackLink`, `Breadcrumb` |
-| `layout/` | `AppShell`, `Page`, `PageHeader`, `Section`, `Stack`, `Grid` |
+| `layout/` | `AppShell`, `FormOverlay`, `Page`, `PageHeader`, `Section`, `Stack`, `Grid` |
 | `finance/` | `StatHero`, `InsightCard`, `InvoiceCard`, `InvoicePreview`, `SharesList`, `RecentEntries`, `EntryRow`, `OccurrenceRow`, `ContactRow`, `ChargePreview`, `AmountSplitEditor` |
 | `brand/` | `Logo`, `OwlScene` (the layered owl scenes and their motion), `AppSplash` |
 | `icons/` | `TwiseIcon` and the icon registries (see Icons) |
@@ -346,6 +346,18 @@ component here, so the form, and later the account, card and planning forms, sha
 - `AutoFillTip` (`components/feedback/auto-fill-tip`): the discreet line under a field that says
   what was filled for the person, with a mint check and "Desfazer" on the right; a `status`, so it
   is announced.
+- `Select` (`components/inputs/select`): a native `select` drawn like the fields (the phone's own
+  picker opens), with an optional empty first choice; `TextArea` (`components/inputs/text-area`):
+  the notes field, two lines to start. Both take the `FormField` control.
+- `ConfirmDialog` (`components/feedback/confirm-dialog`, Base UI `AlertDialog`): the title, what
+  will happen, the secondary "keep" action and the danger one, as
+  `../product/requirements/ui-standards.md` → Destructive actions and the discard rule ask
+  ("Descartar as alterações?").
+- `FormOverlay` (`components/layout/form-overlay`, Base UI `Dialog`): a form that opens over the
+  screen: full screen on the phone (no tab bar), with "X" and the title on top; from 1024 px a
+  dialog 880 px wide, 40 px from the top, over the dimmed page, the title on the left and "X" on the
+  right. The body scrolls between a fixed header and the footer of buttons. "X", Escape and a press
+  outside all call `onRequestClose`, so the screen decides whether to ask before discarding.
 - `CategoryArt` (`components/display/category-art`): the category drawing of an account's `icon`,
   never clipped in a circle (`../product/requirements/ui-standards.md` → Visual rules across
   screens). By default (`loose`) it is the drawing without its paper square, from
