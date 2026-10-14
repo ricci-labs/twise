@@ -15,6 +15,7 @@ export const formOverlayPopupVariants = cva(
       size: {
         lg: 'lg:top-10 lg:bottom-10 lg:w-220',
         md: 'lg:top-15 lg:bottom-15 lg:h-fit lg:w-140',
+        wide: 'lg:top-15 lg:bottom-15 lg:h-fit lg:w-190',
       },
     },
     defaultVariants: { size: 'lg' },
@@ -22,7 +23,7 @@ export const formOverlayPopupVariants = cva(
 )
 
 export const formOverlayHeadVariants = cva(
-  'flex items-center gap-1 pt-2 pr-4 pl-1.5 lg:sticky lg:top-0 lg:z-sticky lg:flex-row-reverse lg:justify-between lg:bg-page lg:pt-4.5 lg:pl-8',
+  'flex items-center gap-1 pt-2 pr-4 pl-1.5 lg:sticky lg:top-0 lg:z-sticky lg:flex-row-reverse lg:justify-between lg:bg-page lg:pt-4.5 lg:pb-1 lg:pl-8',
 )
 
 export const formOverlayTitleVariants = cva('font-display text-form-title lg:text-form-title-lg')

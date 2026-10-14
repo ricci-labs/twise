@@ -21,8 +21,8 @@ export function CardDays({ isEditing }: CardDaysProps) {
   const haveDaysChanged = isEditing && Boolean(dirtyFields.closingDay || dirtyFields.dueDay)
   return (
     <>
-      <div className="flex flex-col gap-1.5">
-        <div className="grid grid-cols-2 items-start gap-2.5">
+      <div className="flex flex-col gap-1.5 lg:col-span-2">
+        <div className="grid grid-cols-2 items-start gap-2.5 lg:gap-6">
           <FormField<CardFormInput> name="closingDay" label={messages.closingDay} isRequired>
             {(control) => (
               <DayField
@@ -57,7 +57,7 @@ export function CardDays({ isEditing }: CardDaysProps) {
         <p className="text-body-sm text-ink-muted">{messages.daysHelp}</p>
       </div>
       {closingDay && dueDay && (
-        <div className="-mt-1.5">
+        <div className="-mt-1.5 lg:col-span-2 lg:mt-0">
           <CyclePreview
             text={messages.preview(
               closingDay,
@@ -74,9 +74,11 @@ export function CardDays({ isEditing }: CardDaysProps) {
         </div>
       )}
       {haveDaysChanged && (
-        <Alert tone="warning" icon="warn">
-          {messages.daysChanged}
-        </Alert>
+        <div className="lg:col-span-2">
+          <Alert tone="warning" icon="warn">
+            {messages.daysChanged}
+          </Alert>
+        </div>
       )}
     </>
   )

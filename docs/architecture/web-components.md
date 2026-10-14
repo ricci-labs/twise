@@ -447,7 +447,10 @@ component here, so the form, and later the account, card and planning forms, sha
   dialog (submit buttons in the footer and Enter submit it); `initialFocus` names the field that
   takes the focus when it opens (the amount). `size="md"` is the one-column 560 px dialog, 60 px from
   the top and as tall as its content (up to 820 px), for the account and category forms;
-  `actions="single"` gives the phone footer of one button its 20 px bottom.
+  `size="wide"` is the same at 760 px, for the card form's two columns (fields side by side at the
+  same height, the days preview and the switch across both). The desktop header keeps 4 px under
+  the 44 px "X" row, as the design's `dlg__head`. `actions="single"` gives the phone footer of one
+  button its 20 px bottom.
 - `IllustrationPicker` (`components/inputs/illustration-picker`, Base UI `RadioGroup`): the 13
   drawings on paper tiles, 5 per row on the phone and 7 from 1024 px, after the first tile, the
   name's initial ("Sem ilustração: a inicial"); the chosen tile keeps its paper and gets the 2 px
