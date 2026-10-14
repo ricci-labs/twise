@@ -32,13 +32,18 @@ The UX/UI was designed visually (no production code) and exported here so it can
 | `entries/screens.md` | Building one part of ENT-02: every type and state, mobile and desktop, with HTML, PNG and notes |
 | `entries/components.md` | Form components for ENT-02 (pickers, type chips, date shortcuts, shares…), mapped to shadcn/ui |
 | `entries/decisions.md` | **Before building ENT-02:** changes to entries.md, approved additions that need the API, app-wide rules (illustrations, desktop field heights, dotted leaders) |
+| `accounts/README.md` | Starting accounts, categories or cards (ACC-01..04, CARD-01..04): layouts, rules, build order |
+| `accounts/screens.md` | Building one accounts, categories, subcategories, cards or invoice screen, mobile and desktop, with HTML, PNG and notes |
+| `accounts/components.md` | Components for accounts, categories and cards (rows, KPI carousel, subcategory chips, month strip, day picker…), mapped to shadcn/ui |
+| `accounts/decisions.md` | **Before building accounts or cards:** changes to accounts-and-cards.md, API needs G40–G42, app-wide rules (KPI carousel, one selection style, system illustrations) |
+| `assets/ilustracoes/README-sistema.md` | The system illustrations (invoice payment, transfer, opening balance, receipt) |
 | `assets/ilustracoes/soltas/` | Category illustrations without the paper square, for white surfaces |
 | `assets/icones/` | The Twise interface icons (two layers) |
 | `assets/` | SVGs: owl scenes, layered owl kits, logo, category illustrations, fonts |
 
 ## How to use it
 
-1. Read `account/decisions.md`, `home/decisions.md` and `entries/decisions.md` first: where the design and the requirement docs disagree, the design wins and the requirement doc must be updated in the same PR.
+1. Read `account/decisions.md`, `home/decisions.md`, `entries/decisions.md` and `accounts/decisions.md` first: where the design and the requirement docs disagree, the design wins and the requirement doc must be updated in the same PR.
 2. Build components before screens (`account/components.md`). Screens are compositions; no screen should need one-off CSS.
 3. For a screen, open its PNG to see it and its HTML for exact copy, spacing and states. The HTML is a reference, not code to copy: its inline CSS (`tw-…` classes) predates the design system classes (`fn-…`). Use tokens and components.
 4. Copy (pt-BR) in the screens and notes is final. Error copy comes from `product/requirements/error-messages.md`.
@@ -46,4 +51,4 @@ The UX/UI was designed visually (no production code) and exported here so it can
 
 ## Sources
 
-Exported on 2026-10-01 (account) and 2026-10-07 (shell, workspace and Home: canvas "Twise Telas · Início") and 2026-10-10 (ENT-02 new entry: canvas "Twise Telas · Lançamento") from the Claude design canvas "Twise Telas" and the design system artifact "Twise", then brought into the repo: the docs were translated to English (UI copy stays in pt-BR), and the token values moved into code (`apps/web/src/styles/tokens/`), which is now their only source. The HTML, PNG and animation files are references and are not edited by hand; a new export of a screen replaces its files.
+Exported on 2026-10-01 (account) and 2026-10-07 (shell, workspace and Home: canvas "Twise Telas · Início") and 2026-10-10 (ENT-02 new entry: canvas "Twise Telas · Lançamento") and 2026-10-14 (accounts, categories and cards: canvas "Twise Telas · Contas e cartões") from the Claude design canvas "Twise Telas" and the design system artifact "Twise", then brought into the repo: the docs were translated to English (UI copy stays in pt-BR), and the token values moved into code (`apps/web/src/styles/tokens/`), which is now their only source. The HTML, PNG and animation files are references and are not edited by hand; a new export of a screen replaces its files.

@@ -36,6 +36,11 @@ updated: 2026-10-14
 | fechamento | `closing_day` / `closing_on` | The day the invoice stops taking purchases. |
 | vencimento | `due_day` / `due_on` | The day the invoice must be paid. |
 | melhor dia de compra | (derived) | The closing day. |
+| subcategoria | category with `parentId` | A category inside a main one, shown "Mercado › Feira". The UI keeps two levels. |
+| categoria principal, categoria mãe | category with `parentId = null` | A category that holds subcategories or none. |
+| titular | `holderUserId` | The member whose name is on a card. Informational. |
+| em aberto no cartão | card balance (`openCents`) | All a card still owes, future installments included. |
+| fatura de {mês} | invoice by its `dueOn` month | An invoice is named after the month it is due in. |
 | parcela, parcelado | installment (`installment_no`, `installment_count`) | One of N payments of a card purchase. |
 | à vista | `installment_count = 1` | |
 | limite | `limit_cents` | Card credit limit. |

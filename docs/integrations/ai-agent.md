@@ -45,7 +45,7 @@ Tool rules:
 - Errors come back as `is_error` tool results with a pt-BR message Claude can relay.
 
 ## Confirmation flow
-1. A write tool validates and builds a **preview**, e.g. "Mercado · R$ 87,50 · Nubank (fatura de outubro) · categoria Mercado · 1×". It stores a `pendingAction` (expires in 15 min) and returns the preview.
+1. A write tool validates and builds a **preview**, e.g. "Mercado · R$ 87,50 · Cartão X (fatura de outubro) · categoria Mercado · 1×". It stores a `pendingAction` (expires in 15 min) and returns the preview.
 2. Claude shows the preview and asks "Confirma?".
 3. The user replies "sim"/"ok"/👍 and Claude calls `confirm_pending`. Any correction ("foi no inter") produces a new preview that replaces the pending one.
 4. Only one pending action per user per workspace at a time.
