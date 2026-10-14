@@ -29,6 +29,9 @@ export const entriesMessages = {
     description: 'Descrição',
     descriptionPlaceholder: 'Ex.: Mercado da semana',
     paidFrom: 'Pago com',
+    receivedIn: 'Recebido em',
+    from: 'De',
+    to: 'Para',
     card: 'Cartão',
     installments: 'Parcelas',
     inProgress: 'Compra já em andamento',
@@ -44,7 +47,8 @@ export const entriesMessages = {
   required: {
     amount: 'Informe um valor maior que zero, como 25,90.',
     description: 'Informe a descrição.',
-    paidFromAccountId: 'Escolha uma conta.',
+    accountId: 'Escolha uma conta.',
+    toAccountId: 'Escolha uma conta.',
     cardAccountId: 'Escolha um cartão.',
     categoryId: 'Escolha uma categoria.',
     occurredOn: 'Informe uma data válida (dd/mm/aaaa).',
@@ -129,5 +133,19 @@ export const entriesMessages = {
       text: 'Cadastre a primeira para separar os gastos.',
       action: 'Cadastrar categoria',
     },
+    income: {
+      subtitle: 'Categorias de receita',
+      empty: {
+        title: 'Vocês ainda não têm categorias de receita.',
+        text: 'Cadastre a primeira para separar o que entra.',
+      },
+      natures: {
+        fixed: { badge: 'Fixa', detail: 'Renda fixa' },
+        variable: { badge: 'Variável', detail: 'Renda variável' },
+      },
+    },
+  },
+  transfers: {
+    sameAccount: 'Escolha uma conta diferente da de origem.',
   },
 } as const

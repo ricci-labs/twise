@@ -7,6 +7,7 @@ export type PickerItem = {
   value: string
   label: string
   detail?: string
+  badge?: string
   icon?: string | null
   placeholderIcon?: TwiseIconName
   isPerson?: boolean

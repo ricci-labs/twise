@@ -347,7 +347,7 @@ passes the overview's numbers.
   (`status-neutral-soft` with the muted `status-neutral` text, "Futura"). `size="sm"` (22 px) for
   the nature of an income category, `size="status"` (22 px, 10 px sides, the design's `fn-badge`)
   for an invoice's state in a table, `size="tiny"` (18 px, 11 px text) inside a preview row
-  ("Fechada").
+  ("Fechada"), `size="compact"` (20 px, 8 px sides) beside the name in a `PickerField`.
 - `AddTile` (`components/actions/add-tile`): the dashed tile that closes a grid's last row ("Novo
   cartão"): a 240 px minimum, the "+" icon, a 16 px display title and an optional muted line; the
   whole tile is the link it is given.
@@ -382,7 +382,8 @@ component here, so the form, and later the account, card and planning forms, sha
   and a grey second line ("Saldo de hoje: R$ 4.200,00"); a subcategory reads with its parent
   (`parentLabel`: "Mercado › Feira", the separator in `ink-subtle`); empty, a dashed "+" square and
   the placeholder. 56 px on the phone, 48 px from 1024 px; the drawing (42 px) overhangs the padding
-  instead of growing the field. A filled field reads in `choice` semibold.
+  instead of growing the field. A filled field reads in `choice` semibold; `badge` puts an `info`
+  `compact` `Badge` 8 px after the name (an income category's "Fixa" / "Variável").
 - `PickerSheet` (`components/inputs/picker-sheet`): what a `PickerField` opens. A bottom `Sheet`
   with "Fechar" on the phone; from 1024 px a popover anchored to the field (`anchor`), above a
   dialog. `layout` `list` (rows with the drawing and the detail, 8 px from the sheet's sides, the

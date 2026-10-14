@@ -1,6 +1,8 @@
+import { Badge } from '@web/components/display/badge'
 import { pickerFieldMessages as messages } from '@web/components/inputs/picker-field/picker-field.messages'
 import type { PickerFieldProps } from '@web/components/inputs/picker-field/picker-field.types'
 import {
+  pickerBadgeVariants,
   pickerDetailVariants,
   pickerEmptyArtVariants,
   pickerFieldVariants,
@@ -15,6 +17,7 @@ export function PickerField({
   value,
   parentLabel,
   detail,
+  badge,
   art,
   placeholder,
   className,
@@ -45,6 +48,11 @@ export function PickerField({
             </>
           )}
           {value ?? placeholder}
+          {!isEmpty && badge && (
+            <Badge tone="info" size="compact" className={pickerBadgeVariants()}>
+              {badge}
+            </Badge>
+          )}
         </span>
         {!isEmpty && detail && <span className={pickerDetailVariants()}>{detail}</span>}
       </span>

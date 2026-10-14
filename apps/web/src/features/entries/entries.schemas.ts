@@ -6,6 +6,7 @@ import {
   MAX_SHARES_PER_ENTRY,
   PAYMENT_METHODS,
 } from '@financas/shared'
+import { hasCategory, isSpending } from '@web/features/entries/components/entry-kind'
 import { entriesMessages } from '@web/features/entries/entries.messages'
 import { centsOfTypedAmount, sumOfTypedAmounts } from '@web/lib/format/money'
 import { z } from 'zod'
@@ -18,9 +19,11 @@ export const newEntrySearchSchema = z.object({
   entry: z.literal(NEW_ENTRY).optional().catch(undefined),
 })
 
-const FORM_ENTRY_TYPES = ['expense', 'card_purchase'] as const
+const FORM_ENTRY_TYPES = ['expense', 'card_purchase', 'income', 'transfer'] as const
 
 const CARD_PURCHASE = 'card_purchase'
+
+const TRANSFER = 'transfer'
 
 const installmentSchema = z.number().int().min(1).max(MAX_INSTALLMENTS)
 
@@ -33,21 +36,37 @@ export const entryFormSchema = z
       .string()
       .refine((text) => (centsOfTypedAmount(text) ?? 0) > 0, entriesMessages.amountInvalid),
     description: z.string().trim().min(1).max(ENTRY_DESCRIPTION_MAX_LENGTH),
-    paidFromAccountId: z.string(),
+    accountId: z.string(),
+    toAccountId: z.string(),
     cardAccountId: z.string(),
     installmentCount: installmentSchema,
     isInProgress: z.boolean(),
     firstInstallment: installmentSchema,
-    categoryId: z.string().min(1),
+    categoryId: z.string(),
     occurredOn: isoDateSchema,
     paymentMethod: z.union([z.enum(PAYMENT_METHODS), z.literal(NO_CHOICE)]),
     spentByUserId: z.string(),
     shares: z.array(entryShareSchema).max(MAX_SHARES_PER_ENTRY),
     notes: z.string().trim().max(ENTRY_NOTES_MAX_LENGTH),
   })
-  .refine((values) => values.entryType === CARD_PURCHASE || Boolean(values.paidFromAccountId), {
-    path: ['paidFromAccountId'],
-    message: entriesMessages.required.paidFromAccountId,
+  .refine((values) => values.entryType === CARD_PURCHASE || Boolean(values.accountId), {
+    path: ['accountId'],
+    message: entriesMessages.required.accountId,
+    when: () => true,
+  })
+  .refine((values) => values.entryType !== TRANSFER || Boolean(values.toAccountId), {
+    path: ['toAccountId'],
+    message: entriesMessages.required.toAccountId,
+    when: () => true,
+  })
+  .refine((values) => values.entryType !== TRANSFER || values.toAccountId !== values.accountId, {
+    path: ['toAccountId'],
+    message: entriesMessages.transfers.sameAccount,
+    when: () => true,
+  })
+  .refine((values) => !hasCategory(values.entryType) || Boolean(values.categoryId), {
+    path: ['categoryId'],
+    message: entriesMessages.required.categoryId,
     when: () => true,
   })
   .refine((values) => values.entryType !== CARD_PURCHASE || Boolean(values.cardAccountId), {
@@ -76,15 +95,21 @@ export const entryFormSchema = z
       when: () => true,
     },
   )
-  .refine((values) => values.shares.every((share) => (centsOfTypedAmount(share.amount) ?? 0) > 0), {
-    path: ['shares'],
-    message: entriesMessages.shares.notPositive,
-    when: () => true,
-  })
+  .refine(
+    (values) =>
+      !isSpending(values.entryType) ||
+      values.shares.every((share) => (centsOfTypedAmount(share.amount) ?? 0) > 0),
+    {
+      path: ['shares'],
+      message: entriesMessages.shares.notPositive,
+      when: () => true,
+    },
+  )
   .refine(
     (values) => {
       const totalCents = centsOfTypedAmount(values.amount)
       return (
+        !isSpending(values.entryType) ||
         totalCents === null ||
         sumOfTypedAmounts(values.shares.map((share) => share.amount)) <= totalCents
       )

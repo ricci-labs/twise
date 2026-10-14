@@ -10,17 +10,21 @@ import { EntryPicker } from '@web/features/entries/components/entry-picker'
 import { entriesMessages } from '@web/features/entries/entries.messages'
 import type {
   CategoryFieldProps,
+  CategoryNature,
   EntryFormInput,
   LedgerAccount,
 } from '@web/features/entries/entries.types'
 
 const messages = entriesMessages.categories
-const EXPENSE_CATEGORY = 'expense_category'
+const INCOME_CATEGORY = 'income_category'
+const EMPTY_ICONS = { expense_category: 'receipt', income_category: 'coin' } as const
 
-export function CategoryField({ workspaceId }: CategoryFieldProps) {
+export function CategoryField({ workspaceId, kind }: CategoryFieldProps) {
   const accounts = useQuery(accountsQueryOptions(workspaceId)).data ?? []
   const latestEntries = useQuery(latestEntriesQueryOptions(workspaceId)).data?.items ?? []
-  const categories = byMostUsed(accounts.filter(isUsableExpenseCategory), latestEntries)
+  const usable = accounts.filter((account) => account.kind === kind && account.archivedAt === null)
+  const categories = byMostUsed(usable, latestEntries)
+  const texts = kind === INCOME_CATEGORY ? messages.income : messages
 
   return (
     <FormField<EntryFormInput> name="categoryId" label={entriesMessages.fields.category} isRequired>
@@ -28,20 +32,16 @@ export function CategoryField({ workspaceId }: CategoryFieldProps) {
         <EntryPicker
           control={control}
           title={entriesMessages.fields.category}
-          subtitle={messages.subtitle}
+          subtitle={texts.subtitle}
           placeholder={messages.placeholder}
           items={categoryTree(categories)}
           layout="grid"
           searchLabel={messages.search}
-          empty={{ icon: 'receipt', title: messages.empty.title, text: messages.empty.text }}
+          empty={{ icon: EMPTY_ICONS[kind], title: texts.empty.title, text: texts.empty.text }}
         />
       )}
     </FormField>
   )
-}
-
-function isUsableExpenseCategory(account: LedgerAccount): boolean {
-  return account.kind === EXPENSE_CATEGORY && account.archivedAt === null
 }
 
 function categoryTree(categories: readonly LedgerAccount[]): PickerItem[] {
@@ -50,12 +50,26 @@ function categoryTree(categories: readonly LedgerAccount[]): PickerItem[] {
   return categories.filter(isTop).map((parent) => {
     const children = categories
       .filter((category) => category.parentId === parent.id)
-      .map((child) => ({ value: child.id, label: child.name, icon: child.icon }))
+      .map((child) => ({
+        ...natureOf(child),
+        value: child.id,
+        label: child.name,
+        icon: child.icon,
+      }))
     return {
+      ...natureOf(parent),
       value: parent.id,
       label: parent.name,
       icon: parent.icon,
       children: children.length > 0 ? children : undefined,
     }
   })
+}
+
+function natureOf(category: LedgerAccount): CategoryNature {
+  if (category.incomeNature !== 'fixed' && category.incomeNature !== 'variable') {
+    return {}
+  }
+  const nature = messages.income.natures[category.incomeNature]
+  return { badge: nature.badge, detail: nature.detail }
 }

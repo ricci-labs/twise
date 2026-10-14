@@ -28,3 +28,5 @@ export const pickerDetailVariants = cva('truncate text-caption font-normal text-
 export const pickerEmptyArtVariants = cva(
   'grid size-8.5 shrink-0 place-items-center rounded-sm border-stroke border-dashed border-border-control text-ink-muted [&_svg]:size-4',
 )
+
+export const pickerBadgeVariants = cva('ml-2 -translate-y-px')

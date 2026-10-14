@@ -9,6 +9,7 @@ export const badgeVariants = cva(
         sm: 'h-5.5 px-2.25',
         status: 'h-5.5 px-2.5',
         xs: 'h-5 px-2 text-tab font-semibold',
+        compact: 'h-5 px-2',
         tiny: 'h-4.5 px-1.5 text-badge-tiny',
       },
 
