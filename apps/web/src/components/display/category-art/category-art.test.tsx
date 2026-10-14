@@ -36,7 +36,7 @@ describe('CategoryArt', () => {
     expect(art?.className).not.toContain('rounded-full')
   })
 
-  it('keeps the loose drawing on a surface that is light in both themes, and falls back to paper', async () => {
+  it('keeps the loose drawing on a surface that is light in both themes', async () => {
     const screen = await render(
       <div className="dark">
         <CategoryArt name="Mercado" icon="groceries" variant="onLight" size="xl" />
@@ -47,6 +47,6 @@ describe('CategoryArt', () => {
 
     expect(onLight?.getAttribute('src')).toContain('loose/groceries')
     expect(onLight && getComputedStyle(onLight).display).not.toBe('none')
-    expect(travel?.getAttribute('src')).toContain('travel')
+    expect(travel?.getAttribute('src')).toContain('loose/travel')
   })
 })

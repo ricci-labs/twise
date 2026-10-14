@@ -2,11 +2,15 @@ import { Drawer } from '@base-ui/react/drawer'
 import type { SheetProps } from '@web/components/layout/sheet/sheet.types'
 import {
   sheetBackdropVariants,
+  sheetCloseVariants,
   sheetHandleVariants,
+  sheetHeadVariants,
   sheetPopupVariants,
+  sheetTitleVariants,
 } from '@web/components/layout/sheet/sheet.variants'
+import { X } from 'lucide-react'
 
-export function Sheet({ title, trigger, isOpen, onOpenChange, children }: SheetProps) {
+export function Sheet({ title, closeLabel, trigger, isOpen, onOpenChange, children }: SheetProps) {
   return (
     <Drawer.Root open={isOpen} onOpenChange={(open) => onOpenChange?.(open)}>
       {trigger && <Drawer.Trigger render={trigger} />}
@@ -15,7 +19,16 @@ export function Sheet({ title, trigger, isOpen, onOpenChange, children }: SheetP
         <Drawer.Viewport>
           <Drawer.Popup data-slot="sheet" className={sheetPopupVariants()}>
             <span aria-hidden="true" className={sheetHandleVariants()} />
-            <Drawer.Title className="text-title-sm">{title}</Drawer.Title>
+            <div className={sheetHeadVariants()}>
+              <Drawer.Title className={sheetTitleVariants({ hasClose: Boolean(closeLabel) })}>
+                {title}
+              </Drawer.Title>
+              {closeLabel && (
+                <Drawer.Close aria-label={closeLabel} className={sheetCloseVariants()}>
+                  <X aria-hidden="true" />
+                </Drawer.Close>
+              )}
+            </div>
             {children}
           </Drawer.Popup>
         </Drawer.Viewport>

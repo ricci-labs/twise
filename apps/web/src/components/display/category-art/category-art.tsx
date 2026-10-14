@@ -16,6 +16,7 @@ import loosePiggyBank from '@web/assets/illustrations/loose/piggy-bank.svg'
 import looseReceipt from '@web/assets/illustrations/loose/receipt.svg'
 import looseTogether from '@web/assets/illustrations/loose/together.svg'
 import looseTransport from '@web/assets/illustrations/loose/transport.svg'
+import looseTravel from '@web/assets/illustrations/loose/travel.svg'
 import looseWallet from '@web/assets/illustrations/loose/wallet.svg'
 import piggyBank from '@web/assets/illustrations/piggy-bank.svg'
 import receipt from '@web/assets/illustrations/receipt.svg'
@@ -46,6 +47,7 @@ const LOOSE_ART: Readonly<Record<string, string>> = {
   receipt: looseReceipt,
   together: looseTogether,
   transport: looseTransport,
+  travel: looseTravel,
   wallet: looseWallet,
 }
 

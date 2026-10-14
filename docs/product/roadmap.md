@@ -205,7 +205,8 @@ updated: 2026-10-14
       outline (no mint, no check), and subcategories in the category sheet; requirements updated
   4. [x] Web components: `MoneyInput` (the design's `MoneyField`) and `ChoiceChips` (the type pills,
      the date shortcuts and who spent)
-  5. [ ] Web components: `PickerField` + `PickerSheet`, `CategoryGrid`
+  5. [x] Web components: `PickerField` + `PickerSheet` (the list, and the category grid as its
+     `grid` layout)
   6. [ ] Web components: `InstallmentStepper`, `InProgressSwitch`
   7. [ ] Web components: `InvoicePreview`, `InvoiceRadioList`
   8. [ ] Web components: `SharesList`
