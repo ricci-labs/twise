@@ -18,6 +18,7 @@ import { archivedToggleExamples } from '@web/components/display/archived-toggle'
 import { avatarExamples } from '@web/components/display/avatar'
 import { cardExamples } from '@web/components/display/card'
 import { categoryArtExamples } from '@web/components/display/category-art'
+import { dataTableExamples } from '@web/components/display/data-table'
 import { dividerExamples } from '@web/components/display/divider'
 import { kpiCardExamples } from '@web/components/display/kpi-card'
 import { kpiCarouselExamples } from '@web/components/display/kpi-carousel'
@@ -76,6 +77,7 @@ import { textInputExamples } from '@web/components/inputs/text-input'
 import { authLayoutExamples } from '@web/components/layout/auth-layout'
 import { formOverlayExamples } from '@web/components/layout/form-overlay'
 import { momentScreenExamples } from '@web/components/layout/moment-screen'
+import { pageHeaderExamples } from '@web/components/layout/page-header'
 import { sheetExamples } from '@web/components/layout/sheet'
 import { subPageHeaderExamples } from '@web/components/layout/sub-page-header'
 import { appSidebarExamples } from '@web/components/navigation/app-sidebar'
@@ -124,6 +126,8 @@ export const workbenchSections: readonly ComponentExamples[] = [
   subcategoryChipExamples,
   subcategoryAddChipExamples,
   cardBlockExamples,
+  dataTableExamples,
+  pageHeaderExamples,
   cyclePreviewExamples,
   invoiceMonthStripExamples,
   invoiceSummaryExamples,

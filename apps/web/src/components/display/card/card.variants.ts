@@ -22,3 +22,7 @@ export const cardBodyVariants = cva('mt-4 flex min-w-0 flex-1 flex-col')
 export const cardFootVariants = cva(
   'mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-border pt-3.5 text-body-sm text-ink-muted',
 )
+
+export const cardTitleVariants = cva('font-display text-section-title lg:text-card-title')
+
+export const cardDescriptionVariants = cva('mt-0.5 text-note text-ink-muted')

@@ -5,17 +5,20 @@ import { AccountRow } from '@web/components/finance/account-row'
 import { accountsMessages } from '@web/features/accounts/accounts.messages'
 import type { AccountsListsProps, ListedAccount } from '@web/features/accounts/accounts.types'
 import { AccountRowActions } from '@web/features/accounts/components/account-row-actions'
+import { AccountsTables } from '@web/features/accounts/components/accounts-tables'
 import { cardEditActionsOf } from '@web/features/accounts/components/card-edit-actions'
+import { useMediaQuery } from '@web/hooks/use-media-query'
+import { DESKTOP_QUERY } from '@web/lib/breakpoints'
 import { hasPermission } from '@web/lib/permissions'
 
 const messages = accountsMessages.groups
 
-export function AccountsLists({
-  workspaceId,
-  permissions,
-  accounts,
-  highlightedId,
-}: AccountsListsProps) {
+export function AccountsLists(props: AccountsListsProps) {
+  const isDesktop = useMediaQuery(DESKTOP_QUERY)
+  return isDesktop ? <AccountsTables {...props} /> : <AccountsGroups {...props} />
+}
+
+function AccountsGroups({ workspaceId, permissions, accounts, highlightedId }: AccountsListsProps) {
   const active = accounts.filter((account) => !account.isArchived)
   const money = active.filter((account) => account.isMoney)
   const cards = active.filter((account) => account.isCard)

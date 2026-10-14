@@ -1,18 +1,18 @@
 import { cva } from 'class-variance-authority'
 
 export const actionMenuPopupVariants = cva(
-  'z-overlay flex min-w-60 flex-col gap-0.5 rounded-md border border-border bg-surface p-1.5 shadow-dialog outline-none',
+  'z-overlay flex min-w-60 flex-col rounded-md border border-border bg-surface p-1.5 shadow-dialog outline-none',
 )
 
 export const actionMenuItemVariants = cva(
   [
-    'flex min-h-10 cursor-pointer items-center gap-2.5 rounded-sm px-2.5 py-1.5 text-body-sm font-medium text-ink outline-none select-none data-highlighted:bg-page aria-[current=true]:font-semibold',
-    '[&_[data-slot=icon]]:size-4.5 [&_[data-slot=icon]]:text-ink-muted',
+    'flex min-h-10 cursor-pointer items-center gap-2.5 rounded-sm px-2.5 py-1.5 text-body-sm font-medium outline-none select-none data-highlighted:bg-page aria-[current=true]:font-semibold',
+    '[&_[data-slot=icon]]:size-4.5',
   ],
   {
     variants: {
       tone: {
-        neutral: '',
+        neutral: 'text-ink [&_[data-slot=icon]]:text-ink-muted',
         danger: 'text-danger [&_[data-slot=icon]]:text-danger',
       },
     },

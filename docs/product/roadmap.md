@@ -251,7 +251,8 @@ updated: 2026-10-14
      "Cartões" group of `ACC-01`, "Editar ciclo" and "Renomear e cor"). "Cadastrar cartão" comes
      with the new entry's card purchase, and "Pagar fatura" with its invoice payment (steps 11
      and 13 of the new entry round)
-  7. [ ] Web: the desktop versions (tables, menus, dialogs)
+  7. [ ] Web: the desktop versions (tables, menus, dialogs). Done: the sidebar to the approved
+     model, the page header, the `DataTable`, `ACC-01` (KPIs, tables, "Lixeira" and "Nova conta")
   8. [ ] Fixes to merged work from this round's review: no circles in the Home, the one selection
      style everywhere, the "Mais" sheet with the system illustrations
   9. [ ] G42 (archive a category with its subcategories) only if the product owner approves it

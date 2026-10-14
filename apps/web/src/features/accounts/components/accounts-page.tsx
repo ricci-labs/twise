@@ -47,11 +47,19 @@ export function AccountsPage({
     return () => clearTimeout(timer)
   }, [createdId, onCreatedSeen])
   return (
-    <div className="mx-auto flex w-full max-w-160 flex-col gap-4 px-4 pt-2 pb-6 lg:px-8 lg:pt-7 lg:pb-12">
+    <div className="mx-auto flex w-full max-w-160 flex-col gap-4 px-4 pt-2 pb-6 lg:max-w-296 lg:gap-5 lg:px-8 lg:pt-7 lg:pb-12">
       <AccountsAreaHeader
         workspaceId={workspaceId}
         current="accounts"
         canSeeTrash={hasPermission(permissions, 'accounts', 'delete')}
+        newItem={
+          hasPermission(permissions, 'accounts', 'create')
+            ? {
+                label: accountsMessages.groups.newAccount,
+                link: <Link to="." search={(previous) => ({ ...previous, account: 'new' })} />,
+              }
+            : undefined
+        }
       />
       <AccountsBody workspaceId={workspaceId} permissions={permissions} highlightedId={createdId} />
     </div>
