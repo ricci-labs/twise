@@ -488,20 +488,17 @@ export type PreviewBodyProps = {
   lines: readonly InvoiceLineView[] | undefined
 }
 
-export type CardPart = 'cycle' | 'name'
-
 export type CardFormInput = z.input<typeof cardFormSchema>
 
 export type CardFormValues = z.output<typeof cardFormSchema>
 
-export type CardFormMode = { kind: 'create' } | { kind: 'edit'; card: CardSummary; part?: CardPart }
+export type CardFormMode = { kind: 'create' } | { kind: 'edit'; card: CardSummary }
 
 export type CardEditorProps = {
   workspaceId: string
   currentUserId: string
   permissions: readonly Permission[]
   param: string | undefined
-  part: CardPart | undefined
   onClose: () => void
   onCreated: (cardId: string) => void
 }

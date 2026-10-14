@@ -30,7 +30,6 @@ export const Route = createFileRoute('/_app/w/$workspaceId')({
       parent,
       kind,
       card,
-      part,
     } = Route.useSearch()
     const { account, access } = Route.useRouteContext()
     const navigate = useNavigate()
@@ -42,7 +41,7 @@ export const Route = createFileRoute('/_app/w/$workspaceId')({
     const closeCardForm = () =>
       navigate({
         to: '.',
-        search: (previous) => ({ ...previous, card: undefined, part: undefined }),
+        search: (previous) => ({ ...previous, card: undefined }),
       })
     return (
       <WorkspaceShell
@@ -100,7 +99,6 @@ export const Route = createFileRoute('/_app/w/$workspaceId')({
           currentUserId={account.userId}
           permissions={access.permissions}
           param={card}
-          part={part}
           onClose={closeCardForm}
           onCreated={() => {
             if (entry === 'new') {

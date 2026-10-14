@@ -103,7 +103,6 @@ export function CardForm({
     setProblem(ref ? fill(messages.failed, { ref }) : errorMessageFor(error))
   }
 
-  const focusName = !isEditing || (mode.kind === 'edit' && mode.part === 'name')
   return (
     <FormProvider {...form}>
       <FormOverlay
@@ -114,7 +113,7 @@ export function CardForm({
         isOpen
         onRequestClose={requestClose}
         onSubmit={form.handleSubmit(save)}
-        initialFocus={focusName && canRename ? nameInput : undefined}
+        initialFocus={canRename ? nameInput : undefined}
         banner={<OfflineBanner message={messages.offline} />}
         footer={
           <AccountFormFooter

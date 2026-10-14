@@ -73,6 +73,19 @@ describe('CARD-01 cards', () => {
     expect(app.router.state.location.pathname).toContain('/cards/')
   })
 
+  it('offers one "Editar cartão" that opens the whole card form', async () => {
+    const app = await openCards()
+
+    await page.getByRole('button', { name: 'Ações de Cartão X' }).click()
+    await expect.element(page.getByRole('link', { name: 'Editar ciclo' })).not.toBeInTheDocument()
+    await expect.element(page.getByRole('link', { name: 'Renomear e cor' })).not.toBeInTheDocument()
+    await page.getByRole('link', { name: 'Editar cartão' }).click()
+
+    await expect.element(page.getByRole('dialog', { name: 'Editar cartão' })).toBeVisible()
+    await expect.element(page.getByLabelText(/^Nome do cartão/)).toHaveFocus()
+    expect(app.router.state.location.search).toMatchObject({ card: expect.any(String) })
+  })
+
   it('gives a viewer no actions', async () => {
     await openCards({ access: () => accessAs('Leitor', VIEWER_PERMISSIONS) })
 

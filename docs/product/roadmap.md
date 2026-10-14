@@ -296,7 +296,8 @@ updated: 2026-10-14
   the iPhone guide ("Adicionar à Tela de Início") comes later (RNF-RESP-2)
 - [x] **Desktop fixes asked by the user** (2026-10-14): no bottom sheets on the desktop (the day
   and invoice-month pickers open under their button, "Mover para" in the middle of the screen),
-  and every page keeps the Home's margins through `PageFrame` (`requirements/ui-standards.md`)
+  and every page keeps the Home's margins through `PageFrame` (`requirements/ui-standards.md`);
+  one "Editar cartão" instead of "Editar ciclo" and "Renomear e cor" (one action per destination)
 - [ ] Remaining project skills (`new-module`, `db-migration`, `domain-rule`, `pr`) and Claude Code hooks
 
 ## Phase 1: MVP

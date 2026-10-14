@@ -110,7 +110,7 @@ describe('CARD-04 card form', () => {
   it('warns that past invoices keep their dates and sends only the cycle that changed', async () => {
     const sent: unknown[] = []
     await openCards({
-      path: `?card=${CARD}&part=cycle`,
+      path: `?card=${CARD}`,
       answers: {
         [`PATCH ${BASE}/cards/${CARD}`]: async (request) => {
           sent.push(await request.json())
@@ -137,7 +137,7 @@ describe('CARD-04 card form', () => {
 
   it('points at the payment account the API refuses', async () => {
     await openCards({
-      path: `?card=${CARD}&part=cycle`,
+      path: `?card=${CARD}`,
       answers: {
         [`PATCH ${BASE}/cards/${CARD}`]: () => apiError('PAYMENT_ACCOUNT_NOT_AVAILABLE', 400),
       },
@@ -154,7 +154,7 @@ describe('CARD-04 card form', () => {
 
   it('lets a member change only the cycle', async () => {
     await openCards({
-      path: `?card=${CARD}&part=cycle`,
+      path: `?card=${CARD}`,
       access: () =>
         accessAs('Membro', [
           { module: 'cards', action: 'view' },

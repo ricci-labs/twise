@@ -161,6 +161,10 @@ Decided with the new-entry design (2026-10-10, version 2 on 2026-10-14,
   (equal margins beyond). Pages whose phone layout runs edge to edge (a month strip) keep the
   desktop margins. The accounts designs drew 28 px on top and stopped at 1184 px; the Home rule
   wins.
+- **One action per destination** (decided by the user, 2026-10-14): when two actions of a menu
+  open the same screen with no real difference (only the field that gets the focus, say), they
+  become one action named after the screen ("Editar cartão", not "Editar ciclo" and "Renomear e
+  cor"). The screen shows the person only what they may change, as before.
 - **No bottom sheets on the desktop** (decided by the user, 2026-10-14): what slides up from the
   bottom on the phone opens, on the desktop, as a popover under the field or button that asked for
   it (day, month and item pickers) or, when nothing on screen asked for it, as a dialog in the
