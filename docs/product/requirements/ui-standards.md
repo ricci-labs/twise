@@ -128,15 +128,17 @@ Every screen spec defines each of these:
 - **Percentages:** `72%`, no decimals unless below 10% (`4,5%`).
 
 ## Visual rules across screens
-Decided with the new-entry design (2026-10-10, `../../design/entries/decisions.md`); they hold for
-every screen, the Home included.
+Decided with the new-entry design (2026-10-10, version 2 on 2026-10-14,
+`../../design/entries/decisions.md`); they hold for every screen, the Home included.
 
 - **Illustrations are never clipped in a circle** (it cut the details at the corners). On white or
   light surfaces (picker fields, list rows, sheets, previews, banners, cards) use the loose versions
   without the paper square (`../../design/assets/ilustracoes/soltas/`), 42–46 px. The paper square
-  stays only when the illustration *is* the button (the category grid), and in the dark theme,
-  where the loose drawing's black ink would vanish on a dark surface (found while building,
-  2026-10-14).
+  stays only when the illustration *is* the button (the category grid, an illustration picker),
+  where the selected one keeps its paper colour and gets a 2 px `ink` outline and a bold label, like
+  every other selection in the app (no full mint tile, which hides the mint inside the drawing, and
+  no check mark); and in the dark theme, where the loose drawing's black ink would vanish on a dark
+  surface (found while building, 2026-10-14).
 - **Desktop forms:** fields side by side share one height (48 px, the `control` size); only money
   fields are taller. A switch sits beside its label, not at the far edge of the row.
 - **Name-to-value lists** (the shares of an entry, who owes what): a dotted leader between the name

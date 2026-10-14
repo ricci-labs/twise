@@ -1,7 +1,7 @@
 ---
 summary: Index of the visual design (Twise design system, account screens, app shell and Home, icons, owl illustrations and motion) and how to use it when building the web app.
 read_when: Building or changing any web screen or component, picking colors/type/spacing, or using the owl illustrations.
-updated: 2026-10-10
+updated: 2026-10-14
 ---
 
 # Design
