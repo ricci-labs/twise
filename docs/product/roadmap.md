@@ -252,7 +252,10 @@ updated: 2026-10-14
      with the new entry's card purchase, and "Pagar fatura" with its invoice payment (steps 11
      and 13 of the new entry round)
   7. [ ] Web: the desktop versions (tables, menus, dialogs). Done: the sidebar to the approved
-     model, the page header, the `DataTable`, `ACC-01` (KPIs, tables, "Lixeira" and "Nova conta")
+     model, the page header, the `DataTable`, `ACC-01` (KPIs, tables, "Lixeira" and "Nova conta"),
+     `ACC-02` (expense and income tables, chips on one line with "+{n} mais", the chip's menu).
+     The chips keep the categories' order until usage counts exist ("most used first"), and "Ver
+     lançamentos" joins the menus with the filtered `ENT-01`
   8. [ ] Fixes to merged work from this round's review: no circles in the Home, the one selection
      style everywhere, the "Mais" sheet with the system illustrations
   9. [ ] G42 (archive a category with its subcategories) only if the product owner approves it

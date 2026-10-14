@@ -19,14 +19,14 @@ const MONEY_COLUMNS: readonly DataTableColumn[] = [
   { key: 'kind', label: columns.kind },
   { key: 'owner', label: columns.owner },
   { key: 'balance', label: columns.balance, align: 'end' },
-  { key: 'actions', label: columns.actions, isLabelHidden: true },
+  { key: 'actions', label: columns.actions, isLabelHidden: true, isActions: true },
 ]
 
 const CARD_COLUMNS: readonly DataTableColumn[] = [
   { key: 'name', label: columns.card },
   { key: 'cycle', label: columns.cycle },
   { key: 'open', label: columns.open, align: 'end' },
-  { key: 'actions', label: columns.actions, isLabelHidden: true },
+  { key: 'actions', label: columns.actions, isLabelHidden: true, isActions: true },
 ]
 
 export function AccountsTables({ workspaceId, permissions, accounts }: AccountsListsProps) {

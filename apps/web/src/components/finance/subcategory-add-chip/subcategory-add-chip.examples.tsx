@@ -7,7 +7,14 @@ export const subcategoryAddChipExamples: ComponentExamples = {
     {
       name: 'Nova subcategoria',
       render: () => (
-        <SubcategoryAddChip label="Nova subcategoria em Mercado" link={<a href="#nova" />} />
+        <div className="flex gap-1.5">
+          <SubcategoryAddChip label="Nova subcategoria em Mercado" link={<a href="#nova" />} />
+          <SubcategoryAddChip
+            label="Nova subcategoria em Lazer"
+            text="Subcategoria"
+            link={<a href="#nova-lazer" />}
+          />
+        </div>
       ),
     },
   ],

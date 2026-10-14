@@ -3,10 +3,11 @@ import { subcategoryAddChipVariants } from '@web/components/finance/subcategory-
 import { TwiseIcon } from '@web/components/icons/twise-icon'
 import { cloneElement } from 'react'
 
-export function SubcategoryAddChip({ label, link }: SubcategoryAddChipProps) {
+export function SubcategoryAddChip({ label, text, link }: SubcategoryAddChipProps) {
   return cloneElement(
     link,
     { 'aria-label': label, className: subcategoryAddChipVariants() },
     <TwiseIcon name="plus" />,
+    text,
   )
 }

@@ -108,8 +108,9 @@ When to use each one: the design system guide → Colour, and each token's notes
   `account-name` (14/18, 600), the workspace and account names in its foot. `card-title` (18/24, 700,
   display), a card's title on the desktop.
 - **Table columns:** the desktop tables' column templates are theme values
-  (`--grid-template-columns-table-accounts`, `-cards`, `-invoices`, `-lines`), copied from the
-  design CSS, so a table row uses `grid-cols-table-accounts` instead of an arbitrary value.
+  (`--grid-template-columns-table-accounts`, `-cards`, `-invoices`, `-lines`, `-categories`,
+  `-incomes`), copied from the design CSS, so a table row uses `grid-cols-table-accounts` instead
+  of an arbitrary value.
 - **Amounts** always use `tabular-nums`. It lives inside the `Amount` component, so no screen has
   to remember it (`web-components.md`). Inputs use 16 px (`body`) so iPhones don't zoom.
 

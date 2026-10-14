@@ -99,7 +99,7 @@ export function CategoryList({
   )
 }
 
-function Subcategory({ workspaceId, permissions, tree, node }: CategoryNodeProps) {
+export function Subcategory({ workspaceId, permissions, tree, node }: CategoryNodeProps) {
   const parent = tree.active.find((main) => main.id === node.parentId)
   const canAct =
     hasPermission(permissions, 'accounts', 'update') ||
@@ -121,7 +121,7 @@ function Subcategory({ workspaceId, permissions, tree, node }: CategoryNodeProps
   )
 }
 
-function NatureBadge({ node }: NatureBadgeProps) {
+export function NatureBadge({ node }: NatureBadgeProps) {
   if (node.incomeNature === 'fixed') {
     return (
       <Badge tone="success" size="sm">

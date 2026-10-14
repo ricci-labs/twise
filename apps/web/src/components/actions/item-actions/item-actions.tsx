@@ -22,6 +22,7 @@ export function ItemActions({
   triggerLabel,
   actions,
   trigger,
+  align = 'end',
   onOpenChange,
 }: ItemActionsProps) {
   const isDesktop = useMediaQuery(DESKTOP_QUERY)
@@ -37,7 +38,7 @@ export function ItemActions({
     return (
       <ActionMenu
         trigger={opener}
-        align="end"
+        align={align}
         onOpenChange={onOpenChange}
         groups={[
           actions.map(({ key, label, icon, tone, onSelect, render }) => ({

@@ -21,7 +21,7 @@ import {
   workspaceList,
 } from '@web/testing/fake-api'
 import type { FakeAnswer } from '@web/testing/testing.types'
-import { afterEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { page } from 'vitest/browser'
 import { render } from 'vitest-browser-react'
 
@@ -179,5 +179,89 @@ describe('ACC-02 categories', () => {
       .element(page.getByRole('button', { name: 'Ações de Mercado' }))
       .not.toBeInTheDocument()
     await expect.element(page.getByRole('button', { name: /^Feira/ })).not.toBeInTheDocument()
+  })
+})
+
+const HOUSE_CHILDREN = [
+  'Aluguel',
+  'Condomínio',
+  'Luz e água',
+  'Internet',
+  'Gás',
+  'IPTU',
+  'Manutenção',
+  'Limpeza',
+  'Móveis',
+  'Decoração',
+  'Jardim',
+  'Seguro residencial',
+].map((name, position) => ({
+  ...CATEGORIES[1],
+  id: `00000000-0000-4000-8000-0000000001${String(position).padStart(2, '0')}`,
+  name,
+  parentId: HOUSE,
+}))
+
+describe('ACC-02 categories on the desktop', () => {
+  beforeEach(async () => {
+    await page.viewport(1440, 900)
+  })
+
+  afterEach(async () => {
+    localStorage.clear()
+    vi.restoreAllMocks()
+    await page.viewport(414, 896)
+  })
+
+  it('lays expenses and incomes out as tables, with every subcategory in its row', async () => {
+    await openCategories()
+
+    const expenses = page.getByRole('table', { name: 'Despesas' })
+    await expect.element(expenses).toBeVisible()
+    await expect.element(page.getByText('2 categorias, 2 subcategorias.')).toBeVisible()
+    await expect
+      .element(expenses.getByRole('button', { name: 'Feira, subcategoria de Mercado: ações' }))
+      .toBeVisible()
+    await expect
+      .element(expenses.getByRole('link', { name: 'Nova subcategoria em Casa' }))
+      .toHaveTextContent('Subcategoria')
+    const incomes = page.getByRole('table', { name: 'Receitas' })
+    await expect.element(incomes.getByRole('columnheader', { name: 'Natureza' })).toBeVisible()
+    await expect.element(incomes.getByText('Fixa')).toBeVisible()
+    await expect.element(page.getByRole('radio', { name: 'Despesas' })).not.toBeInTheDocument()
+    await expect
+      .element(page.getByRole('link', { name: 'Nova categoria' }))
+      .toHaveAttribute('href', expect.stringContaining('category=new'))
+    await expectNoAccessibilityViolations(page.getByRole('main').element())
+  })
+
+  it('keeps many subcategories on one line behind "+N mais" and opens them in place', async () => {
+    await openCategories({
+      answers: {
+        [`GET ${BASE}/accounts`]: () => Response.json([...CATEGORIES, ...HOUSE_CHILDREN]),
+      },
+    })
+
+    const more = page.getByRole('button', { name: /^\+\d+ mais$/ })
+    await expect.element(more).toBeVisible()
+    await expect.element(page.getByText('12 subcategorias')).toBeVisible()
+    const lastChip = page.getByRole('button', { name: /^Seguro residencial, subcategoria/ })
+    await expect.element(lastChip).not.toBeInTheDocument()
+
+    await more.click()
+
+    await expect.element(lastChip).toBeVisible()
+    await page.getByRole('button', { name: 'Mostrar menos' }).click()
+    await expect.element(lastChip).not.toBeInTheDocument()
+  })
+
+  it('opens the actions of a subcategory in a menu under its chip', async () => {
+    await openCategories()
+
+    await page.getByRole('button', { name: 'Feira, subcategoria de Mercado: ações' }).click()
+
+    await expect
+      .element(page.getByRole('menuitem', { name: 'Mover para outra categoria' }))
+      .toBeVisible()
   })
 })

@@ -8,5 +8,6 @@ export type AddChipLinkProps = {
 
 export type SubcategoryAddChipProps = {
   label: string
+  text?: string
   link: ReactElement<AddChipLinkProps>
 }

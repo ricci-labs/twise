@@ -54,6 +54,7 @@ import { recentEntriesExamples } from '@web/components/finance/recent-entries'
 import { sharesListExamples } from '@web/components/finance/shares-list'
 import { subcategoryAddChipExamples } from '@web/components/finance/subcategory-add-chip'
 import { subcategoryChipExamples } from '@web/components/finance/subcategory-chip'
+import { subcategoryChipsExamples } from '@web/components/finance/subcategory-chips'
 import { trashRowExamples } from '@web/components/finance/trash-row'
 import { fieldGroupExamples } from '@web/components/forms/field-group'
 import { formFieldExamples } from '@web/components/forms/form-field'
@@ -124,6 +125,7 @@ export const workbenchSections: readonly ComponentExamples[] = [
   trashRowExamples,
   categoryRowExamples,
   subcategoryChipExamples,
+  subcategoryChipsExamples,
   subcategoryAddChipExamples,
   cardBlockExamples,
   dataTableExamples,

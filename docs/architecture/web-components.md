@@ -287,8 +287,10 @@ piggy bank once. `prefers-reduced-motion` zeroes all of it (`globals.css`).
   the same order as a sheet on the phone and an `ActionMenu` on the desktop
   (`../design/accounts/components.md` item 4). The sheet is titled with the item's name and an optional `description`
   ("Subcategoria de Mercado"); rows of 52 px with a 22 px icon, the destructive one last in
-  `danger`. The default trigger is a 36 px "⋯" named by `triggerLabel` ("Ações de Conta X"); a
-  `trigger` replaces it (a subcategory chip). Renders nothing when the person may do nothing.
+  `danger`. The default trigger is a 36 px "⋯" (16 px dots) named by `triggerLabel` ("Ações de
+  Conta X"); a `trigger` replaces it (a subcategory chip). The desktop menu opens aligned to the
+  trigger's end, or its start with `align="start"` (under a chip). Renders nothing when the person
+  may do nothing.
 - `Sheet` (`components/layout/sheet`, Base UI `Drawer`): a titled dialog from the bottom with a
   handle, a dimmed backdrop and the safe area; the phone's "Mais" and workspace switcher. The
   content keeps 16 px from the sides, the title 20 px; a list may bleed to 8 px (the picker rows).
@@ -311,10 +313,14 @@ passes the overview's numbers.
   (display font, `section-title` on the phone, `card-title` from 1024 px), the description `note`.
 - `DataTable` + `DataTableName` + `DataTableAmount` (`components/display/data-table`): the desktop
   tables of the design (`tb`): a `table` whose rows are grids on one of the column templates
-  (`layout`: `accounts`, `cards`, `invoices`, `lines`, from `--grid-template-columns-table-*`),
-  14 px muted cells and header, 60 px rows with a divider, the name cell (40 px drawing, name, colour
-  dot, an optional link) and the bold amount. A column can hide its label from view (`isLabelHidden`,
-  the actions column). A row whose menu is open (`data-popup-open`) gets the `page` highlight.
+  (`layout`: `accounts`, `cards`, `invoices`, `lines`, `categories`, `incomes`, from
+  `--grid-template-columns-table-*`), 14 px muted cells, a divider per row, the name cell (40 px
+  drawing, name, an optional `detail` line, colour dot, an optional link) and the bold amount. The
+  money layouts have 60 px rows, a 12 px gap and a 14 px header; the category ones (`ctb`) 64 px rows,
+  a 16 px gap and the 12.5 px semibold header. A column can hide its label from view
+  (`isLabelHidden`); the actions column (`isActions`) puts the "⋯" at the end, 8 px past the column
+  like the design. A row whose menu is open (`data-popup-open` in its last cell) gets the `page`
+  highlight; an `isOpen` row (a category showing all its chips) gets it too, top-aligned.
 - `PageHeader` (`components/layout/page-header`): a screen's title (`form-title-lg` on the phone,
   `display` from 1024 px), its description on the desktop only and the actions on the right.
 - `KpiCard` + `KpiBadge` (`components/display/kpi-card`): label (`h3`) with an optional help
@@ -492,7 +498,13 @@ component here, so the form, and later the account, card and planning forms, sha
   is a button that opens its actions (white with the 2 px ink outline while they are open, via
   `data-popup-open`), `plain` is the text a viewer sees and `archived` the outlined, faded one.
 - `SubcategoryAddChip` (`components/finance/subcategory-add-chip`): the dashed "+" at the end of
-  a category's chips, a link named "Nova subcategoria em {mãe}".
+  a category's chips, a link named "Nova subcategoria em {mãe}"; with `text` it also shows a word
+  ("+ Subcategoria", the desktop row of a category without subcategories).
+- `SubcategoryChips` (`components/finance/subcategory-chips`): a desktop row of chips that stays on
+  one line. It measures the chips (from their `labels`) and shows the ones that fit, then "+{n}
+  mais" and the add chip; `isExpanded` shows them all, wrapping, ending with "Mostrar menos ⌃"
+  (mint, underlined). It reports how many are hidden (`onHiddenCountChange`) so the row can show
+  "{n} subcategorias" under the name.
 - `SubPageHeader` (`components/layout/sub-page-header`): a page one level down on the phone: the
   40 px "‹" back link (named "Voltar para {page}"), the title in `form-title-lg`, a grey
   `sub-page` description under it, and an optional `actions` slot on the right (a card's "⋯").

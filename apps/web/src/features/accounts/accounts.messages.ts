@@ -189,6 +189,19 @@ export const accountsMessages = {
     },
     failed: 'Não foi possível carregar as categorias.',
     and: ' e ',
+    table: {
+      summary: (categories: number, subcategories: number) =>
+        `${categories === 1 ? '1 categoria' : `${categories} categorias`}, ${subcategories === 1 ? '1 subcategoria' : `${subcategories} subcategorias`}.`,
+      subcategoryCount: (count: number) =>
+        count === 1 ? '1 subcategoria' : `${count} subcategorias`,
+      addSubcategory: 'Subcategoria',
+      columns: {
+        category: 'Categoria',
+        nature: 'Natureza',
+        subcategories: 'Subcategorias',
+        actions: 'Ações',
+      },
+    },
   },
   categoryForm: {
     newTitle: 'Nova categoria',

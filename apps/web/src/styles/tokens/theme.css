@@ -199,6 +199,8 @@
     minmax(0, 0.8fr) minmax(0, 1fr) minmax(0, 1fr) 5.625rem;
   --grid-template-columns-table-lines: 5rem minmax(0, 2.6fr) minmax(0, 0.8fr) minmax(0, 1fr)
     minmax(0, 1fr);
+  --grid-template-columns-table-categories: minmax(0, 1.2fr) minmax(0, 3fr) 2.75rem;
+  --grid-template-columns-table-incomes: minmax(0, 1.2fr) 7.5rem minmax(0, 2.8fr) 2.75rem;
 
   --spacing-touch: 2.75rem;
   --spacing-control: 3rem;

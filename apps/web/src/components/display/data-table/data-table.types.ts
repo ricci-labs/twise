@@ -9,11 +9,13 @@ export type DataTableColumn = {
   label: string
   align?: DataTableAlign
   isLabelHidden?: boolean
+  isActions?: boolean
 }
 
 export type DataTableRow = {
   key: string
   cells: readonly ReactNode[]
+  isOpen?: boolean
 }
 
 export type DataTableProps = Required<Pick<VariantProps<typeof dataTableRowVariants>, 'layout'>> & {
@@ -23,6 +25,7 @@ export type DataTableProps = Required<Pick<VariantProps<typeof dataTableRowVaria
 }
 
 export type DataTableNameLinkProps = {
+  'data-slot'?: string
   className?: string
   children?: ReactNode
 }
@@ -31,6 +34,7 @@ export type DataTableNameProps = {
   name: string
   icon: string | null
   color?: string | null
+  detail?: string
   link?: ReactElement<DataTableNameLinkProps>
 }
 
