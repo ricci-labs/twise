@@ -33,6 +33,26 @@ export function cardsQueryOptions(workspaceId: string) {
   })
 }
 
+export function invoicesQueryOptions(workspaceId: string, cardId: string) {
+  return queryOptions({
+    queryKey: [...queryKeys.workspace(workspaceId), 'cards', cardId, 'invoices'] as const,
+    queryFn: () => fetchInvoices(workspaceId, cardId),
+  })
+}
+
+export function invoiceLinesQueryOptions(workspaceId: string, cardId: string, invoiceId: string) {
+  return queryOptions({
+    queryKey: [
+      ...queryKeys.workspace(workspaceId),
+      'cards',
+      cardId,
+      'invoices',
+      invoiceId,
+    ] as const,
+    queryFn: () => fetchInvoiceLines(workspaceId, cardId, invoiceId),
+  })
+}
+
 export function membersQueryOptions(workspaceId: string) {
   return queryOptions({
     queryKey: [...queryKeys.workspace(workspaceId), 'members'] as const,
@@ -69,4 +89,16 @@ export function fetchCards(workspaceId: string) {
 
 export function fetchMembers(workspaceId: string) {
   return unwrap(workspaceApi.members.$get({ param: { workspaceId } }))
+}
+
+export function fetchInvoices(workspaceId: string, cardId: string) {
+  return unwrap(workspaceApi.cards[':cardId'].invoices.$get({ param: { workspaceId, cardId } }))
+}
+
+export function fetchInvoiceLines(workspaceId: string, cardId: string, invoiceId: string) {
+  return unwrap(
+    workspaceApi.cards[':cardId'].invoices[':invoiceId'].lines.$get({
+      param: { workspaceId, cardId, invoiceId },
+    }),
+  )
 }

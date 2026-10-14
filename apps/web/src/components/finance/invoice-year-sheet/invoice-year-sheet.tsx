@@ -26,7 +26,7 @@ export function InvoiceYearSheet({
   onNext,
 }: InvoiceYearSheetProps) {
   return (
-    <Sheet title={title} isOpen={isOpen} onOpenChange={onOpenChange}>
+    <Sheet title={title} closeLabel={messages.close} isOpen={isOpen} onOpenChange={onOpenChange}>
       <div className={invoiceYearHeadVariants()}>
         <h3 className={invoiceYearLabelVariants()}>{year}</h3>
         <div className="flex">

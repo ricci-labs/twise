@@ -11,7 +11,7 @@ export const invoiceLineDateVariants = cva(
 export const invoiceLineTextVariants = cva('flex min-w-0 flex-1 flex-col')
 
 export const invoiceLineNameVariants = cva(
-  'flex min-w-0 items-center gap-1.5 text-choice font-semibold [&>span:first-child]:truncate',
+  'flex min-w-0 items-center gap-1.5 text-choice font-semibold [&>span:first-child]:min-w-0',
 )
 
 export const invoiceLineInstallmentVariants = cva(

@@ -4,6 +4,8 @@ export type MonthLinkProps = {
   className?: string
   'aria-label'?: string
   'aria-current'?: 'true'
+  'data-slot'?: string
+  'data-month'?: string
   children?: ReactNode
 }
 
@@ -20,6 +22,7 @@ export type InvoiceMonth = {
 export type InvoiceMonthStripProps = {
   label: string
   months: readonly InvoiceMonth[]
+  anchor?: string
   allLabel: string
   onAll: () => void
 }

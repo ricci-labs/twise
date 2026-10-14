@@ -1,8 +1,8 @@
 import { cva } from 'class-variance-authority'
 
-export const invoiceYearHeadVariants = cva('flex items-center justify-between pl-1')
+export const invoiceYearHeadVariants = cva('-mb-1 flex items-center justify-between pl-1')
 
-export const invoiceYearLabelVariants = cva('font-display text-section-title')
+export const invoiceYearLabelVariants = cva('text-choice font-emphasis')
 
 export const invoiceYearArrowVariants = cva(
   'grid size-touch cursor-pointer place-items-center rounded-full text-ink outline-none hover:bg-sunken focus-visible:ring-2 focus-visible:ring-focus-ring disabled:cursor-not-allowed disabled:text-ink-subtle [&_svg]:size-5',

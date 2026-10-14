@@ -243,8 +243,12 @@ updated: 2026-10-14
   5. [x] Web: `ACC-02` with subcategories and every subcategory action (tree, income natures,
      archive with the children, refused delete, move, archived, viewer), `ACC-03` for categories
      (new, new subcategory, edit, the locked "Dentro de", the income nature)
-  6. [ ] Web: `CARD-01`, `CARD-02` (strip, year sheet), `CARD-03`, `CARD-04` (days); "Cadastrar
-     cartão" in the new entry's empty sheet
+  6. [ ] Web: `CARD-01` (done: one block per card, archived cards, "Ver faturas", archive and
+     delete with undo and the refused delete, empty, viewer, loading, error), `CARD-02` (done:
+     strip, year sheet, summary with the future and paid notes, first lines), `CARD-03` (done:
+     header, closed note, filters, not found); `CARD-04` (days) with "Novo cartão", "Editar ciclo"
+     and "Renomear e cor"; "Cadastrar cartão" in the new entry's empty sheet. "Pagar fatura" comes
+     with the entry's invoice payment (step 13 of the new entry round)
   7. [ ] Web: the desktop versions (tables, menus, dialogs)
   8. [ ] Fixes to merged work from this round's review: no circles in the Home, the one selection
      style everywhere, the "Mais" sheet with the system illustrations

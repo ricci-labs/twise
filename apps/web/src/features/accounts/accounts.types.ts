@@ -1,14 +1,18 @@
 import type { NewAccountInput, Permission } from '@financas/shared'
 import type { ItemAction } from '@web/components/actions/item-actions'
+import type { BackLinkProps } from '@web/components/layout/sub-page-header'
 import type { accountFormSchema, categoryFormSchema } from '@web/features/accounts/accounts.schemas'
 import type {
   fetchAccounts,
   fetchAccountsSummary,
   fetchBalances,
   fetchCards,
+  fetchInvoiceLines,
+  fetchInvoices,
   fetchMembers,
   fetchTrashedAccounts,
 } from '@web/features/accounts/api/accounts.queries'
+import type { ReactElement, ReactNode } from 'react'
 import type { z } from 'zod'
 
 export type LedgerAccount = Awaited<ReturnType<typeof fetchAccounts>>[number]
@@ -18,6 +22,10 @@ export type AccountBalance = Awaited<ReturnType<typeof fetchBalances>>[number]
 export type AccountsSummary = Awaited<ReturnType<typeof fetchAccountsSummary>>
 
 export type CardSummary = Awaited<ReturnType<typeof fetchCards>>[number]
+
+export type StoredInvoice = Awaited<ReturnType<typeof fetchInvoices>>[number]
+
+export type InvoiceLineItem = Awaited<ReturnType<typeof fetchInvoiceLines>>[number]
 
 export type WorkspaceMember = Awaited<ReturnType<typeof fetchMembers>>[number]
 
@@ -71,6 +79,7 @@ export type AccountRowActionsProps = {
   workspaceId: string
   permissions: readonly Permission[]
   account: ListedAccount
+  leadingActions?: readonly ItemAction[]
 }
 
 export type AccountsData = {
@@ -296,4 +305,113 @@ export type ParentSectionProps = {
   kind: CategoryKind
   mains: Readonly<Record<CategoryKind, readonly CategoryNode[]>>
   name: string
+}
+
+export type CardsPageProps = {
+  workspaceId: string
+  permissions: readonly Permission[]
+}
+
+export type CardListProps = CardsPageProps & {
+  cards: readonly CardSummary[]
+  members: readonly WorkspaceMember[] | null
+}
+
+export type CardItemProps = CardsPageProps & {
+  card: CardSummary
+  holder: string | null
+}
+
+export type InvoiceState = 'future' | 'open' | 'closed' | 'paid'
+
+export type CardInvoice = {
+  invoiceId: string | null
+  referenceMonth: string
+  closingOn: string
+  dueOn: string
+  state: InvoiceState
+  totalCents: number
+  paidCents: number
+  dueCents: number
+  ownCents: number
+  frontedCents: number
+}
+
+export type InvoiceLineView = {
+  key: string
+  date: string
+  description: string
+  icon: string | null
+  installment?: string
+  detail?: string
+  amountCents: number
+  isPayment: boolean
+  isFronted: boolean
+}
+
+export type InvoiceFilter = 'all' | 'own' | 'fronted'
+
+export type CardInvoicesPageProps = CardsPageProps & {
+  cardId: string
+  month?: string
+}
+
+export type InvoicePageProps = CardsPageProps & {
+  cardId: string
+  invoiceId: string
+}
+
+export type CardInvoicesLoadedProps = CardsPageProps & {
+  card: CardSummary
+  stored: readonly StoredInvoice[]
+  month?: string
+}
+
+export type PageMissingProps = {
+  title: string
+  backLabel: string
+  back: ReactElement
+}
+
+export type CardPageFrameProps = {
+  children: ReactNode
+}
+
+export type CardPageHeaderProps = CardsPageProps & {
+  card: CardSummary
+  back: ReactElement<BackLinkProps>
+  backLabel: string
+  title: string
+  description: string
+}
+
+export type InvoiceLinesPreviewProps = {
+  workspaceId: string
+  card: CardSummary
+  invoice: CardInvoice
+  lines: readonly InvoiceLineView[] | undefined
+}
+
+export type InvoiceYearPickerProps = {
+  workspaceId: string
+  card: CardSummary
+  invoices: readonly CardInvoice[]
+  chosen: CardInvoice
+  isOpen: boolean
+  onOpenChange: (isOpen: boolean) => void
+}
+
+export type InvoiceDetailProps = CardsPageProps & {
+  card: CardSummary
+  invoice: CardInvoice
+  lines: readonly InvoiceLineView[]
+}
+
+export type InvoiceLineListProps = {
+  lines: readonly InvoiceLineView[]
+}
+
+export type PreviewBodyProps = {
+  hasInvoice: boolean
+  lines: readonly InvoiceLineView[] | undefined
 }

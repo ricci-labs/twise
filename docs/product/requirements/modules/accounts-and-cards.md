@@ -212,6 +212,9 @@ com a {conta}", no button.
 an invoice payment, prefilled with the card, invoice, due amount and the card's payment account;
 secondary on a future invoice (paying early is allowed); hidden when nothing is due or the card is
 archived (`../api-gaps.md`).
+The strip lists every month from the card's registration (`createdAt`) to the last invoice with
+lines, the open one included; a month with no stored invoice shows zeros. It opens with the month
+after the open invoice at the right margin and a whole month at the left one.
 Desktop: `CARD-02` and `CARD-03` are one page: the strip, four KPIs of the chosen invoice (total,
 falta pagar, seu, de terceiros), "Pagar fatura" top right, and the lines table with the filters in
 its header.
@@ -223,7 +226,8 @@ Route `/cartoes/:cardId/faturas/:invoiceId`. `GET …/invoices/:invoiceId/lines`
 category drawing, description (+ "1/3"), amount; "R$ 160,00 de terceiros" under the description
 when contacts owe part; payments negative in green with the `fatura-paga` drawing ("Pagamento",
 the account used). Tap a line → `ENT-03`.
-**RF-CARD-5** Filters (client side): "Todas", "Só minhas", "Com terceiros".
+**RF-CARD-5** Filters (client side): "Todas", "Só minhas" (lines with no part owed by contacts;
+payments show only under "Todas"), "Com terceiros" (lines with a part owed by contacts).
 **RF-CARD-6** "Pagar fatura" as in `CARD-02`. Closed invoices show, with a lock: "Fatura fechada.
 Lançamentos dela não podem ser excluídos nem editados."
 Errors: `INVOICE_NOT_FOUND` ("Fatura não encontrada.") as the page state.

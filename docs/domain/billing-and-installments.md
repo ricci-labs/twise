@@ -1,7 +1,7 @@
 ---
 summary: Rules for card invoices (closing/due), installment splitting, multi-party allocation, refunds, and competence vs cash views — with worked examples that double as test cases.
 read_when: Any code or question involving card invoices, installments, refunds, competence month or cash month.
-updated: 2026-09-25
+updated: 2026-10-14
 ---
 
 # Billing cycle and installments
@@ -65,6 +65,15 @@ Card X (`closingDay = 3`, `dueDay = 10`), invoices of October (closes 10-03) and
 | 2026-10-03, issuer keeps closing-day purchases | open | open |
 
 Statuses are refreshed whenever an entry touches the card (a daily job comes later).
+
+## The invoice of a month, and when it opens
+`invoiceForReferenceMonth()` gives the closing and due dates of the invoice due in a month, so a
+screen can show a month the card had no purchase in. `invoiceOpeningOn()` gives the first day a
+purchase lands on an invoice: the previous closing day when closing-day purchases go to the next
+invoice, else the day after it ("Ela abre em 26/10" on `CARD-02`).
+
+Card X (`closingDay = 3`): the November invoice (closes 11-03) opens on 10-03; when the issuer
+keeps closing-day purchases, on 10-04.
 
 ## Installment split
 

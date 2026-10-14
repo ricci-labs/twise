@@ -58,6 +58,11 @@ export function formatMonthLabel(label: string): string {
   return `${SHORT_MONTHS[month - 1]}/${String(year).slice(YEAR_DIGITS)}`
 }
 
+export function formatShortMonthName(label: string): string {
+  const { month } = parseIsoDate(`${label}-01`)
+  return SHORT_MONTHS[month - 1] ?? label
+}
+
 export function formatMonthName(label: string): string {
   const { month } = parseIsoDate(`${label}-01`)
   return LONG_MONTHS[month - 1] ?? label

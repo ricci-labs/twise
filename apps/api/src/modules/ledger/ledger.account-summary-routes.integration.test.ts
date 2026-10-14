@@ -172,6 +172,7 @@ describe('GET /cards', () => {
       },
     })
     expect(x?.currentInvoice.invoiceId).toEqual(expect.any(String))
+    expect(Number.isNaN(Date.parse(String(x?.createdAt)))).toBe(false)
     expect(y).toMatchObject({ openCents: 62_000, limitUsedPercent: null })
     expect(cards.find((card) => card.accountId === archivedCard)?.archivedAt).not.toBeNull()
   })
