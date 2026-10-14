@@ -32,6 +32,7 @@ import { spinnerExamples } from '@web/components/feedback/spinner'
 import { tipExamples } from '@web/components/feedback/tip'
 import { toastExamples } from '@web/components/feedback/toast'
 import { invoicePreviewExamples } from '@web/components/finance/invoice-preview'
+import { sharesListExamples } from '@web/components/finance/shares-list'
 import { formFieldExamples } from '@web/components/forms/form-field'
 import { twiseIconExamples } from '@web/components/icons/twise-icon'
 import { choiceChipsExamples } from '@web/components/inputs/choice-chips'
@@ -61,6 +62,7 @@ export const workbenchSections: readonly ComponentExamples[] = [
   switchExamples,
   radioCardListExamples,
   invoicePreviewExamples,
+  sharesListExamples,
   amountExamples,
   cardExamples,
   kpiCardExamples,
