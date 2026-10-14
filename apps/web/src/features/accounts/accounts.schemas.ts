@@ -21,3 +21,7 @@ export const accountFormSchema = z.object({
   icon: z.string(),
   color: z.string(),
 })
+
+export const categoriesSearchSchema = z.object({
+  kind: z.enum(['expense', 'income']).optional().catch(undefined),
+})

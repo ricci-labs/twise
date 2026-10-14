@@ -14,4 +14,4 @@ export const accountGroupListVariants = cva(
   'flex flex-col rounded-lg border border-border bg-surface px-3 py-1',
 )
 
-export const accountGroupNoteVariants = cva('mx-0.5 mt-1 text-caption font-normal text-ink-muted')
+export const accountGroupNoteVariants = cva('mx-0.5 mt-1 text-group-note text-ink-muted')

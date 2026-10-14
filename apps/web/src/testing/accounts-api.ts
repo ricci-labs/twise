@@ -127,3 +127,29 @@ export const TRASH = [
     deleteReason: null,
   },
 ]
+
+export const GROCERIES = '00000000-0000-4000-8000-0000000000e1'
+export const MARKET = '00000000-0000-4000-8000-0000000000e2'
+export const BAKERY = '00000000-0000-4000-8000-0000000000e3'
+export const HOUSE = '00000000-0000-4000-8000-0000000000e4'
+export const SALARY = '00000000-0000-4000-8000-0000000000e5'
+
+export const CATEGORIES = [
+  {
+    ...ledgerAccount(GROCERIES, 'expense_category', 'Mercado', { icon: 'groceries' }),
+    class: 'expense',
+  },
+  {
+    ...ledgerAccount(MARKET, 'expense_category', 'Feira', { parentId: GROCERIES }),
+    class: 'expense',
+  },
+  {
+    ...ledgerAccount(BAKERY, 'expense_category', 'Padaria', { parentId: GROCERIES }),
+    class: 'expense',
+  },
+  { ...ledgerAccount(HOUSE, 'expense_category', 'Casa', { icon: 'house' }), class: 'expense' },
+  {
+    ...ledgerAccount(SALARY, 'income_category', 'Salário', { icon: 'coin', incomeNature: 'fixed' }),
+    class: 'income',
+  },
+]

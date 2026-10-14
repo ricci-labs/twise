@@ -32,7 +32,10 @@ export function AccountsAreaHeader({ workspaceId, current, canSeeTrash }: Accoun
         ]}
         width="full"
         onValueChange={(area) =>
-          navigate({ to: '/w/$workspaceId/$area', params: { workspaceId, area } })
+          navigate({
+            to: area === 'accounts' ? '/w/$workspaceId/accounts' : '/w/$workspaceId/categories',
+            params: { workspaceId },
+          })
         }
       />
     </header>

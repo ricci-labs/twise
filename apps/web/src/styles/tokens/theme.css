@@ -87,6 +87,15 @@
   --text-sub-page: 0.84375rem;
   --text-sub-page--line-height: 1.1875rem;
   --text-sub-page--font-weight: 400;
+  --text-chip: 0.84375rem;
+  --text-chip--line-height: 1.125rem;
+  --text-chip--font-weight: 500;
+  --text-toggle: 0.78125rem;
+  --text-toggle--line-height: 1rem;
+  --text-toggle--font-weight: 600;
+  --text-group-note: 0.78125rem;
+  --text-group-note--line-height: 1.0625rem;
+  --text-group-note--font-weight: 400;
   --text-lead: 1.0625rem;
   --text-lead--line-height: 1.4375rem;
   --text-lead--font-weight: 650;

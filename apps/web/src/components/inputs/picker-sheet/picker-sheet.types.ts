@@ -1,3 +1,4 @@
+import type { TwiseIconName } from '@web/components/icons/twise-icon'
 import type { pickerListVariants } from '@web/components/inputs/picker-sheet/picker-sheet.variants'
 import type { VariantProps } from 'class-variance-authority'
 import type { RefObject } from 'react'
@@ -7,6 +8,7 @@ export type PickerItem = {
   label: string
   detail?: string
   icon?: string | null
+  placeholderIcon?: TwiseIconName
   children?: readonly PickerItem[]
 }
 

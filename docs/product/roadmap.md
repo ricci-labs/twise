@@ -239,8 +239,9 @@ updated: 2026-10-14
      entry's empty sheet; the "{nome} criada" sheet and "Informar saldo inicial" come with the
      entry's opening balance), `ACC-04` (done: list, restore with "Ver", "Restaurar as duas",
      empty and error)
-  5. [ ] Web: `ACC-02` with subcategories and every subcategory action, `ACC-03` (category, edit,
-     move)
+  5. [ ] Web: `ACC-02` with subcategories and every subcategory action (done: tree, income
+     natures, archive with the children, refused delete, move, archived, viewer), `ACC-03`
+     (category, edit; "Nova subcategoria", "+ Nova categoria" and the "+" chip come with it)
   6. [ ] Web: `CARD-01`, `CARD-02` (strip, year sheet), `CARD-03`, `CARD-04` (days); "Cadastrar
      cartão" in the new entry's empty sheet
   7. [ ] Web: the desktop versions (tables, menus, dialogs)

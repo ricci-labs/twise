@@ -46,7 +46,11 @@ export const pickerChildrenVariants = cva('flex flex-col gap-2 rounded-lg bg-pag
 export const pickerChildrenTitleVariants = cva('text-note font-medium text-ink-muted')
 
 export const pickerEmptyVariants = cva(
-  'flex flex-col items-center gap-1.5 px-3 pt-2 pb-6 text-center text-body-sm text-ink-muted [&_b]:text-title-sm [&_b]:text-ink',
+  'flex flex-col items-center gap-1.5 px-3 pt-2 pb-4 text-center text-body-sm text-ink-muted [&_b]:text-title-sm [&_b]:text-ink',
 )
 
 export const pickerEmptyActionVariants = cva('mt-2.5')
+
+export const pickerPlaceholderArtVariants = cva(
+  'grid size-11.5 shrink-0 place-items-center rounded-md border-stroke border-dashed border-border-control text-ink-muted [&_svg]:size-4',
+)
