@@ -186,6 +186,30 @@ Decided with the new-entry design (2026-10-10, version 2 on 2026-10-14,
   check. On the phone they sit above the tab bar, or above a form's buttons, and the floating "+"
   moves up while one shows.
 
+## Lists, pickers and long content
+Decided by the user on 2026-10-14, for every screen, built or to be built.
+
+- **Lists that grow over time** (entries, the lines of an invoice, the trash, the history) load 50
+  items at a time and end with a "Mostrar mais" button; no page numbers. Search and filters ask the
+  API, never only what is already on screen. Lists that stay small by nature (accounts,
+  categories, cards, contacts, a card's invoices) load whole.
+- **A menu opened from a field** (picker, select, suggestions) is as wide as the field, at least
+  288 px and at most 480 px. A field narrower than that keeps the menu's start aligned with it and
+  lets the menu grow towards the side with room.
+- **No browser-made controls.** Every choice field uses the app's picker (a sheet on the phone, a
+  menu under the field on the desktop), never the browser's `select`; every date uses the app's
+  calendar (month with arrows, days in a grid, today marked, the chosen day with the selection
+  outline), never the browser's date picker.
+- **Nothing on the desktop depends on swiping.** A strip that scrolls sideways (the invoice
+  months, "Repetir um recente") gets ‹ › arrows at its ends on the desktop, shown only while there
+  is more on that side; the wheel and the touchpad keep scrolling it.
+- **Many items in a card or a list:** a card of the Home shows at most 5 items with "Ver todos"; a
+  row of chips shows what fits on one line and "+N mais"; a list of more than 12 items (the
+  categories) gets a search on top; pickers show the most used first, with their search.
+- **Lists inside a dialog or a sheet** (the invoices to pay, the contacts to choose) show at most 5
+  items, the most relevant first (the oldest invoice with something due), then "Mostrar mais
+  ({n})"; more than 10 items add a search on top.
+
 ## Permissions in the UI
 - The member's permissions come from `GET /api/workspaces/:workspaceId`. Each action in a screen
   spec names its permission (`module:action`, e.g. `entries:create`).
