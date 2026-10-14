@@ -240,7 +240,8 @@ updated: 2026-10-14
         the red "em atraso" badge, the amount and "{nome} pagou" filled from it, an amber warning
         when receiving more). Waiting on the contacts round: "Novo contato" (`CON-05`) and
         opening it from `CON-02`
-  14. [ ] Web: the desktop dialog for the other types (the type pills in one row)
+  14. [x] Web: the desktop dialog for the other types (the type pills in one row, "Mais" as a
+      384 px popover under its pill, each type's fields in the two columns)
   15. [ ] Web: "Repetir um recente" and the suggestion that fills the rest
   16. [ ] Web: the Home follows the app-wide rules (loose illustrations, no circles; the budgets
       already do, through `CategoryArt`)

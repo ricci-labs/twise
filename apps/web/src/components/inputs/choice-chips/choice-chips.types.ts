@@ -1,6 +1,7 @@
 import type { TwiseIconName } from '@web/components/icons/twise-icon'
 import type { choiceChipsVariants } from '@web/components/inputs/choice-chips/choice-chips.variants'
 import type { VariantProps } from 'class-variance-authority'
+import type { Ref } from 'react'
 
 export type ChoiceChipIcon = 'calendar' | 'chevron'
 
@@ -11,6 +12,7 @@ export type ChoiceChip = {
   avatarName?: string
   avatarIcon?: TwiseIconName
   opensDialog?: boolean
+  buttonRef?: Ref<HTMLButtonElement>
 }
 
 export type ChoiceChipsProps = VariantProps<typeof choiceChipsVariants> & {

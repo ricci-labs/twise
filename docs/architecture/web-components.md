@@ -387,7 +387,8 @@ component here, so the form, and later the account, card and planning forms, sha
   `compact` `Badge` 8 px after the name (an income category's "Fixa" / "Variável").
 - `PickerSheet` (`components/inputs/picker-sheet`): what a `PickerField` opens. A bottom `Sheet`
   with "Fechar" on the phone; from 1024 px a popover anchored to the field (`anchor`), above a
-  dialog. `layout` `list` (rows with the drawing and the detail, 8 px from the sheet's sides, the
+  dialog, 320 px wide (`popupWidth="wide"`: 384 px, for rows with a longer line, as "Outros
+  tipos" under the "Mais" pill, which `ChoiceChips` anchors through the option's `buttonRef`). `layout` `list` (rows with the drawing and the detail, 8 px from the sheet's sides, the
   current one on `mint-soft` with a check) or `grid` (the category tiles on paper; the current one keeps its paper and gets a 2 px
   sketch-ink outline and a bold label, no mint and no check). An item with `isPerson` shows the
   `lg` `Avatar` of its label instead of a drawing (the contact picker); one with `hasChevron` ends

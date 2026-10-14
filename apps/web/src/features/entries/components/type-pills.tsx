@@ -2,7 +2,7 @@ import { type ChoiceChip, ChoiceChips } from '@web/components/inputs/choice-chip
 import { PickerSheet } from '@web/components/inputs/picker-sheet'
 import { entriesMessages } from '@web/features/entries/entries.messages'
 import type { FormEntryType, TypePillsProps } from '@web/features/entries/entries.types'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 
 const messages = entriesMessages.newEntry
 const MAIN_TYPES: readonly FormEntryType[] = ['expense', 'card_purchase', 'income', 'transfer']
@@ -24,6 +24,7 @@ const MORE_ITEMS = MORE_TYPES.map((entryType) => ({
 
 export function TypePills({ value, canSeeContacts, onChange }: TypePillsProps) {
   const [isChoosingMore, setIsChoosingMore] = useState(false)
+  const moreButton = useRef<HTMLButtonElement>(null)
   const moreType = MORE_TYPES.find((entryType) => entryType === value)
   const options: ChoiceChip[] = [
     ...MAIN_TYPES.map((entryType) => ({ value: entryType, label: messages.types[entryType] })),
@@ -32,6 +33,7 @@ export function TypePills({ value, canSeeContacts, onChange }: TypePillsProps) {
       label: moreType ? messages.types[moreType] : messages.more.label,
       icon: 'chevron',
       opensDialog: true,
+      buttonRef: moreButton,
     },
   ]
 
@@ -55,6 +57,8 @@ export function TypePills({ value, canSeeContacts, onChange }: TypePillsProps) {
         title={messages.more.title}
         items={MORE_ITEMS.filter((item) => canSeeContacts || item.value !== NEEDS_CONTACTS)}
         value={moreType ?? null}
+        anchor={moreButton}
+        popupWidth="wide"
         isOpen={isChoosingMore}
         onOpenChange={setIsChoosingMore}
         onSelect={(next) => {
