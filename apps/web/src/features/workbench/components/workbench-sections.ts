@@ -24,6 +24,7 @@ import { responsiveTextExamples } from '@web/components/display/responsive-text'
 import { richTextExamples } from '@web/components/display/rich-text'
 import { stepTrackExamples } from '@web/components/display/step-track'
 import { alertExamples } from '@web/components/feedback/alert'
+import { autoFillTipExamples } from '@web/components/feedback/auto-fill-tip'
 import { bannerExamples } from '@web/components/feedback/banner'
 import { emptyStateExamples } from '@web/components/feedback/empty-state'
 import { sectionErrorExamples } from '@web/components/feedback/section-error'
@@ -32,6 +33,7 @@ import { spinnerExamples } from '@web/components/feedback/spinner'
 import { tipExamples } from '@web/components/feedback/tip'
 import { toastExamples } from '@web/components/feedback/toast'
 import { invoicePreviewExamples } from '@web/components/finance/invoice-preview'
+import { recentEntriesExamples } from '@web/components/finance/recent-entries'
 import { sharesListExamples } from '@web/components/finance/shares-list'
 import { formFieldExamples } from '@web/components/forms/form-field'
 import { twiseIconExamples } from '@web/components/icons/twise-icon'
@@ -63,6 +65,8 @@ export const workbenchSections: readonly ComponentExamples[] = [
   radioCardListExamples,
   invoicePreviewExamples,
   sharesListExamples,
+  recentEntriesExamples,
+  autoFillTipExamples,
   amountExamples,
   cardExamples,
   kpiCardExamples,

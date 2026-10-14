@@ -3,6 +3,7 @@ import { cva } from 'class-variance-authority'
 export const amountVariants = cva('whitespace-nowrap tabular-nums', {
   variants: {
     size: {
+      inherit: '',
       sm: 'text-amount-sm',
       md: 'text-amount',
       lg: 'text-amount-lg',

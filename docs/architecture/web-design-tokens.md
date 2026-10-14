@@ -83,7 +83,10 @@ When to use each one: the design system guide → Colour, and each token's notes
 - **Component type styles** (tier 3), from the account components' design CSS: `screen-title`
   (30/36, auth and moment titles), `screen-title-lg` (36/42, moment titles on desktop), `claim`
   (the desktop panel's "Leve, claro, a dois.", the same metrics as `amount-hero`),
-  `claim-support` (17/26), `brand` (64, the opening's "twise") and `slogan` (18/24).
+  `claim-support` (17/26), `brand` (64, the opening's "twise") and `slogan` (18/24). From the
+  New entry design CSS: `note` (13/18, 400), the small lines of a form (the "* obrigatório"
+  legend, a sheet's subtitle, the auto-fill tip, the "Repetir um recente" title, with a weight
+  class where the design sets one).
 - **Amounts** always use `tabular-nums`. It lives inside the `Amount` component, so no screen has
   to remember it (`web-components.md`). Inputs use 16 px (`body`) so iPhones don't zoom.
 

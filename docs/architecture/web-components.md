@@ -35,12 +35,12 @@ where it's used.
 | `actions/` | `Button`, `IconButton`, `SubmitButton`, `FloatingActionButton`, `ActionMenu`, `SegmentedControl` |
 | `inputs/` | `TextInput`, `PasswordInput`, `EmailInput`, `PhoneInput`, `SearchInput`, `TextArea`, `MoneyInput`, `ChoiceChips`, `PickerField`, `PickerSheet`, `Stepper`, `RadioCardList`, `DateInput`, `PeriodPicker`, `Select`, `Combobox`, `Checkbox`, `RadioGroup`, `Switch`, `DayOfMonthPicker`, `FileUpload`, `ColorSwatch` |
 | `forms/` | `Form`, `FormField`, `FormErrorSummary`, `FormFooter`, `RequiredLegend` |
-| `feedback/` | `Toast`, `InlineAlert`, `Banner`, `ConfirmDialog`, `EmptyState`, `Skeleton`, `ErrorState` |
+| `feedback/` | `Toast`, `InlineAlert`, `AutoFillTip`, `Banner`, `ConfirmDialog`, `EmptyState`, `Skeleton`, `ErrorState` |
 | `display/` | `Amount`, `StatusBadge`, `Avatar`, `ListItem`, `Card`, `StatCard`, `ThresholdProgress`, `Tabs`, `Accordion`, `DataList` (table on desktop, list on mobile), `LoadMore`, `Tooltip`, `HelpPopover`, `FilterChips`, `CategoryIcon` |
 | `charts/` | `BarChart`, `ForecastChart`, `DonutChart`, each with its text alternative |
 | `navigation/` | `BottomBar`, `Sidebar`, `TopBar`, `WorkspaceSwitcher`, `BackLink`, `Breadcrumb` |
 | `layout/` | `AppShell`, `Page`, `PageHeader`, `Section`, `Stack`, `Grid` |
-| `finance/` | `StatHero`, `InsightCard`, `InvoiceCard`, `InvoicePreview`, `SharesList`, `EntryRow`, `OccurrenceRow`, `ContactRow`, `ChargePreview`, `AmountSplitEditor` |
+| `finance/` | `StatHero`, `InsightCard`, `InvoiceCard`, `InvoicePreview`, `SharesList`, `RecentEntries`, `EntryRow`, `OccurrenceRow`, `ContactRow`, `ChargePreview`, `AmountSplitEditor` |
 | `brand/` | `Logo`, `OwlScene` (the layered owl scenes and their motion), `AppSplash` |
 | `icons/` | `TwiseIcon` and the icon registries (see Icons) |
 
@@ -262,7 +262,8 @@ piggy bank once. `prefers-reduced-motion` zeroes all of it (`globals.css`).
 `docs/design/home/` → Rules and `../design/home/components.md`. They take formatted pieces; the Home feature
 passes the overview's numbers.
 - `Amount` (`components/display/amount`): cents → "R$ 1.234,56" through `formatBrl`, the true minus
-  "−", "+" only with `sign="always"`, never wrapping, tabular figures; sizes `sm`, `md`, `lg`,
+  "−", "+" only with `sign="always"`, never wrapping, tabular figures; sizes `inherit` (the
+  surrounding text's, for an amount inside a sentence or a card's second line), `sm`, `md`, `lg`,
   `kpi` (30 px, display font) and `hero`; `isCentsRaised` lifts ",00" (`text-cents`).
 - `Card` (`components/display/card`): a region named by its `h2` title, an optional description
   and `headerAction` (tabs), the body, and a footer with a stat on the left and a link on the
@@ -338,6 +339,13 @@ component here, so the form, and later the account, card and planning forms, sha
   "×" to take them out), the error under the rows, "Adicionar contato" (disabled at the limit), and,
   after a dashed divider, "Sua parte" with its value in the same column (blank while the sum passes
   the total). The screen owns the amounts and the rules; the list only shows them.
+- `RecentEntries` (`components/finance/recent-entries`): "Repetir um recente", a row of cards that
+  scrolls sideways from the 16 px margin (the last one peeking): the drawing, the description and
+  the last amount; the picked card is `aria-pressed` with the ink outline. Nothing renders when
+  there is nothing to repeat.
+- `AutoFillTip` (`components/feedback/auto-fill-tip`): the discreet line under a field that says
+  what was filled for the person, with a mint check and "Desfazer" on the right; a `status`, so it
+  is announced.
 - `CategoryArt` (`components/display/category-art`): the category drawing of an account's `icon`,
   never clipped in a circle (`../product/requirements/ui-standards.md` → Visual rules across
   screens). By default (`loose`) it is the drawing without its paper square, from
