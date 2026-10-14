@@ -5,6 +5,7 @@ import { AccountRow } from '@web/components/finance/account-row'
 import { accountsMessages } from '@web/features/accounts/accounts.messages'
 import type { AccountsListsProps, ListedAccount } from '@web/features/accounts/accounts.types'
 import { AccountRowActions } from '@web/features/accounts/components/account-row-actions'
+import { cardEditActionsOf } from '@web/features/accounts/components/card-edit-actions'
 import { hasPermission } from '@web/lib/permissions'
 
 const messages = accountsMessages.groups
@@ -30,7 +31,14 @@ export function AccountsLists({
       isArchived={account.isArchived}
       isHighlighted={account.id === highlightedId}
       actions={
-        <AccountRowActions workspaceId={workspaceId} permissions={permissions} account={account} />
+        <AccountRowActions
+          workspaceId={workspaceId}
+          permissions={permissions}
+          account={account}
+          leadingActions={
+            account.isCard && !account.isArchived ? cardEditActionsOf(permissions, account.id) : []
+          }
+        />
       }
     />
   )
@@ -52,7 +60,18 @@ export function AccountsLists({
         </AccountGroup>
       )}
       {cards.length > 0 && (
-        <AccountGroup title={messages.cards} note={messages.cardsNote}>
+        <AccountGroup
+          title={messages.cards}
+          note={messages.cardsNote}
+          add={
+            hasPermission(permissions, 'cards', 'create')
+              ? {
+                  label: messages.newCard,
+                  link: <Link to="." search={(previous) => ({ ...previous, card: 'new' })} />,
+                }
+              : undefined
+          }
+        >
           {cards.map(rowOf)}
         </AccountGroup>
       )}

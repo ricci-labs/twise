@@ -246,9 +246,11 @@ updated: 2026-10-14
   6. [ ] Web: `CARD-01` (done: one block per card, archived cards, "Ver faturas", archive and
      delete with undo and the refused delete, empty, viewer, loading, error), `CARD-02` (done:
      strip, year sheet, summary with the future and paid notes, first lines), `CARD-03` (done:
-     header, closed note, filters, not found); `CARD-04` (days) with "Novo cartão", "Editar ciclo"
-     and "Renomear e cor"; "Cadastrar cartão" in the new entry's empty sheet. "Pagar fatura" comes
-     with the entry's invoice payment (step 13 of the new entry round)
+     header, closed note, filters, not found), `CARD-04` (done: new and edit card, the day sheet,
+     the live cycle preview, the days warning, "Novo cartão" on the page, the empty state and the
+     "Cartões" group of `ACC-01`, "Editar ciclo" and "Renomear e cor"). "Cadastrar cartão" comes
+     with the new entry's card purchase, and "Pagar fatura" with its invoice payment (steps 11
+     and 13 of the new entry round)
   7. [ ] Web: the desktop versions (tables, menus, dialogs)
   8. [ ] Fixes to merged work from this round's review: no circles in the Home, the one selection
      style everywhere, the "Mais" sheet with the system illustrations

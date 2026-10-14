@@ -1,4 +1,6 @@
 import { ACCOUNT_NAME_MAX_LENGTH, INCOME_NATURES, MONEY_ACCOUNT_KINDS } from '@financas/shared'
+import { accountsMessages } from '@web/features/accounts/accounts.messages'
+import { centsOfTypedAmount } from '@web/lib/format/money'
 import { z } from 'zod'
 
 const NEW_ACCOUNT = 'new'
@@ -58,3 +60,31 @@ export const categoryFormSchema = z
       context.addIssue({ code: 'custom', path: ['incomeNature'], input: values.incomeNature })
     }
   })
+
+const CARD_PARTS = ['cycle', 'name'] as const
+
+const DAY_OF_MONTH = /^([1-9]|[12]\d|3[01])$/
+
+export const cardSearchSchema = z.object({
+  card: z
+    .union([z.literal(NEW_ACCOUNT), z.uuid()])
+    .optional()
+    .catch(undefined),
+  part: z.enum(CARD_PARTS).optional().catch(undefined),
+})
+
+export const cardFormSchema = z.object({
+  name: z.string().trim().min(1).max(ACCOUNT_NAME_MAX_LENGTH),
+  closingDay: z.string().regex(DAY_OF_MONTH),
+  dueDay: z.string().regex(DAY_OF_MONTH),
+  purchaseOnClosingDayGoesNext: z.boolean(),
+  limit: z
+    .string()
+    .refine(
+      (text) => text.trim() === '' || (centsOfTypedAmount(text) ?? 0) > 0,
+      accountsMessages.cardForm.limitInvalid,
+    ),
+  paymentAccountId: z.string(),
+  holderUserId: z.string(),
+  color: z.string(),
+})
