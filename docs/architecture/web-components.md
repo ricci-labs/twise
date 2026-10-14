@@ -35,7 +35,7 @@ where it's used.
 | `actions/` | `Button`, `IconButton`, `SubmitButton`, `FloatingActionButton`, `ActionMenu`, `ItemActions`, `SegmentedControl` |
 | `inputs/` | `TextInput`, `PasswordInput`, `EmailInput`, `PhoneInput`, `SearchInput`, `TextArea`, `MoneyInput`, `ChoiceChips`, `PickerField`, `PickerSheet`, `Stepper`, `RadioCardList`, `DateInput`, `PeriodPicker`, `Select`, `Combobox`, `Checkbox`, `RadioGroup`, `Switch`, `DayOfMonthPicker`, `FileUpload`, `ColorSwatch` |
 | `forms/` | `Form`, `FormField`, `FormErrorSummary`, `FormFooter`, `RequiredLegend` |
-| `feedback/` | `Toast`, `InlineAlert`, `AutoFillTip`, `Banner`, `ConfirmDialog`, `EmptyState`, `Skeleton`, `ListSkeleton`, `ErrorState` |
+| `feedback/` | `Toast`, `InlineAlert`, `AutoFillTip`, `Banner`, `ConfirmDialog`, `EmptyState`, `EmptyBlock`, `Skeleton`, `ListSkeleton`, `KpiSkeleton`, `ErrorState` |
 | `display/` | `Amount`, `StatusBadge`, `Avatar`, `ListItem`, `Card`, `StatCard`, `ThresholdProgress`, `Tabs`, `Accordion`, `DataList` (table on desktop, list on mobile), `LoadMore`, `Tooltip`, `HelpPopover`, `FilterChips`, `CategoryIcon`, `ArchivedToggle` |
 | `charts/` | `BarChart`, `ForecastChart`, `DonutChart`, each with its text alternative |
 | `navigation/` | `BottomBar`, `Sidebar`, `TopBar`, `WorkspaceSwitcher`, `BackLink`, `Breadcrumb` |
@@ -153,7 +153,8 @@ React Hook Form v7 + `zodResolver` with the **schemas from `@financas/shared`** 
 - `Banner`: a full-width ink strip for states of the whole screen; `OfflineBanner` shows it with the
   catalog's network message while the device is offline.
   It takes an optional `action` at the end (the update banner's "Atualizar").
-- `Tip`: one centred line of help with the Info icon, in the colour of its background's text.
+- `Tip`: one centred line of help with the Info icon, in the colour of its background's text;
+  `tone="readOnly"` is the grey strip with the eye (`note`, 500) the shell shows to a viewer.
 - Toasts: `showToast(message, { action, tone })` with the `Toaster` mounted once in `AppProviders`
   (`sonner`, styled with tokens): an ink card (`action-primary`) with 15 px text, the action bold and
   underlined in `accent-on-primary`; `tone: 'success'` adds the mint check before the text. On phones
@@ -199,7 +200,8 @@ React Hook Form v7 + `zodResolver` with the **schemas from `@financas/shared`** 
   generator.
 - With `prefers-reduced-motion`, every duration and delay is zero (`globals.css`), so each
   sequence shows its final state at once.
-- `Logo` is the full logo or the icon, named "twise" for screen readers.
+- `Logo` is the full logo, the icon (32 px, the collapsed sidebar) or the `mark` (30 px, the
+  phone's top bar), named "twise" for screen readers.
 - `Spinner` (`components/feedback/spinner`, `sm`/`md`/`lg`) is the one spinner: buttons, the
   step track, the app opening and "Abrindo o espaço…" all use it.
 - `StepTrack` is the 3-step journey of the moments: an `<ol>` with `aria-label`, the current step
@@ -217,8 +219,11 @@ React Hook Form v7 + `zodResolver` with the **schemas from `@financas/shared`** 
   account); collapsed, 76 px (`w-19`) of icons that keep their names (`aria-label`) with a tooltip
   on hover, the owl logo, a round "+" and a divider for "Mais". It's sticky at the window height.
   The collapsed state is the caller's (`isCollapsed`, `onToggle`).
-- `BottomTabBar`: the phone's five items, fixed at the bottom with the safe area (`pb-safe`);
-  current item bold with a short mint bar under the label; hidden from 1024 px.
+- `BottomTabBar`: the phone's five items, fixed at the bottom with the safe area (`pb-safe`), 94 px
+  tall as the approved model: each item centred, a 44 × 30 box with the 25 px icon over the `tab`
+  label (11.5 px); the current one bold in `mint-ink`, with no fill, pill or mark; the bar casts
+  `shadow-bar` upwards. Hidden from 1024 px. The floating action sits 108 px from the bottom and
+  toasts 12 px above the bar.
 - `AppShell` (`components/layout/app-shell`): the sidebar from 1024 px, the content (with an
   optional `banner` on top) and, on the phone, the bottom bar and an optional floating action.
 ## Charts
@@ -274,7 +279,8 @@ piggy bank once. `prefers-reduced-motion` zeroes all of it (`globals.css`).
   With `closeLabel`, the title is the display `title` and "X" sits 8 px from the edge; an optional
   `description` goes under the title in `note`.
 - `Avatar` (`components/display/avatar`): the initial of a name in a circle (`mint` or `paper`),
-  decorative: the name is always written next to it or in the control's label.
+  decorative: the name is always written next to it or in the control's label. `size="stacked"` is
+  the overlapping pair of the phone's top bar: 36 px with a 2 px ring of the page colour.
 
 ## Home building blocks
 `docs/design/home/` → Rules and `../design/home/components.md`. They take formatted pieces; the Home feature
@@ -289,21 +295,26 @@ passes the overview's numbers.
 - `KpiCard` + `KpiBadge` (`components/display/kpi-card`): label (`h3`) with an optional help
   slot, the value, a badge and the foot lines (`children`); `tone` `plain`, `mint` (the first
   card) or `danger` (passed the plan); `art` sits at the bottom right and the foot keeps clear of
-  it.
+  it. With `artAt="top"` (the accounts summary) the art sits at the top right and the label line
+  has no room reserved for a help button.
 - `KpiCarousel` (`components/display/kpi-carousel`): on the phone a scroll-snap row of 300 px
   cards (the next one peeks), each slide a group read as "2 de 4", dots that are buttons and
-  follow the swipe; from 1024 px a row of four.
+  follow the swipe (the current one 22 px in ink, the others `indicator-idle`); the row takes the
+  keyboard focus so the arrows scroll it. From 1024 px a row of four, or of three with
+  `columns={3}`.
 - `SegmentedControl` (`components/actions/segmented-control`, Base UI `ToggleGroup`): one option
-  pressed at a time (`aria-pressed`), e.g. the forecast's account tabs.
+  pressed at a time (`aria-pressed`), e.g. the forecast's account tabs. `width="full"` splits the
+  whole width in equal options with the raised white selection (the "Contas | Categorias" tabs).
 - `Badge` (`components/display/badge`): a short status pill (`neutral`, `info`, `success`,
   `warning`, `danger`), e.g. "Período encerrado".
 - `HelpPopover` (`components/display/help-popover`): the "?" next to a number ("O que é {topic}?"),
   a Base UI popover with the plain-words explanation; Escape and a press outside close it.
 - `SectionSkeleton`, `SectionError` and `EmptyState` (`components/feedback/`): one per section.
   The skeleton is a `status` with "Carregando…" for screen readers and decorative blocks that
-  stop pulsing with reduced motion; the error says what failed, "Código: {ref}" and "Tentar de
-  novo" for that section only; the empty state is an illustration in a soft circle and one line
-  on the card itself, with an optional action.
+  stop pulsing with reduced motion; the error says what failed (`message`, 15 px), "Código: {ref}"
+  and a grey "Tentar de novo" with the refresh icon for that section only, behind the loose alert
+  drawing (no circle); the empty state is an illustration in a soft circle and one line on the
+  card itself, with an optional action.
 
 ## New entry building blocks
 `../design/entries/components.md` names the pieces of the `ENT-02` form; several of them are one
@@ -412,16 +423,22 @@ component here, so the form, and later the account, card and planning forms, sha
   `isHighlighted` puts a new item on `mint-soft`. 61 px with a divider, as the design.
 - `AccountGroup` (`components/finance/account-group`): a titled region ("Dinheiro", `section-title`)
   with its add link on the right ("+ Nova conta", hidden for who can't create), the rows in a white
-  card with dividers, and an optional note under it.
+  card with dividers, and an optional note under it. `loadingRows` puts a `ListSkeleton` in place of
+  the rows; without a title it's only the card (the archived rows under `ArchivedToggle`).
 - `ArchivedToggle` (`components/display/archived-toggle`, Base UI `Collapsible`): the dashed
   "Arquivadas (n)" row at the end of a list, with the archive icon and a chevron; it opens the
   archived items below. Nothing when none is archived.
-- `ListSkeleton` (`components/feedback/list-skeleton`): skeleton rows shaped like `AccountRow` in
-  the same white card, a `status` that says "Carregando…".
+- `ListSkeleton` (`components/feedback/list-skeleton`): 64 px skeleton rows shaped like
+  `AccountRow` in the same white card, a `status` that says "Carregando…".
+- `KpiSkeleton` (`components/feedback/kpi-skeleton`): one summary card while it loads (label and
+  value blocks), what the carousel shows before its numbers arrive.
+- `EmptyBlock` (`components/feedback/empty-block`): a whole list with nothing in it yet: the 96 px
+  loose drawing, the `lead` sentence ("Nenhuma conta ainda."), the reason or next step, and the
+  first action, centred in a white card.
 - The refused action is a `ConfirmDialog` with `confirmVariant="primary"` and `confirmIcon`: the
   title names the item ("Não dá para excluir a Conta Y"), the text says why, "Cancelar" and the way
   out ("Arquivar"). The undo is a toast with "Desfazer"; a refusal that needs an answer, a `danger`
-  toast. Empty and error states use `EmptyState` and `SectionError`.
+  toast. A list with nothing yet is an `EmptyBlock`; a failed load, a `SectionError`.
 
 ## Account layouts
 - `AuthLayout` (`components/layout/auth-layout`): the auth screen of

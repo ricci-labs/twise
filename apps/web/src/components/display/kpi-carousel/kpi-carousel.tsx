@@ -8,7 +8,7 @@ import {
 import { cn } from '@web/lib/cn'
 import { Children, isValidElement, useId, useRef, useState } from 'react'
 
-export function KpiCarousel({ children, className }: KpiCarouselProps) {
+export function KpiCarousel({ children, columns, className }: KpiCarouselProps) {
   const trackRef = useRef<HTMLDivElement>(null)
   const [current, setCurrent] = useState(0)
   const total = children.length
@@ -41,12 +41,18 @@ export function KpiCarousel({ children, className }: KpiCarouselProps) {
     <section
       data-slot="kpi-carousel"
       aria-labelledby={titleId}
-      className={cn('flex flex-col gap-3', className)}
+      className={cn('flex flex-col gap-2', className)}
     >
       <h2 id={titleId} className="sr-only">
         {messages.label}
       </h2>
-      <div ref={trackRef} className={kpiCarouselTrackVariants()} onScroll={onScroll}>
+      <div
+        ref={trackRef}
+        // biome-ignore lint/a11y/noNoninteractiveTabindex: a scrolling region must take the keyboard focus so the arrow keys can scroll it
+        tabIndex={0}
+        className={kpiCarouselTrackVariants({ columns })}
+        onScroll={onScroll}
+      >
         {Children.toArray(children).map((child, position) => (
           // biome-ignore lint/a11y/useSemanticElements: the WAI-ARIA carousel names each slide as a group
           <div

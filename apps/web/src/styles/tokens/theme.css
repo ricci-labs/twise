@@ -42,6 +42,10 @@
   --text-amount-sm: 0.8125rem;
   --text-amount-sm--line-height: 1.125rem;
   --text-amount-sm--font-weight: 700;
+  --text-bar-title: 1.125rem;
+  --text-bar-title--line-height: 1.5rem;
+  --text-bar-title--font-weight: 700;
+  --text-bar-title--letter-spacing: -0.01em;
   --text-title-sm: 1rem;
   --text-title-sm--line-height: 1.375rem;
   --text-title-sm--font-weight: 650;
@@ -60,6 +64,9 @@
   --text-button-sm: 0.8125rem;
   --text-button-sm--line-height: 1.125rem;
   --text-button-sm--font-weight: 650;
+  --text-tab: 0.71875rem;
+  --text-tab--line-height: 0.875rem;
+  --text-tab--font-weight: 550;
   --text-caption: 0.75rem;
   --text-caption--line-height: 1rem;
   --text-caption--font-weight: 600;
@@ -74,6 +81,9 @@
   --text-screen-title-lg--line-height: 2.625rem;
   --text-screen-title-lg--font-weight: 750;
   --text-screen-title-lg--letter-spacing: -0.02em;
+  --text-lead: 1.0625rem;
+  --text-lead--line-height: 1.4375rem;
+  --text-lead--font-weight: 650;
   --text-section-title: 1.0625rem;
   --text-section-title--line-height: 1.375rem;
   --text-section-title--font-weight: 700;
@@ -93,6 +103,15 @@
   --text-form-title-lg--line-height: 2rem;
   --text-form-title-lg--font-weight: 750;
   --text-form-title-lg--letter-spacing: -0.02em;
+  --text-message: 0.9375rem;
+  --text-message--line-height: 1.3125rem;
+  --text-message--font-weight: 400;
+  --text-row: 0.96875rem;
+  --text-row--line-height: 1.25rem;
+  --text-row--font-weight: 600;
+  --text-row-detail: 0.8125rem;
+  --text-row-detail--line-height: 1.0625rem;
+  --text-row-detail--font-weight: 400;
   --text-choice: 0.9375rem;
   --text-choice--line-height: 1.25rem;
   --text-choice--font-weight: 500;
@@ -171,6 +190,7 @@
   --color-ink-subtle: var(--ink-subtle);
   --color-border: var(--border);
   --color-border-control: var(--border-control);
+  --color-indicator-idle: var(--indicator-idle);
   --color-focus-ring: var(--focus-ring);
   --color-mint: var(--mint);
   --color-mint-soft: var(--mint-soft);
@@ -243,7 +263,9 @@
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
 
+  --shadow-raised: var(--elevation-raised);
   --shadow-float: var(--elevation-float);
+  --shadow-bar: var(--elevation-bar);
   --shadow-dialog: var(--elevation-dialog);
 }
 

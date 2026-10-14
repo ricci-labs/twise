@@ -1,4 +1,4 @@
 export type LogoProps = {
-  variant?: 'full' | 'icon'
+  variant?: 'full' | 'icon' | 'mark'
   className?: string
 }

@@ -14,5 +14,14 @@ export const avatarExamples: ComponentExamples = {
         </div>
       ),
     },
+    {
+      name: 'Empilhados, como no topo do celular',
+      render: () => (
+        <p className="flex -space-x-2">
+          <Avatar name="Member A" tone="paper" size="stacked" />
+          <Avatar name="Member B" size="stacked" />
+        </p>
+      ),
+    },
   ],
 }

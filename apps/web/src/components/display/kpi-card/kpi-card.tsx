@@ -33,7 +33,7 @@ export function KpiCard({
           {art}
         </div>
       )}
-      <div className="relative flex min-h-6.5 items-center gap-1.5">
+      <div className={cn('relative flex items-center gap-1.5', artAt === 'bottom' && 'min-h-6.5')}>
         <h3 data-slot="kpi-label" className="text-label">
           {label}
         </h3>
@@ -44,7 +44,7 @@ export function KpiCard({
       </p>
       <div
         className={cn(
-          'relative mt-auto flex flex-col items-start gap-1.5 text-body-sm',
+          'relative mt-auto flex flex-col items-start gap-1.5 text-note',
           art && artAt === 'bottom' && 'pr-14',
         )}
       >

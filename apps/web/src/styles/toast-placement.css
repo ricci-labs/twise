@@ -8,7 +8,7 @@
 }
 
 body:has([data-slot="bottom-tab-bar"]) {
-  --toast-lift: 5.75rem;
+  --toast-lift: 6.625rem;
 }
 
 body:has([data-slot="form-overlay"]) {
@@ -20,5 +20,5 @@ body:has([data-slot="form-overlay"]) {
 }
 
 body:has([data-sonner-toast]) [data-slot="floating-action"] {
-  bottom: 9.75rem;
+  bottom: 10.25rem;
 }

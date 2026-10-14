@@ -5,7 +5,7 @@ export const listSkeletonVariants = cva(
 )
 
 export const listSkeletonRowVariants = cva(
-  'flex items-center gap-3 border-border py-2.5 not-first:border-t',
+  'flex min-h-16 items-center gap-3 border-border py-2.5 not-first:border-t',
 )
 
 export const listSkeletonTextVariants = cva('flex flex-1 flex-col gap-1.5')

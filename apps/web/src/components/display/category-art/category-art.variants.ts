@@ -15,6 +15,7 @@ export const categoryArtVariants = cva(
         lg: 'size-11.5 text-label',
         xl: 'size-16 text-title',
         '2xl': 'size-22 text-title',
+        empty: 'size-24 text-title',
       },
       hasArt: {
         true: '',

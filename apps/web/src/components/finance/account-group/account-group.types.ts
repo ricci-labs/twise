@@ -7,8 +7,9 @@ export type AccountGroupAdd = {
 }
 
 export type AccountGroupProps = {
-  title: string
+  title?: string
   add?: AccountGroupAdd
   note?: string
-  children: ReactNode
+  loadingRows?: number
+  children?: ReactNode
 }

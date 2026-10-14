@@ -56,7 +56,7 @@ When to use each one: the design system guide → Colour, and each token's notes
 
 | Group | Roles |
 |---|---|
-| Surfaces | `bg-page`, `bg-surface`, `bg-sunken`, `border`, `border-control`, `focus-ring` |
+| Surfaces | `bg-page`, `bg-surface`, `bg-sunken`, `border`, `border-control`, `focus-ring`, `indicator-idle` (the carousel's other dots) |
 | Text | `ink`, `ink-muted`, `ink-subtle` |
 | Brand | `mint`, `mint-soft`, `on-mint`, `mint-ink` |
 | Actions | `action-primary`, `action-primary-hover`, `on-action-primary`, `accent-on-primary` (the mint accent on a primary surface: the toast icon and action), `danger-on-primary` (the error toast's alert icon), `action-secondary`, `action-secondary-hover` |
@@ -84,12 +84,16 @@ When to use each one: the design system guide → Colour, and each token's notes
   (30/36, auth and moment titles), `screen-title-lg` (36/42, moment titles on desktop), `claim`
   (the desktop panel's "Leve, claro, a dois.", the same metrics as `amount-hero`),
   `claim-support` (17/26), `brand` (64, the opening's "twise") and `slogan` (18/24). From the
-  New entry and accounts design CSS: `section-title` (17/22, 700, display family), a group's
+  New entry and accounts design CSS: `lead` (17/23, 650), the sentence that heads an empty block;
+  `section-title` (17/22, 700, display family), a group's
   title on the phone ("Dinheiro", "Cartões"); `dialog-title` (21/26, 750, display) and
   `dialog-text` (15/22), a confirmation dialog's title and text; `form-title` (24/30, 750) and `form-title-lg` (26/32,
   desktop), the title of a full-screen form or form dialog; `choice` (15/20, 500), the text of
-  choice chips, of a filled picker field and of a list row's name and value (with `font-semibold`
-  or `font-bold`); `note` (13/18, 400), the small lines of a form (the
+  choice chips and of a filled picker field (with `font-semibold` where the design sets it);
+  `row` (15.5/20, 600) and `row-detail` (13/17), an account row's name and value (`font-bold`) and
+  its grey second line; `message` (15/21), the sentence of a section error; `bar-title` (18/24,
+  700, display), the workspace name in the phone's top bar; `tab` (11.5/14, 550), the bottom bar's
+  labels; `note` (13/18, 400), the small lines of a form (the
   "* obrigatório" legend, a sheet's subtitle, the auto-fill tip, the "Repetir um recente" title,
   with a weight class where the design sets one).
 - **Amounts** always use `tabular-nums`. It lives inside the `Amount` component, so no screen has
@@ -103,8 +107,10 @@ When to use each one: the design system guide → Colour, and each token's notes
   `button-sm` type style), `fab` 56 px (`size-fab`).
 - **Radius:** the design's fixed scale, `sm` 8 px, `md` 14 px (fields, alerts), `lg` 20 px (cards,
   dialogs), `xl` 28 px (main card, bottom sheet), `full` (buttons, badges, chips).
-- **Elevation:** flat by default (cards use `border`). `shadow-float` (floating button, menus,
-  toasts) and `shadow-dialog` (dialogs, bottom sheet) only, from the `--elevation-*` values of each
+- **Elevation:** flat by default (cards use `border`). `shadow-raised` (the selected option of a
+  segmented control), `shadow-float` (floating button, menus,
+  toasts), `shadow-bar` (the phone's bottom bar, cast upwards) and `shadow-dialog` (dialogs, bottom
+  sheet) only, from the `--elevation-*` values of each
   theme.
 - **Borders:** `1px` for cards and fields, `2px` for focus and errors. The design's thinner
   emphasis stroke (`--stroke-emphasis`, 1.5 px) has three utilities, because Tailwind makes no

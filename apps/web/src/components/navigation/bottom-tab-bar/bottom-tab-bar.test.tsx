@@ -61,7 +61,7 @@ describe('BottomTabBar', () => {
     expect(getComputedStyle(other).color).toBe(colorOfClass('text-ink-muted'))
     const fill = current.querySelector('[data-slot=icon-fill]')
     expect(fill && getComputedStyle(fill).fill).toBe('none')
-    expect(current.querySelectorAll('span')).toHaveLength(1)
+    expect(current.children).toHaveLength(2)
   })
 
   it('gives way to the sidebar from 1024 px', async () => {
