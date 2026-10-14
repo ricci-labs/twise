@@ -9,7 +9,7 @@ import { useFormContext, useFormState } from 'react-hook-form'
 
 const messages = entriesMessages.newEntry
 
-export function FormFooter({ isOnline, problem, onCancel }: FormFooterProps) {
+export function FormFooter({ isOnline, isBlocked = false, problem, onCancel }: FormFooterProps) {
   const { trigger } = useFormContext()
   const { isValid, isSubmitting } = useFormState()
   const isDesktop = useMediaQuery(DESKTOP_QUERY)
@@ -25,7 +25,7 @@ export function FormFooter({ isOnline, problem, onCancel }: FormFooterProps) {
         <SubmitButton
           width="full"
           loadingLabel={messages.saving}
-          isBlocked={!isOnline}
+          isBlocked={!isOnline || isBlocked}
           className="lg:w-auto"
         >
           {messages.save}
@@ -36,9 +36,9 @@ export function FormFooter({ isOnline, problem, onCancel }: FormFooterProps) {
           size={isDesktop ? 'md' : 'touch'}
           className="lg:w-auto"
           width="full"
-          isDisabled={!isValid || isSubmitting || !isOnline}
+          isDisabled={!isValid || isSubmitting || !isOnline || isBlocked}
           onDisabledPress={() => {
-            if (isOnline && !isSubmitting) {
+            if (isOnline && !isSubmitting && !isBlocked) {
               void trigger(undefined, { shouldFocus: true })
             }
           }}

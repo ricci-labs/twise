@@ -13,7 +13,7 @@ import {
   workspaceList,
 } from '@web/testing/fake-api'
 import type { FakeAnswer } from '@web/testing/testing.types'
-import { afterEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { type Locator, page } from 'vitest/browser'
 import { render } from 'vitest-browser-react'
 
@@ -24,6 +24,34 @@ const GROCERIES = '00000000-0000-4000-8000-0000000000e1'
 const MARKET = '00000000-0000-4000-8000-0000000000e2'
 const LEISURE = '00000000-0000-4000-8000-0000000000e3'
 const CURRENT_USER = '00000000-0000-4000-8000-0000000000a1'
+const CARD_X = '00000000-0000-4000-8000-0000000000c3'
+
+const CARD_SUMMARY = {
+  accountId: CARD_X,
+  name: 'Cartão X',
+  color: null,
+  icon: 'card',
+  sortOrder: 0,
+  archivedAt: null,
+  createdAt: '2026-01-10T12:00:00.000Z',
+  closingDay: 25,
+  dueDay: 4,
+  purchaseOnClosingDayGoesNext: false,
+  limitCents: null,
+  holderUserId: null,
+  paymentAccountId: CHECKING,
+  openCents: 0,
+  limitUsedPercent: null,
+  currentInvoice: {
+    invoiceId: null,
+    referenceMonth: '2026-11',
+    closingOn: '2026-10-25',
+    dueOn: '2026-11-04',
+    status: 'open',
+    totalCents: 0,
+    dueCents: 0,
+  },
+}
 
 function ledgerAccount(id: string, kind: string, name: string, parentId: string | null = null) {
   return {
@@ -77,7 +105,11 @@ function latestExpense(accountId: string, categoryId: string) {
   }
 }
 
-function entryAnswers(recorded: unknown[], recordAnswer?: FakeAnswer) {
+function entryAnswers(
+  recorded: unknown[],
+  recordAnswer?: FakeAnswer,
+  cards: readonly unknown[] = [CARD_SUMMARY],
+) {
   return {
     [`GET ${BASE}/accounts`]: () => Response.json(ACCOUNTS),
     [`GET ${BASE}/balances`]: () =>
@@ -98,6 +130,7 @@ function entryAnswers(recorded: unknown[], recordAnswer?: FakeAnswer) {
         },
       ]),
     [`GET ${BASE}/members`]: () => Response.json([]),
+    [`GET ${BASE}/cards`]: () => Response.json(cards),
     [`GET ${BASE}/entries`]: () =>
       Response.json({ items: [latestExpense(WALLET, GROCERIES)], nextCursor: null }),
     [`POST ${BASE}/entries`]: async (request: Request) => {
@@ -112,9 +145,11 @@ function entryAnswers(recorded: unknown[], recordAnswer?: FakeAnswer) {
 async function openNewEntry({
   recordAnswer,
   access = workspaceAccess,
+  cards,
 }: {
   recordAnswer?: FakeAnswer
   access?: FakeAnswer
+  cards?: readonly unknown[]
 } = {}) {
   const recorded: unknown[] = []
   fakeApi({
@@ -127,7 +162,7 @@ async function openNewEntry({
     'GET /api/workspaces': () => workspaceList(),
     [`GET ${BASE}`]: access,
     ...demoAnswers(),
-    ...entryAnswers(recorded, recordAnswer),
+    ...entryAnswers(recorded, recordAnswer, cards),
   })
   const app = createApp(createMemoryHistory({ initialEntries: [`/w/${WORKSPACE_ID}?entry=new`] }))
   await render(<AppProviders app={app} />)
@@ -320,5 +355,97 @@ describe('ENT-02 new expense', () => {
     await expect
       .element(page.getByRole('dialog', { name: 'Novo lançamento' }))
       .not.toBeInTheDocument()
+  })
+})
+
+async function fillCardPurchase(amount: string) {
+  await page.getByRole('radio', { name: 'Compra no cartão' }).click()
+  await page.getByLabelText(/^Valor/).fill(amount)
+  await page.getByLabelText(/^Descrição/).fill('Tênis de corrida')
+  await page.getByRole('button', { name: /^Categoria/ }).click()
+  await page.getByRole('button', { name: /^Lazer/ }).click()
+}
+
+describe('ENT-02 card purchase', () => {
+  beforeEach(() => {
+    vi.useFakeTimers({ toFake: ['Date'] })
+    vi.setSystemTime(new Date('2026-10-20T15:00:00.000Z'))
+  })
+
+  afterEach(async () => {
+    vi.useRealTimers()
+    vi.restoreAllMocks()
+    await page.viewport(414, 896)
+  })
+
+  it('shows the invoice each installment lands on and records the purchase in 3×', async () => {
+    const { recorded } = await openNewEntry()
+    await fillCardPurchase('1000')
+
+    await expectText(page.getByRole('button', { name: /^Cartão/ }), /Fecha 25\/10 · vence 04\/11/)
+    await expect.element(page.getByText(/^Entra na fatura que vence em 04\/11/)).toBeVisible()
+    await page.getByRole('button', { name: 'Mais uma parcela' }).click()
+    await page.getByRole('button', { name: 'Mais uma parcela' }).click()
+
+    await expect.element(page.getByText(/^3× de/)).toBeVisible()
+    await expect
+      .element(page.getByText(/^A 1ª parcela entra na fatura que vence em 04\/11/))
+      .toBeVisible()
+    await expect.element(page.getByText('vence 04/01/27')).toBeVisible()
+    await page.getByRole('button', { name: 'Salvar lançamento' }).click()
+
+    await expect.element(page.getByText('Lançamento registrado.')).toBeVisible()
+    expect(recorded).toEqual([
+      expect.objectContaining({
+        entryType: 'card_purchase',
+        amountCents: 100_000,
+        cardAccountId: CARD_X,
+        categoryId: LEISURE,
+        installmentCount: 3,
+        firstInstallment: 1,
+        paymentMethod: 'credit',
+      }),
+    ])
+  })
+
+  it('warns before saving when the first installment falls on a closed invoice, and starts later', async () => {
+    const { recorded } = await openNewEntry()
+    await fillCardPurchase('1000')
+    await page.getByRole('button', { name: 'Mais uma parcela' }).click()
+    await page.getByRole('button', { name: 'Mais uma parcela' }).click()
+    await page.getByLabelText('Escolher outra data').fill('2026-09-20')
+
+    await expect
+      .element(page.getByText('A fatura de outubro já fechou. Registre a partir da parcela 2.'))
+      .toBeVisible()
+    await expect
+      .element(page.getByRole('button', { name: 'Salvar lançamento' }))
+      .toHaveAttribute('aria-disabled', 'true')
+    await page.getByRole('button', { name: 'Começar da parcela 2' }).click()
+
+    await expect.element(page.getByRole('switch', { name: 'Compra já em andamento' })).toBeChecked()
+    await expect.element(page.getByText(/^Faltam 2 parcelas/)).toBeVisible()
+    await page.getByRole('button', { name: 'Salvar lançamento' }).click()
+    await expect.element(page.getByText('Lançamento registrado.')).toBeVisible()
+    expect(recorded).toEqual([
+      expect.objectContaining({
+        installmentCount: 3,
+        firstInstallment: 2,
+        occurredOn: '2026-09-20',
+      }),
+    ])
+  })
+
+  it('offers to register the first card when there is none', async () => {
+    const { app } = await openNewEntry({ cards: [] })
+    await page.getByRole('radio', { name: 'Compra no cartão' }).click()
+    await page.getByRole('button', { name: /^Cartão/ }).click()
+
+    await expect.element(page.getByText('Vocês ainda não têm um cartão.')).toBeVisible()
+    await page.getByRole('button', { name: 'Cadastrar cartão' }).click()
+
+    await expect
+      .poll(() => app.router.state.location.search)
+      .toMatchObject({ entry: 'new', card: 'new' })
   })
 })

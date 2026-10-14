@@ -24,9 +24,9 @@ export const invoicePreviewRowVariants = cva(
 export const invoicePreviewNumberVariants = cva('min-w-7.5 font-emphasis')
 
 export const invoicePreviewDueVariants = cva(
-  'flex flex-1 items-center gap-1.5 whitespace-nowrap text-ink-muted',
+  'flex flex-1 items-center gap-2 whitespace-nowrap text-ink-muted',
 )
 
 export const invoicePreviewMoreVariants = cva(
-  'border-t border-border py-1.5 text-caption font-normal text-ink-muted',
+  'border-t border-border py-1.5 text-note leading-5 text-ink-muted',
 )

@@ -13,7 +13,7 @@ import { entriesMessages } from '@web/features/entries/entries.messages'
 import type {
   AccountBalance,
   AccountFieldProps,
-  ExpenseFormInput,
+  EntryFormInput,
   LatestEntry,
   LedgerAccount,
 } from '@web/features/entries/entries.types'
@@ -39,7 +39,7 @@ export function AccountField({ workspaceId, canCreateAccounts }: AccountFieldPro
   )
 
   return (
-    <FormField<ExpenseFormInput>
+    <FormField<EntryFormInput>
       name="paidFromAccountId"
       label={entriesMessages.fields.paidFrom}
       isRequired
@@ -71,7 +71,7 @@ function usePreferredAccount(
   usableAccountIds: readonly string[],
   latestEntries: readonly LatestEntry[] | undefined,
 ) {
-  const { getValues, resetField } = useFormContext<ExpenseFormInput>()
+  const { getValues, resetField } = useFormContext<EntryFormInput>()
   const preferred = latestEntries && preferredAccountOf(usableAccountIds, latestEntries)
 
   useEffect(() => {

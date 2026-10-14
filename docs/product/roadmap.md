@@ -216,7 +216,9 @@ updated: 2026-10-14
       errors, save, toast, discard, offline), opened by `?entry=new`; compared side by side with
       every PNG of the package. Waiting on other screens: "Cadastrar conta/cartão" in the empty
       sheet (`ACC-03`, `CARD-04`) and "Ver" in the toast (`ENT-03`)
-  11. [ ] Web: card purchase with the invoice preview, the closed invoice and a purchase in progress
+  11. [x] Web: card purchase with the invoice preview, the closed invoice and a purchase in progress
+      (the type pills show the types built so far; the shared `installmentPlan` puts each
+      installment on its invoice; "Cadastrar cartão" in the empty sheet comes back to the entry)
   12. [ ] Web: shares with contacts
   13. [ ] Web: income, transfer (and from `HOME-03`), invoice payment, settlement, opening balance
   14. [ ] Web: the desktop dialog for the other types (the type pills in one row)
@@ -251,7 +253,7 @@ updated: 2026-10-14
      "Cartões" group of `ACC-01`, "Editar ciclo" and "Renomear e cor"). "Cadastrar cartão" comes
      with the new entry's card purchase, and "Pagar fatura" with its invoice payment (steps 11
      and 13 of the new entry round)
-  7. [ ] Web: the desktop versions (tables, menus, dialogs). Done: the sidebar to the approved
+  7. [x] Web: the desktop versions (tables, menus, dialogs). Done: the sidebar to the approved
      model, the page header, the `DataTable`, `ACC-01` (KPIs, tables, "Lixeira" and "Nova conta"),
      `ACC-02` (expense and income tables, chips on one line with "+{n} mais", the chip's menu).
      The chips keep the categories' order until usage counts exist ("most used first"), and "Ver

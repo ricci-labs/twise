@@ -21,6 +21,7 @@ export function NewEntry({
       currentUserId={currentUserId}
       canSeeMembers={hasPermission(permissions, 'members', 'view')}
       canCreateAccounts={hasPermission(permissions, 'accounts', 'create')}
+      canCreateCards={hasPermission(permissions, 'cards', 'create')}
       today={todayIn(TIME_ZONE, new Date())}
       onClose={onClose}
     />
