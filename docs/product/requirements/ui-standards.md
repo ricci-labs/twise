@@ -155,6 +155,16 @@ Decided with the new-entry design (2026-10-10, version 2 on 2026-10-14,
 - **Desktop forms:** fields side by side share one height (48 px, the `control` size); only money
   fields are taller. A switch sits beside its label, not at the far edge of the row.
 - **Desktop grids:** cards in a row have the same height, their footer at the bottom.
+- **Page margins follow the Home** (decided by the user, 2026-10-14, for every screen, old and
+  new): on the phone 16 px at the sides; on the desktop 32 px at the sides, 32 px above the title
+  and 48 px under the last block, the content filling the width next to the sidebar up to 1600 px
+  (equal margins beyond). Pages whose phone layout runs edge to edge (a month strip) keep the
+  desktop margins. The accounts designs drew 28 px on top and stopped at 1184 px; the Home rule
+  wins.
+- **No bottom sheets on the desktop** (decided by the user, 2026-10-14): what slides up from the
+  bottom on the phone opens, on the desktop, as a popover under the field or button that asked for
+  it (day, month and item pickers) or, when nothing on screen asked for it, as a dialog in the
+  middle of the screen ("Mover para"). Action sheets are menus there, as before.
 - **Messages name things:** a refused action says which item and why, and offers the way out; the
   web picks the copy by the kind of item (`error-messages.md`).
 - **Every list is designed with** loading, empty, error, viewer, many items, archived, its actions

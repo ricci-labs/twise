@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 import { SectionError } from '@web/components/feedback/section-error'
 import { SectionSkeleton } from '@web/components/feedback/section-skeleton'
 import { Tip } from '@web/components/feedback/tip'
+import { PageFrame } from '@web/components/layout/page-frame'
 import {
   accountIconsQueryOptions,
   accountNamesQueryOptions,
@@ -45,12 +46,9 @@ import { usePageTitle } from '@web/hooks/use-page-title'
 import { useSwapPhase } from '@web/hooks/use-swap-phase'
 import { ApiError } from '@web/lib/api/api-error'
 import { DESKTOP_QUERY } from '@web/lib/breakpoints'
-import { cn } from '@web/lib/cn'
 import { errorMessageFor } from '@web/lib/errors/error-message'
 import { hasPermission, isReadOnly } from '@web/lib/permissions'
 import { useRef } from 'react'
-
-const HOME_PAGE = 'mx-auto w-full max-w-400 px-4 pt-2.5 pb-6 lg:px-8 lg:pt-8 lg:pb-12'
 
 const SAO_PAULO_HOUR = new Intl.DateTimeFormat('pt-BR', {
   timeZone: 'America/Sao_Paulo',
@@ -97,7 +95,7 @@ export function HomePage({
   const data = overview.data
   if (setup && !setup.hasMoneyAccount) {
     return (
-      <div className={HOME_PAGE}>
+      <PageFrame className="pt-2.5">
         <FirstRun
           workspaceId={workspaceId}
           workspaceName={workspaceName}
@@ -105,7 +103,7 @@ export function HomePage({
           isJustCreated={isJustCreated}
           steps={setupSteps(setup, data)}
         />
-      </div>
+      </PageFrame>
     )
   }
   return (
@@ -126,26 +124,26 @@ export function HomePage({
 
 function HomeFailed({ error, isRetrying, onRetry }: HomeFailedProps) {
   return (
-    <div className={HOME_PAGE}>
+    <PageFrame className="pt-2.5">
       <SectionError
         message={errorMessageFor(error)}
         errorRef={error instanceof ApiError ? error.ref : null}
         isRetrying={isRetrying}
         onRetry={onRetry}
       />
-    </div>
+    </PageFrame>
   )
 }
 
 function HomeLoading() {
   return (
-    <div className={cn(HOME_PAGE, 'grid gap-5 lg:grid-cols-4')}>
+    <PageFrame className="grid gap-5 pt-2.5 lg:grid-cols-4">
       {['free', 'income', 'spent', 'committed'].map((key) => (
         <SectionSkeleton key={key} lines={2} />
       ))}
       <SectionSkeleton hasChart className="lg:col-span-3" />
       <SectionSkeleton />
-    </div>
+    </PageFrame>
   )
 }
 
@@ -178,12 +176,12 @@ function HomeContent({
   const gridRef = useRef<HTMLDivElement>(null)
   useMarkInView(gridRef, isEntrance)
   return (
-    <div
+    <PageFrame
       data-entrance={isEntrance ? 'play' : undefined}
       data-swap={swap}
       data-stale={isStale ? '' : undefined}
       aria-busy={isStale || undefined}
-      className={cn(HOME_PAGE, 'flex flex-col gap-4 lg:gap-5')}
+      className="gap-4 pt-2.5 lg:gap-5"
     >
       <HomeHeader
         workspaceId={workspaceId}
@@ -292,6 +290,6 @@ function HomeContent({
           className="lg:order-11 lg:col-span-6"
         />
       </div>
-    </div>
+    </PageFrame>
   )
 }

@@ -3,6 +3,7 @@ import { Link } from '@tanstack/react-router'
 import { EmptyBlock } from '@web/components/feedback/empty-block'
 import { ListSkeleton } from '@web/components/feedback/list-skeleton'
 import { SectionError } from '@web/components/feedback/section-error'
+import { PageFrame } from '@web/components/layout/page-frame'
 import { PageHeader } from '@web/components/layout/page-header'
 import { SubPageHeader } from '@web/components/layout/sub-page-header'
 import { Breadcrumb } from '@web/components/navigation/breadcrumb'
@@ -28,7 +29,7 @@ export function AccountsTrashPage({ workspaceId, permissions }: TrashPageProps) 
   const isDesktop = useMediaQuery(DESKTOP_QUERY)
   if (isDesktop) {
     return (
-      <div className="mx-auto flex w-full max-w-296 flex-col px-8 pt-7 pb-12">
+      <PageFrame>
         <div className="mb-2">
           <Breadcrumb
             label={messages.crumb}
@@ -45,11 +46,11 @@ export function AccountsTrashPage({ workspaceId, permissions }: TrashPageProps) 
         <div className="rounded-lg border border-border bg-surface px-6 pt-9 pb-5">
           <TrashBody workspaceId={workspaceId} permissions={permissions} />
         </div>
-      </div>
+      </PageFrame>
     )
   }
   return (
-    <div className="mx-auto flex w-full max-w-160 flex-col gap-4 pb-6">
+    <PageFrame edge="bleed" className="gap-4">
       <SubPageHeader
         back={<Link to="/w/$workspaceId/accounts" params={{ workspaceId }} />}
         backLabel={messages.back}
@@ -59,7 +60,7 @@ export function AccountsTrashPage({ workspaceId, permissions }: TrashPageProps) 
       <div className="px-4">
         <TrashBody workspaceId={workspaceId} permissions={permissions} />
       </div>
-    </div>
+    </PageFrame>
   )
 }
 

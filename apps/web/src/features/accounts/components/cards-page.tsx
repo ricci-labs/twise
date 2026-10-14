@@ -4,6 +4,7 @@ import { Button } from '@web/components/actions/button'
 import { EmptyBlock } from '@web/components/feedback/empty-block'
 import { SectionError } from '@web/components/feedback/section-error'
 import { SectionSkeleton } from '@web/components/feedback/section-skeleton'
+import { PageFrame } from '@web/components/layout/page-frame'
 import { PageHeader } from '@web/components/layout/page-header'
 import { accountsMessages } from '@web/features/accounts/accounts.messages'
 import type { CardsBodyProps, CardsPageProps } from '@web/features/accounts/accounts.types'
@@ -26,7 +27,7 @@ export function CardsPage({ workspaceId, permissions }: CardsPageProps) {
   const isDesktop = useMediaQuery(DESKTOP_QUERY)
   const canCreate = hasPermission(permissions, 'cards', 'create')
   return (
-    <div className="mx-auto flex w-full max-w-240 flex-col gap-4 px-4 pt-2 pb-6 lg:max-w-296 lg:gap-5 lg:px-8 lg:pt-7 lg:pb-12">
+    <PageFrame className="gap-4 lg:gap-5">
       <PageHeader
         title={messages.title}
         description={messages.description}
@@ -44,7 +45,7 @@ export function CardsPage({ workspaceId, permissions }: CardsPageProps) {
         }
       />
       <CardsBody workspaceId={workspaceId} permissions={permissions} isDesktop={isDesktop} />
-    </div>
+    </PageFrame>
   )
 }
 

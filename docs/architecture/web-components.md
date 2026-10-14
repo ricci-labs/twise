@@ -298,7 +298,14 @@ piggy bank once. `prefers-reduced-motion` zeroes all of it (`globals.css`).
   handle, a dimmed backdrop and the safe area; the phone's "Mais" and workspace switcher. The
   content keeps 16 px from the sides, the title 20 px; a list may bleed to 8 px (the picker rows).
   With `closeLabel`, the title is the display `title` and "X" sits 8 px from the edge; an optional
-  `description` goes under the title in `note`.
+  `description` goes under the title in `note`. On the desktop it is never a bottom sheet
+  (`../product/requirements/ui-standards.md`): with an `anchor` (the element that opened it) it becomes a 384 px Base UI
+  `Popover` 6 px under it; without one, a `Dialog` in the middle of the screen, 440 px wide, over
+  the dimmed backdrop. Same title, close and content in all three.
+- `PageFrame` (`components/layout/page-frame`): the frame of every page, the Home's margins
+  (`../product/requirements/ui-standards.md` → Page margins): 16 px at the sides and 8 px on top on the phone (`edge`
+  `bleed` drops them for pages whose phone layout runs edge to edge), 32 px at the sides and on top
+  on the desktop, 48 px at the bottom, up to 1600 px wide. Pages add only their own gap.
 - `Avatar` (`components/display/avatar`): the initial of a name in a circle (`mint` or `paper`),
   decorative: the name is always written next to it or in the control's label. `size="stacked"` is
   the overlapping pair of the phone's top bar: 36 px with a 2 px ring of the page colour; `lg`
@@ -570,8 +577,8 @@ component here, so the form, and later the account, card and planning forms, sha
   with the month after `anchor` (the open invoice) in view and a whole month at the left margin,
   then keeps the chosen month in view. `size="wide"` (the desktop card page): 96 px months, no
   side margin, and it opens scrolled to the end so the latest months and "Todas" show.
-- `InvoiceYearSheet` (`components/finance/invoice-year-sheet`): the `Sheet` behind "Todas", with
-  its close button: the year between arrows (no arrow when there is nowhere to go), the months in three columns with the
+- `InvoiceYearSheet` (`components/finance/invoice-year-sheet`): the `Sheet` behind "Todas" (a
+  popover under it on the desktop), with its close button: the year between arrows (no arrow when there is nowhere to go), the months in three columns with the
   status `Badge` and the total, and the footnote. Choosing a month closes it.
 - `InvoiceSummary` (`components/finance/invoice-summary`): the chosen invoice: title and status
   badge, the dates, the total (`Amount` size `total`), the "Pago" / "Falta pagar" tiles, the
@@ -585,8 +592,8 @@ component here, so the form, and later the account, card and planning forms, sha
   positive tone.
 
 - `DayField` (`components/inputs/day-field`): a day of the month, the field the card form uses
-  twice side by side: calendar icon, "Escolha" or "Dia 25", chevron. It opens a `Sheet` with the
-  31 days as 42 px circles, seven per row (the chosen one with the ink outline and heavy weight;
+  twice side by side: calendar icon, "Escolha" or "Dia 25", chevron. It opens a `Sheet` (a popover under
+  the field on the desktop) with the 31 days as 42 px circles, seven per row (the chosen one with the ink outline and heavy weight;
   29, 30 and 31 with a dot explained below) and, once a day is chosen, the `summary` line ("Fecha
   todo dia **25**"). Tapping a day picks it and closes the sheet. It takes the `FormField` control.
 - `CyclePreview` (`components/finance/cycle-preview`): the sunken box with the calendar drawing

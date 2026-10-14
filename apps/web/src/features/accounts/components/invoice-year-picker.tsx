@@ -14,6 +14,7 @@ export function InvoiceYearPicker({
   card,
   invoices,
   chosen,
+  anchor,
   isOpen,
   onOpenChange,
 }: InvoiceYearPickerProps) {
@@ -31,6 +32,7 @@ export function InvoiceYearPicker({
     <InvoiceYearSheet
       title={messages.strip(card.name)}
       year={String(year)}
+      anchor={anchor}
       isOpen={isOpen}
       onOpenChange={onOpenChange}
       onPrevious={year > Math.min(...years) ? () => setYear(year - 1) : undefined}

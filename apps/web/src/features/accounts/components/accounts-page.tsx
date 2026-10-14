@@ -5,6 +5,7 @@ import { EmptyBlock } from '@web/components/feedback/empty-block'
 import { KpiSkeleton } from '@web/components/feedback/kpi-skeleton'
 import { SectionError } from '@web/components/feedback/section-error'
 import { AccountGroup } from '@web/components/finance/account-group'
+import { PageFrame } from '@web/components/layout/page-frame'
 import { accountsMessages } from '@web/features/accounts/accounts.messages'
 import type {
   AccountsBodyProps,
@@ -48,7 +49,7 @@ export function AccountsPage({
     return () => clearTimeout(timer)
   }, [createdId, onCreatedSeen])
   return (
-    <div className="mx-auto flex w-full max-w-160 flex-col gap-4 px-4 pt-2 pb-6 lg:max-w-296 lg:gap-5 lg:px-8 lg:pt-7 lg:pb-12">
+    <PageFrame className="gap-4 lg:gap-5">
       <AccountsAreaHeader
         workspaceId={workspaceId}
         current="accounts"
@@ -66,7 +67,7 @@ export function AccountsPage({
       {hasPermission(permissions, 'entries', 'create') && (
         <CreatedAccountMoment workspaceId={workspaceId} createdId={createdId} />
       )}
-    </div>
+    </PageFrame>
   )
 }
 
