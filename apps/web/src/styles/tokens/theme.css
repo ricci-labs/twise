@@ -124,6 +124,9 @@
   --text-status: 0.71875rem;
   --text-status--line-height: 0.9375rem;
   --text-status--font-weight: 500;
+  --text-tag: 0.71875rem;
+  --text-tag--line-height: 1rem;
+  --text-tag--font-weight: 600;
   --text-amount-share: 1.0625rem;
   --text-amount-share--line-height: 1.375rem;
   --text-amount-share--font-weight: 750;
@@ -161,6 +164,17 @@
   --text-moment-title: 1.375rem;
   --text-moment-title--line-height: 1.75rem;
   --text-moment-title--font-weight: 750;
+  --text-welcome-title: 1.75rem;
+  --text-welcome-title--line-height: 2rem;
+  --text-welcome-title--font-weight: 750;
+  --text-welcome-title--letter-spacing: -0.02em;
+  --text-welcome-title-lg: 2.5rem;
+  --text-welcome-title-lg--line-height: 2.875rem;
+  --text-welcome-title-lg--font-weight: 750;
+  --text-welcome-title-lg--letter-spacing: -0.02em;
+  --text-welcome-lead: 1.0625rem;
+  --text-welcome-lead--line-height: 1.5625rem;
+  --text-welcome-lead--font-weight: 400;
   --text-message: 0.9375rem;
   --text-message--line-height: 1.3125rem;
   --text-message--font-weight: 400;

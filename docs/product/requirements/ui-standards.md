@@ -139,7 +139,9 @@ Decided with the new-entry design (2026-10-10, version 2 on 2026-10-14,
   where the selected one keeps its paper colour and gets a 2 px `ink` outline and a bold label, like
   every other selection in the app (no full mint tile, which hides the mint inside the drawing, and
   no check mark); and in the dark theme, where the loose drawing's black ink would vanish on a dark
-  surface (found while building, 2026-10-14).
+  surface (found while building, 2026-10-14). On a full mint surface (the Home's first KPI, the
+  closed period's highlight) the drawing keeps its paper square too, without the circle, because
+  its mint would vanish on the mint card.
 - **One selection style:** a 2 px `ink` outline and a bold label for every selected or pressed item
   (tiles, chips, month pills, days, member buttons, the tapped chip while its menu is open). No mint
   fill and no check mark. The pills that pick a type or a list (the new entry's types, "Despesas |

@@ -48,7 +48,7 @@ function FreeToSpendCard({ workspaceId, overview, stage }: HomeIndicatorsProps) 
         help={help(messages.free)}
         value={<Amount cents={metrics.freeToSpend} size="kpi" isCentsRaised />}
         badge={<KpiBadge tone="danger">{messages.free.over}</KpiBadge>}
-        art={<img src={piggyBankAlert} alt="" className="size-15 rounded-full" />}
+        art={<img src={piggyBankAlert} alt="" className="size-19 lg:size-15" />}
         artAt="top"
       >
         <p>
@@ -74,7 +74,7 @@ function FreeToSpendCard({ workspaceId, overview, stage }: HomeIndicatorsProps) 
           <KpiBadge tone="onMint">{messages.free.perDay(formatBrl(perDay))}</KpiBadge>
         )
       }
-      art={<img src={piggyBank} alt="" className="size-17 rounded-full" />}
+      art={<img src={piggyBank} alt="" className="size-17" />}
     >
       {stage === 'open' && (
         <p>{messages.free.until(formatDayMonth(period.end), metrics.periodProgress.left)}</p>

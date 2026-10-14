@@ -315,6 +315,8 @@ passes the overview's numbers.
   and `headerAction` (tabs), the body, and a footer with a stat on the left and a link on the
   right when given. Rows of cards stretch to the same height. The title is the design's `cc__title`
   (display font, `section-title` on the phone, `card-title` from 1024 px), the description `note`.
+  On the phone it has 16 px padding and 12 px between header, body and footer; from 1024 px
+  20 × 24 px padding, 16 px before the body and the footer (the Home PNGs).
 - `DataTable` + `DataTableName` + `DataTableAmount` (`components/display/data-table`): the desktop
   tables of the design (`tb`): a `table` whose rows are grids on one of the column templates
   (`layout`: `accounts`, `cards`, `invoices`, `lines`, `categories`, `incomes`, from
@@ -331,9 +333,9 @@ passes the overview's numbers.
 - `KpiCard` + `KpiBadge` (`components/display/kpi-card`): label (`h3`) with an optional help
   slot, the value, a badge and the foot lines (`children`); `tone` `plain`, `mint` (the first
   card) or `danger` (passed the plan); `art` sits at the bottom right and the foot keeps clear of
-  it. The label line keeps 26 px for the help button only when there is one (the Home cards);
-  without `help` it is the label's 20 px, as the card page's KPIs. With `artAt="top"` (the
-  accounts summary) the art sits at the top right.
+  it. The label line is always the label's 20 px; the help button overflows it, as in the Home
+  PNGs. With `artAt="top"` (the accounts summary and the Home's "passed the plan" card) the art
+  sits at the top right. The `danger` card has a 25 % `danger` border.
 - `KpiCarousel` (`components/display/kpi-carousel`): on the phone a scroll-snap row of 300 px
   cards (the next one peeks), each slide a group read as "2 de 4", dots that are buttons and
   follow the swipe (the current one 22 px in ink, the others `indicator-idle`); the row takes the
@@ -357,8 +359,8 @@ passes the overview's numbers.
   The skeleton is a `status` with "Carregando…" for screen readers and decorative blocks that
   stop pulsing with reduced motion; the error says what failed (`message`, 15 px), "Código: {ref}"
   and a grey "Tentar de novo" with the refresh icon for that section only, behind the loose alert
-  drawing (no circle); the empty state is an illustration in a soft circle and one line on the
-  card itself, with an optional action.
+  drawing (no circle); the empty state is a loose illustration (`art`, an illustration name drawn
+  by `CategoryArt`, 44 px, no circle) and one line on the card itself, with an optional action.
 
 ## New entry building blocks
 `../design/entries/components.md` names the pieces of the `ENT-02` form; several of them are one

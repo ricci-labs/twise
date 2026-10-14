@@ -50,7 +50,7 @@ export function AchievementsCard({ overview, className }: AchievementsCardProps)
             data-slot="achievement-art"
             src={piggyBank}
             alt=""
-            className="size-14 shrink-0 rounded-full lg:size-24"
+            className="size-14 shrink-0 lg:size-24"
           />
         </div>
       )}

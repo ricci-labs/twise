@@ -1,9 +1,9 @@
 import { formatBrl } from '@financas/shared'
 import { Link } from '@tanstack/react-router'
-import card from '@web/assets/illustrations/card.svg'
 import { TextLink } from '@web/components/actions/text-link'
 import { Amount } from '@web/components/display/amount'
 import { Card } from '@web/components/display/card'
+import { CategoryArt } from '@web/components/display/category-art'
 import { TwiseIcon } from '@web/components/icons/twise-icon'
 import { homeMessages } from '@web/features/home/home.messages'
 import type { InvoicesCardProps } from '@web/features/home/home.types'
@@ -37,7 +37,7 @@ export function InvoicesCard({ workspaceId, overview, nameOf, className }: Invoi
             key={invoice.cardAccountId}
             className="flex gap-2.5 border-t border-border py-2.5 first:border-t-0 first:pt-0"
           >
-            <img src={card} alt="" className="size-8 shrink-0 rounded-full bg-sketch-paper" />
+            <CategoryArt name="" icon="card" size="md" />
             <div className="flex min-w-0 flex-1 flex-col">
               <span className="truncate text-title-sm">{nameOf(invoice.cardAccountId)}</span>
               <span className="text-caption font-normal text-ink-muted">

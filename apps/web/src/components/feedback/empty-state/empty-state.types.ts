@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react'
 
 export type EmptyStateProps = {
-  illustration?: string
+  art?: string
   children: ReactNode
   action?: ReactNode
   className?: string

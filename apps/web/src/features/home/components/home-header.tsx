@@ -14,7 +14,7 @@ import {
   formatMonthLabel,
   formatRange,
 } from '@web/lib/format/calendar'
-import { CalendarDays, ChevronLeft, ChevronRight } from 'lucide-react'
+import { Calendar, ChevronLeft, ChevronRight } from 'lucide-react'
 
 export function HomeHeader({
   workspaceId,
@@ -29,12 +29,12 @@ export function HomeHeader({
   const { today, period, metrics } = overview
   const step = (direction: -1 | 1) => neighbourPeriod(period.label, direction)
   return (
-    <header className="flex flex-col gap-3 lg:flex-row lg:flex-wrap lg:items-center lg:justify-between lg:gap-4">
+    <header className="flex flex-col gap-3 lg:mb-1 lg:flex-row lg:flex-wrap lg:items-center lg:justify-between lg:gap-4">
       <div className="flex flex-col gap-1">
-        <h1 className="font-display text-title-lg lg:text-display">
+        <h1 className="font-display text-form-title-lg lg:text-display">
           {greetingOf(hour)(displayName)}
         </h1>
-        <p className="hidden flex-wrap items-center gap-2 text-body text-ink-muted lg:flex">
+        <p className="hidden flex-wrap items-center gap-2 text-dialog-text text-ink-muted lg:flex">
           {stage === 'open'
             ? messages.today(formatDayMonthLong(today), metrics.periodProgress.left)
             : messages.period.range(formatDayMonth(period.start), formatDayMonth(period.end))}
@@ -44,26 +44,28 @@ export function HomeHeader({
       <div className="flex items-center gap-3">
         <nav
           aria-label={messages.period.label}
-          className="flex flex-1 items-center justify-between gap-2 rounded-full border border-border bg-surface p-1 lg:w-85 lg:flex-none"
+          className="flex h-12 flex-1 items-center justify-between gap-1 rounded-full border border-border bg-surface px-0.5 lg:w-85 lg:flex-none"
         >
           <Link
             to="."
             search={(previous) => ({ ...previous, period: step(-1) })}
             aria-label={messages.period.previous}
-            className="grid size-10 place-items-center rounded-full hover:bg-sunken"
+            className="grid size-11 place-items-center rounded-full hover:bg-sunken"
           >
             <ChevronLeft className="size-5" aria-hidden="true" />
           </Link>
-          <p className="flex items-center gap-2 text-body">
-            <CalendarDays className="size-4 text-ink-muted" aria-hidden="true" />
-            <span className="font-semibold">{formatMonthLabel(period.label)}</span>
-            <span className="text-ink-muted">· {formatRange(period.start, period.end)}</span>
+          <p className="flex items-center gap-2 text-choice font-emphasis tabular-nums">
+            <Calendar className="size-4" aria-hidden="true" />
+            <span>{formatMonthLabel(period.label)}</span>
+            <span className="font-medium text-ink-muted">
+              · {formatRange(period.start, period.end)}
+            </span>
           </p>
           <Link
             to="."
             search={(previous) => ({ ...previous, period: step(1) })}
             aria-label={messages.period.next}
-            className="grid size-10 place-items-center rounded-full hover:bg-sunken"
+            className="grid size-11 place-items-center rounded-full hover:bg-sunken"
           >
             <ChevronRight className="size-5" aria-hidden="true" />
           </Link>

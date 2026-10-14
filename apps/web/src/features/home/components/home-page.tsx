@@ -50,7 +50,7 @@ import { errorMessageFor } from '@web/lib/errors/error-message'
 import { hasPermission, isReadOnly } from '@web/lib/permissions'
 import { useRef } from 'react'
 
-const HOME_PAGE = 'mx-auto w-full max-w-400 px-4 py-6 lg:px-8 lg:pt-7 lg:pb-12'
+const HOME_PAGE = 'mx-auto w-full max-w-400 px-4 pt-2.5 pb-6 lg:px-8 lg:pt-8 lg:pb-12'
 
 const SAO_PAULO_HOUR = new Intl.DateTimeFormat('pt-BR', {
   timeZone: 'America/Sao_Paulo',
@@ -180,7 +180,7 @@ function HomeContent({
       data-swap={swap}
       data-stale={isStale ? '' : undefined}
       aria-busy={isStale || undefined}
-      className={cn(HOME_PAGE, 'flex flex-col gap-5')}
+      className={cn(HOME_PAGE, 'flex flex-col gap-4 lg:gap-5')}
     >
       <HomeHeader
         workspaceId={workspaceId}
@@ -195,14 +195,16 @@ function HomeContent({
           {homeMessages.readOnly}
         </Tip>
       )}
-      <div className="-mx-4 lg:mx-0">
-        <HomeIndicators workspaceId={workspaceId} overview={data} stage={stage} />
+      <div className="flex flex-col gap-3">
+        <div className="-mx-4 lg:mx-0">
+          <HomeIndicators workspaceId={workspaceId} overview={data} stage={stage} />
+        </div>
+        {stage !== 'closed' && <CanIBuyCard workspaceId={workspaceId} className="lg:hidden" />}
       </div>
-      {stage !== 'closed' && <CanIBuyCard workspaceId={workspaceId} className="lg:hidden" />}
       <div
         ref={gridRef}
         data-slot="home-grid"
-        className="grid grid-cols-1 items-stretch gap-5 lg:grid-cols-12"
+        className="mt-2 grid grid-cols-1 items-stretch gap-6 lg:mt-0 lg:grid-cols-12 lg:gap-5"
       >
         {stage === 'closed' && (
           <AchievementsCard

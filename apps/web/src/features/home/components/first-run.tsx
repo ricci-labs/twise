@@ -1,14 +1,10 @@
 import { Link } from '@tanstack/react-router'
-import calendar from '@web/assets/illustrations/calendar.svg'
-import card from '@web/assets/illustrations/card.svg'
-import receipt from '@web/assets/illustrations/receipt.svg'
-import together from '@web/assets/illustrations/together.svg'
-import wallet from '@web/assets/illustrations/wallet.svg'
 import { Button } from '@web/components/actions/button'
 import { OwlKit } from '@web/components/brand/owl-kit'
 import { OwlScene } from '@web/components/brand/owl-scene'
 import { ProgressBar } from '@web/components/charts/progress-bar'
 import { Card } from '@web/components/display/card'
+import { CategoryArt } from '@web/components/display/category-art'
 import { ResponsiveText } from '@web/components/display/responsive-text'
 import { TwiseIcon } from '@web/components/icons/twise-icon'
 import { homeMessages } from '@web/features/home/home.messages'
@@ -29,12 +25,12 @@ const START_PERCENT = 4
 const NEW_ENTRY_AREA = 'new-entry'
 const NEW_ENTRY = 'new'
 const OWL =
-  'pointer-events-none absolute -top-2.5 -right-6.5 size-35 lg:static lg:order-last lg:-my-10 lg:-mr-5 lg:size-85 lg:shrink-0'
+  'pointer-events-none absolute -top-2.5 -right-6.5 size-35 lg:static lg:order-last lg:-mt-10 lg:-mr-5 lg:-mb-16 lg:size-85 lg:shrink-0'
 const ILLUSTRATIONS: Readonly<Record<SetupStepKey, string>> = {
-  accounts: wallet,
-  cards: card,
-  income: calendar,
-  entries: receipt,
+  accounts: 'wallet',
+  cards: 'card',
+  income: 'calendar',
+  entries: 'receipt',
 }
 const PREVIEW = [
   { key: 'free', step: 4 },
@@ -57,7 +53,7 @@ export function FirstRun({
     <div
       data-slot="first-run"
       data-created={isJustCreated ? '' : undefined}
-      className="flex flex-col gap-5"
+      className="flex flex-col gap-6 pt-1.5 lg:pt-0"
     >
       <section
         data-first-run="hero"
@@ -69,13 +65,13 @@ export function FirstRun({
           <OwlScene scene="space" className={OWL} />
         )}
         <div className="relative flex min-w-0 flex-1 flex-col items-start">
-          <p className="mb-1.5 max-w-47.5 text-label lg:max-w-none">
+          <p className="mb-1.5 max-w-47.5 text-label font-emphasis lg:max-w-none lg:text-choice">
             {messages.welcome(workspaceName)}
           </p>
-          <h1 className="max-w-54 font-display text-title-lg lg:max-w-none lg:text-screen-title-lg">
+          <h1 className="max-w-54 font-display text-welcome-title lg:max-w-none lg:text-welcome-title-lg">
             {messages.title}
           </h1>
-          <p className="mt-3 max-w-125 text-body lg:text-claim-support">
+          <p className="mt-3 max-w-125 text-message lg:text-welcome-lead">
             <ResponsiveText short={messages.textShort} long={messages.text} />
           </p>
           <div className="mt-4 flex w-full items-center gap-3 lg:mt-5.5 lg:w-auto">
@@ -99,7 +95,7 @@ export function FirstRun({
           )}
         </div>
       </section>
-      <div className="grid gap-5 lg:grid-cols-12">
+      <div className="grid gap-6 lg:grid-cols-12 lg:gap-5">
         <Card
           className="lg:col-span-7"
           title={messages.stepsTitle}
@@ -176,11 +172,7 @@ export function FirstRun({
         </Card>
         {canInvite && (
           <section className="flex items-center gap-3 rounded-lg border border-border bg-surface p-3.5 outline-2 outline-offset-3 outline-warning-fill outline-dashed lg:col-span-7 lg:gap-3.5 lg:p-5">
-            <img
-              src={together}
-              alt=""
-              className="size-12 shrink-0 rounded-full bg-sketch-paper lg:size-14"
-            />
+            <CategoryArt name="" icon="together" className="size-12 lg:size-14" />
             <div className="flex min-w-0 flex-1 flex-col gap-0.5">
               <h2 className="text-title-sm">{messages.invite.title}</h2>
               <p className="text-body-sm text-ink-muted">{messages.invite.text}</p>
@@ -209,18 +201,14 @@ function StepRow({ step, position, isNext, hasDivider, workspaceId }: StepRowPro
       >
         {step.isDone ? <TwiseIcon name="ok" tone="success" size="sm" /> : position}
       </span>
-      <img
-        src={ILLUSTRATIONS[step.key]}
-        alt=""
-        className="size-11 shrink-0 rounded-full bg-sketch-paper lg:size-13"
-      />
-      <span className="flex min-w-0 flex-1 flex-col items-start gap-0.5 text-body-sm text-ink-muted">
-        <span className="flex flex-col-reverse items-start gap-0.5 text-title-sm text-ink lg:flex-row lg:items-center lg:gap-2">
+      <CategoryArt name="" icon={ILLUSTRATIONS[step.key]} size="list" className="lg:size-13" />
+      <span className="flex min-w-0 flex-1 flex-col items-start gap-0.5 text-note text-ink-muted lg:text-body-sm">
+        <span className="flex flex-col-reverse items-start gap-1 text-choice font-emphasis text-ink lg:flex-row lg:items-center lg:gap-2 lg:text-title-sm">
           {copy.title}
           {isNext && (
             <span
               data-first-run="next"
-              className="rounded-full bg-surface px-2 py-0.5 text-caption font-semibold whitespace-nowrap text-mint-ink"
+              className="rounded-full bg-surface px-2 py-0.5 text-tag whitespace-nowrap text-mint-ink"
             >
               {messages.next}
             </span>
