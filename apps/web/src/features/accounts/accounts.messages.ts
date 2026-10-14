@@ -2,6 +2,9 @@ export const accountsMessages = {
   pageTitle: 'Contas e categorias',
   title: 'Contas e categorias',
   trash: 'Lixeira de contas',
+  trashButton: 'Lixeira',
+  archivedTitle: 'Arquivadas',
+  description: 'Onde está o dinheiro de vocês hoje, e como os gastos se organizam.',
   tabs: {
     label: 'Contas e categorias',
     accounts: 'Contas',
@@ -30,6 +33,18 @@ export const accountsMessages = {
     newAccount: 'Nova conta',
     newCard: 'Novo cartão',
     cardsNote: 'Nos cartões, o total em aberto inclui as parcelas futuras.',
+    moneyDescription: 'Contas correntes, poupança, carteira e investimentos.',
+    cardsDescription: 'O em aberto inclui as parcelas futuras.',
+    columns: {
+      account: 'Conta',
+      kind: 'Tipo',
+      owner: 'De quem',
+      balance: 'Saldo hoje',
+      card: 'Cartão',
+      cycle: 'Ciclo',
+      open: 'Em aberto',
+      actions: 'Ações',
+    },
   },
   kinds: {
     checking: 'Conta corrente',
@@ -40,6 +55,7 @@ export const accountsMessages = {
   },
   household: 'da casa',
   cardDetail: (closing: string, due: string) => `Em aberto · fecha ${closing} · vence ${due}`,
+  cardCycle: (closing: string, due: string) => `Fecha ${closing} · vence ${due}`,
   detail: (kind: string, owner: string) => `${kind} · ${owner}`,
   actions: {
     trigger: (name: string) => `Ações de ${name}`,

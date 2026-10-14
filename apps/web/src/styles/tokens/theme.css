@@ -46,6 +46,10 @@
   --text-amount-sm: 0.8125rem;
   --text-amount-sm--line-height: 1.125rem;
   --text-amount-sm--font-weight: 700;
+  --text-card-title: 1.125rem;
+  --text-card-title--line-height: 1.5rem;
+  --text-card-title--font-weight: 700;
+  --text-card-title--letter-spacing: -0.01em;
   --text-bar-title: 1.125rem;
   --text-bar-title--line-height: 1.5rem;
   --text-bar-title--font-weight: 700;
@@ -187,6 +191,14 @@
 
   --font-weight-emphasis: 650;
   --font-weight-heavy: 750;
+
+  --grid-template-columns-table-accounts: minmax(0, 2.2fr) minmax(0, 1.3fr) minmax(0, 1fr)
+    minmax(0, 1fr) 2.75rem;
+  --grid-template-columns-table-cards: minmax(0, 2.2fr) minmax(0, 2.3fr) minmax(0, 1fr) 2.75rem;
+  --grid-template-columns-table-invoices: minmax(0, 1.6fr) minmax(0, 1fr) minmax(0, 0.8fr)
+    minmax(0, 0.8fr) minmax(0, 1fr) minmax(0, 1fr) 5.625rem;
+  --grid-template-columns-table-lines: 5rem minmax(0, 2.6fr) minmax(0, 0.8fr) minmax(0, 1fr)
+    minmax(0, 1fr);
 
   --spacing-touch: 2.75rem;
   --spacing-control: 3rem;

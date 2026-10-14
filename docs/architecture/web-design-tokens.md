@@ -105,7 +105,11 @@ When to use each one: the design system guide → Colour, and each token's notes
   (11.5/15, 500), a month's status in the invoice strip; `confirm` (14.5/20), the day sheet's
   "Fecha todo dia 25". From the shell's design CSS: `wordmark` (30, 750, display), the sidebar's
   "twise"; `overline` (11.5/16, 600, 0.06em), the sidebar's group labels ("MAIS", "ESPAÇO");
-  `account-name` (14/18, 600), the workspace and account names in its foot.
+  `account-name` (14/18, 600), the workspace and account names in its foot. `card-title` (18/24, 700,
+  display), a card's title on the desktop.
+- **Table columns:** the desktop tables' column templates are theme values
+  (`--grid-template-columns-table-accounts`, `-cards`, `-invoices`, `-lines`), copied from the
+  design CSS, so a table row uses `grid-cols-table-accounts` instead of an arbitrary value.
 - **Amounts** always use `tabular-nums`. It lives inside the `Amount` component, so no screen has
   to remember it (`web-components.md`). Inputs use 16 px (`body`) so iPhones don't zoom.
 

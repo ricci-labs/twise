@@ -307,7 +307,16 @@ passes the overview's numbers.
   `kpi` (30 px, display font) and `hero`; `isCentsRaised` lifts ",00" (`text-cents`).
 - `Card` (`components/display/card`): a region named by its `h2` title, an optional description
   and `headerAction` (tabs), the body, and a footer with a stat on the left and a link on the
-  right when given. Rows of cards stretch to the same height.
+  right when given. Rows of cards stretch to the same height. The title is the design's `cc__title`
+  (display font, `section-title` on the phone, `card-title` from 1024 px), the description `note`.
+- `DataTable` + `DataTableName` + `DataTableAmount` (`components/display/data-table`): the desktop
+  tables of the design (`tb`): a `table` whose rows are grids on one of the column templates
+  (`layout`: `accounts`, `cards`, `invoices`, `lines`, from `--grid-template-columns-table-*`),
+  14 px muted cells and header, 60 px rows with a divider, the name cell (40 px drawing, name, colour
+  dot, an optional link) and the bold amount. A column can hide its label from view (`isLabelHidden`,
+  the actions column). A row whose menu is open (`data-popup-open`) gets the `page` highlight.
+- `PageHeader` (`components/layout/page-header`): a screen's title (`form-title-lg` on the phone,
+  `display` from 1024 px), its description on the desktop only and the actions on the right.
 - `KpiCard` + `KpiBadge` (`components/display/kpi-card`): label (`h3`) with an optional help
   slot, the value, a badge and the foot lines (`children`); `tone` `plain`, `mint` (the first
   card) or `danger` (passed the plan); `art` sits at the bottom right and the foot keeps clear of

@@ -27,6 +27,8 @@ function listedMoney(account: LedgerAccount, { balances, members }: AccountsData
   return {
     ...common(account),
     detail: owner ? accountsMessages.detail(kind, owner) : kind,
+    kindLabel: kind,
+    ownerLabel: owner ? capitalized(owner) : null,
     amountCents: balanceOf(account.id, balances),
     isCard: false,
     isMoney: true,
@@ -44,6 +46,13 @@ function listedCard(account: LedgerAccount, { balances, cards }: AccountsData): 
           formatShortDate(invoice.dueOn),
         )
       : accountsMessages.kinds.credit_card,
+    kindLabel: invoice
+      ? accountsMessages.cardCycle(
+          formatShortDate(invoice.closingOn),
+          formatShortDate(invoice.dueOn),
+        )
+      : accountsMessages.kinds.credit_card,
+    ownerLabel: null,
     amountCents: card?.openCents ?? balanceOf(account.id, balances),
     isCard: true,
     isMoney: false,
@@ -81,9 +90,15 @@ export function listedCardOf(card: CardSummary): ListedAccount {
     icon: card.icon,
     color: card.color,
     detail: '',
+    kindLabel: accountsMessages.kinds.credit_card,
+    ownerLabel: null,
     amountCents: card.openCents,
     isCard: true,
     isMoney: false,
     isArchived: card.archivedAt !== null,
   }
+}
+
+function capitalized(text: string): string {
+  return text.charAt(0).toLocaleUpperCase('pt-BR') + text.slice(1)
 }

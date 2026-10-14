@@ -53,6 +53,7 @@ export type AccountsAreaHeaderProps = {
   workspaceId: string
   current: 'accounts' | 'categories'
   canSeeTrash: boolean
+  newItem?: { label: string; link: ReactElement }
 }
 
 export type AccountsSummaryCardsProps = {
@@ -66,6 +67,8 @@ export type ListedAccount = {
   icon: string | null
   color: string | null
   detail: string
+  kindLabel: string
+  ownerLabel: string | null
   amountCents: number
   isCard: boolean
   isMoney: boolean

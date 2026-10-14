@@ -1,8 +1,10 @@
 import type { CardProps } from '@web/components/display/card/card.types'
 import {
   cardBodyVariants,
+  cardDescriptionVariants,
   cardFootVariants,
   cardHeadVariants,
+  cardTitleVariants,
   cardVariants,
 } from '@web/components/display/card/card.variants'
 import { cn } from '@web/lib/cn'
@@ -31,10 +33,10 @@ export function Card({
     >
       <div className={cardHeadVariants()}>
         <div className="min-w-0">
-          <h2 id={titleId} className="text-title">
+          <h2 id={titleId} className={cardTitleVariants()}>
             {title}
           </h2>
-          {description && <p className="mt-0.5 text-body-sm text-ink-muted">{description}</p>}
+          {description && <p className={cardDescriptionVariants()}>{description}</p>}
         </div>
         {headerAction}
       </div>
