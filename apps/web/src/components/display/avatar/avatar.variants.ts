@@ -11,6 +11,7 @@ export const avatarVariants = cva(
       size: {
         sm: 'size-8 text-caption',
         md: 'size-9 text-label',
+        stacked: 'size-9 border-2 border-page text-button-sm',
       },
     },
     defaultVariants: { tone: 'mint', size: 'md' },

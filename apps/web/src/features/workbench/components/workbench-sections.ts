@@ -29,7 +29,9 @@ import { alertExamples } from '@web/components/feedback/alert'
 import { autoFillTipExamples } from '@web/components/feedback/auto-fill-tip'
 import { bannerExamples } from '@web/components/feedback/banner'
 import { confirmDialogExamples } from '@web/components/feedback/confirm-dialog'
+import { emptyBlockExamples } from '@web/components/feedback/empty-block'
 import { emptyStateExamples } from '@web/components/feedback/empty-state'
+import { kpiSkeletonExamples } from '@web/components/feedback/kpi-skeleton'
 import { listSkeletonExamples } from '@web/components/feedback/list-skeleton'
 import { sectionErrorExamples } from '@web/components/feedback/section-error'
 import { sectionSkeletonExamples } from '@web/components/feedback/section-skeleton'
@@ -92,6 +94,8 @@ export const workbenchSections: readonly ComponentExamples[] = [
   listSkeletonExamples,
   sectionErrorExamples,
   emptyStateExamples,
+  emptyBlockExamples,
+  kpiSkeletonExamples,
   forecastChartExamples,
   committedChartExamples,
   paceRingExamples,

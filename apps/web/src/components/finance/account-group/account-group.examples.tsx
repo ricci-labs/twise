@@ -45,5 +45,9 @@ export const accountGroupExamples: ComponentExamples = {
         </AccountGroup>
       ),
     },
+    {
+      name: 'Carregando',
+      render: () => <AccountGroup title="Dinheiro" loadingRows={3} />,
+    },
   ],
 }

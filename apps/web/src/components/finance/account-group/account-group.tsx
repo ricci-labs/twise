@@ -1,4 +1,5 @@
 import { TextLink } from '@web/components/actions/text-link'
+import { ListSkeleton } from '@web/components/feedback/list-skeleton'
 import type { AccountGroupProps } from '@web/components/finance/account-group/account-group.types'
 import {
   accountGroupAddVariants,
@@ -11,8 +12,11 @@ import {
 import { Plus } from 'lucide-react'
 import { useId } from 'react'
 
-export function AccountGroup({ title, add, note, children }: AccountGroupProps) {
+export function AccountGroup({ title, add, note, loadingRows, children }: AccountGroupProps) {
   const titleId = useId()
+  if (!title) {
+    return <ul className={accountGroupListVariants()}>{children}</ul>
+  }
   return (
     <section data-slot="account-group" aria-labelledby={titleId} className={accountGroupVariants()}>
       <div className={accountGroupHeadVariants()}>
@@ -30,7 +34,11 @@ export function AccountGroup({ title, add, note, children }: AccountGroupProps) 
           </TextLink>
         )}
       </div>
-      <ul className={accountGroupListVariants()}>{children}</ul>
+      {loadingRows ? (
+        <ListSkeleton rows={loadingRows} />
+      ) : (
+        <ul className={accountGroupListVariants()}>{children}</ul>
+      )}
       {note && <p className={accountGroupNoteVariants()}>{note}</p>}
     </section>
   )

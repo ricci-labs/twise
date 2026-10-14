@@ -8,7 +8,7 @@ export const sheetPopupVariants = cva(
   'fixed inset-x-0 bottom-0 z-modal flex max-h-sheet flex-col gap-2 overflow-y-auto rounded-t-xl bg-surface px-4 pt-2 pb-safe shadow-dialog outline-none transition-transform duration-sheet ease-out data-ending-style:translate-y-full data-ending-style:duration-normal data-starting-style:translate-y-full',
 )
 
-export const sheetHandleVariants = cva('mx-auto mb-1 h-1 w-10 rounded-full bg-border')
+export const sheetHandleVariants = cva('mx-auto mb-1 h-1 w-10 rounded-full bg-border-control/50')
 
 export const sheetHeadVariants = cva('flex items-center justify-between gap-2 pl-1')
 

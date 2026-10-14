@@ -2,7 +2,10 @@ import { Button } from '@web/components/actions/button'
 import { sectionErrorMessages as messages } from '@web/components/feedback/section-error/section-error.messages'
 import type { SectionErrorProps } from '@web/components/feedback/section-error/section-error.types'
 import {
+  sectionErrorCodeVariants,
   sectionErrorIconVariants,
+  sectionErrorMessageVariants,
+  sectionErrorRetryVariants,
   sectionErrorVariants,
 } from '@web/components/feedback/section-error/section-error.variants'
 import { TwiseIcon } from '@web/components/icons/twise-icon'
@@ -18,22 +21,19 @@ export function SectionError({
   return (
     <div data-slot="section-error" role="alert" className={cn(sectionErrorVariants(), className)}>
       <span className={sectionErrorIconVariants()}>
-        <TwiseIcon name="alert" tone="danger" size="md" />
+        <TwiseIcon name="alert" tone="danger" size="xl" />
       </span>
       <div className="flex flex-col items-start">
-        <p className="text-body">{message}</p>
-        {errorRef && (
-          <p className="mt-0.5 text-body-sm text-ink-muted tabular-nums">
-            {messages.code(errorRef)}
-          </p>
-        )}
+        <p className={sectionErrorMessageVariants()}>{message}</p>
+        {errorRef && <p className={sectionErrorCodeVariants()}>{messages.code(errorRef)}</p>}
         <Button
-          variant="outline"
+          variant="secondary"
           size="sm"
-          className="mt-2.5"
+          className={sectionErrorRetryVariants()}
           isLoading={isRetrying}
           onClick={onRetry}
         >
+          <TwiseIcon name="refresh" size="md" />
           {messages.retry}
         </Button>
       </div>

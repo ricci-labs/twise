@@ -233,8 +233,9 @@ updated: 2026-10-14
   2. [x] API: the accounts summary (G40) and the cards summary and upcoming invoices (G41)
   3. [x] Web components 1–8 of `../design/accounts/components.md` (rows, groups, KPI carousel,
      action sheet and menu, undo toast, refused-action dialog, archived toggle, list states)
-  4. [ ] Web: `ACC-01` with every state, `ACC-03` (account), `ACC-04`; "Cadastrar conta" in the new
-     entry's empty sheet
+  4. [ ] Web: `ACC-01` with every state (done: summary, groups, archived, actions with undo and the
+     refused delete, loading, empty, error, viewer; the phone's top and bottom bars to the approved
+     model), `ACC-03` (account), `ACC-04`; "Cadastrar conta" in the new entry's empty sheet
   5. [ ] Web: `ACC-02` with subcategories and every subcategory action, `ACC-03` (category, edit,
      move)
   6. [ ] Web: `CARD-01`, `CARD-02` (strip, year sheet), `CARD-03`, `CARD-04` (days); "Cadastrar

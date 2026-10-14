@@ -9,6 +9,7 @@
   --ink-subtle: #676b72;
   --border: #e6e3dc;
   --border-control: #8a877f;
+  --indicator-idle: #c9ccd1;
   --focus-ring: #17191c;
   --mint: #80dca5;
   --mint-soft: #e3f7eb;
@@ -41,7 +42,9 @@
   --chart-4: #3f67d1;
   --chart-5: #8a63d2;
 
+  --elevation-raised: 0 1px 2px rgb(23 25 28 / 12%);
   --elevation-float: 0 6px 20px rgb(23 25 28 / 12%);
+  --elevation-bar: 0 -10px 28px rgb(23 25 28 / 5%);
   --elevation-dialog: 0 16px 48px rgb(23 25 28 / 18%);
 
   --stroke-emphasis: 1.5px;
@@ -78,6 +81,7 @@
   --ink-subtle: #949aa1;
   --border: #2d3135;
   --border-control: #737980;
+  --indicator-idle: #4a4f55;
   --focus-ring: #f2f0ea;
   --mint-soft: #1d3a2a;
   --on-mint: #10231a;
@@ -106,7 +110,9 @@
   --chart-4: #8fb0ff;
   --chart-5: #bda6ff;
 
+  --elevation-raised: 0 1px 2px rgb(0 0 0 / 40%);
   --elevation-float: 0 6px 20px rgb(0 0 0 / 45%);
+  --elevation-bar: 0 -10px 28px rgb(0 0 0 / 30%);
   --elevation-dialog: 0 16px 48px rgb(0 0 0 / 55%);
 }
 

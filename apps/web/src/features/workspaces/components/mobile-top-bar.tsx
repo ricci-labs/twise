@@ -18,24 +18,24 @@ export function MobileTopBar({ access }: MobileTopBarProps) {
   const workspaces = demo ? [demoWorkspace(access.workspace.workspaceId)] : listed
   const { workspace, memberNames } = access
   return (
-    <header className="flex items-center justify-between gap-3 px-4 pt-4 lg:hidden">
-      <div className="flex min-w-0 items-center gap-2">
-        <Logo variant="icon" />
+    <header className="flex items-center justify-between gap-3 pt-2.5 pr-3 pl-2 lg:hidden">
+      <div className="flex min-w-0 items-center">
         <Sheet
           title={workspacesMessages.picker.title}
           trigger={
             <button
               type="button"
               aria-label={workspacesMessages.shell.switchWorkspace(workspace.name)}
-              className="flex min-w-0 cursor-pointer items-center gap-1 text-title"
+              className="flex min-h-touch min-w-0 cursor-pointer items-center gap-2 rounded-full pr-2.5 pl-1.5 font-display text-bar-title outline-none focus-visible:ring-2 focus-visible:ring-focus-ring"
             >
+              <Logo variant="mark" />
               <span className="truncate">{workspace.name}</span>
               {isReadOnly(access.permissions) && (
-                <span className="text-body-sm font-medium whitespace-nowrap text-ink-muted">
+                <span className="font-sans text-note font-medium whitespace-nowrap text-ink-muted">
                   · {access.role.name}
                 </span>
               )}
-              <ChevronDown className="size-4 shrink-0 text-ink-muted" aria-hidden="true" />
+              <ChevronDown className="size-4.5 shrink-0 text-ink-muted" aria-hidden="true" />
             </button>
           }
         >
@@ -45,15 +45,10 @@ export function MobileTopBar({ access }: MobileTopBarProps) {
           />
         </Sheet>
       </div>
-      <p className="flex -space-x-2">
+      <p className="flex -space-x-2 py-1 pr-3 pl-1">
         <span className="sr-only">{memberNames.join(', ')}</span>
         {[...new Set(memberNames)].slice(0, MAX_AVATARS).map((name, position) => (
-          <Avatar
-            key={name}
-            name={name}
-            tone={position === 0 ? 'paper' : 'mint'}
-            className="ring-2 ring-page"
-          />
+          <Avatar key={name} name={name} tone={position === 0 ? 'paper' : 'mint'} size="stacked" />
         ))}
       </p>
     </header>

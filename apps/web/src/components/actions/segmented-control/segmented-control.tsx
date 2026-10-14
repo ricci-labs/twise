@@ -12,6 +12,7 @@ export function SegmentedControl({
   options,
   value,
   onValueChange,
+  width,
   className,
 }: SegmentedControlProps) {
   return (
@@ -25,10 +26,14 @@ export function SegmentedControl({
           onValueChange(String(picked))
         }
       }}
-      className={cn(segmentedControlVariants(), className)}
+      className={cn(segmentedControlVariants({ width }), className)}
     >
       {options.map((option) => (
-        <Toggle key={option.value} value={option.value} className={segmentedOptionVariants()}>
+        <Toggle
+          key={option.value}
+          value={option.value}
+          className={segmentedOptionVariants({ width })}
+        >
           {option.label}
         </Toggle>
       ))}
