@@ -1,5 +1,6 @@
 import { formatBrl, MONEY_ACCOUNT_KINDS } from '@financas/shared'
 import { useQuery } from '@tanstack/react-query'
+import { useNavigate } from '@tanstack/react-router'
 import { FormField } from '@web/components/forms/form-field'
 import {
   accountsQueryOptions,
@@ -22,7 +23,8 @@ import { useFormContext } from 'react-hook-form'
 const messages = entriesMessages.accounts
 const MONEY_KINDS: readonly string[] = MONEY_ACCOUNT_KINDS
 
-export function AccountField({ workspaceId }: AccountFieldProps) {
+export function AccountField({ workspaceId, canCreateAccounts }: AccountFieldProps) {
+  const navigate = useNavigate()
   const accounts = useQuery(accountsQueryOptions(workspaceId)).data ?? []
   const balances = useQuery(balancesQueryOptions(workspaceId)).data ?? []
   const items = accounts.filter(isUsableMoneyAccount).map((account) => ({
@@ -49,7 +51,16 @@ export function AccountField({ workspaceId }: AccountFieldProps) {
           subtitle={messages.subtitle}
           placeholder={messages.placeholder}
           items={items}
-          empty={{ icon: 'wallet', title: messages.empty.title, text: messages.empty.text }}
+          empty={{
+            icon: 'wallet',
+            title: messages.empty.title,
+            text: messages.empty.text,
+            ...(canCreateAccounts && {
+              actionLabel: messages.empty.action,
+              onAction: () =>
+                navigate({ to: '.', search: (previous) => ({ ...previous, account: 'new' }) }),
+            }),
+          }}
         />
       )}
     </FormField>

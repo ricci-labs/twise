@@ -286,6 +286,32 @@ describe('ENT-02 new expense', () => {
     expect(getComputedStyle(footer as Element).flexDirection).toBe('row-reverse')
   })
 
+  it('offers to register the first account and opens its form over the entry', async () => {
+    const recorded: unknown[] = []
+    fakeApi({
+      'GET /api/auth/me': () =>
+        Response.json({
+          userId: CURRENT_USER,
+          email: 'member.a@exemplo.com',
+          displayName: 'Member A',
+        }),
+      'GET /api/workspaces': () => workspaceList(),
+      [`GET ${BASE}`]: workspaceAccess,
+      ...demoAnswers(),
+      ...entryAnswers(recorded),
+      [`GET ${BASE}/accounts`]: () =>
+        Response.json(ACCOUNTS.filter((account) => account.class !== 'asset')),
+    })
+    const app = createApp(createMemoryHistory({ initialEntries: [`/w/${WORKSPACE_ID}?entry=new`] }))
+    await render(<AppProviders app={app} />)
+
+    await page.getByRole('button', { name: /^Pago com/ }).click()
+    await page.getByRole('button', { name: 'Cadastrar conta' }).click()
+
+    await expect.element(page.getByRole('dialog', { name: 'Nova conta' })).toBeVisible()
+    expect(app.router.state.location.search).toEqual({ entry: 'new', account: 'new' })
+  })
+
   it('stays closed for someone who cannot record entries', async () => {
     await openNewEntry({
       access: () => accessAs('Visualizador', VIEWER_PERMISSIONS),

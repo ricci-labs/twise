@@ -6,6 +6,7 @@ export const choiceChipsVariants = cva('', {
       pill: 'flex flex-wrap gap-2',
       outline: 'flex flex-wrap gap-2',
       card: 'grid grid-cols-2 gap-2',
+      member: 'flex flex-wrap gap-2',
     },
   },
   defaultVariants: { variant: 'pill' },
@@ -31,7 +32,11 @@ export const choiceChipVariants = cva(
           'data-checked:border-ink data-checked:font-emphasis data-checked:ring-1 data-checked:ring-ink data-checked:ring-inset',
         ],
         card: [
-          'min-h-control min-w-0 gap-2.5 rounded-md px-3 text-body-sm',
+          'min-h-control min-w-0 gap-2.5 rounded-md px-3 text-choice',
+          'data-checked:border-ink data-checked:font-emphasis data-checked:ring-1 data-checked:ring-ink data-checked:ring-inset',
+        ],
+        member: [
+          'min-h-touch min-w-0 gap-2 rounded-md pr-3.5 pl-2 text-body-sm font-medium',
           'data-checked:border-ink data-checked:font-emphasis data-checked:ring-1 data-checked:ring-ink data-checked:ring-inset',
         ],
       },

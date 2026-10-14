@@ -31,6 +31,11 @@ const PEOPLE = [
   { value: 'b', label: 'Member B', avatarName: 'Member B' },
 ] as const
 
+const OWNERS = [
+  ...PEOPLE,
+  { value: '', label: 'Da casa', avatarName: 'Da casa', avatarIcon: 'home' },
+] as const
+
 export const choiceChipsExamples: ComponentExamples = {
   component: 'ChoiceChips',
   examples: [
@@ -45,6 +50,10 @@ export const choiceChipsExamples: ComponentExamples = {
     {
       name: 'Quem gastou (cartões)',
       render: () => <Example label="Quem gastou" variant="card" options={PEOPLE} initial="a" />,
+    },
+    {
+      name: 'De quem é (pessoas que quebram linha)',
+      render: () => <Example label="De quem é" variant="member" options={OWNERS} initial="a" />,
     },
     {
       name: 'Desativado',

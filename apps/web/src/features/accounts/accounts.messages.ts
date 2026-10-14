@@ -27,6 +27,7 @@ export const accountsMessages = {
   groups: {
     money: 'Dinheiro',
     cards: 'Cartões',
+    newAccount: 'Nova conta',
     cardsNote: 'Nos cartões, o total em aberto inclui as parcelas futuras.',
   },
   kinds: {
@@ -41,6 +42,7 @@ export const accountsMessages = {
   detail: (kind: string, owner: string) => `${kind} · ${owner}`,
   actions: {
     trigger: (name: string) => `Ações de ${name}`,
+    edit: 'Editar',
     archive: 'Arquivar',
     unarchive: 'Desarquivar',
     delete: 'Excluir',
@@ -62,6 +64,41 @@ export const accountsMessages = {
   empty: {
     title: 'Nenhuma conta ainda.',
     text: 'Comece pela sua conta corrente. Depois, os cartões.',
+    action: 'Nova conta',
+  },
+  form: {
+    newTitle: 'Nova conta',
+    editTitle: 'Editar conta',
+    close: 'Cancelar',
+    requiredMark: '*',
+    requiredLegend: 'obrigatório',
+    kind: 'Tipo',
+    kindHelp: 'O tipo não pode ser mudado depois.',
+    name: 'Nome',
+    namePlaceholder: 'Ex.: Conta do banco',
+    owner: 'De quem é',
+    household: 'Da casa',
+    illustration: 'Ilustração',
+    color: 'Cor',
+    colorHelp: 'Aparece nos gráficos e ao lado do nome.',
+    create: 'Criar conta',
+    creating: 'Criando conta…',
+    save: 'Salvar',
+    saving: 'Salvando…',
+    cancel: 'Cancelar',
+    created: (name: string) => `${name} criada.`,
+    saved: 'Alterações salvas.',
+    failed: 'Não foi possível salvar a conta. Código: {ref}.',
+    offline: 'Sem conexão. O que você digitou fica aqui; salve quando a conexão voltar.',
+    required: {
+      name: 'Informe o nome da conta.',
+    },
+    discard: {
+      title: 'Descartar as alterações?',
+      text: 'O que você preencheu nesta conta vai se perder.',
+      keep: 'Continuar editando',
+      confirm: 'Descartar',
+    },
   },
   failed: 'Não foi possível carregar as contas.',
 } as const

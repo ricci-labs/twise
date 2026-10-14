@@ -57,7 +57,11 @@ export function ResetPasswordForm({ token, onLinkInvalid }: ResetPasswordFormPro
       return
     }
     if (code === 'PASSWORD_INVALID') {
-      form.setError('password', { message: errorMessageFor(error) }, { shouldFocus: true })
+      form.setError(
+        'password',
+        { type: 'server', message: errorMessageFor(error) },
+        { shouldFocus: true },
+      )
       return
     }
     setProblem(formProblemOf(error))

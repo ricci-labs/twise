@@ -48,6 +48,7 @@ export function EntryForm({
   workspaceId,
   currentUserId,
   canSeeMembers,
+  canCreateAccounts,
   today,
   onClose,
 }: EntryFormProps) {
@@ -96,7 +97,7 @@ export function EntryForm({
     if (field) {
       form.setError(
         field,
-        { message: errorMessageFor(error, { Conta: fields.paidFrom }) },
+        { type: 'server', message: errorMessageFor(error, { Conta: fields.paidFrom }) },
         { shouldFocus: true },
       )
       return
@@ -147,7 +148,7 @@ export function EntryForm({
               />
             )}
           </FormField>
-          <AccountField workspaceId={workspaceId} />
+          <AccountField workspaceId={workspaceId} canCreateAccounts={canCreateAccounts} />
           <CategoryField workspaceId={workspaceId} />
           <DateField today={today} />
           <FormField<ExpenseFormInput> name="paymentMethod" label={fields.paymentMethod}>

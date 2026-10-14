@@ -1,4 +1,6 @@
-import type { Permission } from '@financas/shared'
+import type { NewAccountInput, Permission } from '@financas/shared'
+import type { ItemAction } from '@web/components/actions/item-actions'
+import type { accountFormSchema } from '@web/features/accounts/accounts.schemas'
 import type {
   fetchAccounts,
   fetchAccountsSummary,
@@ -6,6 +8,7 @@ import type {
   fetchCards,
   fetchMembers,
 } from '@web/features/accounts/api/accounts.queries'
+import type { z } from 'zod'
 
 export type LedgerAccount = Awaited<ReturnType<typeof fetchAccounts>>[number]
 
@@ -29,6 +32,8 @@ export type AccountActionRequest = {
 export type AccountsPageProps = {
   workspaceId: string
   permissions: readonly Permission[]
+  createdId?: string
+  onCreatedSeen: () => void
 }
 
 export type AccountsAreaHeaderProps = {
@@ -58,6 +63,7 @@ export type AccountsListsProps = {
   workspaceId: string
   permissions: readonly Permission[]
   accounts: readonly ListedAccount[]
+  highlightedId?: string
 }
 
 export type AccountRowActionsProps = {
@@ -74,6 +80,7 @@ export type AccountsData = {
 }
 
 export type AccountActionHandlers = {
+  edit: NonNullable<ItemAction['render']>
   canUpdate: boolean
   canDelete: boolean
   archive: () => void
@@ -84,9 +91,56 @@ export type AccountActionHandlers = {
 export type AccountsBodyProps = {
   workspaceId: string
   permissions: readonly Permission[]
+  highlightedId?: string
 }
 
 export type AccountsLoadedProps = AccountsBodyProps & {
   data: AccountsData
   summary: AccountsSummary
+}
+
+export type AccountFormInput = z.input<typeof accountFormSchema>
+
+export type AccountFormValues = z.output<typeof accountFormSchema>
+
+export type AccountFormMode = { kind: 'create' } | { kind: 'edit'; account: LedgerAccount }
+
+export type AccountEditorProps = {
+  workspaceId: string
+  currentUserId: string
+  permissions: readonly Permission[]
+  param: string | undefined
+  onClose: () => void
+  onCreated: (accountId: string) => void
+}
+
+export type AccountFormProps = {
+  workspaceId: string
+  mode: AccountFormMode
+  members: readonly WorkspaceMember[] | null
+  defaults: AccountFormInput
+  onClose: () => void
+  onCreated: (accountId: string) => void
+}
+
+export type AccountFormFooterProps = {
+  isEditing: boolean
+  isOnline: boolean
+  problem: string | null
+  onCancel: () => void
+}
+
+export type SaveAccountRequest =
+  | { kind: 'create'; input: NewAccountInput }
+  | { kind: 'edit'; accountId: string; change: AccountChangeRequest }
+
+export type AccountChangeRequest = {
+  name?: string
+  ownerUserId?: string | null
+  icon?: string | null
+  color?: string | null
+}
+
+export type ChangeAccountProps = AccountEditorProps & {
+  accountId: string
 }

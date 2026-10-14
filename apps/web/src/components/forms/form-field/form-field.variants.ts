@@ -4,7 +4,7 @@ export const fieldVariants = cva('flex flex-col gap-2')
 
 export const labelVariants = cva('text-label font-medium text-ink')
 
-export const requiredMarkVariants = cva('ml-0.5 font-semibold text-danger')
+export const requiredMarkVariants = cva('ml-1 font-semibold text-danger')
 
 export const helpVariants = cva('-mt-1 text-body-sm text-ink-muted')
 

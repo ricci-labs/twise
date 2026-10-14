@@ -40,6 +40,7 @@ export type EntryFormProps = {
   workspaceId: string
   currentUserId: string
   canSeeMembers: boolean
+  canCreateAccounts: boolean
   today: IsoDate
   onClose: () => void
 }
@@ -52,6 +53,7 @@ export type FieldsProps = {
 
 export type AccountFieldProps = {
   workspaceId: string
+  canCreateAccounts: boolean
 }
 
 export type CategoryFieldProps = {

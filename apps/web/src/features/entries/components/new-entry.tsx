@@ -20,6 +20,7 @@ export function NewEntry({
       workspaceId={workspaceId}
       currentUserId={currentUserId}
       canSeeMembers={hasPermission(permissions, 'members', 'view')}
+      canCreateAccounts={hasPermission(permissions, 'accounts', 'create')}
       today={todayIn(TIME_ZONE, new Date())}
       onClose={onClose}
     />

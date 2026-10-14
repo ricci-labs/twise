@@ -1,3 +1,4 @@
+import { Link } from '@tanstack/react-router'
 import { type ItemAction, ItemActions } from '@web/components/actions/item-actions'
 import { ConfirmDialog } from '@web/components/feedback/confirm-dialog'
 import { showToast } from '@web/components/feedback/toast'
@@ -55,7 +56,8 @@ export function AccountRowActions({ workspaceId, permissions, account }: Account
       }),
     )
 
-  const actions = actionsOf(account, { canUpdate, canDelete, archive, unarchive, remove })
+  const edit = <Link to="." search={(previous) => ({ ...previous, account: account.id })} />
+  const actions = actionsOf(account, { edit, canUpdate, canDelete, archive, unarchive, remove })
   return (
     <>
       <ItemActions
@@ -97,6 +99,12 @@ function actionsOf(account: ListedAccount, can: AccountActionHandlers): ItemActi
   return [
     ...(can.canUpdate
       ? [
+          {
+            key: 'edit',
+            label: messages.actions.edit,
+            icon: 'edit',
+            render: can.edit,
+          } as const,
           {
             key: 'archive',
             label: messages.actions.archive,

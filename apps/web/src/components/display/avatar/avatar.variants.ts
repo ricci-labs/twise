@@ -9,7 +9,8 @@ export const avatarVariants = cva(
         paper: 'bg-sketch-paper text-ink',
       },
       size: {
-        sm: 'size-8 text-caption',
+        xs: 'size-6.5 text-caption [&_svg]:size-3.75',
+        sm: 'size-7.5 text-button-sm [&_svg]:size-4',
         md: 'size-9 text-label',
         stacked: 'size-9 border-2 border-page text-button-sm',
       },

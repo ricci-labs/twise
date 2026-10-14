@@ -2,7 +2,7 @@ import { Radio } from '@base-ui/react/radio'
 import { RadioGroup } from '@base-ui/react/radio-group'
 import { Avatar } from '@web/components/display/avatar'
 import type {
-  ChoiceChip,
+  ChipContentProps,
   ChoiceChipsProps,
 } from '@web/components/inputs/choice-chips/choice-chips.types'
 import {
@@ -46,17 +46,24 @@ export function ChoiceChips({
           }}
           className={choiceChipVariants({ variant })}
         >
-          <ChipContent option={option} />
+          <ChipContent option={option} avatarSize={variant === 'member' ? 'xs' : 'sm'} />
         </Radio.Root>
       ))}
     </RadioGroup>
   )
 }
 
-function ChipContent({ option }: { option: ChoiceChip }) {
+function ChipContent({ option, avatarSize }: ChipContentProps) {
   return (
     <>
-      {option.avatarName && <Avatar name={option.avatarName} size="sm" />}
+      {option.avatarName && (
+        <Avatar
+          name={option.avatarName}
+          icon={option.avatarIcon}
+          tone={option.avatarIcon ? 'paper' : 'mint'}
+          size={avatarSize}
+        />
+      )}
       {option.icon === 'calendar' && <CalendarDays data-slot="chip-icon" aria-hidden="true" />}
       <span className={choiceChipLabelVariants()}>{option.label}</span>
       {option.icon === 'chevron' && <ChevronDown data-slot="chip-icon" aria-hidden="true" />}

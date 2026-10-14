@@ -1,6 +1,8 @@
 import { Button } from '@web/components/actions/button'
 import type { SubmitButtonProps } from '@web/components/forms/submit-button/submit-button.types'
-import { useFormContext, useFormState } from 'react-hook-form'
+import { type FieldErrors, useFormContext, useFormState } from 'react-hook-form'
+
+const SERVER_ERROR = 'server'
 
 export function SubmitButton({
   requiresChange = false,
@@ -8,8 +10,9 @@ export function SubmitButton({
   ...props
 }: SubmitButtonProps) {
   const { trigger } = useFormContext()
-  const { isValid, isDirty, isSubmitting } = useFormState()
-  const isIncomplete = !isValid || (requiresChange && !isDirty)
+  const { isValid, isDirty, isSubmitting, errors } = useFormState()
+  const isRefusedByServer = isOnlyServerRefusal(errors)
+  const isIncomplete = (!isValid && !isRefusedByServer) || (requiresChange && !isDirty)
 
   return (
     <Button
@@ -24,4 +27,9 @@ export function SubmitButton({
       }}
     />
   )
+}
+
+function isOnlyServerRefusal(errors: FieldErrors): boolean {
+  const found = Object.values(errors)
+  return found.length > 0 && found.every((error) => error?.type === SERVER_ERROR)
 }

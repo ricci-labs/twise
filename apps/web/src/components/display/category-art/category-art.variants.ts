@@ -16,6 +16,7 @@ export const categoryArtVariants = cva(
         xl: 'size-16 text-title',
         '2xl': 'size-22 text-title',
         empty: 'size-24 text-title',
+        fill: 'size-full text-title',
       },
       hasArt: {
         true: '',

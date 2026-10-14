@@ -32,7 +32,7 @@ import { TextInput } from '@web/components/inputs/text-input'
 import { Sheet } from '@web/components/layout/sheet'
 import { useMediaQuery } from '@web/hooks/use-media-query'
 import { DESKTOP_QUERY } from '@web/lib/breakpoints'
-import { Check, Search } from 'lucide-react'
+import { Check, Plus, Search } from 'lucide-react'
 import { useState } from 'react'
 
 const DIACRITICS = /\p{Diacritic}/gu
@@ -204,6 +204,7 @@ function PickerEmptyState({ empty }: PickerEmptyStateProps) {
       <span>{empty.text}</span>
       {empty.actionLabel && (
         <Button className={pickerEmptyActionVariants()} onClick={empty.onAction}>
+          <Plus aria-hidden="true" />
           {empty.actionLabel}
         </Button>
       )}
