@@ -74,6 +74,17 @@
   --text-screen-title-lg--line-height: 2.625rem;
   --text-screen-title-lg--font-weight: 750;
   --text-screen-title-lg--letter-spacing: -0.02em;
+  --text-section-title: 1.0625rem;
+  --text-section-title--line-height: 1.375rem;
+  --text-section-title--font-weight: 700;
+  --text-section-title--letter-spacing: -0.01em;
+  --text-dialog-title: 1.3125rem;
+  --text-dialog-title--line-height: 1.625rem;
+  --text-dialog-title--font-weight: 750;
+  --text-dialog-title--letter-spacing: -0.01em;
+  --text-dialog-text: 0.9375rem;
+  --text-dialog-text--line-height: 1.375rem;
+  --text-dialog-text--font-weight: 400;
   --text-form-title: 1.5rem;
   --text-form-title--line-height: 1.875rem;
   --text-form-title--font-weight: 750;
@@ -168,6 +179,7 @@
   --color-action-primary-hover: var(--action-primary-hover);
   --color-on-action-primary: var(--on-action-primary);
   --color-accent-on-primary: var(--accent-on-primary);
+  --color-danger-on-primary: var(--danger-on-primary);
   --color-action-secondary-hover: var(--action-secondary-hover);
   --color-income: var(--income);
   --color-income-soft: var(--income-soft);
@@ -293,6 +305,14 @@
 
 @utility z-toast {
   z-index: var(--z-toast);
+}
+
+@utility bg-data-color {
+  background-color: var(--data-color);
+
+  &:where(.dark, .dark *) {
+    background-color: var(--data-color-on-dark, var(--data-color));
+  }
 }
 
 @utility pb-safe {

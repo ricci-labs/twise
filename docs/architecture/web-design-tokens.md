@@ -59,7 +59,7 @@ When to use each one: the design system guide → Colour, and each token's notes
 | Surfaces | `bg-page`, `bg-surface`, `bg-sunken`, `border`, `border-control`, `focus-ring` |
 | Text | `ink`, `ink-muted`, `ink-subtle` |
 | Brand | `mint`, `mint-soft`, `on-mint`, `mint-ink` |
-| Actions | `action-primary`, `action-primary-hover`, `on-action-primary`, `accent-on-primary` (the mint accent on a primary surface: the toast icon and action), `action-secondary`, `action-secondary-hover` |
+| Actions | `action-primary`, `action-primary-hover`, `on-action-primary`, `accent-on-primary` (the mint accent on a primary surface: the toast icon and action), `danger-on-primary` (the error toast's alert icon), `action-secondary`, `action-secondary-hover` |
 | Money | `income`, `income-soft`, `expense`, `expense-soft`, `transfer` (always next to a sign or a word, RNF-A11Y-4) |
 | Feedback | `success`, `warning`, `danger`, `info`, each with `-soft`; `warning-fill` (budget bar, never text) |
 | Status | `status-pending`, `status-overdue`, `status-paid`, `status-partial`, `status-matched`, `status-neutral` (cancelled, skipped), each with `-soft` |
@@ -84,9 +84,12 @@ When to use each one: the design system guide → Colour, and each token's notes
   (30/36, auth and moment titles), `screen-title-lg` (36/42, moment titles on desktop), `claim`
   (the desktop panel's "Leve, claro, a dois.", the same metrics as `amount-hero`),
   `claim-support` (17/26), `brand` (64, the opening's "twise") and `slogan` (18/24). From the
-  New entry design CSS: `form-title` (24/30, 750) and `form-title-lg` (26/32, desktop), the title
-  of a full-screen form or form dialog; `choice` (15/20, 500), the text of choice chips and of a
-  filled picker field (with `font-semibold`); `note` (13/18, 400), the small lines of a form (the
+  New entry and accounts design CSS: `section-title` (17/22, 700, display family), a group's
+  title on the phone ("Dinheiro", "Cartões"); `dialog-title` (21/26, 750, display) and
+  `dialog-text` (15/22), a confirmation dialog's title and text; `form-title` (24/30, 750) and `form-title-lg` (26/32,
+  desktop), the title of a full-screen form or form dialog; `choice` (15/20, 500), the text of
+  choice chips, of a filled picker field and of a list row's name and value (with `font-semibold`
+  or `font-bold`); `note` (13/18, 400), the small lines of a form (the
   "* obrigatório" legend, a sheet's subtitle, the auto-fill tip, the "Repetir um recente" title,
   with a weight class where the design sets one).
 - **Amounts** always use `tabular-nums`. It lives inside the `Amount` component, so no screen has
@@ -168,13 +171,15 @@ not a token:
 - it is drawn only as a swatch, dot or icon tint, never as a background behind text;
 - it reaches the DOM only through the `--data-color` custom property set by `ColorSwatch` and
   `CategoryIcon`, the two components allowed a `style` prop (besides the development-only
-  workbench, which draws every token by name).
+  workbench, which draws every token by name), and is painted by the `bg-data-color` utility;
+- a palette choice too dark for the dark theme carries an `onDark` shade (the grey), which
+  `ColorSwatch` passes as `--data-color-on-dark`; the stored value doesn't change.
 
 ## Enforcement
 | Check | Fails on | Where |
 |---|---|---|
 | `pnpm lint:tokens` (`scripts/check-tokens.mjs`) | Every string in `apps/web/src` TS/TSX outside `styles/` (class lists included): a raw colour (`#hex`, `rgb(`, `hsl(`, `oklch(`, `color-mix(`…); an arbitrary value (`w-[37px]`, `[color:red]`, `size-(--x)`), while arbitrary **variants** stay allowed (`[&_svg]:size-4`, `has-data-[icon=x]:pr-2`); classes of the scales we reset, which Tailwind would drop **silently** (the default palette `bg-red-500`, `text-white`, `bg-black/50`; `text-lg` and up; `shadow-xs…2xl`; `rounded-2xl…4xl`); numeric `z-<n>` and `duration-<n>`; the `sm:`, `2xl:` and arbitrary breakpoints; a `style` prop outside the two data-colour components | `pnpm check`, pre-commit, CI |
-| `pnpm check:contrast` (`scripts/check-contrast.mjs`) | A token pair below WCAG 2.2 AA (4.5:1 text, 1.4.3; 3:1 UI parts, 1.4.11), resolved through every alias: the text roles on the three surfaces, each role on its `-soft`, `on-mint` on `mint`, `on-action-primary` on both primary states, `accent-on-primary` on `action-primary`, `border-control`, `focus-ring` and the chart series on `bg-surface`, in both themes; plus the account-screen pairs (`ink` and `ink-muted` on `sketch-paper`, `focus-ring` on `mint`) in the light theme only, since those screens are always light | `pnpm check`, pre-commit when a token file changes, CI |
+| `pnpm check:contrast` (`scripts/check-contrast.mjs`) | A token pair below WCAG 2.2 AA (4.5:1 text, 1.4.3; 3:1 UI parts, 1.4.11), resolved through every alias: the text roles on the three surfaces, each role on its `-soft`, `on-mint` on `mint`, `on-action-primary` on both primary states, `accent-on-primary` and `danger-on-primary` on `action-primary`, the account colours as dots on `bg-page` and `bg-surface` (3:1), `border-control`, `focus-ring` and the chart series on `bg-surface`, in both themes; plus the account-screen pairs (`ink` and `ink-muted` on `sketch-paper`, `focus-ring` on `mint`) in the light theme only, since those screens are always light | `pnpm check`, pre-commit when a token file changes, CI |
 
 `lint:tokens` also covers `components/ui`: a `shadcn add` that brings `bg-black/50`, `text-white`
 or `ring-[3px]` is fixed to tokens in the same PR. The pairs checked live in the script; a new

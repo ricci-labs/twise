@@ -12,6 +12,10 @@ export const sheetHandleVariants = cva('mx-auto mb-1 h-1 w-10 rounded-full bg-bo
 
 export const sheetHeadVariants = cva('flex items-center justify-between gap-2 pl-1')
 
+export const sheetTitleBlockVariants = cva('flex min-w-0 flex-col')
+
+export const sheetDescriptionVariants = cva('mt-0.5 text-note font-medium text-ink-muted')
+
 export const sheetTitleVariants = cva('', {
   variants: {
     hasClose: {

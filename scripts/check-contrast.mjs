@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs'
 import { readThemeValues, resolveColor } from './tokens/semantic-tokens.mjs'
 
 const THEMES = ['light', 'dark']
@@ -29,6 +30,7 @@ const TEXT_PAIRS = [
   ['on-action-primary', 'action-primary'],
   ['on-action-primary', 'action-primary-hover'],
   ['accent-on-primary', 'action-primary'],
+  ['danger-on-primary', 'action-primary'],
   ['ink', 'action-secondary'],
   ['ink', 'action-secondary-hover'],
   ['transfer', 'bg-surface'],
@@ -60,6 +62,26 @@ const UI_PAIRS = [
   ]),
 ]
 const ACCOUNT_SCREEN_UI_PAIRS = [['focus-ring', 'mint']]
+const ACCOUNT_COLORS_FILE = 'apps/web/src/styles/account-colors.ts'
+const ACCOUNT_COLOR = /key: '([a-z]+)', value: '(#[0-9a-f]{6})'(?:, onDark: '(#[0-9a-f]{6})')?/g
+const DATA_COLOR_SURFACES = ['bg-page', 'bg-surface']
+
+function accountColorProblems(valuesByTheme) {
+  const colors = [...readFileSync(ACCOUNT_COLORS_FILE, 'utf8').matchAll(ACCOUNT_COLOR)]
+  return THEMES.flatMap((theme) =>
+    colors.flatMap(([, key, value, onDark]) =>
+      DATA_COLOR_SURFACES.flatMap((surface) => {
+        const color = theme === 'dark' ? (onDark ?? value) : value
+        const ratio = contrastRatio(color, resolveColor(valuesByTheme[theme], surface))
+        return ratio >= UI_MINIMUM
+          ? []
+          : [
+              `${theme}: account colour ${key} on ${surface} is ${ratio.toFixed(2)}:1, needs ${UI_MINIMUM}:1`,
+            ]
+      }),
+    ),
+  )
+}
 
 function linearChannel(channel) {
   const ratio = channel / CHANNEL_MAX
@@ -101,6 +123,7 @@ const problems = [
   ]),
   ...pairProblems(accountScreenValues, 'account screens', ACCOUNT_SCREEN_TEXT_PAIRS, TEXT_MINIMUM),
   ...pairProblems(accountScreenValues, 'account screens', ACCOUNT_SCREEN_UI_PAIRS, UI_MINIMUM),
+  ...accountColorProblems(valuesByTheme),
 ]
 const pairCount =
   (TEXT_PAIRS.length + UI_PAIRS.length) * THEMES.length +
@@ -116,5 +139,5 @@ if (problems.length > 0) {
 }
 
 console.log(
-  `Contrast meets WCAG 2.2 AA for ${pairCount} token pairs (both themes, account screens light).`,
+  `Contrast meets WCAG 2.2 AA for ${pairCount} token pairs (both themes, account screens light) and the account colours.`,
 )

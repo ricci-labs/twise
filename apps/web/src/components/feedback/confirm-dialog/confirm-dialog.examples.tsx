@@ -3,6 +3,28 @@ import { ConfirmDialog } from '@web/components/feedback/confirm-dialog/confirm-d
 import type { ComponentExamples } from '@web/lib/examples.types'
 import { useState } from 'react'
 
+function RefusedExample() {
+  const [isOpen, setIsOpen] = useState(false)
+  return (
+    <>
+      <Button variant="subtle" size="sm" onClick={() => setIsOpen(true)}>
+        Excluir uma conta com lançamentos
+      </Button>
+      <ConfirmDialog
+        title="Não dá para excluir a Conta Y"
+        description="Esta conta tem lançamentos ou subcategorias. Arquive em vez de excluir."
+        cancelLabel="Cancelar"
+        confirmLabel="Arquivar"
+        confirmVariant="primary"
+        confirmIcon="archive"
+        isOpen={isOpen}
+        onOpenChange={setIsOpen}
+        onConfirm={() => setIsOpen(false)}
+      />
+    </>
+  )
+}
+
 function Example() {
   const [isOpen, setIsOpen] = useState(false)
   return (
@@ -25,5 +47,8 @@ function Example() {
 
 export const confirmDialogExamples: ComponentExamples = {
   component: 'ConfirmDialog',
-  examples: [{ name: 'Descartar as alterações', render: () => <Example /> }],
+  examples: [
+    { name: 'Descartar as alterações', render: () => <Example /> },
+    { name: 'Ação recusada, com a saída', render: () => <RefusedExample /> },
+  ],
 }

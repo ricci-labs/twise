@@ -8,12 +8,15 @@ import {
   confirmPopupVariants,
   confirmTitleVariants,
 } from '@web/components/feedback/confirm-dialog/confirm-dialog.variants'
+import { TwiseIcon } from '@web/components/icons/twise-icon'
 
 export function ConfirmDialog({
   title,
   description,
   cancelLabel,
   confirmLabel,
+  confirmVariant = 'danger',
+  confirmIcon,
   isOpen,
   onOpenChange,
   onConfirm,
@@ -31,7 +34,8 @@ export function ConfirmDialog({
             <AlertDialog.Close render={<Button variant="secondary" />}>
               {cancelLabel}
             </AlertDialog.Close>
-            <Button variant="danger" onClick={onConfirm}>
+            <Button variant={confirmVariant} onClick={onConfirm}>
+              {confirmIcon && <TwiseIcon name={confirmIcon} size="md" />}
               {confirmLabel}
             </Button>
           </div>

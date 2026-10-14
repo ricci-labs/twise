@@ -18,6 +18,14 @@ const INTERFACE_ICONS: readonly TwiseIconName[] = [
   'shield',
   'bag',
   'out',
+  'edit',
+  'flag',
+  'archive',
+  'unarchive',
+  'calendar',
+  'subcategory',
+  'move',
+  'more',
 ]
 
 const ALERT_ICONS = [

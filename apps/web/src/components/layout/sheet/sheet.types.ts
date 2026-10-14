@@ -2,6 +2,7 @@ import type { ReactElement, ReactNode } from 'react'
 
 export type SheetProps = {
   title: string
+  description?: string
   closeLabel?: string
   trigger?: ReactElement
   isOpen?: boolean

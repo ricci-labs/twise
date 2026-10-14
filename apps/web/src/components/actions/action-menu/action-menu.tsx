@@ -13,12 +13,19 @@ import { TwiseIcon } from '@web/components/icons/twise-icon'
 import { Check } from 'lucide-react'
 import { Fragment } from 'react'
 
-export function ActionMenu({ trigger, groups, header, side = 'bottom' }: ActionMenuProps) {
+export function ActionMenu({
+  trigger,
+  groups,
+  header,
+  side = 'bottom',
+  align = 'start',
+  onOpenChange,
+}: ActionMenuProps) {
   return (
-    <Menu.Root>
+    <Menu.Root onOpenChange={(open) => onOpenChange?.(open)}>
       <Menu.Trigger render={trigger} />
       <Menu.Portal>
-        <Menu.Positioner side={side} align="start" sideOffset={8}>
+        <Menu.Positioner side={side} align={align} sideOffset={8}>
           <Menu.Popup data-slot="action-menu" className={actionMenuPopupVariants()}>
             {header && <div className={actionMenuHeaderVariants()}>{header}</div>}
             {groups.map((group, index) => (
@@ -42,9 +49,9 @@ function MenuEntry({ item }: ActionMenuEntryProps) {
       render={item.render}
       onClick={item.onSelect}
       aria-current={item.isCurrent ? true : undefined}
-      className={actionMenuItemVariants()}
+      className={actionMenuItemVariants({ tone: item.tone })}
     >
-      {item.icon && <TwiseIcon name={item.icon} tone="muted" size="md" />}
+      {item.icon && <TwiseIcon name={item.icon} />}
       <span className="flex min-w-0 flex-1 flex-col">
         <span className="truncate">{item.label}</span>
         {item.detail && <span className="text-caption text-ink-muted">{item.detail}</span>}

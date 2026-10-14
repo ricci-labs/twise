@@ -25,6 +25,22 @@ export const toastExamples: ComponentExamples = {
       ),
     },
     {
+      name: 'Recusa, até a pessoa responder',
+      render: () => (
+        <Button
+          variant="secondary"
+          onClick={() =>
+            showToast('Saúde, a categoria mãe, está na lixeira.', {
+              tone: 'danger',
+              action: { label: 'Restaurar as duas', onPress: () => undefined },
+            })
+          }
+        >
+          Mostrar recusa
+        </Button>
+      ),
+    },
+    {
       name: 'Com "Desfazer"',
       render: () => (
         <Button
