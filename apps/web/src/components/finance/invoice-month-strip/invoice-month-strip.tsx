@@ -8,6 +8,7 @@ import {
   invoiceYearVariants,
 } from '@web/components/finance/invoice-month-strip/invoice-month-strip.variants'
 import { TwiseIcon } from '@web/components/icons/twise-icon'
+import { ScrollArrows } from '@web/components/navigation/scroll-arrows'
 import { cloneElement, Fragment, useEffect, useRef } from 'react'
 
 export function InvoiceMonthStrip({
@@ -41,40 +42,47 @@ export function InvoiceMonthStrip({
   }, [current, anchor, size])
 
   return (
-    <nav
-      ref={stripRef}
-      aria-label={label}
-      data-slot="invoice-month-strip"
-      className={invoiceMonthStripVariants({ size })}
-    >
-      {months.map((month) => (
-        <Fragment key={month.key}>
-          {month.yearBefore && (
-            <span aria-hidden="true" className={invoiceYearVariants()}>
-              {month.yearBefore}
-            </span>
-          )}
-          {cloneElement(
-            month.link,
-            {
-              'aria-label': month.accessibleLabel,
-              'aria-current': month.isCurrent ? 'true' : undefined,
-              'data-slot': 'invoice-month',
-              'data-month': month.key,
-              className: invoiceMonthVariants({ size, isCurrent: month.isCurrent }),
-            },
-            <>
-              <b className={invoiceMonthNameVariants()}>{month.month}</b>
-              <small className={invoiceMonthStatusVariants()}>{month.status}</small>
-            </>,
-          )}
-        </Fragment>
-      ))}
-      <button type="button" aria-haspopup="dialog" className={invoiceAllVariants()} onClick={onAll}>
-        <TwiseIcon name="calendar" />
-        {allLabel}
-      </button>
-    </nav>
+    <ScrollArrows scrollerRef={stripRef}>
+      <nav
+        ref={stripRef}
+        aria-label={label}
+        data-slot="invoice-month-strip"
+        className={invoiceMonthStripVariants({ size })}
+      >
+        {months.map((month) => (
+          <Fragment key={month.key}>
+            {month.yearBefore && (
+              <span aria-hidden="true" className={invoiceYearVariants()}>
+                {month.yearBefore}
+              </span>
+            )}
+            {cloneElement(
+              month.link,
+              {
+                'aria-label': month.accessibleLabel,
+                'aria-current': month.isCurrent ? 'true' : undefined,
+                'data-slot': 'invoice-month',
+                'data-month': month.key,
+                className: invoiceMonthVariants({ size, isCurrent: month.isCurrent }),
+              },
+              <>
+                <b className={invoiceMonthNameVariants()}>{month.month}</b>
+                <small className={invoiceMonthStatusVariants()}>{month.status}</small>
+              </>,
+            )}
+          </Fragment>
+        ))}
+        <button
+          type="button"
+          aria-haspopup="dialog"
+          className={invoiceAllVariants()}
+          onClick={onAll}
+        >
+          <TwiseIcon name="calendar" />
+          {allLabel}
+        </button>
+      </nav>
+    </ScrollArrows>
   )
 }
 

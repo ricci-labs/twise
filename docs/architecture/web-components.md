@@ -38,7 +38,7 @@ where it's used.
 | `feedback/` | `Toast`, `InlineAlert`, `AutoFillTip`, `Banner`, `ConfirmDialog`, `EmptyState`, `EmptyBlock`, `Skeleton`, `ListSkeleton`, `KpiSkeleton`, `ErrorState` |
 | `display/` | `Amount`, `StatusBadge`, `Avatar`, `ListItem`, `Card`, `StatCard`, `ThresholdProgress`, `Tabs`, `Accordion`, `DataList` (table on desktop, list on mobile), `LoadMore`, `Tooltip`, `HelpPopover`, `FilterChips`, `CategoryIcon`, `ArchivedToggle` |
 | `charts/` | `BarChart`, `ForecastChart`, `DonutChart`, each with its text alternative |
-| `navigation/` | `BottomBar`, `Sidebar`, `TopBar`, `WorkspaceSwitcher`, `BackLink`, `Breadcrumb` |
+| `navigation/` | `BottomBar`, `Sidebar`, `TopBar`, `WorkspaceSwitcher`, `BackLink`, `Breadcrumb`, `ScrollArrows` |
 | `layout/` | `AppShell`, `FormOverlay`, `Page`, `PageHeader`, `Section`, `Stack`, `Grid` |
 | `finance/` | `StatHero`, `InsightCard`, `InvoiceCard`, `InvoicePreview`, `SharesList`, `RecentEntries`, `AccountRow`, `AccountGroup`, `CardBlock`, `InvoiceSummary`, `InvoiceLine`, `EntryRow`, `OccurrenceRow`, `ContactRow`, `ChargePreview`, `AmountSplitEditor` |
 | `brand/` | `Logo`, `OwlScene` (the layered owl scenes and their motion), `AppSplash` |
@@ -226,6 +226,10 @@ React Hook Form v7 + `zodResolver` with the **schemas from `@financas/shared`** 
 - `Breadcrumb` (`components/navigation/breadcrumb`): the desktop path above a page title
   ("Cartões › Cartão X"), a `nav` named by `label`; the levels above are mint underlined links,
   the current one plain with `aria-current="page"`, 14 px, `›` between them.
+- `ScrollArrows` (`components/navigation/scroll-arrows`): wraps a strip that scrolls sideways and,
+  on the desktop only, puts round ‹ › buttons at its ends ("Ver anteriores" / "Ver próximos"), each
+  shown only while there is more on that side; a click scrolls 80% of the visible width. The strip
+  passes its own element as `scrollerRef`. Used by `InvoiceMonthStrip` and `RecentEntries`.
 - `NavItem` (`components/navigation/nav-link`): `{ key, label, icon, render, isCurrent }`. `render`
   is the element that navigates (a router `Link`, or a `button` for "Mais"); `NavLink` draws it
   with the Twise icon (mint fill when current) and forwards any props, so it can be a tooltip

@@ -10,10 +10,12 @@ import {
   recentEntryTextVariants,
   recentEntryVariants,
 } from '@web/components/finance/recent-entries/recent-entries.variants'
-import { useId } from 'react'
+import { ScrollArrows } from '@web/components/navigation/scroll-arrows'
+import { useId, useRef } from 'react'
 
 export function RecentEntries({ entries, pickedKey, onPick }: RecentEntriesProps) {
   const titleId = useId()
+  const rowRef = useRef<HTMLUListElement>(null)
   if (entries.length === 0) {
     return null
   }
@@ -26,26 +28,28 @@ export function RecentEntries({ entries, pickedKey, onPick }: RecentEntriesProps
       <h2 id={titleId} className={recentEntriesTitleVariants()}>
         {messages.title}
       </h2>
-      <ul className={recentEntriesRowVariants()}>
-        {entries.map((entry) => (
-          <li key={entry.key}>
-            <button
-              type="button"
-              aria-pressed={entry.key === pickedKey}
-              onClick={() => onPick(entry.key)}
-              className={recentEntryVariants()}
-            >
-              <CategoryArt name={entry.description} icon={entry.icon} size="lg" />
-              <span className={recentEntryTextVariants()}>
-                {entry.description}
-                <span className={recentEntryAmountVariants()}>
-                  <Amount cents={entry.amountCents} size="inherit" />
+      <ScrollArrows scrollerRef={rowRef}>
+        <ul ref={rowRef} className={recentEntriesRowVariants()}>
+          {entries.map((entry) => (
+            <li key={entry.key}>
+              <button
+                type="button"
+                aria-pressed={entry.key === pickedKey}
+                onClick={() => onPick(entry.key)}
+                className={recentEntryVariants()}
+              >
+                <CategoryArt name={entry.description} icon={entry.icon} size="lg" />
+                <span className={recentEntryTextVariants()}>
+                  {entry.description}
+                  <span className={recentEntryAmountVariants()}>
+                    <Amount cents={entry.amountCents} size="inherit" />
+                  </span>
                 </span>
-              </span>
-            </button>
-          </li>
-        ))}
-      </ul>
+              </button>
+            </li>
+          ))}
+        </ul>
+      </ScrollArrows>
     </section>
   )
 }
