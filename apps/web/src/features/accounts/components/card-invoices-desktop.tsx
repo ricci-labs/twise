@@ -1,6 +1,7 @@
 import { formatBrl } from '@financas/shared'
 import { useQuery } from '@tanstack/react-query'
 import { Link } from '@tanstack/react-router'
+import { ShowMoreButton } from '@web/components/actions/show-more-button'
 import { Amount } from '@web/components/display/amount'
 import { Card } from '@web/components/display/card'
 import {
@@ -27,9 +28,10 @@ import type {
 import { membersQueryOptions } from '@web/features/accounts/api/accounts.queries'
 import { AccountRowActions } from '@web/features/accounts/components/account-row-actions'
 import { cardEditActionsOf } from '@web/features/accounts/components/card-edit-actions'
-import { filteredLines, stateLabelOf } from '@web/features/accounts/components/card-invoices'
+import { stateLabelOf } from '@web/features/accounts/components/card-invoices'
 import { listedCardOf } from '@web/features/accounts/components/listed-accounts'
 import { PayInvoiceButton } from '@web/features/accounts/components/pay-invoice-button'
+import { useInvoiceLines } from '@web/features/accounts/hooks/use-invoice-lines'
 import { formatShortDate } from '@web/lib/format/calendar'
 import { hasPermission } from '@web/lib/permissions'
 import { useState } from 'react'
@@ -59,7 +61,6 @@ export function CardInvoicesDesktop({
   card,
   invoice,
   months,
-  lines,
   onAll,
 }: CardInvoicesDesktopProps) {
   const members = useQuery({
@@ -143,19 +144,20 @@ export function CardInvoicesDesktop({
         </KpiCarousel>
       </div>
       <div className="mt-5">
-        <InvoiceLinesTable lines={lines} />
+        <InvoiceLinesTable workspaceId={workspaceId} card={card} invoice={invoice} />
       </div>
     </PageFrame>
   )
 }
 
-function InvoiceLinesTable({ lines }: InvoiceLinesTableProps) {
+function InvoiceLinesTable({ workspaceId, card, invoice }: InvoiceLinesTableProps) {
   const [filter, setFilter] = useState<InvoiceFilter>('all')
-  const shown = lines ? filteredLines(lines, filter) : []
+  const lines = useInvoiceLines(workspaceId, card.accountId, invoice.invoiceId, filter)
+  const shown = lines.lines ?? []
   return (
     <Card
       title={desktop.linesTitle}
-      description={desktop.linesCount(lines?.length ?? 0)}
+      description={desktop.linesCount(lines.counts?.all ?? 0)}
       headerAction={
         <ChoiceChips
           label={filters.filter}
@@ -183,6 +185,11 @@ function InvoiceLinesTable({ lines }: InvoiceLinesTableProps) {
         />
       ) : (
         <p className="text-note text-ink-muted">{emptyTextOf(filter)}</p>
+      )}
+      {lines.hasMore && (
+        <div className="mt-4">
+          <ShowMoreButton isLoading={lines.isLoadingMore} onClick={lines.loadMore} />
+        </div>
       )}
     </Card>
   )

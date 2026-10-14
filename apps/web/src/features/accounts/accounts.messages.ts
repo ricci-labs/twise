@@ -402,6 +402,7 @@ export const accountsMessages = {
   invoicePage: {
     back: 'Voltar para as faturas',
     failed: 'Não foi possível carregar a fatura.',
+    linesFailed: 'Não foi possível carregar os lançamentos da fatura.',
     notFound: 'Fatura não encontrada.',
     description: (card: string, closing: string, due: string) =>
       `${card} · fecha ${closing} · vence ${due}`,

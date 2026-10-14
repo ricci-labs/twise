@@ -5,24 +5,27 @@ import { expectNoAccessibilityViolations } from '@web/testing/accessibility'
 import {
   accountsAnswers,
   CARD,
+  invoiceLinesAnswer,
   MEMBER_A,
+  manyInvoiceLines,
   OPEN_INVOICE,
   PAID_INVOICE,
 } from '@web/testing/accounts-api'
 import { fakeApi, WORKSPACE_ID, workspaceAccess, workspaceList } from '@web/testing/fake-api'
+import type { FakeAnswer } from '@web/testing/testing.types'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { page } from 'vitest/browser'
 import { render } from 'vitest-browser-react'
 
 const BASE = `/api/workspaces/${WORKSPACE_ID}`
 
-async function openInvoice(invoiceId: string) {
+async function openInvoice(invoiceId: string, answers: Record<string, FakeAnswer> = {}) {
   fakeApi({
     'GET /api/auth/me': () =>
       Response.json({ userId: MEMBER_A, email: 'member.a@exemplo.com', displayName: 'Member A' }),
     'GET /api/workspaces': () => workspaceList(),
     [`GET ${BASE}`]: workspaceAccess,
-    ...accountsAnswers(),
+    ...accountsAnswers(answers),
   })
   const app = createApp(
     createMemoryHistory({
@@ -43,7 +46,22 @@ describe('CARD-03 invoice detail', () => {
     vi.restoreAllMocks()
   })
 
-  it('sums the invoice up and filters the lines on the device', async () => {
+  it('shows 50 lines at a time and asks the API for the next ones', async () => {
+    await openInvoice(OPEN_INVOICE, {
+      [`GET ${BASE}/cards/${CARD}/invoices/${OPEN_INVOICE}/lines`]: invoiceLinesAnswer(
+        manyInvoiceLines(60),
+      ),
+    })
+    const shownLines = () => document.querySelectorAll('[data-slot=invoice-line]').length
+
+    await expect.element(page.getByText('Compra 28', { exact: true })).toBeVisible()
+    await expect.poll(shownLines).toBe(50)
+    await page.getByRole('button', { name: 'Mostrar mais' }).click()
+    await expect.poll(shownLines).toBe(60)
+    await expect.element(page.getByRole('button', { name: 'Mostrar mais' })).not.toBeInTheDocument()
+  })
+
+  it('sums the invoice up and filters the lines through the API', async () => {
     await openInvoice(OPEN_INVOICE)
 
     await expect.element(page.getByRole('heading', { name: 'Fatura de novembro' })).toBeVisible()

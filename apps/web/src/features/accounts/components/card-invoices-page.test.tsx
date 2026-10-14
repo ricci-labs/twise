@@ -2,7 +2,14 @@ import { createMemoryHistory } from '@tanstack/react-router'
 import { AppProviders } from '@web/app/providers'
 import { createApp } from '@web/app/router'
 import { expectNoAccessibilityViolations } from '@web/testing/accessibility'
-import { accountsAnswers, CARD, MEMBER_A, OPEN_INVOICE } from '@web/testing/accounts-api'
+import {
+  accountsAnswers,
+  CARD,
+  invoiceLinesAnswer,
+  MEMBER_A,
+  manyInvoiceLines,
+  OPEN_INVOICE,
+} from '@web/testing/accounts-api'
 import { fakeApi, WORKSPACE_ID, workspaceAccess, workspaceList } from '@web/testing/fake-api'
 import type { FakeAnswer } from '@web/testing/testing.types'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
@@ -151,5 +158,20 @@ describe('CARD-02 and CARD-03 on the desktop', () => {
       .not.toBeInTheDocument()
     await expect.element(table.getByRole('cell', { name: 'R$ 160,00', exact: true })).toBeVisible()
     await expectNoAccessibilityViolations(page.getByRole('main').element())
+  })
+
+  it('loads the lines of a long invoice 50 at a time under the table', async () => {
+    await openInvoices('', {
+      [`GET ${BASE}/cards/${CARD}/invoices/${OPEN_INVOICE}/lines`]: invoiceLinesAnswer(
+        manyInvoiceLines(60),
+      ),
+    })
+    const table = page.getByRole('table', { name: 'Lançamentos da fatura' })
+    const rows = () => table.getByRole('row').elements().length - 1
+
+    await expect.element(page.getByText('60 lançamentos')).toBeVisible()
+    await expect.poll(rows).toBe(50)
+    await page.getByRole('button', { name: 'Mostrar mais' }).click()
+    await expect.poll(rows).toBe(60)
   })
 })

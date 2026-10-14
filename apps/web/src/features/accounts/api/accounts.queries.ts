@@ -1,4 +1,5 @@
-import { queryOptions } from '@tanstack/react-query'
+import { INVOICE_LINES_PAGE_SIZE, type InvoiceLineFilter } from '@financas/shared'
+import { infiniteQueryOptions, queryOptions } from '@tanstack/react-query'
 import { unwrap } from '@web/lib/api/unwrap'
 import { apiClient } from '@web/lib/api-client'
 import { queryKeys } from '@web/lib/query-keys'
@@ -6,6 +7,8 @@ import { queryKeys } from '@web/lib/query-keys'
 const workspaceApi = apiClient.api.workspaces[':workspaceId']
 
 const UPCOMING_INVOICES = 6
+
+const FIRST_PAGE: string | undefined = undefined
 
 export function accountsQueryOptions(workspaceId: string) {
   return queryOptions({
@@ -49,16 +52,26 @@ export function invoicesQueryOptions(workspaceId: string, cardId: string) {
   })
 }
 
-export function invoiceLinesQueryOptions(workspaceId: string, cardId: string, invoiceId: string) {
-  return queryOptions({
+export function invoiceLinesQueryOptions(
+  workspaceId: string,
+  cardId: string,
+  invoiceId: string,
+  filter: InvoiceLineFilter,
+) {
+  return infiniteQueryOptions({
     queryKey: [
       ...queryKeys.workspace(workspaceId),
       'cards',
       cardId,
       'invoices',
       invoiceId,
+      'lines',
+      filter,
     ] as const,
-    queryFn: () => fetchInvoiceLines(workspaceId, cardId, invoiceId),
+    queryFn: ({ pageParam }) =>
+      fetchInvoiceLines(workspaceId, cardId, invoiceId, filter, pageParam),
+    initialPageParam: FIRST_PAGE,
+    getNextPageParam: (page) => page.nextCursor ?? undefined,
   })
 }
 
@@ -113,10 +126,17 @@ export function fetchInvoices(workspaceId: string, cardId: string) {
   return unwrap(workspaceApi.cards[':cardId'].invoices.$get({ param: { workspaceId, cardId } }))
 }
 
-export function fetchInvoiceLines(workspaceId: string, cardId: string, invoiceId: string) {
+export function fetchInvoiceLines(
+  workspaceId: string,
+  cardId: string,
+  invoiceId: string,
+  filter: InvoiceLineFilter,
+  cursor: string | undefined,
+) {
   return unwrap(
     workspaceApi.cards[':cardId'].invoices[':invoiceId'].lines.$get({
       param: { workspaceId, cardId, invoiceId },
+      query: { filter, limit: String(INVOICE_LINES_PAGE_SIZE), ...(cursor ? { cursor } : {}) },
     }),
   )
 }

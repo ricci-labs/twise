@@ -18,13 +18,11 @@ import type {
 import {
   accountsQueryOptions,
   cardsQueryOptions,
-  invoiceLinesQueryOptions,
   invoicesQueryOptions,
 } from '@web/features/accounts/api/accounts.queries'
 import {
   cardInvoicesOf,
   chosenInvoiceOf,
-  invoiceLinesOf,
   paidNoteOf,
   splitLabelOf,
   stateLabelOf,
@@ -38,6 +36,7 @@ import { CardPageHeader } from '@web/features/accounts/components/card-page-head
 import { InvoiceLinesPreview } from '@web/features/accounts/components/invoice-lines-preview'
 import { InvoiceYearPicker } from '@web/features/accounts/components/invoice-year-picker'
 import { PayInvoiceButton } from '@web/features/accounts/components/pay-invoice-button'
+import { useInvoiceLines } from '@web/features/accounts/hooks/use-invoice-lines'
 import { useMediaQuery } from '@web/hooks/use-media-query'
 import { usePageTitle } from '@web/hooks/use-page-title'
 import { ApiError } from '@web/lib/api/api-error'
@@ -126,16 +125,11 @@ function CardInvoicesLoaded({
   const invoices = cardInvoicesOf(card, stored, todayOnDevice())
   const chosen = chosenInvoiceOf(invoices, card, month) ?? invoices.at(-1)
   const accounts = useQuery(accountsQueryOptions(workspaceId))
-  const lines = useQuery({
-    ...invoiceLinesQueryOptions(workspaceId, card.accountId, chosen?.invoiceId ?? ''),
-    enabled: Boolean(chosen?.invoiceId),
-  })
+  const lines = useInvoiceLines(workspaceId, card.accountId, chosen?.invoiceId ?? null, 'all')
   if (!chosen) {
     return null
   }
   const months = monthsOf(workspaceId, card, invoices, chosen)
-  const lineViews =
-    lines.data && accounts.data ? invoiceLinesOf(lines.data, accounts.data) : undefined
   const yearPicker = (
     <InvoiceYearPicker
       workspaceId={workspaceId}
@@ -156,7 +150,6 @@ function CardInvoicesLoaded({
           card={card}
           invoice={chosen}
           months={months}
-          lines={chosen.invoiceId ? lineViews : NO_LINES}
           onAll={openYear}
         />
         {yearPicker}
@@ -194,7 +187,7 @@ function CardInvoicesLoaded({
           own={{ label: messages.parts.own, cents: chosen.ownCents }}
           fronted={{ label: messages.parts.fronted, cents: chosen.frontedCents }}
           splitLabel={splitLabelOf(chosen)}
-          note={noteOf(chosen, card, lines.data, accounts.data)}
+          note={noteOf(chosen, card, lines.lastPayment, accounts.data)}
           action={
             <PayInvoiceButton permissions={permissions} card={card} invoice={chosen} width="full" />
           }
@@ -203,7 +196,8 @@ function CardInvoicesLoaded({
           workspaceId={workspaceId}
           card={card}
           invoice={chosen}
-          lines={lineViews}
+          lines={chosen.invoiceId ? lines.lines : NO_LINES}
+          counts={lines.counts}
         />
       </div>
       {yearPicker}
@@ -242,7 +236,7 @@ function monthsOf(
 function noteOf(
   invoice: CardInvoice,
   card: CardSummary,
-  lines: readonly InvoiceLineItem[] | undefined,
+  lastPayment: InvoiceLineItem | null,
   accounts: readonly LedgerAccount[] | undefined,
 ): InvoiceSummaryNote | undefined {
   if (invoice.state === 'future') {
@@ -254,7 +248,7 @@ function noteOf(
       text: messages.futureNote(opening, formatMonthName(previous)),
     }
   }
-  const paidNote = invoice.state === 'paid' ? paidNoteOf(lines, accounts) : undefined
+  const paidNote = invoice.state === 'paid' ? paidNoteOf(lastPayment, accounts) : undefined
   return paidNote ? { icon: 'ok', tone: 'success', text: paidNote } : undefined
 }
 

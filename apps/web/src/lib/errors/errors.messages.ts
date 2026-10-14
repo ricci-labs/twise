@@ -84,6 +84,7 @@ export const errorMessages: Readonly<Record<string, string>> = {
   ENTRY_SUGGESTION_QUERY_INVALID: 'Não foi possível carregar as sugestões.',
   FREQUENT_ENTRY_QUERY_INVALID: 'Não foi possível carregar as sugestões.',
   UPCOMING_INVOICE_QUERY_INVALID: 'Não foi possível carregar as próximas faturas.',
+  INVOICE_LINE_QUERY_INVALID: 'Não foi possível carregar os lançamentos da fatura.',
   ENTRY_NOT_FOUND: 'Este lançamento foi excluído ou editado. Atualize a lista.',
   ENTRY_ALREADY_DELETED:
     'Este lançamento foi excluído ou já foi editado por outra pessoa. Atualize a lista.',

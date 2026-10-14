@@ -610,7 +610,7 @@ export function selectInvoiceLines(
         isNull(journalEntries.deletedAt),
       ),
     )
-    .orderBy(asc(journalEntries.occurredOn), asc(journalEntries.id))
+    .orderBy(desc(journalEntries.occurredOn), desc(journalEntries.id))
 }
 
 export function selectPostingFacts(tx: WorkspaceTransaction, from: IsoDate, to: IsoDate) {

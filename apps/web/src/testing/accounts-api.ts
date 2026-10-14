@@ -1,3 +1,4 @@
+import { type InvoiceLineFacts, invoiceLinePageOf, invoiceLineQuerySchema } from '@financas/shared'
 import { ACCOUNT_COLORS } from '@web/styles/account-colors'
 import { WORKSPACE_ID } from '@web/testing/fake-api'
 import type { FakeAnswer } from '@web/testing/testing.types'
@@ -122,6 +123,25 @@ const PAID_LINES = [
   invoiceLine('00000000-0000-4000-8000-000000000105', '2026-09-24', 'Mercado da semana'),
 ]
 
+export function invoiceLinesAnswer(lines: readonly InvoiceLineFacts[]): FakeAnswer {
+  return (request) => {
+    const query = invoiceLineQuerySchema.parse(
+      Object.fromEntries(new URL(request.url).searchParams),
+    )
+    return Response.json(invoiceLinePageOf(lines, query))
+  }
+}
+
+export function manyInvoiceLines(count: number) {
+  return Array.from({ length: count }, (_, position) =>
+    invoiceLine(
+      `00000000-0000-4000-8000-0000000002${String(position).padStart(2, '0')}`,
+      `2026-10-${String((position % 28) + 1).padStart(2, '0')}`,
+      `Compra ${position + 1}`,
+    ),
+  )
+}
+
 export function accountsAnswers(overrides: Record<string, FakeAnswer> = {}) {
   return {
     [`GET ${BASE}/accounts`]: () => Response.json(ACCOUNTS),
@@ -179,8 +199,8 @@ export function accountsAnswers(overrides: Record<string, FakeAnswer> = {}) {
         },
       ]),
     [`GET ${BASE}/cards/${CARD}/invoices`]: () => Response.json(CARD_INVOICES),
-    [`GET ${BASE}/cards/${CARD}/invoices/${OPEN_INVOICE}/lines`]: () => Response.json(OPEN_LINES),
-    [`GET ${BASE}/cards/${CARD}/invoices/${PAID_INVOICE}/lines`]: () => Response.json(PAID_LINES),
+    [`GET ${BASE}/cards/${CARD}/invoices/${OPEN_INVOICE}/lines`]: invoiceLinesAnswer(OPEN_LINES),
+    [`GET ${BASE}/cards/${CARD}/invoices/${PAID_INVOICE}/lines`]: invoiceLinesAnswer(PAID_LINES),
     [`GET ${BASE}/members`]: () =>
       Response.json([
         { userId: MEMBER_A, displayName: 'Member A' },
