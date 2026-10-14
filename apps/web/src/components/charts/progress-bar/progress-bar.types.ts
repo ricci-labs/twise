@@ -4,5 +4,6 @@ import type { VariantProps } from 'class-variance-authority'
 export type ProgressBarProps = VariantProps<typeof progressBarVariants> & {
   percent: number
   markPercent?: number
+  thickness?: 'md' | 'lg'
   className?: string
 }

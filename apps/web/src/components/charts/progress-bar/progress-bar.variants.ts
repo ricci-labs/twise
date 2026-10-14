@@ -29,3 +29,13 @@ export const progressTrackVariants = cva('', {
   },
   defaultVariants: { tone: 'within' },
 })
+
+export const progressSvgVariants = cva('w-full overflow-visible', {
+  variants: {
+    thickness: {
+      md: 'h-4',
+      lg: 'h-2.5',
+    },
+  },
+  defaultVariants: { thickness: 'md' },
+})
