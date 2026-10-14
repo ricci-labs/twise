@@ -109,7 +109,15 @@ showing the loose illustration, the name and a grey second line ("Saldo de hoje:
 "Fecha 25/10 · vence 04/11", "Renda variável"); empty, a dashed "+" square with a grey placeholder
 ("Escolha uma categoria"). They open a bottom sheet on mobile and a popover with search on desktop;
 the current item is on `mint-soft` with a check. Categories open as a grid of tiles (three columns,
-most used first, search on top); the selected tile is all `mint`, its label bold, with a check.
+the parents, most used first, search on top); the selected tile keeps its paper colour and gets a
+2 px `ink` outline and a bold label, with no check mark.
+**Subcategories:** a category with children shows "{N} sub" under its name. Tapping it marks the
+tile and opens, right below the grid, the row "Em {mãe}" with "Só {mãe}" and its children as
+chips; choosing one closes the sheet. A category without children closes the sheet at once.
+Posting to the parent is allowed (the API accepts any active category; the parent's budget covers
+its children). The search also finds subcategories, shown with their parent ("Feira · em
+Mercado"). The field then reads "Mercado › Feira", with the parent's drawing (subcategories have
+no drawing of their own unless one was chosen).
 **No account or card yet:** the sheet says so ("Vocês ainda não têm um cartão.") and offers
 "Cadastrar conta" / "Cadastrar cartão" (`ACC-03` / `CARD-04`), which comes back with the new one
 selected and nothing typed lost. The same holds for categories.

@@ -201,6 +201,8 @@ updated: 2026-10-14
   2. [x] Requirements: `ENT-02` from the design, RF-ENT-13/14, API gaps G38–G39, the app-wide
      visual rules (no circles, desktop field heights, dotted leaders)
   3. [x] API: description suggestions (G38) and the current person's frequent entries (G39)
+  3b. [x] Design version 2 (2026-10-14): the selected category tile is the paper tile with an ink
+      outline (no mint, no check), and subcategories in the category sheet; requirements updated
   4. [x] Web components: `MoneyInput` (the design's `MoneyField`) and `ChoiceChips` (the type pills,
      the date shortcuts and who spent)
   5. [ ] Web components: `PickerField` + `PickerSheet`, `CategoryGrid`
