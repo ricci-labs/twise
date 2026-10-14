@@ -295,6 +295,14 @@
   z-index: var(--z-toast);
 }
 
+@utility bg-data-color {
+  background-color: var(--data-color);
+
+  &:where(.dark, .dark *) {
+    background-color: var(--data-color-on-dark, var(--data-color));
+  }
+}
+
 @utility pb-safe {
   padding-bottom: max(--spacing(3), env(safe-area-inset-bottom));
 }
