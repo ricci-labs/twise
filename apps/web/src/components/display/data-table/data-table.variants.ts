@@ -26,7 +26,12 @@ export const dataTableRowVariants = cva('relative grid border-t border-border', 
     {
       isHead: false,
       layout: ['accounts', 'cards', 'invoices', 'lines'],
-      className: 'min-h-15 [&_[data-slot=data-table-name]]:pt-0.5',
+      className: 'min-h-15',
+    },
+    {
+      isHead: false,
+      layout: ['accounts', 'cards'],
+      className: '[&_[data-slot=data-table-name]]:pt-0.5',
     },
     { isHead: false, layout: ['categories', 'incomes'], className: 'min-h-16' },
   ],

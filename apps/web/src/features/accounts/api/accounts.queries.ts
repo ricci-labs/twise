@@ -5,6 +5,8 @@ import { queryKeys } from '@web/lib/query-keys'
 
 const workspaceApi = apiClient.api.workspaces[':workspaceId']
 
+const UPCOMING_INVOICES = 6
+
 export function accountsQueryOptions(workspaceId: string) {
   return queryOptions({
     queryKey: [...queryKeys.workspace(workspaceId), 'accounts'] as const,
@@ -30,6 +32,13 @@ export function cardsQueryOptions(workspaceId: string) {
   return queryOptions({
     queryKey: [...queryKeys.workspace(workspaceId), 'cards'] as const,
     queryFn: () => fetchCards(workspaceId),
+  })
+}
+
+export function upcomingInvoicesQueryOptions(workspaceId: string) {
+  return queryOptions({
+    queryKey: [...queryKeys.workspace(workspaceId), 'cards', 'upcoming-invoices'] as const,
+    queryFn: () => fetchUpcomingInvoices(workspaceId),
   })
 }
 
@@ -85,6 +94,15 @@ export function fetchAccountsSummary(workspaceId: string) {
 
 export function fetchCards(workspaceId: string) {
   return unwrap(workspaceApi.cards.$get({ param: { workspaceId } }))
+}
+
+export function fetchUpcomingInvoices(workspaceId: string) {
+  return unwrap(
+    workspaceApi.cards.invoices.upcoming.$get({
+      param: { workspaceId },
+      query: { limit: String(UPCOMING_INVOICES) },
+    }),
+  )
 }
 
 export function fetchMembers(workspaceId: string) {

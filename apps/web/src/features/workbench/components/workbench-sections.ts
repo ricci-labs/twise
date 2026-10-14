@@ -1,4 +1,5 @@
 import { actionMenuExamples } from '@web/components/actions/action-menu'
+import { addTileExamples } from '@web/components/actions/add-tile'
 import { buttonExamples } from '@web/components/actions/button'
 import { itemActionsExamples } from '@web/components/actions/item-actions'
 import { segmentedControlExamples } from '@web/components/actions/segmented-control'
@@ -146,6 +147,7 @@ export const workbenchSections: readonly ComponentExamples[] = [
   sheetExamples,
   avatarExamples,
   textLinkExamples,
+  addTileExamples,
   textInputExamples,
   passwordInputExamples,
   formFieldExamples,

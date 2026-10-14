@@ -164,6 +164,20 @@ export function accountsAnswers(overrides: Record<string, FakeAnswer> = {}) {
           currentInvoice: INVOICE,
         },
       ]),
+    [`GET ${BASE}/cards/invoices/upcoming`]: () =>
+      Response.json([
+        { ...INVOICE, cardAccountId: CARD },
+        {
+          cardAccountId: CARD,
+          invoiceId: null,
+          referenceMonth: '2026-12',
+          closingOn: '2026-11-25',
+          dueOn: '2026-12-04',
+          status: 'future',
+          totalCents: 0,
+          dueCents: 0,
+        },
+      ]),
     [`GET ${BASE}/cards/${CARD}/invoices`]: () => Response.json(CARD_INVOICES),
     [`GET ${BASE}/cards/${CARD}/invoices/${OPEN_INVOICE}/lines`]: () => Response.json(OPEN_LINES),
     [`GET ${BASE}/cards/${CARD}/invoices/${PAID_INVOICE}/lines`]: () => Response.json(PAID_LINES),

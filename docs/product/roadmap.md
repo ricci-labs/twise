@@ -255,7 +255,9 @@ updated: 2026-10-14
      model, the page header, the `DataTable`, `ACC-01` (KPIs, tables, "Lixeira" and "Nova conta"),
      `ACC-02` (expense and income tables, chips on one line with "+{n} mais", the chip's menu).
      The chips keep the categories' order until usage counts exist ("most used first"), and "Ver
-     lançamentos" joins the menus with the filtered `ENT-01`
+     lançamentos" joins the menus with the filtered `ENT-01`. `CARD-01` (two or three cards per
+     row, the "Novo cartão" tile closing the last row, "Próximas faturas" from
+     `GET /cards/invoices/upcoming`); its "Pagar" comes with the invoice payment
   8. [ ] Fixes to merged work from this round's review: no circles in the Home, the one selection
      style everywhere, the "Mais" sheet with the system illustrations
   9. [ ] G42 (archive a category with its subcategories) only if the product owner approves it

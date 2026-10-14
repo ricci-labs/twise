@@ -1,5 +1,6 @@
 import { formatBrl } from '@financas/shared'
 import { Link } from '@tanstack/react-router'
+import { AddTile } from '@web/components/actions/add-tile'
 import type { ItemAction } from '@web/components/actions/item-actions'
 import { ArchivedToggle } from '@web/components/display/archived-toggle'
 import { AccountGroup } from '@web/components/finance/account-group'
@@ -22,12 +23,24 @@ const messages = accountsMessages.cardsPage
 
 const CARD_ICON = 'card'
 
-export function CardList({ workspaceId, permissions, cards, members }: CardListProps) {
+const TWO_PER_ROW = 2
+
+const THREE_PER_ROW = 3
+
+export function CardList({ workspaceId, permissions, cards, members, afterCards }: CardListProps) {
   const active = cards.filter((card) => card.archivedAt === null)
   const archived = cards.filter((card) => card.archivedAt !== null)
+  const perRow = active.length > TWO_PER_ROW ? THREE_PER_ROW : TWO_PER_ROW
+  const hasGap = active.length % perRow !== 0
   return (
     <>
-      <div className="grid gap-4 lg:grid-cols-2">
+      <div
+        className={
+          perRow === THREE_PER_ROW
+            ? 'grid gap-4 lg:grid-cols-3 lg:gap-5'
+            : 'grid gap-4 lg:grid-cols-2 lg:gap-5'
+        }
+      >
         {active.map((card) => (
           <CardItem
             key={card.accountId}
@@ -37,7 +50,17 @@ export function CardList({ workspaceId, permissions, cards, members }: CardListP
             holder={holderOf(card, members)}
           />
         ))}
+        {hasGap && hasPermission(permissions, 'cards', 'create') && (
+          <div className="hidden lg:block">
+            <AddTile
+              title={messages.newCard}
+              text={messages.newCardText}
+              link={<Link to="." search={(previous) => ({ ...previous, card: 'new' })} />}
+            />
+          </div>
+        )}
       </div>
+      {afterCards}
       <ArchivedToggle count={archived.length}>
         <AccountGroup>
           {archived.map((card) => (

@@ -32,7 +32,7 @@ where it's used.
 
 | Family | Components (from the brief) |
 |---|---|
-| `actions/` | `Button`, `IconButton`, `SubmitButton`, `FloatingActionButton`, `ActionMenu`, `ItemActions`, `SegmentedControl` |
+| `actions/` | `Button`, `IconButton`, `SubmitButton`, `FloatingActionButton`, `ActionMenu`, `ItemActions`, `SegmentedControl`, `AddTile` |
 | `inputs/` | `TextInput`, `PasswordInput`, `EmailInput`, `PhoneInput`, `SearchInput`, `TextArea`, `MoneyInput`, `ChoiceChips`, `PickerField`, `PickerSheet`, `Stepper`, `RadioCardList`, `DateInput`, `PeriodPicker`, `Select`, `Combobox`, `Checkbox`, `RadioGroup`, `Switch`, `DayOfMonthPicker`, `FileUpload`, `ColorSwatch` |
 | `forms/` | `Form`, `FormField`, `FieldGroup`, `LockedField`, `FormErrorSummary`, `FormFooter`, `RequiredLegend` |
 | `feedback/` | `Toast`, `InlineAlert`, `AutoFillTip`, `Banner`, `ConfirmDialog`, `EmptyState`, `EmptyBlock`, `Skeleton`, `ListSkeleton`, `KpiSkeleton`, `ErrorState` |
@@ -316,7 +316,8 @@ passes the overview's numbers.
   (`layout`: `accounts`, `cards`, `invoices`, `lines`, `categories`, `incomes`, from
   `--grid-template-columns-table-*`), 14 px muted cells, a divider per row, the name cell (40 px
   drawing, name, an optional `detail` line, colour dot, an optional link) and the bold amount. The
-  money layouts have 60 px rows, a 12 px gap and a 14 px header; the category ones (`ctb`) 64 px rows,
+  money layouts have 60 px rows, a 12 px gap and a 14 px header (the accounts page's names sit 2 px
+  lower, as measured on its PNG); the category ones (`ctb`) 64 px rows,
   a 16 px gap and the 12.5 px semibold header. A column can hide its label from view
   (`isLabelHidden`); the actions column (`isActions`) puts the "⋯" at the end, 8 px past the column
   like the design. A row whose menu is open (`data-popup-open` in its last cell) gets the `page`
@@ -338,7 +339,11 @@ passes the overview's numbers.
   whole width in equal options with the raised white selection (the "Contas | Categorias" tabs).
 - `Badge` (`components/display/badge`): a short status pill (`neutral`, `info`, `success`,
   `warning`, `danger`), e.g. "Período encerrado"; `size="sm"` (22 px) for the nature of an income
-  category.
+  category, `size="status"` (22 px, 10 px sides, the design's `fn-badge`) for an invoice's state in
+  a table.
+- `AddTile` (`components/actions/add-tile`): the dashed tile that closes a grid's last row ("Novo
+  cartão"): a 240 px minimum, the "+" icon, a 16 px display title and an optional muted line; the
+  whole tile is the link it is given.
 - `HelpPopover` (`components/display/help-popover`): the "?" next to a number ("O que é {topic}?"),
   a Base UI popover with the plain-words explanation; Escape and a press outside close it.
 - `SectionSkeleton`, `SectionError` and `EmptyState` (`components/feedback/`): one per section.
