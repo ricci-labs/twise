@@ -24,7 +24,7 @@ const KIND_OPTIONS = [
   { value: 'income', label: messages.kinds.income },
 ]
 
-export function CategoriesPage({ workspaceId, permissions, kind }: CategoriesPageProps) {
+export function CategoriesPage({ workspaceId, permissions, kind, createdId }: CategoriesPageProps) {
   usePageTitle(accountsMessages.pageTitle)
   const navigate = useNavigate()
   return (
@@ -48,12 +48,17 @@ export function CategoriesPage({ workspaceId, permissions, kind }: CategoriesPag
           {messages.incomeNote}
         </p>
       )}
-      <CategoriesBody workspaceId={workspaceId} permissions={permissions} kind={kind} />
+      <CategoriesBody
+        workspaceId={workspaceId}
+        permissions={permissions}
+        kind={kind}
+        createdId={createdId}
+      />
     </div>
   )
 }
 
-function CategoriesBody({ workspaceId, permissions, kind }: CategoriesBodyProps) {
+function CategoriesBody({ workspaceId, permissions, kind, createdId }: CategoriesBodyProps) {
   const accounts = useQuery(accountsQueryOptions(workspaceId))
   if (accounts.isError) {
     return (
@@ -73,6 +78,12 @@ function CategoriesBody({ workspaceId, permissions, kind }: CategoriesBodyProps)
     return <EmptyBlock icon="groceries" title={messages.empty[kind]} />
   }
   return (
-    <CategoryList workspaceId={workspaceId} permissions={permissions} tree={tree} kind={kind} />
+    <CategoryList
+      workspaceId={workspaceId}
+      permissions={permissions}
+      tree={tree}
+      kind={kind}
+      createdId={createdId}
+    />
   )
 }

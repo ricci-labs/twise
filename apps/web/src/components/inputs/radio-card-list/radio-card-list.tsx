@@ -18,6 +18,7 @@ export function RadioCardList({
   value,
   onSelect,
   onBlur,
+  layout,
   className,
 }: RadioCardListProps) {
   return (
@@ -26,7 +27,7 @@ export function RadioCardList({
       aria-label={label}
       value={value}
       onValueChange={(next) => onSelect(String(next))}
-      className={cn(radioCardListVariants(), className)}
+      className={cn(radioCardListVariants({ layout }), className)}
     >
       {options.map((option) => (
         <Radio.Root
@@ -34,13 +35,13 @@ export function RadioCardList({
           value={option.value}
           nativeButton
           render={<button type="button" onBlur={onBlur} />}
-          className={radioCardVariants()}
+          className={radioCardVariants({ layout })}
         >
-          <span aria-hidden="true" className={radioDotVariants()} />
+          <span data-slot="radio-dot" aria-hidden="true" className={radioDotVariants()} />
           <span className={radioCardTextVariants()}>
             {option.label}
             {option.detail && (
-              <span className={radioCardDetailVariants()}>
+              <span className={radioCardDetailVariants({ layout })}>
                 <RichText text={option.detail} />
               </span>
             )}

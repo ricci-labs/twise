@@ -146,6 +146,8 @@ React Hook Form v7 + `zodResolver` with the **schemas from `@financas/shared`** 
 - `LockedField` (`components/forms/locked-field`): a value that can't change on this form (an
   account's kind on edit): the label, a grey box with the lock and the value in bold, and the reason
   under it.
+- `FormField`'s help sits 4 px under the label by default; `helpGap="roomy"` gives the 8 px of the
+  account, category and card forms.
 - Text inputs keep the design's 2 px inner padding on the `input` (18 px from the border to the
   text).
 - `PasswordInput`'s toggle is named "Mostrar senha" / "Ocultar senha" (visible "Mostrar"/"Ocultar"
@@ -374,6 +376,8 @@ component here, so the form, and later the account, card and planning forms, sha
 - `RadioCardList` (`components/inputs/radio-card-list`, Base UI `RadioGroup`, the design's
   `InvoiceRadioList`): one choice among rows with a radio dot, a title, a detail with `**bold**`
   ("Falta pagar **R$ 1.950,00**") and an optional status badge; the chosen row gets the ink outline.
+  `layout="pair"` puts two cards side by side, the dot at the top and a grey example under the title
+  (the income nature: "Renda fixa" / "ex.: salário").
 - `InvoicePreview` (`components/finance/invoice-preview`): the sunken box under the card with the
   calendar drawing, the sentence ("A 1ª parcela entra na fatura que vence em **04/11**.") and, with
   more than one installment or a closed invoice, one row per installment ("1/3 · vence 04/11 · R$
@@ -474,6 +478,8 @@ component here, so the form, and later the account, card and planning forms, sha
 - `SubcategoryChip` (`components/finance/subcategory-chip`): a 30 px pill per subcategory. `action`
   is a button that opens its actions (white with the 2 px ink outline while they are open, via
   `data-popup-open`), `plain` is the text a viewer sees and `archived` the outlined, faded one.
+- `SubcategoryAddChip` (`components/finance/subcategory-add-chip`): the dashed "+" at the end of
+  a category's chips, a link named "Nova subcategoria em {mãe}".
 - `SubPageHeader` (`components/layout/sub-page-header`): a page one level down on the phone: the
   40 px "‹" back link (named "Voltar para {page}"), the title in `form-title-lg` and a grey
   `sub-page` description under it.

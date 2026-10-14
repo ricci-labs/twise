@@ -26,7 +26,30 @@ function Invoices() {
   )
 }
 
+const NATURES = [
+  { value: 'fixed', label: 'Renda fixa', detail: 'ex.: salário' },
+  { value: 'variable', label: 'Renda variável', detail: 'ex.: comissão' },
+] as const
+
+function Natures() {
+  const [value, setValue] = useState<string>('variable')
+  return (
+    <div className="w-full max-w-90">
+      <RadioCardList
+        label="Natureza da receita"
+        layout="pair"
+        options={NATURES}
+        value={value}
+        onSelect={setValue}
+      />
+    </div>
+  )
+}
+
 export const radioCardListExamples: ComponentExamples = {
   component: 'RadioCardList',
-  examples: [{ name: 'Faturas do cartão', render: () => <Invoices /> }],
+  examples: [
+    { name: 'Faturas do cartão', render: () => <Invoices /> },
+    { name: 'Dois cartões lado a lado', render: () => <Natures /> },
+  ],
 }

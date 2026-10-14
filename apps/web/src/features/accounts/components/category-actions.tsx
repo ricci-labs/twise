@@ -1,3 +1,4 @@
+import { Link } from '@tanstack/react-router'
 import { type ItemAction, ItemActions } from '@web/components/actions/item-actions'
 import { ConfirmDialog } from '@web/components/feedback/confirm-dialog'
 import { showToast } from '@web/components/feedback/toast'
@@ -105,6 +106,11 @@ export function CategoryActions({
     })
 
   const actions = actionsOf(node, {
+    canCreate: hasPermission(permissions, 'accounts', 'create'),
+    newSubcategory: (
+      <Link to="." search={(previous) => ({ ...previous, category: 'new', parent: node.id })} />
+    ),
+    edit: <Link to="." search={(previous) => ({ ...previous, category: node.id })} />,
     canUpdate,
     canDelete,
     archive,
@@ -157,6 +163,9 @@ export function CategoryActions({
 function actionsOf(
   node: CategoryNode,
   can: {
+    canCreate: boolean
+    newSubcategory: NonNullable<ItemAction['render']>
+    edit: NonNullable<ItemAction['render']>
     canUpdate: boolean
     canDelete: boolean
     archive: () => void
@@ -188,7 +197,25 @@ function actionsOf(
       ...remove,
     ]
   }
+  const newSubcategory: ItemAction[] =
+    can.canCreate && !node.parentId
+      ? [
+          {
+            key: 'new-subcategory',
+            label: accountsMessages.categoryForm.newSubcategory,
+            icon: 'subcategory',
+            render: can.newSubcategory,
+          },
+        ]
+      : []
   return [
+    ...newSubcategory,
+    ...update({
+      key: 'edit',
+      label: accountsMessages.actions.edit,
+      icon: 'edit',
+      render: can.edit,
+    }),
     ...(node.parentId
       ? update({ key: 'move', label: messages.move, icon: 'move', onSelect: can.move })
       : []),

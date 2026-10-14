@@ -1,4 +1,6 @@
 import type { BadgeProps } from '@web/components/display/badge'
+import type { radioCardListVariants } from '@web/components/inputs/radio-card-list/radio-card-list.variants'
+import type { VariantProps } from 'class-variance-authority'
 
 export type RadioCard = {
   value: string
@@ -7,7 +9,7 @@ export type RadioCard = {
   badge?: { label: string; tone: BadgeProps['tone'] }
 }
 
-export type RadioCardListProps = {
+export type RadioCardListProps = VariantProps<typeof radioCardListVariants> & {
   label: string
   options: readonly RadioCard[]
   value: string | null

@@ -19,6 +19,7 @@ export type FormFieldProps<Values extends FieldValues> = {
   name: FieldPath<Values>
   label: string
   help?: string
+  helpGap?: 'tight' | 'roomy'
   isRequired?: boolean
   isReadOnly?: boolean
   maxLength?: number
