@@ -209,7 +209,7 @@ updated: 2026-10-14
      `grid` layout)
   6. [x] Web components: `Stepper` (installments and the first installment) and `Switch`
   7. [x] Web components: `InvoicePreview` and `RadioCardList` (the invoices to pay)
-  8. [ ] Web components: `SharesList`
+  8. [x] Web components: `SharesList` (with its collapsed pill)
   9. [ ] Web components: `RecentEntries`, `AutoFillTip`
   10. [ ] Web: `ENT-02` expense on mobile, end to end (fields, pickers, errors, save, toast, discard,
       offline)

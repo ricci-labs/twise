@@ -40,7 +40,7 @@ where it's used.
 | `charts/` | `BarChart`, `ForecastChart`, `DonutChart`, each with its text alternative |
 | `navigation/` | `BottomBar`, `Sidebar`, `TopBar`, `WorkspaceSwitcher`, `BackLink`, `Breadcrumb` |
 | `layout/` | `AppShell`, `Page`, `PageHeader`, `Section`, `Stack`, `Grid` |
-| `finance/` | `StatHero`, `InsightCard`, `InvoiceCard`, `InvoicePreview`, `EntryRow`, `OccurrenceRow`, `ContactRow`, `ChargePreview`, `AmountSplitEditor` |
+| `finance/` | `StatHero`, `InsightCard`, `InvoiceCard`, `InvoicePreview`, `SharesList`, `EntryRow`, `OccurrenceRow`, `ContactRow`, `ChargePreview`, `AmountSplitEditor` |
 | `brand/` | `Logo`, `OwlScene` (the layered owl scenes and their motion), `AppSplash` |
 | `icons/` | `TwiseIcon` and the icon registries (see Icons) |
 
@@ -332,6 +332,12 @@ component here, so the form, and later the account, card and planning forms, sha
   333,34", split by dividers, no leader); a closed one is struck through with "Fechada"; `more` adds
   "+ N parcelas, até…". A `status` region, so changes are announced. The screen computes the rows
   with the shared billing rules and passes them.
+- `SharesList` + `SharesCollapsed` (`components/finance/shares-list`): "Dividir com contatos".
+  Collapsed, a dashed pill. Open, the title with the quick fills "Metade" and "Dividir igualmente",
+  one row per contact (initial, name, a dotted leader, a `sm` `MoneyInput` named "Parte de {nome}",
+  "×" to take them out), the error under the rows, "Adicionar contato" (disabled at the limit), and,
+  after a dashed divider, "Sua parte" with its value in the same column (blank while the sum passes
+  the total). The screen owns the amounts and the rules; the list only shows them.
 - `CategoryArt` (`components/display/category-art`): the category drawing of an account's `icon`,
   never clipped in a circle (`../product/requirements/ui-standards.md` → Visual rules across
   screens). By default (`loose`) it is the drawing without its paper square, from
