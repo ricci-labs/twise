@@ -10,6 +10,8 @@ const labels = workspacesMessages.shell.nav
 
 const NEW_ENTRY = 'new'
 
+const AREA_OF_PAGE: Readonly<Record<string, string>> = { categories: 'accounts' }
+
 const MAIN_AREAS: readonly WorkspaceArea[] = [
   { key: 'entries', icon: 'list', module: 'entries' },
   { key: 'cards', icon: 'card', module: 'cards' },
@@ -58,5 +60,5 @@ export function workspaceNavigation(
 
 export function currentAreaOf(pathname: string): string | null {
   const [, , , area] = pathname.split('/')
-  return area || null
+  return area ? (AREA_OF_PAGE[area] ?? area) : null
 }

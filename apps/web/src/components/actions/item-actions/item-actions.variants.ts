@@ -4,7 +4,7 @@ export const itemActionsTriggerVariants = cva(
   'grid size-control-sm shrink-0 cursor-pointer place-items-center rounded-full text-ink-muted outline-none hover:bg-sunken focus-visible:ring-2 focus-visible:ring-focus-ring [&_svg]:size-5',
 )
 
-export const actionSheetListVariants = cva('-mx-2 flex flex-col pb-2')
+export const actionSheetListVariants = cva('-mx-2 flex flex-col')
 
 export const actionSheetRowVariants = cva(
   [

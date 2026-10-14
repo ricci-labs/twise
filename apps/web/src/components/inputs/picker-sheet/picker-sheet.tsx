@@ -1,6 +1,7 @@
 import { Popover } from '@base-ui/react/popover'
 import { Button } from '@web/components/actions/button'
 import { CategoryArt } from '@web/components/display/category-art'
+import { TwiseIcon } from '@web/components/icons/twise-icon'
 import { ChoiceChips } from '@web/components/inputs/choice-chips'
 import { pickerSheetMessages as messages } from '@web/components/inputs/picker-sheet/picker-sheet.messages'
 import type {
@@ -17,6 +18,7 @@ import {
   pickerEmptyActionVariants,
   pickerEmptyVariants,
   pickerListVariants,
+  pickerPlaceholderArtVariants,
   pickerPopupVariants,
   pickerPositionerVariants,
   pickerRowDetailVariants,
@@ -167,7 +169,17 @@ function PickerChoice({ item, layout, isCurrent, onPress }: PickerChoiceProps) {
       onClick={() => onPress(item)}
       className={pickerRowVariants()}
     >
-      <CategoryArt name={item.label} icon={item.icon} size="lg" />
+      {item.placeholderIcon ? (
+        <span
+          data-slot="category-art"
+          aria-hidden="true"
+          className={pickerPlaceholderArtVariants()}
+        >
+          <TwiseIcon name={item.placeholderIcon} />
+        </span>
+      ) : (
+        <CategoryArt name={item.label} icon={item.icon} size="lg" />
+      )}
       <span className={pickerRowTextVariants()}>
         {item.label}
         {detail && <span className={pickerRowDetailVariants()}>{detail}</span>}

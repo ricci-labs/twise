@@ -316,7 +316,8 @@ passes the overview's numbers.
   pressed at a time (`aria-pressed`), e.g. the forecast's account tabs. `width="full"` splits the
   whole width in equal options with the raised white selection (the "Contas | Categorias" tabs).
 - `Badge` (`components/display/badge`): a short status pill (`neutral`, `info`, `success`,
-  `warning`, `danger`), e.g. "Período encerrado".
+  `warning`, `danger`), e.g. "Período encerrado"; `size="sm"` (22 px) for the nature of an income
+  category.
 - `HelpPopover` (`components/display/help-popover`): the "?" next to a number ("O que é {topic}?"),
   a Base UI popover with the plain-words explanation; Escape and a press outside close it.
 - `SectionSkeleton`, `SectionError` and `EmptyState` (`components/feedback/`): one per section.
@@ -357,7 +358,9 @@ component here, so the form, and later the account, card and planning forms, sha
   pressing it opens the row "Em {mãe}" below the grid with "Só {mãe}" and the children as chips.
   `searchLabel` adds a 44 px search (with its icon) that ignores case and accents and also finds children,
   shown "em {mãe}" with the parent's drawing; `empty` replaces the list with the drawing, a sentence
-  and, when it has `actionLabel` and `onAction`, the primary action with a "+" ("Cadastrar conta"),
+  and, when it has `actionLabel` and `onAction`, the primary action with a "+" ("Cadastrar conta"). An item with
+  `placeholderIcon` shows that icon in a dashed square instead of a drawing ("Nenhuma" in the move
+  sheet),
   which closes the sheet before it runs. A pick calls
   `onSelect` and closes. On the desktop the popover sits on the `modal` layer, over a `FormOverlay`.
 - `Stepper` (`components/inputs/stepper`, the design's `InstallmentStepper`): "−  3×  +" between
@@ -463,6 +466,14 @@ component here, so the form, and later the account, card and planning forms, sha
   (or the initial), the name, the grey lines (kind, "dentro de {mãe}", "Excluída em {data} por
   {nome}"), the reason in ink, and the small secondary "Restaurar" with the restore arrow; the
   button's name says what it restores ("Restaurar Conta antiga").
+- `CategoryRow` (`components/finance/category-row`, Base UI `Collapsible`): a category in the tree:
+  the drawing, the name (and, for income, a small `Badge`: "Fixa" or "Variável"), a grey detail
+  line when given, and the "2 subcategorias ⌄" pill that opens its chips below (mint while open;
+  named "Mostrar/Recolher as subcategorias de {nome}"); without subcategories or a toggle, the
+  chips (archived ones) show at once. 64 px rows with dividers, the chips 56 px from the edge.
+- `SubcategoryChip` (`components/finance/subcategory-chip`): a 30 px pill per subcategory. `action`
+  is a button that opens its actions (white with the 2 px ink outline while they are open, via
+  `data-popup-open`), `plain` is the text a viewer sees and `archived` the outlined, faded one.
 - `SubPageHeader` (`components/layout/sub-page-header`): a page one level down on the phone: the
   40 px "‹" back link (named "Voltar para {page}"), the title in `form-title-lg` and a grey
   `sub-page` description under it.

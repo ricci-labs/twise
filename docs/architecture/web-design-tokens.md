@@ -90,7 +90,9 @@ When to use each one: the design system guide → Colour, and each token's notes
   `dialog-text` (15/22), a confirmation dialog's title and text; `form-title` (24/30, 750) and `form-title-lg` (26/32,
   desktop), the title of a full-screen form or form dialog; `choice` (15/20, 500), the text of
   choice chips and of a filled picker field (with `font-semibold` where the design sets it);
-  `letter` (18, 750, display), the initial that stands in for a missing drawing; `sub-page`
+  `letter` (18, 750, display), the initial that stands in for a missing drawing; `chip` (13.5/18,
+  500) and `toggle` (12.5/16, 600), a subcategory chip and the "2 subcategorias" pill; `group-note`
+  (12.5/17), the small notes of a list ("Nos cartões, o total em aberto…"); `sub-page`
   (13.5/19), a sub page's description; `row` (15.5/20, 600) and `row-detail` (13/17), an account row's name and value (`font-bold`) and
   its grey second line; `message` (15/21), the sentence of a section error; `bar-title` (18/24,
   700, display), the workspace name in the phone's top bar; `tab` (11.5/14, 550), the bottom bar's
@@ -123,7 +125,7 @@ When to use each one: the design system guide → Colour, and each token's notes
 Tailwind has no duration or z-index namespace, so these are `:root` variables with one `@utility`
 each (`@utility duration-fast { transition-duration: var(--duration-fast) }`). `pb-safe` pads the
 bottom by the phone's safe area, at least `--spacing(3)` (the bottom tab bar), and `pb-safe-roomy`
-at least `--spacing(5)` (a form footer with one button); `max-h-sheet` caps a
+at least `--spacing(5)` (a form footer with one button, the bottom sheets); `max-h-sheet` caps a
 bottom sheet at 85% of the screen; `text-cents` lifts the cents of a big amount; `scrollbar-none`
 hides the bar of a swipeable row (the KPI carousel).
 

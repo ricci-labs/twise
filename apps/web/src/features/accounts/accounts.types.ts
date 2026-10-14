@@ -181,3 +181,76 @@ export type TrashRowProps = {
   item: TrashedItem
   onRestore: () => void
 }
+
+export type CategoryKind = 'expense' | 'income'
+
+export type CategoryNode = {
+  id: string
+  name: string
+  icon: string | null
+  kind: CategoryKind
+  parentId: string | null
+  incomeNature: string | null
+  isArchived: boolean
+  children: CategoryNode[]
+}
+
+export type ArchivedCategory = CategoryNode & {
+  detail: string
+}
+
+export type CategoryTree = {
+  active: CategoryNode[]
+  archived: ArchivedCategory[]
+  archivedCount: number
+}
+
+export type CategoriesPageProps = {
+  workspaceId: string
+  permissions: readonly Permission[]
+  kind: CategoryKind
+}
+
+export type CategoriesBodyProps = CategoriesPageProps
+
+export type CategoryListProps = {
+  workspaceId: string
+  permissions: readonly Permission[]
+  tree: CategoryTree
+  kind: CategoryKind
+}
+
+export type NatureBadgeProps = {
+  node: CategoryNode
+}
+
+export type CategoryNodeProps = {
+  workspaceId: string
+  permissions: readonly Permission[]
+  node: CategoryNode
+  tree: CategoryTree
+}
+
+export type CategoryActionsProps = CategoryNodeProps & {
+  trigger?: ItemAction['render']
+  description?: string
+}
+
+export type CategoryRefusal = {
+  title: string
+  text: string
+  confirmLabel: string
+}
+
+export type MoveCategorySheetProps = {
+  workspaceId: string
+  node: CategoryNode
+  tree: CategoryTree
+  isOpen: boolean
+  onOpenChange: (isOpen: boolean) => void
+}
+
+export type CategoryMove = {
+  accountId: string
+  parentId: string | null
+}

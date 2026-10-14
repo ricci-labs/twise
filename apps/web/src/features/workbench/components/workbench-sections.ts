@@ -40,9 +40,11 @@ import { tipExamples } from '@web/components/feedback/tip'
 import { toastExamples } from '@web/components/feedback/toast'
 import { accountGroupExamples } from '@web/components/finance/account-group'
 import { accountRowExamples } from '@web/components/finance/account-row'
+import { categoryRowExamples } from '@web/components/finance/category-row'
 import { invoicePreviewExamples } from '@web/components/finance/invoice-preview'
 import { recentEntriesExamples } from '@web/components/finance/recent-entries'
 import { sharesListExamples } from '@web/components/finance/shares-list'
+import { subcategoryChipExamples } from '@web/components/finance/subcategory-chip'
 import { trashRowExamples } from '@web/components/finance/trash-row'
 import { fieldGroupExamples } from '@web/components/forms/field-group'
 import { formFieldExamples } from '@web/components/forms/form-field'
@@ -108,6 +110,8 @@ export const workbenchSections: readonly ComponentExamples[] = [
   fieldGroupExamples,
   subPageHeaderExamples,
   trashRowExamples,
+  categoryRowExamples,
+  subcategoryChipExamples,
   forecastChartExamples,
   committedChartExamples,
   paceRingExamples,
