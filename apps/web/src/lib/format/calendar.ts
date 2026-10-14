@@ -48,6 +48,11 @@ export function formatShortDate(date: IsoDate): string {
   return `${pad(day)}/${pad(month)}`
 }
 
+export function formatShortDateWithYear(date: IsoDate): string {
+  const { year } = parseIsoDate(date)
+  return `${formatShortDate(date)}/${String(year).slice(YEAR_DIGITS)}`
+}
+
 export function formatFullDate(date: IsoDate): string {
   const { year } = parseIsoDate(date)
   return `${formatShortDate(date)}/${year}`

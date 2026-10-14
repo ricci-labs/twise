@@ -342,9 +342,11 @@ passes the overview's numbers.
   pressed at a time (`aria-pressed`), e.g. the forecast's account tabs. `width="full"` splits the
   whole width in equal options with the raised white selection (the "Contas | Categorias" tabs).
 - `Badge` (`components/display/badge`): a short status pill (`neutral`, `info`, `success`,
-  `warning`, `danger`), e.g. "Período encerrado"; `size="sm"` (22 px) for the nature of an income
-  category, `size="status"` (22 px, 10 px sides, the design's `fn-badge`) for an invoice's state in
-  a table.
+  `warning`, `danger`), e.g. "Período encerrado"; `neutral` is the design's `fn-badge--neutral`
+  (`status-neutral-soft` with the muted `status-neutral` text, "Futura"). `size="sm"` (22 px) for
+  the nature of an income category, `size="status"` (22 px, 10 px sides, the design's `fn-badge`)
+  for an invoice's state in a table, `size="tiny"` (18 px, 11 px text) inside a preview row
+  ("Fechada").
 - `AddTile` (`components/actions/add-tile`): the dashed tile that closes a grid's last row ("Novo
   cartão"): a 240 px minimum, the "+" icon, a 16 px display title and an optional muted line; the
   whole tile is the link it is given.
@@ -410,8 +412,9 @@ component here, so the form, and later the account, card and planning forms, sha
   calendar drawing, the sentence ("A 1ª parcela entra na fatura que vence em **04/11**.") and, with
   more than one installment or a closed invoice, one row per installment ("1/3 · vence 04/11 · R$
   333,34", split by dividers, no leader); a closed one is struck through with "Fechada"; `more` adds
-  "+ N parcelas, até…". A `status` region, so changes are announced. The screen computes the rows
-  with the shared billing rules and passes them.
+  "+ N parcelas, até…" (13 px). The 40 px drawing, the number in a 30 px column and the due date
+  with its tiny "Fechada" 8 px apart, as the design's `pv`. A `status` region, so changes are
+  announced. The screen computes the rows with the shared `installmentPlan` and passes them.
 - `SharesList` + `SharesCollapsed` (`components/finance/shares-list`): "Dividir com contatos".
   Collapsed, a dashed pill. Open, the title with the quick fills "Metade" and "Dividir igualmente",
   one row per contact (initial, name, a dotted leader, a `sm` `MoneyInput` named "Parte de {nome}",
@@ -425,6 +428,9 @@ component here, so the form, and later the account, card and planning forms, sha
 - `AutoFillTip` (`components/feedback/auto-fill-tip`): the discreet line under a field that says
   what was filled for the person, with a mint check and "Desfazer" on the right; a `status`, so it
   is announced.
+- `Button` `sm` keeps the buttons' 650 weight at 14 px (the design's `fn-btn--sm`: "Restaurar",
+  "Começar da parcela 2"); `subtle` is the white one with a 1 px `border-control` ring, the
+  button inside an `Alert`.
 - `Button` `quiet`: a transparent button with ink text that turns `sunken` on hover; the phone's
   second action under the main one ("Salvar e registrar outro", with size `touch`: 44 px, the
   smallest touch target, where the design draws it lower) and the desktop's "Cancelar" at the left

@@ -27,6 +27,11 @@ export const Route = createFileRoute('/_app/w/$workspaceId')({
     )
     const closeAccountForm = () =>
       navigate({ to: '.', search: (previous) => ({ ...previous, account: undefined }) })
+    const closeCardForm = () =>
+      navigate({
+        to: '.',
+        search: (previous) => ({ ...previous, card: undefined, part: undefined }),
+      })
     return (
       <WorkspaceShell
         workspaceId={workspaceId}
@@ -67,13 +72,14 @@ export const Route = createFileRoute('/_app/w/$workspaceId')({
           permissions={access.permissions}
           param={card}
           part={part}
-          onClose={() =>
-            navigate({
-              to: '.',
-              search: (previous) => ({ ...previous, card: undefined, part: undefined }),
-            })
-          }
-          onCreated={() => navigate({ to: '/w/$workspaceId/cards', params: { workspaceId } })}
+          onClose={closeCardForm}
+          onCreated={() => {
+            if (entry === 'new') {
+              closeCardForm()
+              return
+            }
+            navigate({ to: '/w/$workspaceId/cards', params: { workspaceId } })
+          }}
         />
         <CategoryEditor
           workspaceId={workspaceId}

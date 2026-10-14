@@ -10,7 +10,7 @@ import { EntryPicker } from '@web/features/entries/components/entry-picker'
 import { entriesMessages } from '@web/features/entries/entries.messages'
 import type {
   CategoryFieldProps,
-  ExpenseFormInput,
+  EntryFormInput,
   LedgerAccount,
 } from '@web/features/entries/entries.types'
 
@@ -23,11 +23,7 @@ export function CategoryField({ workspaceId }: CategoryFieldProps) {
   const categories = byMostUsed(accounts.filter(isUsableExpenseCategory), latestEntries)
 
   return (
-    <FormField<ExpenseFormInput>
-      name="categoryId"
-      label={entriesMessages.fields.category}
-      isRequired
-    >
+    <FormField<EntryFormInput> name="categoryId" label={entriesMessages.fields.category} isRequired>
       {(control) => (
         <EntryPicker
           control={control}

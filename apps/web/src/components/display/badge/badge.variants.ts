@@ -9,10 +9,11 @@ export const badgeVariants = cva(
         sm: 'h-5.5 px-2.25',
         status: 'h-5.5 px-2.5',
         xs: 'h-5 px-2 text-tab font-semibold',
+        tiny: 'h-4.5 px-1.5 text-badge-tiny',
       },
 
       tone: {
-        neutral: 'bg-sunken text-ink',
+        neutral: 'bg-status-neutral-soft text-status-neutral',
         info: 'bg-info-soft text-info',
         success: 'bg-success-soft text-success',
         warning: 'bg-warning-soft text-warning',

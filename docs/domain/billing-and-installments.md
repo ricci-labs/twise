@@ -6,8 +6,8 @@ updated: 2026-10-14
 
 # Billing cycle and installments
 
-Implemented as pure functions in `packages/shared/src/ledger/cards/billing-cycle.ts` and
-`packages/shared/src/ledger/installments/installments.ts`. Every example below exists as a unit test next to them.
+Implemented as pure functions in `packages/shared/src/ledger/cards/billing-cycle.ts`,
+`packages/shared/src/ledger/installments/installments.ts` and `installment-plan.ts`. Every example below exists as a unit test next to them.
 
 ## Invoice assignment
 
@@ -114,6 +114,25 @@ Card X, purchase 2026-09-15, R$ 1.000,00 in 3×:
 | 1 | 33334 | 2026-10-10 |
 | 2 | 33333 | 2026-11-10 |
 | 3 | 33333 | 2026-12-10 |
+
+### The plan a purchase shows before it is saved
+
+`installmentPlan` puts each installment of a purchase on its invoice (`invoicesForInstallments`)
+with its amount (`splitInstallments`) and whether that invoice has already closed on the given day
+(`invoiceStatusOn`). A purchase in progress starts at `firstInstallment` and lists only the ones
+still to come; `firstOpenInstallment` is the first one whose invoice is still open. The new entry
+uses them for the preview and for "A fatura de {mês} já fechou. Registre a partir da parcela {N}."
+(RF-ENT-6, RF-ENT-7).
+
+Card X (closes 25, due 4), today 2026-10-20, R$ 1.000,00 in 3× bought on 2026-09-20:
+
+| # | Amount | Invoice due | Closed |
+|---|---|---|---|
+| 1 | 33334 | 2026-10-04 | yes |
+| 2 | 33333 | 2026-11-04 | no |
+| 3 | 33333 | 2026-12-04 | no |
+
+The first installment still open is 2.
 
 ## Multi-party allocation
 When an installment purchase is shared (the household's own share plus one or more contacts), the

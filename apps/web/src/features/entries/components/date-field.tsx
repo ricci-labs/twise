@@ -5,7 +5,7 @@ import { entriesMessages } from '@web/features/entries/entries.messages'
 import type {
   DateChoice,
   DateFieldProps,
-  ExpenseFormInput,
+  EntryFormInput,
 } from '@web/features/entries/entries.types'
 import { formatDayMonth } from '@web/lib/format/calendar'
 import { useRef } from 'react'
@@ -14,7 +14,7 @@ import { useController } from 'react-hook-form'
 const messages = entriesMessages.dates
 
 export function DateField({ today }: DateFieldProps) {
-  const { field } = useController<ExpenseFormInput, 'occurredOn'>({ name: 'occurredOn' })
+  const { field } = useController<EntryFormInput, 'occurredOn'>({ name: 'occurredOn' })
   const otherDate = useRef<HTMLInputElement>(null)
   const yesterday = addDays(today, -1)
   const choice = choiceOf(field.value, today, yesterday)

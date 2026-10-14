@@ -25,7 +25,7 @@ export function InvoicePreview({ title, rows, more, className }: InvoicePreviewP
       role="status"
       className={cn(invoicePreviewVariants(), className)}
     >
-      <CategoryArt name={title} icon={CALENDAR_ICON} size="lg" />
+      <CategoryArt name={title} icon={CALENDAR_ICON} size="row" />
       <div className={invoicePreviewBodyVariants()}>
         <p>
           <RichText text={title} />
@@ -39,7 +39,7 @@ export function InvoicePreview({ title, rows, more, className }: InvoicePreviewP
                 </span>
                 <span className={invoicePreviewDueVariants()}>
                   {row.due}
-                  {row.isClosed && <Badge>{messages.closed}</Badge>}
+                  {row.isClosed && <Badge size="tiny">{messages.closed}</Badge>}
                 </span>
                 <Amount cents={row.amountCents} size="sm" />
               </li>

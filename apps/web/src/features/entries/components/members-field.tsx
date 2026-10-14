@@ -3,14 +3,14 @@ import { FieldGroup } from '@web/components/forms/field-group'
 import { ChoiceChips } from '@web/components/inputs/choice-chips'
 import { membersQueryOptions } from '@web/features/entries/api/entries.queries'
 import { entriesMessages } from '@web/features/entries/entries.messages'
-import type { ExpenseFormInput, MembersFieldProps } from '@web/features/entries/entries.types'
+import type { EntryFormInput, MembersFieldProps } from '@web/features/entries/entries.types'
 import { useController } from 'react-hook-form'
 
 const ALONE = 1
 
 export function MembersField({ workspaceId }: MembersFieldProps) {
   const members = useQuery(membersQueryOptions(workspaceId)).data ?? []
-  const { field } = useController<ExpenseFormInput, 'spentByUserId'>({ name: 'spentByUserId' })
+  const { field } = useController<EntryFormInput, 'spentByUserId'>({ name: 'spentByUserId' })
   if (members.length <= ALONE) {
     return null
   }
