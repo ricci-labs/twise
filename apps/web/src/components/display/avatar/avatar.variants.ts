@@ -12,6 +12,7 @@ export const avatarVariants = cva(
         xs: 'size-6.5 text-caption [&_svg]:size-3.75',
         sm: 'size-7.5 text-button-sm [&_svg]:size-4',
         md: 'size-9 text-label',
+        lg: 'size-10 text-choice',
         stacked: 'size-9 border-2 border-page text-button-sm',
       },
     },

@@ -207,10 +207,12 @@ Replaces "Valor"; description defaults to "Saldo inicial".
 
 ### Shares (`shares`, expense and card purchase)
 **RF-ENT-8** Collapsed, a dashed pill "+ Dividir com contatos". Open, a header "Dividir com
-contatos" with the quick fills "Metade" and "Dividir igualmente" (between you and the contacts),
+contatos" with the quick fills "Metade" (the contacts together take half, split evenly between
+them) and "Dividir igualmente" (between you and the contacts); the rounding cents stay in "Sua
+parte". The contact picker lists the active contacts not yet in the split, with a search,
 then one row per contact: avatar, name, a **dotted leader**, the amount input (132 px) and "×" to
 remove; "+ Adicionar contato" below. After a dashed divider, the last row "Sua parte" with its
-value, bold, in the same column as the inputs; it updates live and is blank while the sum passes
+value, bold, in the same column as the inputs; it updates live and shows "—" while the sum passes
 the total. Errors under the rows: a contact twice ("Esse contato já está na divisão."), the sum
 above the total ("A soma das partes passa do valor total."), 11th contact blocked with "Até 10
 contatos por lançamento." "Novo contato" inside the picker opens `CON-05` in a dialog. On a card

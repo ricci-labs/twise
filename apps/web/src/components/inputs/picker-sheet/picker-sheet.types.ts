@@ -9,6 +9,7 @@ export type PickerItem = {
   detail?: string
   icon?: string | null
   placeholderIcon?: TwiseIconName
+  isPerson?: boolean
   children?: readonly PickerItem[]
 }
 
@@ -46,6 +47,10 @@ export type PickerChoiceProps = {
   layout: PickerLayout
   isCurrent: boolean
   onPress: (item: PickerItem) => void
+}
+
+export type PickerRowArtProps = {
+  item: PickerItem
 }
 
 export type PickerChildrenProps = {

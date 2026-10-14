@@ -10,6 +10,7 @@ import type {
   fetchAccounts,
   fetchBalances,
   fetchCards,
+  fetchContacts,
   fetchLatestEntries,
   fetchMembers,
 } from '@web/features/entries/api/entries.queries'
@@ -30,6 +31,10 @@ export type LatestEntry = Awaited<ReturnType<typeof fetchLatestEntries>>['items'
 
 export type CardSummary = Awaited<ReturnType<typeof fetchCards>>[number]
 
+export type EntryContact = Awaited<ReturnType<typeof fetchContacts>>[number]
+
+export type EntryShareInput = EntryFormInput['shares'][number]
+
 export type WorkspaceMember = Awaited<ReturnType<typeof fetchMembers>>[number]
 
 export type EntryKind = EntryTypeWithCategory
@@ -39,6 +44,7 @@ export type DateChoice = 'today' | 'yesterday' | 'other'
 export type NewEntryProps = {
   workspaceId: string
   currentUserId: string
+  currentUserName: string
   permissions: readonly Permission[]
   isOpen: boolean
   onClose: () => void
@@ -47,7 +53,9 @@ export type NewEntryProps = {
 export type EntryFormProps = {
   workspaceId: string
   currentUserId: string
+  currentUserName: string
   canSeeMembers: boolean
+  canSeeContacts: boolean
   canCreateAccounts: boolean
   canCreateCards: boolean
   today: IsoDate
@@ -112,6 +120,20 @@ export type EntryPickerProps = {
 
 export type DateFieldProps = {
   today: IsoDate
+}
+
+export type ShareTotals = {
+  totalCents: number | null
+  yoursCents: number | null
+  isOver: boolean
+}
+
+export type QuickFill = (totalCents: number, contactCount: number) => number[]
+
+export type SharesFieldProps = {
+  workspaceId: string
+  yoursName: string
+  totals: ShareTotals
 }
 
 export type MembersFieldProps = {

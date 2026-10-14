@@ -11,7 +11,7 @@ export const moneyBoxVariants = cva(
   {
     variants: {
       size: {
-        sm: 'min-h-control-sm gap-1 px-3',
+        sm: 'min-h-touch gap-2 px-2.5',
         md: 'min-h-14',
         lg: 'min-h-16',
       },
@@ -43,7 +43,7 @@ export const moneyValueVariants = cva(
   {
     variants: {
       size: {
-        sm: 'text-right text-amount',
+        sm: 'text-right text-amount font-semibold',
         md: 'text-amount-lg',
         lg: 'font-display text-display',
       },

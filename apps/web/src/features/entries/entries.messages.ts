@@ -38,6 +38,7 @@ export const entriesMessages = {
     paymentMethod: 'Forma de pagamento',
     paymentMethodPlaceholder: 'Escolha',
     spentBy: 'Quem gastou',
+    shares: 'Dividir com contatos',
     notes: 'Observações',
   },
   required: {
@@ -107,6 +108,17 @@ export const entriesMessages = {
     ofCount: (count: number) => `de ${count}`,
     firstAfterCount: 'A parcela inicial passa do número de parcelas.',
     tooManyInstallments: 'Use menos parcelas que centavos no valor.',
+  },
+  shares: {
+    picker: 'Contato',
+    search: 'Buscar contato',
+    exceed: 'A soma das partes passa do valor total.',
+    notPositive: 'Informe um valor maior que zero.',
+    limit: 'Até 10 contatos por lançamento.',
+    empty: {
+      title: 'Nenhum contato ainda.',
+      text: 'Contatos são pessoas que dividem compras com vocês.',
+    },
   },
   categories: {
     placeholder: 'Escolha uma categoria',

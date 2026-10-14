@@ -1,5 +1,6 @@
 import { Popover } from '@base-ui/react/popover'
 import { Button } from '@web/components/actions/button'
+import { Avatar } from '@web/components/display/avatar'
 import { CategoryArt } from '@web/components/display/category-art'
 import { TwiseIcon } from '@web/components/icons/twise-icon'
 import { ChoiceChips } from '@web/components/inputs/choice-chips'
@@ -10,6 +11,7 @@ import type {
   PickerContentProps,
   PickerEmptyStateProps,
   PickerItem,
+  PickerRowArtProps,
   PickerSheetProps,
 } from '@web/components/inputs/picker-sheet/picker-sheet.types'
 import {
@@ -169,17 +171,7 @@ function PickerChoice({ item, layout, isCurrent, onPress }: PickerChoiceProps) {
       onClick={() => onPress(item)}
       className={pickerRowVariants()}
     >
-      {item.placeholderIcon ? (
-        <span
-          data-slot="category-art"
-          aria-hidden="true"
-          className={pickerPlaceholderArtVariants()}
-        >
-          <TwiseIcon name={item.placeholderIcon} />
-        </span>
-      ) : (
-        <CategoryArt name={item.label} icon={item.icon} size="lg" />
-      )}
+      <PickerRowArt item={item} />
       <span className={pickerRowTextVariants()}>
         {item.label}
         {detail && <span className={pickerRowDetailVariants()}>{detail}</span>}
@@ -187,6 +179,20 @@ function PickerChoice({ item, layout, isCurrent, onPress }: PickerChoiceProps) {
       {isCurrent && <Check data-slot="picker-check" aria-hidden="true" />}
     </button>
   )
+}
+
+function PickerRowArt({ item }: PickerRowArtProps) {
+  if (item.isPerson) {
+    return <Avatar name={item.label} tone="paper" size="lg" />
+  }
+  if (item.placeholderIcon) {
+    return (
+      <span data-slot="category-art" aria-hidden="true" className={pickerPlaceholderArtVariants()}>
+        <TwiseIcon name={item.placeholderIcon} />
+      </span>
+    )
+  }
+  return <CategoryArt name={item.label} icon={item.icon} size="lg" />
 }
 
 function PickerChildren({ parent, value, onSelect }: PickerChildrenProps) {

@@ -28,6 +28,10 @@ export function centsOfTypedAmount(text: string): number | null {
   }
 }
 
+export function sumOfTypedAmounts(texts: readonly string[]): number {
+  return texts.reduce((sum, text) => sum + (centsOfTypedAmount(text) ?? 0), 0)
+}
+
 export function tidyTypedAmount(text: string): string {
   const cents = centsOfTypedAmount(text)
   return cents === null ? text : formatTypedAmount(cents)

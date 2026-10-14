@@ -17,6 +17,7 @@ import { CategoryField } from '@web/features/entries/components/category-field'
 import { DateField } from '@web/features/entries/components/date-field'
 import { FormFooter } from '@web/features/entries/components/form-footer'
 import { MembersField } from '@web/features/entries/components/members-field'
+import { SharesField } from '@web/features/entries/components/shares-field'
 import { entriesMessages } from '@web/features/entries/entries.messages'
 import { entryFormSchema } from '@web/features/entries/entries.schemas'
 import type {
@@ -27,6 +28,7 @@ import type {
   FormEntryType,
 } from '@web/features/entries/entries.types'
 import { useCardPlan } from '@web/features/entries/hooks/use-card-plan'
+import { useShareTotals } from '@web/features/entries/hooks/use-share-totals'
 import { useIsOnline } from '@web/hooks/use-is-online'
 import { ApiError } from '@web/lib/api/api-error'
 import { errorMessageFor } from '@web/lib/errors/error-message'
@@ -45,6 +47,10 @@ const FIELD_OF_CODE: Readonly<Record<string, keyof EntryFormInput>> = {
   CARD_NOT_SET_UP: 'cardAccountId',
   NOT_AN_EXPENSE_CATEGORY: 'categoryId',
   SPENT_BY_NOT_A_MEMBER: 'spentByUserId',
+  CONTACT_NOT_AVAILABLE: 'shares',
+  CONTACT_TWICE: 'shares',
+  SHARES_EXCEED_AMOUNT: 'shares',
+  SHARE_NOT_POSITIVE: 'shares',
 }
 const ACCOUNT_NOT_AVAILABLE = 'ACCOUNT_NOT_AVAILABLE'
 const INVOICE_CLOSED = 'INVOICE_CLOSED'
@@ -62,7 +68,9 @@ const PAYMENT_OPTIONS = PAYMENT_METHODS.map((method) => ({
 export function EntryForm({
   workspaceId,
   currentUserId,
+  currentUserName,
   canSeeMembers,
+  canSeeContacts,
   canCreateAccounts,
   canCreateCards,
   today,
@@ -83,6 +91,7 @@ export function EntryForm({
   const entryType = useWatch({ control: form.control, name: 'entryType' })
   const plan = useCardPlan(form.control, workspaceId, today)
   const isCardPurchase = entryType === CARD_PURCHASE
+  const shareTotals = useShareTotals(form.control)
 
   function requestClose() {
     if (isDirty) {
@@ -180,7 +189,7 @@ export function EntryForm({
         footer={
           <FormFooter
             isOnline={isOnline}
-            isBlocked={Boolean(plan?.closedAt)}
+            isBlocked={Boolean(plan?.closedAt) || shareTotals.isOver}
             problem={problem}
             onCancel={requestClose}
           />
@@ -243,6 +252,15 @@ export function EntryForm({
             )}
           </FormField>
           {canSeeMembers && <MembersField workspaceId={workspaceId} />}
+          {canSeeContacts && (
+            <div className="lg:col-span-2">
+              <SharesField
+                workspaceId={workspaceId}
+                yoursName={currentUserName}
+                totals={shareTotals}
+              />
+            </div>
+          )}
           <div className="lg:col-span-2">
             <FormField<EntryFormInput> name="notes" label={fields.notes} maxLength={2000}>
               {(control) => <TextArea {...control} />}
@@ -282,6 +300,7 @@ function blankExpense(today: string, spentByUserId: string): EntryFormInput {
     occurredOn: today,
     paymentMethod: '',
     spentByUserId,
+    shares: [],
     notes: '',
   }
 }
@@ -295,6 +314,10 @@ function toEntryInput(values: EntryFormValues): EntryInput {
     paymentMethod: values.paymentMethod || null,
     spentByUserId: values.spentByUserId || null,
     notes: values.notes || null,
+    shares: values.shares.map((share) => ({
+      contactId: share.contactId,
+      amountCents: centsOfTypedAmount(share.amount),
+    })),
   }
   if (values.entryType === CARD_PURCHASE) {
     return entryInputSchema.parse({

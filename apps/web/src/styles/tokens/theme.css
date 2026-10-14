@@ -124,6 +124,9 @@
   --text-status: 0.71875rem;
   --text-status--line-height: 0.9375rem;
   --text-status--font-weight: 500;
+  --text-amount-share: 1.0625rem;
+  --text-amount-share--line-height: 1.375rem;
+  --text-amount-share--font-weight: 750;
   --text-amount-card: 1.25rem;
   --text-amount-card--line-height: 1.5rem;
   --text-amount-card--font-weight: 750;
@@ -347,6 +350,14 @@
 
 @utility border-l-stroke {
   border-left-width: var(--stroke-emphasis);
+}
+
+@utility dotted-leader {
+  height: 0.25rem;
+  background-image: radial-gradient(circle, var(--border-control) 1.1px, transparent 1.5px);
+  background-position: left center;
+  background-repeat: repeat-x;
+  background-size: 0.4375rem 0.25rem;
 }
 
 @utility text-vertical {
