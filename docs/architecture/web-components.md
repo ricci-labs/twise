@@ -449,6 +449,11 @@ component here, so the form, and later the account, card and planning forms, sha
   share the width on the phone and sit at the right, 440 px wide, on the desktop), as
   `../product/requirements/ui-standards.md` → Destructive actions and the discard rule ask
   ("Descartar as alterações?").
+- `MomentSheet` (`components/feedback/moment-sheet`): a moment worth a pause and one next step,
+  as the design's `sheet--moment` ("Conta Z criada"): on the phone a bottom sheet without header,
+  centred, with the handle, the 104 px loose drawing, the 22 px display title, the muted text, the
+  full-width primary action and a `tertiary` "Agora não" that closes it (16 px under it); from
+  1024 px it is a `ConfirmDialog` with the same words (the desktop has no design of its own).
 - `FormOverlay` (`components/layout/form-overlay`, Base UI `Dialog`): a form that opens over the
   screen: full screen on the phone (no tab bar), with "X" and the title on top; from 1024 px a
   dialog 880 px wide, 40 px from the top, over the dimmed page, the title on the left and "X" on the

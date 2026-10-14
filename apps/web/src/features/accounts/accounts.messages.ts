@@ -60,9 +60,16 @@ export const accountsMessages = {
   actions: {
     trigger: (name: string) => `Ações de ${name}`,
     edit: 'Editar',
+    openingBalance: 'Informar saldo inicial',
     archive: 'Arquivar',
     unarchive: 'Desarquivar',
     delete: 'Excluir',
+  },
+  created: {
+    title: (name: string) => `${name} criada`,
+    text: 'Quanto tem nela hoje? Com o saldo inicial, os saldos e a previsão batem com o banco.',
+    openingBalance: 'Informar saldo inicial',
+    later: 'Agora não',
   },
   toasts: {
     archived: (name: string, isCard: boolean) => `${name} ${isCard ? 'arquivado' : 'arquivada'}.`,

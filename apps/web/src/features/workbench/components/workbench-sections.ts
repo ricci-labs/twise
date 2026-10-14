@@ -35,6 +35,7 @@ import { emptyBlockExamples } from '@web/components/feedback/empty-block'
 import { emptyStateExamples } from '@web/components/feedback/empty-state'
 import { kpiSkeletonExamples } from '@web/components/feedback/kpi-skeleton'
 import { listSkeletonExamples } from '@web/components/feedback/list-skeleton'
+import { momentSheetExamples } from '@web/components/feedback/moment-sheet'
 import { sectionErrorExamples } from '@web/components/feedback/section-error'
 import { sectionSkeletonExamples } from '@web/components/feedback/section-skeleton'
 import { spinnerExamples } from '@web/components/feedback/spinner'
@@ -108,6 +109,7 @@ export const workbenchSections: readonly ComponentExamples[] = [
   selectExamples,
   textAreaExamples,
   confirmDialogExamples,
+  momentSheetExamples,
   formOverlayExamples,
   amountExamples,
   cardExamples,

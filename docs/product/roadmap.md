@@ -252,8 +252,9 @@ updated: 2026-10-14
   4. [ ] Web: `ACC-01` with every state (done: summary, groups, archived, actions with undo and the
      refused delete, loading, empty, error, viewer; the phone's top and bottom bars to the approved
      model), `ACC-03` (done: new and edit account, "Nova conta" links, "Cadastrar conta" in the new
-     entry's empty sheet; the "{nome} criada" sheet and "Informar saldo inicial" come with the
-     entry's opening balance), `ACC-04` (done: list, restore with "Ver", "Restaurar as duas",
+     entry's empty sheet, the "{nome} criada" sheet and "Informar saldo inicial" in the account's
+     actions, both opening the new entry as its opening balance; "Ver lançamentos" waits on
+     `ENT-01`), `ACC-04` (done: list, restore with "Ver", "Restaurar as duas",
      empty and error)
   5. [x] Web: `ACC-02` with subcategories and every subcategory action (tree, income natures,
      archive with the children, refused delete, move, archived, viewer), `ACC-03` for categories

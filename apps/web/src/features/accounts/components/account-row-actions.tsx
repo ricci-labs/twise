@@ -28,6 +28,7 @@ export function AccountRowActions({
   const [isRefused, setIsRefused] = useState(false)
   const canUpdate = hasPermission(permissions, 'accounts', 'update')
   const canDelete = hasPermission(permissions, 'accounts', 'delete')
+  const canRecord = hasPermission(permissions, 'entries', 'create')
 
   async function run(action: AccountAction, onDone: () => void) {
     try {
@@ -62,9 +63,29 @@ export function AccountRowActions({
     )
 
   const edit = <Link to="." search={(previous) => ({ ...previous, account: account.id })} />
+  const openingBalance = (
+    <Link
+      to="."
+      search={(previous) => ({
+        ...previous,
+        entry: 'new',
+        entryType: 'opening_balance',
+        entryAccount: account.id,
+      })}
+    />
+  )
   const actions = [
     ...leadingActions,
-    ...actionsOf(account, { edit, canUpdate, canDelete, archive, unarchive, remove }),
+    ...actionsOf(account, {
+      edit,
+      openingBalance,
+      canUpdate,
+      canDelete,
+      canRecord,
+      archive,
+      unarchive,
+      remove,
+    }),
   ]
   return (
     <>
@@ -112,6 +133,16 @@ function actionsOf(account: ListedAccount, can: AccountActionHandlers): ItemActi
             label: messages.actions.edit,
             icon: 'edit',
             render: can.edit,
+          } as const,
+        ]
+      : []),
+    ...(can.canRecord && !account.isCard
+      ? [
+          {
+            key: 'opening-balance',
+            label: messages.actions.openingBalance,
+            icon: 'flag',
+            render: can.openingBalance,
           } as const,
         ]
       : []),
