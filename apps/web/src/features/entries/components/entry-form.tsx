@@ -5,11 +5,11 @@ import { showToast } from '@web/components/feedback/toast'
 import { FormField } from '@web/components/forms/form-field'
 import { Select } from '@web/components/inputs/select'
 import { TextArea } from '@web/components/inputs/text-area'
-import { TextInput } from '@web/components/inputs/text-input'
 import { FormOverlay } from '@web/components/layout/form-overlay'
 import { useRecordEntry } from '@web/features/entries/api/use-record-entry'
 import { AmountField } from '@web/features/entries/components/amount-field'
 import { DateField } from '@web/features/entries/components/date-field'
+import { DescriptionField } from '@web/features/entries/components/description-field'
 import { toEntryInput } from '@web/features/entries/components/entry-input'
 import {
   hasCategory,
@@ -19,6 +19,7 @@ import {
 import { FormFooter } from '@web/features/entries/components/form-footer'
 import { MembersField } from '@web/features/entries/components/members-field'
 import { LeadFields, MoneyFields } from '@web/features/entries/components/money-fields'
+import { RecentRow } from '@web/features/entries/components/recent-row'
 import { SharesField } from '@web/features/entries/components/shares-field'
 import { TypePills } from '@web/features/entries/components/type-pills'
 import { entriesMessages } from '@web/features/entries/entries.messages'
@@ -33,6 +34,7 @@ import type {
   FormEntryType,
 } from '@web/features/entries/entries.types'
 import { useAmountWarning } from '@web/features/entries/hooks/use-amount-warning'
+import { useAutoFill } from '@web/features/entries/hooks/use-auto-fill'
 import { useCardPlan } from '@web/features/entries/hooks/use-card-plan'
 import { useShareTotals } from '@web/features/entries/hooks/use-share-totals'
 import { useIsOnline } from '@web/hooks/use-is-online'
@@ -94,11 +96,13 @@ export function EntryForm({
   const [isDiscarding, setIsDiscarding] = useState(false)
   const amountInput = useRef<HTMLInputElement>(null)
   const blank = prefilled(blankExpense(today, canSeeMembers ? currentUserId : ''), prefill)
+  const isNewForm = prefill.entryType === undefined
   const form = useSchemaForm({
     schema: entryFormSchema,
     requiredMessages: entriesMessages.required,
     defaultValues: blank,
   })
+  const autoFill = useAutoFill(form, amountInput)
   const { isDirty } = useFormState({ control: form.control })
   const entryType = useWatch({ control: form.control, name: 'entryType' })
   const plan = useCardPlan(form.control, workspaceId, today)
@@ -110,11 +114,7 @@ export function EntryForm({
   const shareTotals = useShareTotals(form.control)
 
   const descriptionField = (
-    <FormField<EntryFormInput> name="description" label={fields.description} isRequired>
-      {(control) => (
-        <TextInput autoComplete="off" placeholder={fields.descriptionPlaceholder} {...control} />
-      )}
-    </FormField>
+    <DescriptionField workspaceId={workspaceId} entryType={entryType} autoFill={autoFill} />
   )
 
   function requestClose() {
@@ -144,6 +144,7 @@ export function EntryForm({
           },
           { keepFieldsRef: true },
         )
+        autoFill.forget()
         form.setFocus('amount')
         return
       }
@@ -154,6 +155,7 @@ export function EntryForm({
   }
 
   function changeType(next: FormEntryType) {
+    autoFill.forget()
     if (categoryKindOf(next) !== categoryKindOf(entryType)) {
       form.setValue('categoryId', '')
     }
@@ -216,6 +218,11 @@ export function EntryForm({
         }
       >
         <TypePills value={entryType} canSeeContacts={canSeeContacts} onChange={changeType} />
+        {isNewForm && (
+          <div className="mt-3.5 lg:px-8">
+            <RecentRow workspaceId={workspaceId} entryType={entryType} autoFill={autoFill} />
+          </div>
+        )}
         <p className="mx-4 mt-3.5 text-note text-ink-muted lg:mx-8">
           <span aria-hidden="true" className="font-semibold text-danger">
             {messages.requiredMark}
@@ -231,6 +238,7 @@ export function EntryForm({
           <AmountField
             isOpeningBalance={isOpeningBalance}
             warning={amountWarning}
+            autoFill={autoFill}
             inputRef={amountInput}
           />
           {!isDescriptionLast && descriptionField}

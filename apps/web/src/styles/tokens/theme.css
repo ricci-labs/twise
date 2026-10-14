@@ -363,6 +363,10 @@
   background-size: 0.4375rem 0.25rem;
 }
 
+@utility w-anchor {
+  width: var(--anchor-width);
+}
+
 @utility text-vertical {
   writing-mode: vertical-rl;
   rotate: 180deg;

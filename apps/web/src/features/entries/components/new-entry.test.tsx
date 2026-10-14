@@ -85,6 +85,15 @@ function invoiceTotal(invoiceId: string, month: string, status: string, dueCents
   }
 }
 
+const MARKET_RUN = {
+  description: 'Mercado da semana',
+  categoryId: MARKET,
+  accountId: WALLET,
+  paymentMethod: 'pix',
+  lastAmountCents: 8640,
+  lastUsedOn: '2026-10-10',
+}
+
 const CARD_X_INVOICES = [
   invoiceTotal(NEXT_INVOICE, '2026-12', 'future', 64_000),
   invoiceTotal(OPEN_INVOICE, '2026-11', 'open', 195_000),
@@ -177,6 +186,11 @@ function entryAnswers(
     [`GET ${BASE}/members`]: () => Response.json([]),
     [`GET ${BASE}/cards`]: () => Response.json(cards),
     [`GET ${BASE}/cards/${CARD_X}/invoices`]: () => Response.json(CARD_X_INVOICES),
+    [`GET ${BASE}/entries/frequent`]: (request: Request) =>
+      Response.json(
+        new URL(request.url).searchParams.get('type') === 'expense' ? [MARKET_RUN] : [],
+      ),
+    [`GET ${BASE}/entries/suggestions`]: () => Response.json([MARKET_RUN]),
     [`GET ${BASE}/contacts/balances`]: () =>
       Response.json([
         {
@@ -807,5 +821,53 @@ describe('ENT-02 settlement', () => {
         description: 'Member C pagou',
       }),
     ])
+  })
+})
+
+describe('ENT-02 shortcuts', () => {
+  afterEach(async () => {
+    vi.restoreAllMocks()
+    await page.viewport(414, 896)
+  })
+
+  it('repeats a recent entry in one tap and undoes it', async () => {
+    await openNewEntry()
+    await page.getByRole('button', { name: /Mercado da semana/ }).click()
+
+    await expect.element(page.getByLabelText(/^Valor/)).toHaveValue('86,40')
+    await expect.element(page.getByLabelText(/^Descrição/)).toHaveValue('Mercado da semana')
+    await expectText(page.getByRole('button', { name: /^Categoria/ }), /Mercado›Feira/)
+    await expect.element(page.getByLabelText('Forma de pagamento')).toHaveValue('pix')
+    await expect
+      .element(page.getByRole('button', { name: /Mercado da semana/ }))
+      .toHaveAttribute('aria-pressed', 'true')
+    await expect.element(page.getByText('Igual à última vez. Confira o valor.')).toBeVisible()
+    await page.getByRole('button', { name: 'Desfazer' }).click()
+
+    await expect.element(page.getByLabelText(/^Valor/)).toHaveValue('')
+    await expect.element(page.getByLabelText(/^Descrição/)).toHaveValue('')
+  })
+
+  it('fills the rest from a description suggestion and goes back to the amount', async () => {
+    await openNewEntry()
+    await page.getByLabelText(/^Descrição/).fill('Mer')
+    await page.getByRole('option', { name: 'Mercado da semana' }).click()
+
+    await expect.element(page.getByLabelText(/^Descrição/)).toHaveValue('Mercado da semana')
+    await expect
+      .element(page.getByText('Categoria, conta e forma de pagamento como da última vez.'))
+      .toBeVisible()
+    await expect.element(page.getByLabelText(/^Valor/)).toHaveFocus()
+    await expect.element(page.getByLabelText(/^Valor/)).toHaveValue('')
+  })
+
+  it('has no recent row when the type has none', async () => {
+    await openNewEntry()
+    await expect.element(page.getByRole('heading', { name: 'Repetir um recente' })).toBeVisible()
+    await page.getByRole('radio', { name: 'Receita' }).click()
+
+    await expect
+      .element(page.getByRole('heading', { name: 'Repetir um recente' }))
+      .not.toBeInTheDocument()
   })
 })

@@ -242,7 +242,9 @@ updated: 2026-10-14
         opening it from `CON-02`
   14. [x] Web: the desktop dialog for the other types (the type pills in one row, "Mais" as a
       384 px popover under its pill, each type's fields in the two columns)
-  15. [ ] Web: "Repetir um recente" and the suggestion that fills the rest
+  15. [x] Web: "Repetir um recente" and the suggestion that fills the rest (the row of the current
+      person's frequent entries of the type, only on a new form; up to 3 description suggestions
+      while typing; both fill what was used last time and say so with "Desfazer")
   16. [ ] Web: the Home follows the app-wide rules (loose illustrations, no circles; the budgets
       already do, through `CategoryArt`)
 - [ ] **Accounts round: ACC-01..04 and CARD-01..04** (design `../design/accounts/`, exported

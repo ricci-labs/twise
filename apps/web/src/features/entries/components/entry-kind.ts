@@ -1,6 +1,7 @@
 import {
   ENTRY_TYPES_WITH_CATEGORY,
   ENTRY_TYPES_WITH_PAYMENT_METHOD,
+  type EntryTypeWithCategory,
   SPENDING_ENTRY_TYPES,
 } from '@financas/shared'
 
@@ -18,4 +19,8 @@ export function hasPaymentMethod(entryType: string): boolean {
 
 export function isSpending(entryType: string): boolean {
   return SPENDING.includes(entryType)
+}
+
+export function categoryTypeOf(entryType: string): EntryTypeWithCategory | undefined {
+  return ENTRY_TYPES_WITH_CATEGORY.find((type) => type === entryType)
 }
