@@ -31,6 +31,7 @@ import { sectionSkeletonExamples } from '@web/components/feedback/section-skelet
 import { spinnerExamples } from '@web/components/feedback/spinner'
 import { tipExamples } from '@web/components/feedback/tip'
 import { toastExamples } from '@web/components/feedback/toast'
+import { invoicePreviewExamples } from '@web/components/finance/invoice-preview'
 import { formFieldExamples } from '@web/components/forms/form-field'
 import { twiseIconExamples } from '@web/components/icons/twise-icon'
 import { choiceChipsExamples } from '@web/components/inputs/choice-chips'
@@ -38,6 +39,7 @@ import { moneyInputExamples } from '@web/components/inputs/money-input'
 import { passwordInputExamples } from '@web/components/inputs/password-input'
 import { pickerFieldExamples } from '@web/components/inputs/picker-field'
 import { pickerSheetExamples } from '@web/components/inputs/picker-sheet'
+import { radioCardListExamples } from '@web/components/inputs/radio-card-list'
 import { stepperExamples } from '@web/components/inputs/stepper'
 import { switchExamples } from '@web/components/inputs/switch'
 import { textInputExamples } from '@web/components/inputs/text-input'
@@ -57,6 +59,8 @@ export const workbenchSections: readonly ComponentExamples[] = [
   pickerSheetExamples,
   stepperExamples,
   switchExamples,
+  radioCardListExamples,
+  invoicePreviewExamples,
   amountExamples,
   cardExamples,
   kpiCardExamples,
