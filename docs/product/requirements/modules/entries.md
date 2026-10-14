@@ -1,7 +1,7 @@
 ---
 summary: Functional requirements for entries — list and filters, the new-entry form for every type (expense, card purchase, income, transfer, invoice payment, settlement, opening balance), detail, edit (details or replace), delete, restore and trash.
 read_when: Designing or building ENT-01..05, or any shortcut that opens the new-entry form.
-updated: 2026-09-29
+updated: 2026-10-14
 ---
 
 # Entries
@@ -70,24 +70,49 @@ empty with filters "Nada encontrado com esses filtros." + "Limpar filtros"; erro
 `ENTRY_QUERY_INVALID` resets the filters and says "Os filtros eram inválidos e foram limpos."
 
 ## ENT-02 New entry (MVP)
-A full screen on mobile, a large dialog on desktop. `POST /entries`, permission `entries:create`.
+`POST /entries`, permission `entries:create`. Designed in `../../../design/entries/` (every type and
+state, mobile and desktop); where this section and the design disagree, the design won and this
+section follows it (`../../../design/entries/decisions.md`).
 Opened from the floating button, from `CARD-02/03` (invoice payment), `CON-02` (settlement),
 `ACC-01/03` (opening balance), `PLAN-03` (pay a planned bill) and `HOME-03` (moving commission),
 prefilled accordingly.
 
-**RF-ENT-5** First choose the type (segmented control, the most used first: "Despesa", "Compra no
-cartão", "Receita", "Transferência", then "Mais": invoice payment, settlement, opening balance). The
-fields below change with the type; values common to all types are kept when switching.
+**Layout.** Mobile: a full screen over the app (no tab bar) with "X" (Cancelar) and the title
+"Novo lançamento" on top, the fields in one column (16 px margins), and a fixed footer with
+"Salvar lançamento" (primary, full width) and "Salvar e registrar outro" (text button). Desktop: a
+dialog 880 px wide, 40 px from the top, over the screen the person was on (dimmed); fixed header
+and footer ("Cancelar" on the left, "Salvar e registrar outro" secondary and "Salvar lançamento"
+primary on the right), the body scrolls; fields in two columns in the mobile order, side-by-side
+fields share one height (48 px) and only the money field is taller; the invoice preview, the
+shares and the notes span both columns. It opens on "Despesa" with the focus on "Valor". The form
+mixes required and optional fields, so it starts with "* obrigatório".
+
+**RF-ENT-5** First choose the type: pill buttons that wrap onto a second line, all visible (no
+sideways scroll), the most used first: "Despesa", "Compra no cartão", "Receita", "Transferência",
+then "Mais ▾", which opens a sheet with the other three (invoice payment, settlement, opening
+balance), each with a loose illustration and a one-line description; once one is chosen, the
+"Mais" pill shows its name. The selected pill is `mint` with `on-mint` text. The fields below
+change with the type; values common to all types are kept when switching.
 
 ### Fields common to every type
 | Field | Label | Input | Required | Rules |
 |---|---|---|---|---|
 | amountCents | "Valor" | money, large, first focus | yes | > 0 ("Informe um valor maior que zero, como 25,90.") |
 | description | "Descrição" | text, suggestions from recent descriptions | yes | trimmed, 1–200 |
-| occurredOn | "Data" | date, default "Hoje" | yes | valid date |
+| occurredOn | "Data" | shortcuts "Hoje, {dd mmm}" · "Ontem" · "Outra data" (calendar; then shows the picked date, e.g. "20 set"), default "Hoje" | yes | valid date |
 | paymentMethod | "Forma de pagamento" | select | no | enum above; hidden for transfer, invoice payment, opening balance |
-| spentByUserId | "Quem gastou" | member picker, default the current user for expenses | no | active member |
+| spentByUserId | "Quem gastou" | the members as two side-by-side cards (avatar + name), default the current user | no | active member; **only on expense and card purchase** |
 | notes | "Observações" | textarea with counter | no | up to 2000 |
+
+The account, card, category and contact fields are **pickers**: 56 px on mobile, 48 px on desktop,
+showing the loose illustration, the name and a grey second line ("Saldo de hoje: R$ 4.200,00",
+"Fecha 25/10 · vence 04/11", "Renda variável"); empty, a dashed "+" square with a grey placeholder
+("Escolha uma categoria"). They open a bottom sheet on mobile and a popover with search on desktop;
+the current item is on `mint-soft` with a check. Categories open as a grid of tiles (three columns,
+most used first, search on top); the selected tile is all `mint`, its label bold, with a check.
+**No account or card yet:** the sheet says so ("Vocês ainda não têm um cartão.") and offers
+"Cadastrar conta" / "Cadastrar cartão" (`ACC-03` / `CARD-04`), which comes back with the new one
+selected and nothing typed lost. The same holds for categories.
 
 ### Despesa (`expense`)
 | Field | Label | Required | Rules |
@@ -105,25 +130,43 @@ fields below change with the type; values common to all types are kept when swit
 | firstInstallment | "Começar da parcela" (under "Compra já em andamento") | no, default 1 | 1–installments; help "Para registrar uma compra antiga só a partir das parcelas que faltam. O valor continua sendo o total da compra." |
 | shares | "Dividir com contatos" | no | see Shares |
 
-**RF-ENT-6** Live preview under the card: "Entra na fatura que vence em {dd/mm}" and, in
-installments, the list "1/3 · out · R$ 333,34 · 2/3 · nov …" (computed with the shared billing
-rules).
+"Parcelas" is a stepper "−  3×  +" (1 shows "À vista") with "3× de R$ 333,34" beside it. "Compra
+já em andamento" is a switch beside its label; on, it shows "Começar da parcela" in a bordered box
+with the help text above a stepper and "de {N}".
+
+**RF-ENT-6** Live preview under the card, in a sunken box with the loose calendar: "Entra na fatura
+que vence em {dd/mm}" (à vista) or "A 1ª parcela entra na fatura que vence em {dd/mm}." and one row
+per installment, "1/3 · vence 04/11 · R$ 333,34", the amount right-aligned and rows split by
+dividers (no dotted leader). Long lists show three rows and "+ {N} parcelas, até a fatura que vence
+em {dd/mm/aa}". A purchase in progress lists only the installments still to come. Computed on the
+device with the shared billing rules (`ledger/cards/billing-cycle`, `ledger/installments`); the
+screen never makes up dates or cents and doesn't call the API for it. The card's payment method
+starts as "Crédito".
 **RF-ENT-7** When the first installment would fall on a closed invoice, say it before submitting:
-"A fatura de {mês} já fechou. Registre a partir da parcela {N}." with the action "Começar da
-parcela {N}". The same comes back from the API as `INVOICE_CLOSED`.
+the preview row of that invoice is struck through with the badge "Fechada", and a warning Alert
+says "A fatura de {mês} já fechou. Registre a partir da parcela {N}." with the action "Começar da
+parcela {N}", which turns on "Compra já em andamento" and sets it. The same comes back from the
+API as `INVOICE_CLOSED`.
 
 ### Receita (`income`)
 | Field | Label | Required | Rules |
 |---|---|---|---|
 | receivedInAccountId | "Recebido em" | yes | active money account |
 | categoryId | "Categoria" | yes | active income category (badge "Fixa" / "Variável") |
-When the category is variable income, after saving offer "Ver sugestão de divisão" (`HOME-03`).
+The category picker shows the badge "Fixa" or "Variável" (variable income is a commission). No
+"Quem gastou" and no shares. When the category is variable income, the success toast's action is
+"Ver sugestão de divisão" (instead of "Ver"), opening `HOME-03` with that amount.
 
 ### Transferência (`transfer`)
 | Field | Label | Required | Rules |
 |---|---|---|---|
 | fromAccountId | "De" | yes | active money account |
 | toAccountId | "Para" | yes | active money account, different from "De" ("Escolha uma conta diferente da de origem.") |
+Only "De", "Para", date and notes besides the amount and description: no payment method, category
+or "Quem gastou". **From `HOME-03`** ("Transferir" on a step of the commission split) it opens
+prefilled (amount, "De" where the commission landed, "Para" the step's account) under a mint band
+"Parte {n} da divisão da comissão · {step} · R$ {valor}"; after saving it goes back to the split
+with that part "Feito".
 
 ### Pagamento de fatura (`invoice_payment`)
 | Field | Label | Required | Rules |
@@ -131,37 +174,65 @@ When the category is variable income, after saving offer "Ver sugestão de divis
 | cardAccountId | "Cartão" | yes | active card |
 | invoiceId | "Fatura" | yes | an invoice of that card (list with status and "falta pagar"); default the oldest with something due |
 | paidFromAccountId | "Pago com" | yes when the card has no default payment account | active money account; default the card's |
+The invoices show as a radio list: "Vence {dd/mm}", "Falta pagar R$ X" and a status badge.
 Amount defaults to the invoice's "falta pagar"; partial payment allowed; paying more than due warns
-"O valor é maior que o saldo da fatura." (not blocked).
+in amber under the amount "O valor é maior que o saldo da fatura." (not blocked).
 
 ### Recebimento de contato (`settlement`)
 | Field | Label | Required | Rules |
 |---|---|---|---|
-| contactId | "Contato" | yes | contact picker showing what each owes |
+| contactId | "Contato" | yes, first field | contact picker showing what each owes and, when overdue, a red badge with text; "Novo contato" at the end |
 | receivedInAccountId | "Recebido em" | yes | active money account |
-Paying more than the contact owes warns (not blocked). Charges record payments through `CON-04`,
-which uses this type.
+The amount defaults to what the contact owes; receiving part is allowed, more warns (not
+blocked). Charges record payments through `CON-04`, which uses this type.
 
 ### Saldo inicial (`opening_balance`)
 | Field | Label | Required | Rules |
 |---|---|---|---|
 | accountId | "Conta" | yes | active money account |
-| balanceCents | "Saldo" | yes | ≠ 0; a "Negativo (cheque especial)" switch makes it negative |
+| balanceCents | "Saldo" | yes | ≠ 0; a "Negativo (cheque especial)" switch makes it negative (shown with "−" in the danger colour) |
 Replaces "Valor"; description defaults to "Saldo inicial".
 
 ### Shares (`shares`, expense and card purchase)
-**RF-ENT-8** "Dividir com contatos" adds rows: contact (picker, each once) and amount; quick fills
-"Metade" and "Dividir igualmente". A live line shows "Sua parte: R$ X". Errors: a contact twice
-("Esse contato já está na divisão."), the sum above the total ("A soma das partes passa do valor
-total."), 11th contact blocked with "Até 10 contatos por lançamento." "Novo contato" inside the
-picker opens `CON-05` in a dialog.
+**RF-ENT-8** Collapsed, a dashed pill "+ Dividir com contatos". Open, a header "Dividir com
+contatos" with the quick fills "Metade" and "Dividir igualmente" (between you and the contacts),
+then one row per contact: avatar, name, a **dotted leader**, the amount input (132 px) and "×" to
+remove; "+ Adicionar contato" below. After a dashed divider, the last row "Sua parte" with its
+value, bold, in the same column as the inputs; it updates live and is blank while the sum passes
+the total. Errors under the rows: a contact twice ("Esse contato já está na divisão."), the sum
+above the total ("A soma das partes passa do valor total."), 11th contact blocked with "Até 10
+contatos por lançamento." "Novo contato" inside the picker opens `CON-05` in a dialog. On a card
+purchase the shares are spread across the installments.
+
+**RF-ENT-13** "Repetir um recente" (new form only, not when it opens prefilled from another
+screen): under the types, a row of cards that scrolls sideways from the 16 px margin, the last one
+peeking: loose illustration, description and last amount. They are the entries **the current
+person** repeats most of the chosen type (`GET /entries/frequent`, G39); the row disappears when the
+type has none. One tap fills everything as last time (description, account or card, category,
+payment method and the amount, selected so typing replaces it), outlines the card in ink, and shows
+the auto-fill line with "Desfazer". Two taps save it.
+**RF-ENT-14** Description suggestions: while typing, up to 3 recent descriptions of the workspace
+for the chosen type (`GET /entries/suggestions`, G38). Choosing one fills the description **and**
+the category, account or card and payment method used last time, and moves the focus back to
+"Valor". A discreet line under the description (green check, what was filled, "Desfazer" on the
+right) says so; "Desfazer" clears what was filled. An account or category that is no longer active
+is not filled.
 
 ### Actions and outcome
 | Action | Enabled when | Success | Errors |
 |---|---|---|---|
-| "Salvar lançamento" (primary) | the form is valid for the chosen type (button contract) | toast "Lançamento registrado." with "Ver"; closes, or keeps the form with type, date and accounts for "Salvar e registrar outro" | field-mapped codes below; others as form messages |
-| "Salvar e registrar outro" (secondary) | the form is valid | toast, form cleared except type, date and accounts | same |
-| "Cancelar" | always | warns if changed | — |
+| "Salvar lançamento" (primary) | the form is valid for the chosen type (button contract) and online | toast "Lançamento registrado." with "Ver" (opens `ENT-03`); closes and goes back where it was, whose numbers refresh | field-mapped codes below; others as a danger Alert just above the buttons: "Não foi possível registrar o lançamento. Código: {ref}." |
+| "Salvar e registrar outro" (secondary) | the form is valid and online | the same toast, shown just above the buttons; the form stays, cleared except type, date and accounts, focus back on "Valor" | same |
+| "Cancelar" ("X", Esc, a click outside the dialog) | always | closes at once when nothing changed; otherwise "Descartar as alterações?" with "Continuar editando" (secondary) and "Descartar" (danger) | — |
+
+While saving: spinner and "Salvando…" in the button, both buttons locked, the form stays open
+until the answer. Nothing typed is lost on an error.
+
+**Offline.** With no connection, "Novo lançamento" doesn't open (the Home rule: "Sem conexão. Dá
+para salvar quando a internet voltar."). If the connection drops while the form is open, a dark
+band on top says "Sem conexão. O que você digitou fica aqui; salve quando a conexão voltar.", the
+save buttons are disabled and the form stays editable; nothing is queued to send later. When the
+connection is back the band goes and the buttons release.
 
 Field-mapped codes: `NOT_A_MONEY_ACCOUNT` and `ACCOUNT_NOT_AVAILABLE` → the account field involved;
 `NOT_AN_EXPENSE_CATEGORY`, `NOT_AN_INCOME_CATEGORY` → category; `SAME_ACCOUNT` → "Para";

@@ -1,7 +1,7 @@
 ---
 summary: Brief for the design system to create in Claude Design before any screen — tone, tokens, the component list with every state, and the finance-specific patterns the screens need.
 read_when: Creating or changing the design system, or adding a component a screen needs.
-updated: 2026-09-29
+updated: 2026-10-14
 ---
 
 # Design system brief
@@ -21,8 +21,9 @@ sentences. Numbers are the heroes; decoration stays out of their way.
   - income / money in, expense / money out, transfer / neutral;
   - success, warning, danger, info (for insights and messages);
   - statuses: pending, overdue, paid, partially paid, cancelled, skipped, matched.
-- **Typography:** one family with **tabular numbers** for amounts; a scale from caption to the big
-  "livre para gastar" figure.
+- **Typography:** families with **tabular numbers** for amounts; a scale from caption to the big
+  "livre para gastar" figure. (The design system chose two: a display family for titles and the
+  hero number, and a text family for the rest; `../../design/design-system/README.md`.)
 - **Spacing, radius, elevation, borders:** a small scale (4 px base).
 - **Motion:** short and optional (respects reduced motion).
 - **Themes:** light and dark.

@@ -1,7 +1,7 @@
 ---
 summary: Rules every web screen follows — field and form validation, the button contract, feedback, loading/empty/error states, money and date inputs, permissions in the UI, destructive actions and how API errors become messages.
 read_when: Designing or building any form, button, list or screen, or reviewing one before merge.
-updated: 2026-10-01
+updated: 2026-10-14
 ---
 
 # UI standards
@@ -96,7 +96,8 @@ light theme. Drawn in `../../design/account/` and `../../design/design-system/co
 ## Feedback
 - **Toast** (bottom on mobile, top-right on desktop, 4 s, pausable): confirms an action done away
   from where the user looks, e.g. "Lançamento registrado." Toasts for undoable actions carry
-  "Desfazer" (e.g. after moving to the trash).
+  "Desfazer" (e.g. after moving to the trash). In a full-screen form that stays open after saving
+  ("Salvar e registrar outro"), the toast sits just above its buttons.
 - **Inline message:** for results the user must read (a form error, "Nada a cobrar deste contato").
 - **Banner:** for states of the whole screen (offline, read-only role, session about to expire).
 - Never more than one toast at a time about the same thing.
@@ -119,10 +120,27 @@ Every screen spec defines each of these:
   expense colour; incomes and money in with "+" and the income colour; transfers neutral. The sign
   is always shown, so colour is not the only cue.
 - **Date input:** a date picker plus typing `dd/mm/aaaa`; "Hoje" as a shortcut; sent as
-  `YYYY-MM-DD`.
+  `YYYY-MM-DD`. Where almost everything is recorded on the day (the new entry), the date is three
+  shortcuts instead: "Hoje, {dd mmm}" · "Ontem" · "Outra data" (opens the calendar, then shows the
+  picked date); the selected one has a 1.5 px ink outline and a bold label.
 - **Period picker:** previous and next arrows plus a month list; always shows the range, e.g.
   "5 out – 4 nov".
 - **Percentages:** `72%`, no decimals unless below 10% (`4,5%`).
+
+## Visual rules across screens
+Decided with the new-entry design (2026-10-10, `../../design/entries/decisions.md`); they hold for
+every screen, the Home included.
+
+- **Illustrations are never clipped in a circle** (it cut the details at the corners). On white or
+  light surfaces (picker fields, list rows, sheets, previews, banners, cards) use the loose versions
+  without the paper square (`../../design/assets/ilustracoes/soltas/`), 42–46 px. The paper square
+  stays only when the illustration *is* the button (the category grid).
+- **Desktop forms:** fields side by side share one height (48 px, the `control` size); only money
+  fields are taller. A switch sits beside its label, not at the far edge of the row.
+- **Name-to-value lists** (the shares of an entry, who owes what): a dotted leader between the name
+  and the value when rows are separated only by a gap; values in one column, the total aligned to
+  them. Lists whose rows are split by dividers (the installments) have no leader. On desktop these
+  lists take the full width of their container.
 
 ## Permissions in the UI
 - The member's permissions come from `GET /api/workspaces/:workspaceId`. Each action in a screen

@@ -1,7 +1,7 @@
 ---
 summary: Every designed screen and state of ENT-02 "Novo lançamento" (all seven types), mobile and desktop, with HTML, PNG and designer notes.
 read_when: Building or reviewing any part of ENT-02.
-updated: 2026-10-10
+updated: 2026-10-14
 ---
 
 # New entry screens (ENT-02)
@@ -74,7 +74,7 @@ Save and register another, a save error, losing the connection, no account yet.
 | Salvar e registrar outro | mobile | [html](screens/html/ENT-salvo-outro.html) · [png](screens/png/ENT-salvo-outro.png) | Depois de "Salvar e registrar outro": a tela continua aberta, com o toast "Lançamento registrado." logo acima dos botões. Ficam o tipo, a data e as contas (aqui Despesa, Hoje e Conta X); o resto limpa e o foco volta para o Valor. Bom para registrar várias compras seguidas. |
 | Erro ao salvar | mobile | [html](screens/html/ENT-erro-salvar.html) · [png](screens/png/ENT-erro-salvar.png) | Erro que não é de um campo (ex.: falha do servidor): a mensagem aparece logo acima dos botões, com o código para o suporte, e nada do que foi digitado se perde. Os botões voltam a funcionar para tentar de novo. Erros de campo continuam no próprio campo. |
 | Sem conexão | mobile | [html](screens/html/ENT-sem-conexao.html) · [png](screens/png/ENT-sem-conexao.png) | A conexão caiu com o formulário aberto (sem conexão antes de abrir, o "Novo lançamento" nem abre: mostra "Sem conexão. Dá para salvar quando a internet voltar.", como na Início). Faixa no topo e os botões de salvar apagados. O formulário continua editável e o que foi digitado não se perde; quando a conexão volta, a faixa some e o botão libera. Nada é salvo escondido para enviar depois (isso seria outra decisão). |
-| Ainda sem conta cadastrada | mobile | [html](screens/html/ENT-sem-conta.html) · [png](screens/png/ENT-sem-conta.png) | Primeiro uso: ao abrir "Pago com" sem nenhuma conta, a folha explica e oferece "Cadastrar conta" (ACC-02), que volta para cá com a conta nova já escolhida e sem perder o que foi digitado. O mesmo vale para "Cartão" ("Vocês ainda não têm um cartão." e "Cadastrar cartão") e para categorias. |
+| Ainda sem conta cadastrada | mobile | [html](screens/html/ENT-sem-conta.html) · [png](screens/png/ENT-sem-conta.png) | Primeiro uso: ao abrir "Pago com" sem nenhuma conta, a folha explica e oferece "Cadastrar conta" (ACC-03), que volta para cá com a conta nova já escolhida e sem perder o que foi digitado. O mesmo vale para "Cartão" ("Vocês ainda não têm um cartão." e "Cadastrar cartão") e para categorias. |
 
 ## Desktop
 
