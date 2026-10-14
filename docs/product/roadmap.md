@@ -207,7 +207,7 @@ updated: 2026-10-14
      the date shortcuts and who spent)
   5. [x] Web components: `PickerField` + `PickerSheet` (the list, and the category grid as its
      `grid` layout)
-  6. [ ] Web components: `InstallmentStepper`, `InProgressSwitch`
+  6. [x] Web components: `Stepper` (installments and the first installment) and `Switch`
   7. [ ] Web components: `InvoicePreview`, `InvoiceRadioList`
   8. [ ] Web components: `SharesList`
   9. [ ] Web components: `RecentEntries`, `AutoFillTip`
