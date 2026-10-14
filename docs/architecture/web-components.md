@@ -33,7 +33,7 @@ where it's used.
 | Family | Components (from the brief) |
 |---|---|
 | `actions/` | `Button`, `IconButton`, `SubmitButton`, `FloatingActionButton`, `ActionMenu`, `SegmentedControl` |
-| `inputs/` | `TextInput`, `PasswordInput`, `EmailInput`, `PhoneInput`, `SearchInput`, `TextArea`, `MoneyInput`, `ChoiceChips`, `PickerField`, `PickerSheet`, `DateInput`, `PeriodPicker`, `Select`, `Combobox`, `CategoryPicker`, `Checkbox`, `RadioGroup`, `Switch`, `DayOfMonthPicker`, `InstallmentsStepper`, `FileUpload`, `ColorSwatch` |
+| `inputs/` | `TextInput`, `PasswordInput`, `EmailInput`, `PhoneInput`, `SearchInput`, `TextArea`, `MoneyInput`, `ChoiceChips`, `PickerField`, `PickerSheet`, `Stepper`, `DateInput`, `PeriodPicker`, `Select`, `Combobox`, `Checkbox`, `RadioGroup`, `Switch`, `DayOfMonthPicker`, `FileUpload`, `ColorSwatch` |
 | `forms/` | `Form`, `FormField`, `FormErrorSummary`, `FormFooter`, `RequiredLegend` |
 | `feedback/` | `Toast`, `InlineAlert`, `Banner`, `ConfirmDialog`, `EmptyState`, `Skeleton`, `ErrorState` |
 | `display/` | `Amount`, `StatusBadge`, `Avatar`, `ListItem`, `Card`, `StatCard`, `ThresholdProgress`, `Tabs`, `Accordion`, `DataList` (table on desktop, list on mobile), `LoadMore`, `Tooltip`, `HelpPopover`, `FilterChips`, `CategoryIcon` |
@@ -315,6 +315,14 @@ component here, so the form, and later the account, card and planning forms, sha
   `searchLabel` adds a search (with its icon) that ignores case and accents and also finds children,
   shown "em {mãe}" with the parent's drawing; `empty` replaces the list with the drawing, a sentence
   and the primary action ("Cadastrar conta"). A pick calls `onSelect` and closes.
+- `Stepper` (`components/inputs/stepper`, the design's `InstallmentStepper`): "−  3×  +" between
+  `min` and `max` (the ends disable their button), the shown value given by the caller ("À vista"
+  for 1), an `output` read when it changes, and an optional line beside it with `**bold**` ("3× de
+  **R$ 333,34**", "de 10"). The aria-labels are the screen's ("Menos uma parcela", "Parcela
+  anterior").
+- `Switch` (`components/inputs/switch`, Base UI `Switch`, the design's `InProgressSwitch`): the
+  label beside the switch, which the label also turns; on the desktop the switch sits right after
+  its label, not at the far edge (`../product/requirements/ui-standards.md` → Visual rules).
 - `CategoryArt` (`components/display/category-art`): the category drawing of an account's `icon`,
   never clipped in a circle (`../product/requirements/ui-standards.md` → Visual rules across
   screens). By default (`loose`) it is the drawing without its paper square, from

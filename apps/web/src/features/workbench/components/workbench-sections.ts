@@ -38,6 +38,8 @@ import { moneyInputExamples } from '@web/components/inputs/money-input'
 import { passwordInputExamples } from '@web/components/inputs/password-input'
 import { pickerFieldExamples } from '@web/components/inputs/picker-field'
 import { pickerSheetExamples } from '@web/components/inputs/picker-sheet'
+import { stepperExamples } from '@web/components/inputs/stepper'
+import { switchExamples } from '@web/components/inputs/switch'
 import { textInputExamples } from '@web/components/inputs/text-input'
 import { authLayoutExamples } from '@web/components/layout/auth-layout'
 import { momentScreenExamples } from '@web/components/layout/moment-screen'
@@ -53,6 +55,8 @@ export const workbenchSections: readonly ComponentExamples[] = [
   choiceChipsExamples,
   pickerFieldExamples,
   pickerSheetExamples,
+  stepperExamples,
+  switchExamples,
   amountExamples,
   cardExamples,
   kpiCardExamples,
