@@ -24,7 +24,7 @@ export function NavLink({ item, layout = 'sidebar', className, ...props }: NavLi
             <TwiseIcon
               name={item.icon}
               tone={isTab || item.isCurrent ? 'inherit' : 'muted'}
-              size={isTab ? 'nav' : 'md'}
+              size={iconSizeOf(layout)}
             />
           </span>
           {layout !== 'icon' && (
@@ -34,4 +34,8 @@ export function NavLink({ item, layout = 'sidebar', className, ...props }: NavLi
       ),
     },
   })
+}
+
+function iconSizeOf(layout: NavLinkProps['layout']) {
+  return layout === 'tab' ? 'nav' : 'side'
 }

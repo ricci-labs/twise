@@ -65,15 +65,15 @@ export function WorkspaceShell({
             isFading={sidebar.isFading}
             onToggle={sidebar.toggle}
             foot={
-              sidebar.isCollapsed ? null : (
-                <>
-                  <p className="px-2 text-caption font-semibold tracking-wide text-ink-subtle uppercase">
-                    {messages.workspace}
-                  </p>
-                  <WorkspaceSwitcher access={access} />
+              <>
+                <p className="mx-3 mt-4.5 mb-1.5 text-overline text-ink-subtle uppercase group-data-collapsed/sidebar:hidden">
+                  {messages.workspace}
+                </p>
+                <WorkspaceSwitcher access={access} />
+                <div className="mt-1 border-t border-border pt-2.5 group-data-collapsed/sidebar:border-t-0">
                   {accountMenu}
-                </>
-              )
+                </div>
+              </>
             }
           />
         }

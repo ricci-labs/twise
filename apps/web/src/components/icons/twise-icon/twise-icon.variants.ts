@@ -14,6 +14,7 @@ export const twiseIconVariants = cva('shrink-0', {
     size: {
       sm: 'size-4',
       md: 'size-5',
+      side: 'size-5.5',
       lg: 'size-6',
       nav: 'size-6.25',
       xl: 'size-7',

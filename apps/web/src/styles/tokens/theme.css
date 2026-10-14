@@ -103,6 +103,17 @@
   --text-fine: 0.78125rem;
   --text-fine--line-height: 1rem;
   --text-fine--font-weight: 400;
+  --text-wordmark: 1.875rem;
+  --text-wordmark--line-height: 1;
+  --text-wordmark--font-weight: 750;
+  --text-wordmark--letter-spacing: -0.035em;
+  --text-overline: 0.71875rem;
+  --text-overline--line-height: 1rem;
+  --text-overline--font-weight: 600;
+  --text-overline--letter-spacing: 0.06em;
+  --text-account-name: 0.875rem;
+  --text-account-name--line-height: 1.125rem;
+  --text-account-name--font-weight: 600;
   --text-confirm: 0.90625rem;
   --text-confirm--line-height: 1.25rem;
   --text-confirm--font-weight: 400;

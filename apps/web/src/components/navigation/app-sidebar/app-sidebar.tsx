@@ -20,7 +20,6 @@ import {
 } from '@web/components/navigation/app-sidebar/app-sidebar.variants'
 import { NavLink } from '@web/components/navigation/nav-link'
 import { cn } from '@web/lib/cn'
-import { ChevronsLeft, ChevronsRight } from 'lucide-react'
 
 export function AppSidebar({
   items,
@@ -32,7 +31,6 @@ export function AppSidebar({
   onToggle,
   className,
 }: AppSidebarProps) {
-  const Toggle = isCollapsed ? ChevronsRight : ChevronsLeft
   return (
     <Tooltip.Provider delay={200}>
       <nav
@@ -43,15 +41,15 @@ export function AppSidebar({
         className={cn(appSidebarVariants({ isCollapsed }), className)}
       >
         <div className={sidebarHeadVariants({ isCollapsed })}>
-          <Logo variant={isCollapsed ? 'icon' : 'full'} />
+          <Logo variant={isCollapsed ? 'icon' : 'lockup'} />
           <button
             type="button"
-            className={sidebarToggleVariants()}
+            className={sidebarToggleVariants({ isCollapsed })}
             aria-label={isCollapsed ? messages.expand : messages.collapse}
             aria-expanded={!isCollapsed}
             onClick={onToggle}
           >
-            <Toggle className="size-4.5" aria-hidden="true" />
+            <TwiseIcon name={isCollapsed ? 'expand' : 'collapse'} size="side" />
           </button>
         </div>
         {primaryAction && (
@@ -61,7 +59,7 @@ export function AppSidebar({
                 size="icon"
                 aria-label={primaryAction.label}
                 render={primaryAction.render}
-                className="my-2.5 self-center"
+                className="mt-1 mb-3 self-center"
               >
                 <TwiseIcon name="plus" />
               </Button>
@@ -81,7 +79,7 @@ export function AppSidebar({
             <p className={cn(sidebarGroupVariants(), sidebarLabelVariants())}>{messages.more}</p>
           ))}
         <NavList items={moreItems} isCollapsed={isCollapsed} />
-        <div className={sidebarFootVariants()}>{foot}</div>
+        <div className={sidebarFootVariants({ isCollapsed })}>{foot}</div>
       </nav>
     </Tooltip.Provider>
   )

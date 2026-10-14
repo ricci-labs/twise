@@ -26,16 +26,23 @@ export function WorkspaceSwitcher({ access }: WorkspaceSwitcherProps) {
         <button
           type="button"
           aria-label={messages.switchWorkspace(workspace.name)}
-          className="flex w-full cursor-pointer items-center gap-2.5 rounded-md bg-page px-2.5 py-2 text-left hover:bg-sunken"
+          className="flex w-full cursor-pointer items-center gap-2.5 rounded-md bg-page px-2.5 py-2 text-left hover:bg-sunken group-data-collapsed/sidebar:size-12 group-data-collapsed/sidebar:justify-center group-data-collapsed/sidebar:p-0"
         >
-          <img src={house} alt="" className="size-7 shrink-0" />
-          <span className="flex min-w-0 flex-1 flex-col">
-            <span className="truncate text-label">{workspace.name}</span>
+          <img
+            src={house}
+            alt=""
+            className="size-7 shrink-0 group-data-collapsed/sidebar:size-7.5"
+          />
+          <span className="flex min-w-0 flex-1 flex-col group-data-collapsed/sidebar:hidden">
+            <span className="truncate text-account-name font-emphasis">{workspace.name}</span>
             <span className="truncate text-caption text-ink-muted">
               {messages.roleAndPeople(role.name, memberNames.length)}
             </span>
           </span>
-          <ChevronsUpDown className="size-4 text-ink-muted" aria-hidden="true" />
+          <ChevronsUpDown
+            className="size-4 text-ink-muted group-data-collapsed/sidebar:hidden"
+            aria-hidden="true"
+          />
         </button>
       }
       groups={[
