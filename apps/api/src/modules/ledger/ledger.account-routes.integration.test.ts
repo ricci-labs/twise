@@ -55,9 +55,15 @@ async function listed(requests: ReturnType<typeof requestsAs>, path = accountsPa
   return (await (await requests.get(path)).json()) as LedgerAccountItem[]
 }
 
-async function createCategory(name: string) {
-  const response = await owner.post(accountsPath, { kind: 'expense_category', name })
+async function createCategory(name: string, parentId?: string) {
+  const response = await owner.post(accountsPath, { kind: 'expense_category', name, parentId })
   return ((await response.json()) as { accountId: string }).accountId
+}
+
+async function archivedIds() {
+  return (await listed(owner))
+    .filter((account) => account.archivedAt !== null)
+    .map((account) => account.id)
 }
 
 function codeOf(response: Response) {
@@ -152,13 +158,41 @@ describe('PATCH /accounts/:accountId', () => {
 describe('archive and unarchive', () => {
   it('sets and clears archivedAt', async () => {
     const accountId = await createCategory('Academia')
-    expect((await owner.post(`${accountsPath}/${accountId}/archive`)).status).toBe(204)
-    const archived = (await listed(owner)).find((account) => account.id === accountId)
-    expect(archived?.archivedAt).not.toBeNull()
+    const archived = await owner.post(`${accountsPath}/${accountId}/archive`)
+    expect([archived.status, await archived.json()]).toEqual([200, { childAccountIds: [] }])
+    expect(await archivedIds()).toContain(accountId)
 
-    expect((await owner.post(`${accountsPath}/${accountId}/unarchive`)).status).toBe(204)
-    const active = (await listed(owner)).find((account) => account.id === accountId)
-    expect(active?.archivedAt).toBeNull()
+    const unarchived = await owner.post(`${accountsPath}/${accountId}/unarchive`)
+    expect([unarchived.status, await unarchived.json()]).toEqual([200, { childAccountIds: [] }])
+    expect(await archivedIds()).not.toContain(accountId)
+  })
+
+  it('takes the active subcategories along and brings back only the ones it took', async () => {
+    const parentId = await createCategory('Feira e mercado')
+    const fair = await createCategory('Feira', parentId)
+    const bakery = await createCategory('Padaria', parentId)
+    const butcher = await createCategory('Açougue', parentId)
+    await owner.post(`${accountsPath}/${butcher}/archive`)
+    const taken = { childAccountIds: [fair, bakery].sort() }
+
+    const archived = await owner.post(`${accountsPath}/${parentId}/archive`)
+    expect(await archived.json()).toEqual(taken)
+    expect(await archivedIds()).toEqual(expect.arrayContaining([parentId, fair, bakery, butcher]))
+
+    const unarchived = await owner.post(`${accountsPath}/${parentId}/unarchive`)
+    expect(await unarchived.json()).toEqual(taken)
+    const stillArchived = await archivedIds()
+    expect(stillArchived).toContain(butcher)
+    expect(stillArchived).not.toEqual(expect.arrayContaining([parentId]))
+    expect([fair, bakery].some((id) => stillArchived.includes(id))).toBe(false)
+  })
+
+  it('leaves the parent alone when a subcategory is archived', async () => {
+    const parentId = await createCategory('Casa')
+    const cleaning = await createCategory('Limpeza', parentId)
+    const archived = await owner.post(`${accountsPath}/${cleaning}/archive`)
+    expect(await archived.json()).toEqual({ childAccountIds: [] })
+    expect(await archivedIds()).not.toContain(parentId)
   })
 })
 

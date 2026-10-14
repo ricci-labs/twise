@@ -57,17 +57,17 @@ export function CategoryActions({
 
   const archive = () =>
     attempt(async () => {
-      const children = node.children.map((child) => child.id)
-      await runEach('archive', [...children, node.id])
+      await runEach('archive', [node.id])
+      const childCount = node.children.length
       showToast(
-        children.length
-          ? toasts.archivedWithChildren(node.name, children.length)
+        childCount
+          ? toasts.archivedWithChildren(node.name, childCount)
           : toasts.archived(node.name),
         {
           tone: 'success',
           action: {
             label: accountsMessages.toasts.undo,
-            onPress: () => void runEach('unarchive', [node.id, ...children]),
+            onPress: () => void runEach('unarchive', [node.id]),
           },
         },
       )

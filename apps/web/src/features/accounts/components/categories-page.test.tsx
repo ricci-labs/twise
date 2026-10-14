@@ -4,7 +4,6 @@ import { createApp } from '@web/app/router'
 import { expectNoAccessibilityViolations } from '@web/testing/accessibility'
 import {
   accountsAnswers,
-  BAKERY,
   CATEGORIES,
   GROCERIES,
   HOUSE,
@@ -99,16 +98,14 @@ describe('ACC-02 categories', () => {
     await expectNoAccessibilityViolations(page.getByRole('main').element())
   })
 
-  it('archives a category with its subcategories, children first, and undoes it', async () => {
+  it('archives a category, which takes its subcategories along, and undoes it', async () => {
     const calls: string[] = []
     const record = recorder(calls)
     await openCategories({
-      answers: Object.fromEntries(
-        [GROCERIES, MARKET, BAKERY].flatMap((id) => [
-          [`POST ${BASE}/accounts/${id}/archive`, record],
-          [`POST ${BASE}/accounts/${id}/unarchive`, record],
-        ]),
-      ),
+      answers: {
+        [`POST ${BASE}/accounts/${GROCERIES}/archive`]: record,
+        [`POST ${BASE}/accounts/${GROCERIES}/unarchive`]: record,
+      },
     })
 
     await page.getByRole('button', { name: 'Ações de Mercado' }).click()
@@ -118,14 +115,7 @@ describe('ACC-02 categories', () => {
 
     await expect
       .poll(() => calls)
-      .toEqual([
-        `POST ${MARKET}/archive`,
-        `POST ${BAKERY}/archive`,
-        `POST ${GROCERIES}/archive`,
-        `POST ${GROCERIES}/unarchive`,
-        `POST ${MARKET}/unarchive`,
-        `POST ${BAKERY}/unarchive`,
-      ])
+      .toEqual([`POST ${GROCERIES}/archive`, `POST ${GROCERIES}/unarchive`])
   })
 
   it('names the subcategories when the API refuses to delete their parent', async () => {

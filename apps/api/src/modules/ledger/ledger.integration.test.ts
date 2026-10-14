@@ -1114,6 +1114,19 @@ describe('account services', () => {
     expect((await accountRow(accountId))?.archivedAt).toBeNull()
   })
 
+  it('keeps the first archive time when a parent is archived again, so its children come back', async () => {
+    const parent = await category()
+    const child = await category(uniqueName('Cinema'), parent)
+    await archiveAccount(databases.app, refOf(parent), { now: () => new Date('2026-10-01') })
+    await archiveAccount(databases.app, refOf(parent), { now: () => new Date('2026-10-05') })
+    expect((await accountRow(parent))?.archivedAt).toEqual(new Date('2026-10-01'))
+
+    expect(await unarchiveAccount(databases.app, refOf(parent))).toEqual({
+      childAccountIds: [child],
+    })
+    expect((await accountRow(child))?.archivedAt).toBeNull()
+  })
+
   it('deletes an unused account, refuses one used by entries or a system one', async () => {
     const unused = await create({ kind: 'cash_wallet', name: uniqueName('Carteira') })
     await deleteAccount(databases.app, { ...refOf(unused), userId: ownerUserId, reason: 'fechada' })

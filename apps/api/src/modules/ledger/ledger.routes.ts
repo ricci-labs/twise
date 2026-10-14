@@ -105,13 +105,13 @@ function accountRoutes({ db }: LedgerRouteDeps) {
     )
     .post('/:accountId/archive', authorize('accounts', 'update'), account, async (c) => {
       const { workspaceId } = currentWorkspace(c)
-      await archiveAccount(db, { workspaceId, accountId: c.req.valid('param').accountId })
-      return c.body(null, NO_CONTENT)
+      const accountId = c.req.valid('param').accountId
+      return c.json(await archiveAccount(db, { workspaceId, accountId }))
     })
     .post('/:accountId/unarchive', authorize('accounts', 'update'), account, async (c) => {
       const { workspaceId } = currentWorkspace(c)
-      await unarchiveAccount(db, { workspaceId, accountId: c.req.valid('param').accountId })
-      return c.body(null, NO_CONTENT)
+      const accountId = c.req.valid('param').accountId
+      return c.json(await unarchiveAccount(db, { workspaceId, accountId }))
     })
     .delete(
       '/:accountId',
