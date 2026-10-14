@@ -28,6 +28,7 @@ export default mergeConfig(
         '@base-ui/react/dialog',
         '@base-ui/react/alert-dialog',
         '@base-ui/react/collapsible',
+        '@base-ui/react/autocomplete',
         'class-variance-authority',
         'cn',
         'cn/config',

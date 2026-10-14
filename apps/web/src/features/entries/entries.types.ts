@@ -13,11 +13,13 @@ import type {
   fetchCards,
   fetchContactBalances,
   fetchContacts,
+  fetchEntrySuggestions,
   fetchLatestEntries,
   fetchMembers,
 } from '@web/features/entries/api/entries.queries'
 import type { entryFormSchema, newEntrySearchSchema } from '@web/features/entries/entries.schemas'
 import type { RefObject } from 'react'
+import type { UseFormReturn } from 'react-hook-form'
 import type { z } from 'zod'
 
 export type NewEntrySearch = z.infer<typeof newEntrySearchSchema>
@@ -39,6 +41,7 @@ export type CardInvoice = Awaited<ReturnType<typeof fetchCardInvoices>>[number]
 export type AmountFieldProps = {
   isOpeningBalance: boolean
   warning: string | undefined
+  autoFill: AutoFillControls
   inputRef: RefObject<HTMLInputElement | null>
 }
 
@@ -49,6 +52,44 @@ export type InvoiceFieldProps = {
 export type PaymentAccountFieldProps = {
   workspaceId: string
   canCreateAccounts: boolean
+}
+
+export type EntrySuggestion = Awaited<ReturnType<typeof fetchEntrySuggestions>>[number]
+
+export type EntryForm = UseFormReturn<EntryFormInput, unknown, EntryFormValues>
+
+export type AutoFillField = 'categoryId' | 'accountId' | 'cardAccountId' | 'paymentMethod'
+
+export type AutoFillSnapshot = Pick<
+  EntryFormInput,
+  'amount' | 'description' | 'categoryId' | 'accountId' | 'cardAccountId' | 'paymentMethod'
+>
+
+export type AutoFill = {
+  place: 'amount' | 'description'
+  text: string
+  pickedKey: string | null
+  snapshot: AutoFillSnapshot
+}
+
+export type AutoFillControls = {
+  autoFill: AutoFill | null
+  fillFromSuggestion: (suggestion: EntrySuggestion) => void
+  repeatRecent: (suggestion: EntrySuggestion) => void
+  undo: () => void
+  forget: () => void
+}
+
+export type DescriptionFieldProps = {
+  workspaceId: string
+  entryType: FormEntryType
+  autoFill: AutoFillControls
+}
+
+export type RecentRowProps = {
+  workspaceId: string
+  entryType: FormEntryType
+  autoFill: AutoFillControls
 }
 
 export type ContactBalance = Awaited<ReturnType<typeof fetchContactBalances>>[number]

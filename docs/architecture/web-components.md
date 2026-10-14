@@ -370,6 +370,10 @@ component here, so the form, and later the account, card and planning forms, sha
   `isNegative` puts "−" and the danger colour on it (opening balance); the sign is set like the
   amount (32 px display at `lg`). It speaks the `FormField`
   control contract (`value` text, `onChange({ target: { value } })`, `onBlur`).
+- `SuggestInput` (`components/inputs/suggest-input`, Base UI `Autocomplete`): a `TextInput` that
+  offers the `suggestions` it is given (filtered by whoever gives them) in a list under it, as wide
+  as the field: 15 px muted rows with the typed part in ink 650, the highlighted one on `sunken`.
+  Arrows and Enter pick; `onPick` says which (the entry's description suggestions).
 - `ChoiceChips` (`components/inputs/choice-chips`, Base UI `RadioGroup`): one choice among a few,
   all visible, as radios (arrow keys move the choice). `variant` `pill` (the entry types, chosen in
   `mint`), `outline` (the date shortcuts, chosen with an ink outline; 48 px from 1024 px), `card`

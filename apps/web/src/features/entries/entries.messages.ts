@@ -139,6 +139,18 @@ export const entriesMessages = {
     firstAfterCount: 'A parcela inicial passa do número de parcelas.',
     tooManyInstallments: 'Use menos parcelas que centavos no valor.',
   },
+  autoFill: {
+    recent: 'Igual à última vez. Confira o valor.',
+    lastTime: (parts: string) => `${parts} como da última vez.`,
+    parts: {
+      categoryId: 'categoria',
+      accountId: 'conta',
+      cardAccountId: 'cartão',
+      paymentMethod: 'forma de pagamento',
+    },
+    and: ' e ',
+    comma: ', ',
+  },
   settlements: {
     placeholder: 'Escolha um contato',
     owes: (amount: string) => `deve ${amount}`,

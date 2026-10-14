@@ -1,3 +1,4 @@
+import { AutoFillTip } from '@web/components/feedback/auto-fill-tip'
 import { FormField } from '@web/components/forms/form-field'
 import { MoneyInput } from '@web/components/inputs/money-input'
 import { Switch } from '@web/components/inputs/switch'
@@ -7,7 +8,7 @@ import { Controller, useFormContext, useWatch } from 'react-hook-form'
 
 const fields = entriesMessages.fields
 
-export function AmountField({ isOpeningBalance, warning, inputRef }: AmountFieldProps) {
+export function AmountField({ isOpeningBalance, warning, autoFill, inputRef }: AmountFieldProps) {
   const { control } = useFormContext<EntryFormInput>()
   const isNegative = useWatch<EntryFormInput, 'isNegative'>({ name: 'isNegative' })
 
@@ -36,6 +37,9 @@ export function AmountField({ isOpeningBalance, warning, inputRef }: AmountField
           />
         )}
       </FormField>
+      {autoFill.autoFill?.place === 'amount' && (
+        <AutoFillTip text={autoFill.autoFill.text} onUndo={autoFill.undo} />
+      )}
       {isOpeningBalance && (
         <Controller
           control={control}

@@ -74,6 +74,7 @@ import { pickerSheetExamples } from '@web/components/inputs/picker-sheet'
 import { radioCardListExamples } from '@web/components/inputs/radio-card-list'
 import { selectExamples } from '@web/components/inputs/select'
 import { stepperExamples } from '@web/components/inputs/stepper'
+import { suggestInputExamples } from '@web/components/inputs/suggest-input'
 import { switchExamples } from '@web/components/inputs/switch'
 import { textAreaExamples } from '@web/components/inputs/text-area'
 import { textInputExamples } from '@web/components/inputs/text-input'
@@ -153,6 +154,7 @@ export const workbenchSections: readonly ComponentExamples[] = [
   addTileExamples,
   breadcrumbExamples,
   textInputExamples,
+  suggestInputExamples,
   passwordInputExamples,
   formFieldExamples,
   alertExamples,
