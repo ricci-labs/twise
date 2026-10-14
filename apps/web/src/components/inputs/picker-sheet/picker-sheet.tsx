@@ -22,6 +22,7 @@ import {
   pickerEmptyActionVariants,
   pickerEmptyVariants,
   pickerListVariants,
+  pickerOptionVariants,
   pickerPlaceholderArtVariants,
   pickerPopupVariants,
   pickerPositionerVariants,
@@ -157,6 +158,19 @@ function PickerChoice({ item, layout, isCurrent, onPress }: PickerChoiceProps) {
   const detail = item.children?.length
     ? messages.subcategoryCount(item.children.length)
     : item.detail
+  if (layout === 'options') {
+    return (
+      <button
+        type="button"
+        aria-current={current}
+        onClick={() => onPress(item)}
+        className={pickerOptionVariants()}
+      >
+        <span className="flex-1">{item.label}</span>
+        {isCurrent && <Check data-slot="picker-check" aria-hidden="true" />}
+      </button>
+    )
+  }
   if (layout === 'grid') {
     return (
       <button

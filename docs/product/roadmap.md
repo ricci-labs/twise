@@ -301,8 +301,8 @@ updated: 2026-10-14
 - [ ] **Lists, pickers and long content** (asked by the user 2026-10-14,
   `requirements/ui-standards.md` → Lists, pickers and long content), one PR each:
   1. [x] The rules
-  2. [ ] Menus as wide as their field (288–480 px)
-  3. [ ] The app's own select (the payment method) instead of the browser's
+  2. [x] Menus as wide as their field (288–480 px)
+  3. [x] The app's own select (the payment method) instead of the browser's
   4. [ ] The app's own calendar ("Outra data") instead of the browser's
   5. [ ] ‹ › arrows on sideways strips on the desktop
   6. [ ] At most 5 items in a dialog or sheet list, with "Mostrar mais" and search over 10

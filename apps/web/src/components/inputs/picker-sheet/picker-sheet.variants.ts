@@ -26,10 +26,17 @@ export const pickerListVariants = cva('', {
     layout: {
       list: '-mx-2 flex flex-col lg:mx-0',
       grid: 'grid grid-cols-3 gap-2',
+      options: '-mx-2 flex flex-col gap-0.5 lg:mx-0',
     },
   },
   defaultVariants: { layout: 'list' },
 })
+
+export const pickerOptionVariants = cva([
+  'flex min-h-touch w-full cursor-pointer items-center gap-3 rounded-md px-3 text-left text-body text-ink outline-none',
+  'hover:bg-sunken focus-visible:ring-2 focus-visible:ring-focus-ring',
+  'aria-current:bg-mint-soft aria-current:font-emphasis [&>[data-slot=picker-check]]:size-5 [&>[data-slot=picker-check]]:text-mint-ink',
+])
 
 export const pickerRowVariants = cva([
   'flex min-h-13 w-full cursor-pointer items-center gap-3.5 rounded-md px-3 text-left text-body text-ink outline-none',

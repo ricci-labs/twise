@@ -1,12 +1,19 @@
 import { cva } from 'class-variance-authority'
 
-export const selectBoxVariants = cva([
-  'relative flex min-h-control items-center rounded-md border border-border-control bg-surface text-ink',
-  'focus-within:border-ink focus-within:ring-1 focus-within:ring-ink',
-  'has-[select[aria-invalid=true]]:border-danger has-[select[aria-invalid=true]]:ring-1 has-[select[aria-invalid=true]]:ring-danger',
-  '[&>svg]:pointer-events-none [&>svg]:absolute [&>svg]:right-3 [&>svg]:size-4 [&>svg]:text-ink-muted',
+export const selectVariants = cva([
+  'relative flex min-h-control w-full cursor-pointer items-center gap-2 rounded-md border border-border-control bg-surface pr-3 pl-4 text-left text-body text-ink outline-none',
+  'focus-visible:border-ink focus-visible:ring-1 focus-visible:ring-ink',
+  'aria-invalid:border-danger aria-invalid:ring-1 aria-invalid:ring-danger',
+  'disabled:cursor-not-allowed disabled:text-ink-muted',
+  '[&>svg]:size-4 [&>svg]:shrink-0 [&>svg]:text-ink-muted',
 ])
 
-export const selectVariants = cva(
-  'min-h-control w-full cursor-pointer appearance-none bg-transparent pr-10 pl-4 text-body text-ink outline-none disabled:cursor-not-allowed disabled:text-ink-muted',
-)
+export const selectValueVariants = cva('min-w-0 flex-1 truncate', {
+  variants: {
+    isEmpty: {
+      true: 'text-ink-subtle',
+      false: '',
+    },
+  },
+  defaultVariants: { isEmpty: false },
+})

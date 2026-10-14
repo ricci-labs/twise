@@ -1,5 +1,7 @@
 import { Select } from '@web/components/inputs/select/select'
+import type { SelectExampleProps } from '@web/components/inputs/select/select.types'
 import type { ComponentExamples } from '@web/lib/examples.types'
+import { useState } from 'react'
 
 const METHODS = [
   { value: 'pix', label: 'Pix' },
@@ -8,19 +10,29 @@ const METHODS = [
   { value: 'cash', label: 'Dinheiro' },
 ]
 
+function PaymentMethod({ initial }: SelectExampleProps) {
+  const [value, setValue] = useState(initial)
+  return (
+    <div className="flex w-full max-w-100 flex-col gap-2">
+      <label htmlFor="method" className="text-label text-ink">
+        Forma de pagamento
+      </label>
+      <Select
+        id="method"
+        title="Forma de pagamento"
+        options={METHODS}
+        placeholder="Escolha"
+        value={value}
+        onChange={(event) => setValue(event.target.value)}
+      />
+    </div>
+  )
+}
+
 export const selectExamples: ComponentExamples = {
   component: 'Select',
   examples: [
-    {
-      name: 'Forma de pagamento',
-      render: () => (
-        <div className="flex w-full max-w-100 flex-col gap-2">
-          <label htmlFor="method" className="text-label text-ink">
-            Forma de pagamento
-          </label>
-          <Select id="method" options={METHODS} placeholder="Escolha" defaultValue="pix" />
-        </div>
-      ),
-    },
+    { name: 'Escolhida', render: () => <PaymentMethod initial="pix" /> },
+    { name: 'Vazia', render: () => <PaymentMethod initial="" /> },
   ],
 }
