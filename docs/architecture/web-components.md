@@ -1,7 +1,7 @@
 ---
 summary: How web components are layered and built — shadcn primitives, design-system components with one folder each (variants, types, copy, tests, examples), the props contract, forms, icons, copy, the workbench, tests and lint.
 read_when: Creating, changing or using any component in apps/web; adding a shadcn component; building a form; reviewing a web PR.
-updated: 2026-10-09
+updated: 2026-10-14
 ---
 
 # Web components
@@ -33,7 +33,7 @@ where it's used.
 | Family | Components (from the brief) |
 |---|---|
 | `actions/` | `Button`, `IconButton`, `SubmitButton`, `FloatingActionButton`, `ActionMenu`, `SegmentedControl` |
-| `inputs/` | `TextInput`, `PasswordInput`, `EmailInput`, `PhoneInput`, `SearchInput`, `TextArea`, `MoneyInput`, `DateInput`, `PeriodPicker`, `Select`, `Combobox`, `CategoryPicker`, `Checkbox`, `RadioGroup`, `Switch`, `DayOfMonthPicker`, `InstallmentsStepper`, `FileUpload`, `ColorSwatch` |
+| `inputs/` | `TextInput`, `PasswordInput`, `EmailInput`, `PhoneInput`, `SearchInput`, `TextArea`, `MoneyInput`, `ChoiceChips`, `DateInput`, `PeriodPicker`, `Select`, `Combobox`, `CategoryPicker`, `Checkbox`, `RadioGroup`, `Switch`, `DayOfMonthPicker`, `InstallmentsStepper`, `FileUpload`, `ColorSwatch` |
 | `forms/` | `Form`, `FormField`, `FormErrorSummary`, `FormFooter`, `RequiredLegend` |
 | `feedback/` | `Toast`, `InlineAlert`, `Banner`, `ConfirmDialog`, `EmptyState`, `Skeleton`, `ErrorState` |
 | `display/` | `Amount`, `StatusBadge`, `Avatar`, `ListItem`, `Card`, `StatCard`, `ThresholdProgress`, `Tabs`, `Accordion`, `DataList` (table on desktop, list on mobile), `LoadMore`, `Tooltip`, `HelpPopover`, `FilterChips`, `CategoryIcon` |
@@ -285,6 +285,22 @@ passes the overview's numbers.
   stop pulsing with reduced motion; the error says what failed, "Código: {ref}" and "Tentar de
   novo" for that section only; the empty state is an illustration in a soft circle and one line
   on the card itself, with an optional action.
+
+## New entry building blocks
+`../design/entries/components.md` names the pieces of the `ENT-02` form; several of them are one
+component here, so the form, and later the account, card and planning forms, share them.
+- `MoneyInput` (`components/inputs/money-input`, the design's `MoneyField`): "R$" before the
+  amount, `inputmode="decimal"`, the typed text kept as typed and tidied on blur ("1234,5" →
+  "1.234,50", `lib/format/money.ts`); text that isn't an amount stays as typed so the form can say
+  what's wrong. Sizes `sm` (a share row), `md` and `lg` (the entry's amount, 64 px, display font);
+  `isNegative` puts "−" and the danger colour on it (opening balance). It speaks the `FormField`
+  control contract (`value` text, `onChange({ target: { value } })`, `onBlur`).
+- `ChoiceChips` (`components/inputs/choice-chips`, Base UI `RadioGroup`): one choice among a few,
+  all visible, as radios (arrow keys move the choice). `variant` `pill` (the entry types, chosen in
+  `mint`), `outline` (the date shortcuts, chosen with an ink outline; 48 px from 1024 px) and `card`
+  (who spent, two cards with an initial). An option can open a dialog (`opensDialog`,
+  `aria-haspopup`) and carry an icon (`calendar` before the label, `chevron` after it); `onSelect`
+  fires for every press, even on the chosen option, so "Mais" and "Outra data" reopen their sheet.
 
 ## Account layouts
 - `AuthLayout` (`components/layout/auth-layout`): the auth screen of

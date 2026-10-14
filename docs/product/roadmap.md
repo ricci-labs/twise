@@ -201,9 +201,10 @@ updated: 2026-10-14
   2. [x] Requirements: `ENT-02` from the design, RF-ENT-13/14, API gaps G38–G39, the app-wide
      visual rules (no circles, desktop field heights, dotted leaders)
   3. [x] API: description suggestions (G38) and the current person's frequent entries (G39)
-  4. [ ] Web components: `MoneyField`, `TypeChips`, `DateShortcuts`
+  4. [x] Web components: `MoneyInput` (the design's `MoneyField`) and `ChoiceChips` (the type pills,
+     the date shortcuts and who spent)
   5. [ ] Web components: `PickerField` + `PickerSheet`, `CategoryGrid`
-  6. [ ] Web components: `WhoSpent`, `InstallmentStepper`, `InProgressSwitch`
+  6. [ ] Web components: `InstallmentStepper`, `InProgressSwitch`
   7. [ ] Web components: `InvoicePreview`, `InvoiceRadioList`
   8. [ ] Web components: `SharesList`
   9. [ ] Web components: `RecentEntries`, `AutoFillTip`
