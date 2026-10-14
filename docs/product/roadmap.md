@@ -232,7 +232,10 @@ updated: 2026-10-14
         the opening balance ("Conta" first with its kind, "Saldo" with "Negativo (cheque
         especial)", description "Saldo inicial"); opens on an account from
         `?entry=new&entryType=opening_balance&entryAccount={id}`
-      - [ ] Invoice payment (and "Pagar fatura" on `CARD-02/03`)
+      - [x] Invoice payment (the card's invoices with something due as radio cards, the oldest
+        chosen, the amount and description filled from it, "Pago com" on the card's account,
+        the amber warning when paying more) and "Pagar fatura" on `CARD-01` (desktop "Pagar"),
+        `CARD-02` and `CARD-03`, which open it on that invoice
       - [ ] Settlement
   14. [ ] Web: the desktop dialog for the other types (the type pills in one row)
   15. [ ] Web: "Repetir um recente" and the suggestion that fills the rest
@@ -265,17 +268,16 @@ updated: 2026-10-14
      header, closed note, filters, not found), `CARD-04` (done: new and edit card, the day sheet,
      the live cycle preview, the days warning, "Novo cartão" on the page, the empty state and the
      "Cartões" group of `ACC-01`, "Editar ciclo" and "Renomear e cor"). "Cadastrar cartão" comes
-     with the new entry's card purchase, and "Pagar fatura" with its invoice payment (steps 11
-     and 13 of the new entry round)
+     with the new entry's card purchase, and "Pagar fatura" with its invoice payment (both done)
   7. [x] Web: the desktop versions (tables, menus, dialogs). Done: the sidebar to the approved
      model, the page header, the `DataTable`, `ACC-01` (KPIs, tables, "Lixeira" and "Nova conta"),
      `ACC-02` (expense and income tables, chips on one line with "+{n} mais", the chip's menu).
      The chips keep the categories' order until usage counts exist ("most used first"), and "Ver
      lançamentos" joins the menus with the filtered `ENT-01`. `CARD-01` (two or three cards per
      row, the "Novo cartão" tile closing the last row, "Próximas faturas" from
-     `GET /cards/invoices/upcoming`); its "Pagar" comes with the invoice payment. `CARD-02`
+     `GET /cards/invoices/upcoming`, with "Pagar" on the open ones). `CARD-02`
      and `CARD-03` as one desktop page (path, the wide month strip, four KPIs of the chosen
-     invoice, the lines table with its filters); "Pagar fatura", the "2 contatos" badge (needs the
+     invoice, the lines table with its filters, "Pagar fatura"); the "2 contatos" badge (needs the
      contacts of each line) and opening an entry from its line come later. `CARD-04` as the
      760 px dialog in two columns. `ACC-04` with the path "Contas e categorias › Lixeira", the
      page title and the list in a card

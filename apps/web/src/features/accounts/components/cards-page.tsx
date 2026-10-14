@@ -97,7 +97,15 @@ function CardsBody({ workspaceId, permissions, isDesktop }: CardsBodyProps) {
       permissions={permissions}
       cards={cards.data}
       members={members.data ?? null}
-      afterCards={isDesktop && <UpcomingInvoices workspaceId={workspaceId} cards={cards.data} />}
+      afterCards={
+        isDesktop && (
+          <UpcomingInvoices
+            workspaceId={workspaceId}
+            permissions={permissions}
+            cards={cards.data}
+          />
+        )
+      }
     />
   )
 }

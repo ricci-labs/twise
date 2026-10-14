@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { Link } from '@tanstack/react-router'
+import { Button } from '@web/components/actions/button'
 import { Badge } from '@web/components/display/badge'
 import { Card } from '@web/components/display/card'
 import {
@@ -12,14 +13,17 @@ import { SectionError } from '@web/components/feedback/section-error'
 import { SectionSkeleton } from '@web/components/feedback/section-skeleton'
 import { accountsMessages } from '@web/features/accounts/accounts.messages'
 import type {
+  CardSummary,
   InvoiceState,
   UpcomingInvoice,
   UpcomingInvoicesProps,
 } from '@web/features/accounts/accounts.types'
 import { upcomingInvoicesQueryOptions } from '@web/features/accounts/api/accounts.queries'
 import { stateLabelOf, stateToneOf } from '@web/features/accounts/components/card-invoices'
+import { payInvoiceLink } from '@web/features/accounts/components/pay-invoice-button'
 import { ApiError } from '@web/lib/api/api-error'
 import { formatMonthTitle, formatShortDate } from '@web/lib/format/calendar'
+import { hasPermission } from '@web/lib/permissions'
 
 const messages = accountsMessages.cardsPage.upcoming
 const columns = messages.columns
@@ -33,10 +37,11 @@ const COLUMNS: readonly DataTableColumn[] = [
   { key: 'due', label: columns.due },
   { key: 'status', label: columns.status },
   { key: 'total', label: columns.total, align: 'end' },
-  { key: 'actions', label: columns.actions, isLabelHidden: true, isActions: true },
+  { key: 'actions', label: columns.actions, isLabelHidden: true, align: 'end' },
 ]
 
-export function UpcomingInvoices({ workspaceId, cards }: UpcomingInvoicesProps) {
+export function UpcomingInvoices({ workspaceId, permissions, cards }: UpcomingInvoicesProps) {
+  const canPay = hasPermission(permissions, 'entries', 'create')
   const upcoming = useQuery(upcomingInvoicesQueryOptions(workspaceId))
   if (upcoming.isError) {
     return (
@@ -54,7 +59,7 @@ export function UpcomingInvoices({ workspaceId, cards }: UpcomingInvoicesProps) 
   const byId = new Map(cards.map((card) => [card.accountId, card]))
   const rows = upcoming.data.flatMap((invoice) => {
     const card = byId.get(invoice.cardAccountId)
-    return card ? [rowOf(workspaceId, invoice, card.name, card.icon ?? CARD_ICON)] : []
+    return card ? [rowOf(workspaceId, invoice, card, canPay)] : []
   })
   if (rows.length === 0) {
     return null
@@ -66,15 +71,15 @@ export function UpcomingInvoices({ workspaceId, cards }: UpcomingInvoicesProps) 
   )
 }
 
-function rowOf(workspaceId: string, invoice: UpcomingInvoice, name: string, icon: string) {
+function rowOf(workspaceId: string, invoice: UpcomingInvoice, card: CardSummary, canPay: boolean) {
   const state: InvoiceState = invoice.status
   return {
     key: `${invoice.cardAccountId}-${invoice.referenceMonth}`,
     cells: [
       <DataTableName
         key="card"
-        name={name}
-        icon={icon}
+        name={card.name}
+        icon={card.icon ?? CARD_ICON}
         link={
           <Link
             to="/w/$workspaceId/cards/$card"
@@ -90,7 +95,20 @@ function rowOf(workspaceId: string, invoice: UpcomingInvoice, name: string, icon
         {stateLabelOf(state)}
       </Badge>,
       <DataTableAmount key="total" cents={invoice.totalCents} />,
-      null,
+      canPay && isPayable(invoice, card) && invoice.invoiceId ? (
+        <Button
+          key="pay"
+          variant="secondary"
+          size="sm"
+          render={payInvoiceLink(card.accountId, invoice.invoiceId)}
+        >
+          {messages.pay}
+        </Button>
+      ) : null,
     ],
   }
+}
+
+function isPayable(invoice: UpcomingInvoice, card: CardSummary): boolean {
+  return invoice.status !== 'future' && invoice.dueCents > 0 && card.archivedAt === null
 }

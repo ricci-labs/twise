@@ -20,6 +20,7 @@ export type FormFieldProps<Values extends FieldValues> = {
   label: string
   help?: string
   helpGap?: 'tight' | 'roomy'
+  warning?: string
   isRequired?: boolean
   isReadOnly?: boolean
   maxLength?: number
@@ -30,6 +31,11 @@ export type FieldLabelProps = {
   htmlFor: string
   label: string
   isRequired: boolean
+}
+
+export type FieldWarningProps = {
+  id: string
+  message: string | undefined
 }
 
 export type FieldErrorProps = {

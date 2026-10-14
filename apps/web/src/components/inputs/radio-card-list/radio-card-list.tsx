@@ -41,12 +41,16 @@ export function RadioCardList({
           <span className={radioCardTextVariants()}>
             {option.label}
             {option.detail && (
-              <span className={radioCardDetailVariants({ layout })}>
+              <span className={radioCardDetailVariants()}>
                 <RichText text={option.detail} />
               </span>
             )}
           </span>
-          {option.badge && <Badge tone={option.badge.tone}>{option.badge.label}</Badge>}
+          {option.badge && (
+            <Badge tone={option.badge.tone} hasDot>
+              {option.badge.label}
+            </Badge>
+          )}
         </Radio.Root>
       ))}
     </RadioGroup>

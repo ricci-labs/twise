@@ -20,4 +20,8 @@ export const errorVariants = cva(
   'flex items-start gap-1 text-label font-medium text-danger empty:hidden [&_svg]:mt-px [&_svg]:size-4.5 [&_svg]:shrink-0',
 )
 
+export const warningVariants = cva(
+  'flex items-start gap-1.5 text-label font-medium text-warning empty:hidden [&_svg]:mt-px [&_svg]:size-4.5',
+)
+
 export const counterVariants = cva('text-right text-caption text-ink-muted tabular-nums')

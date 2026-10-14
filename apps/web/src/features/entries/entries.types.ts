@@ -9,12 +9,14 @@ import type { PickerEmpty, PickerItem, PickerSheetProps } from '@web/components/
 import type {
   fetchAccounts,
   fetchBalances,
+  fetchCardInvoices,
   fetchCards,
   fetchContacts,
   fetchLatestEntries,
   fetchMembers,
 } from '@web/features/entries/api/entries.queries'
 import type { entryFormSchema, newEntrySearchSchema } from '@web/features/entries/entries.schemas'
+import type { RefObject } from 'react'
 import type { z } from 'zod'
 
 export type NewEntrySearch = z.infer<typeof newEntrySearchSchema>
@@ -30,6 +32,23 @@ export type AccountBalance = Awaited<ReturnType<typeof fetchBalances>>[number]
 export type LatestEntry = Awaited<ReturnType<typeof fetchLatestEntries>>['items'][number]
 
 export type CardSummary = Awaited<ReturnType<typeof fetchCards>>[number]
+
+export type CardInvoice = Awaited<ReturnType<typeof fetchCardInvoices>>[number]
+
+export type AmountFieldProps = {
+  isOpeningBalance: boolean
+  isOverpaid: boolean
+  inputRef: RefObject<HTMLInputElement | null>
+}
+
+export type InvoiceFieldProps = {
+  workspaceId: string
+}
+
+export type PaymentAccountFieldProps = {
+  workspaceId: string
+  canCreateAccounts: boolean
+}
 
 export type EntryContact = Awaited<ReturnType<typeof fetchContacts>>[number]
 
@@ -47,9 +66,15 @@ export type NewEntryProps = {
   currentUserName: string
   permissions: readonly Permission[]
   isOpen: boolean
-  initialType?: FormEntryType
-  initialAccountId?: string
+  prefill?: EntryPrefill
   onClose: () => void
+}
+
+export type EntryPrefill = {
+  entryType?: FormEntryType
+  accountId?: string
+  cardAccountId?: string
+  invoiceId?: string
 }
 
 export type EntryFormProps = {
@@ -61,8 +86,7 @@ export type EntryFormProps = {
   canCreateAccounts: boolean
   canCreateCards: boolean
   today: IsoDate
-  initialType?: FormEntryType
-  initialAccountId?: string
+  prefill?: EntryPrefill
   onClose: () => void
 }
 
@@ -78,6 +102,18 @@ export type AccountFieldProps = {
   name?: 'accountId' | 'toAccountId'
   label: string
   detail?: 'balance' | 'kind'
+  note?: AccountNote
+}
+
+export type AccountDetailOptions = {
+  detail: NonNullable<AccountFieldProps['detail']>
+  note: AccountNote | undefined
+  balances: readonly AccountBalance[]
+}
+
+export type AccountNote = {
+  accountId: string
+  text: string
 }
 
 export type CategoryFieldProps = {

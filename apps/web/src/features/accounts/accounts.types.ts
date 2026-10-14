@@ -52,6 +52,13 @@ export type AccountsPageProps = {
   onCreatedSeen: () => void
 }
 
+export type PayInvoiceButtonProps = {
+  permissions: readonly Permission[]
+  card: CardSummary
+  invoice: CardInvoice
+  width?: 'auto' | 'full'
+}
+
 export type CreatedAccountMomentProps = {
   workspaceId: string
   createdId: string | undefined
@@ -364,6 +371,7 @@ export type CardListProps = CardsPageProps & {
 
 export type UpcomingInvoicesProps = {
   workspaceId: string
+  permissions: readonly Permission[]
   cards: readonly CardSummary[]
 }
 

@@ -410,7 +410,8 @@ component here, so the form, and later the account, card and planning forms, sha
   its label, not at the far edge (`../product/requirements/ui-standards.md` → Visual rules).
 - `RadioCardList` (`components/inputs/radio-card-list`, Base UI `RadioGroup`, the design's
   `InvoiceRadioList`): one choice among rows with a radio dot, a title, a detail with `**bold**`
-  ("Falta pagar **R$ 1.950,00**") and an optional status badge; the chosen row gets the ink outline.
+  ("Falta pagar **R$ 1.950,00**", 13 px) and an optional status badge with its dot; the title is
+  15 px semibold; the chosen row gets the ink outline.
   `layout="pair"` puts two cards side by side, the dot at the top and a grey example under the title
   (the income nature: "Renda fixa" / "ex.: salário").
 - `InvoicePreview` (`components/finance/invoice-preview`): the sunken box under the card with the
@@ -444,6 +445,8 @@ component here, so the form, and later the account, card and planning forms, sha
 - `Select` (`components/inputs/select`): a native `select` drawn like the fields (the phone's own
   picker opens), with an optional empty first choice; `TextArea` (`components/inputs/text-area`):
   the notes field, two lines to start. Both take the `FormField` control.
+- `FormField` `warning`: an amber line under the control, with the `warn` triangle, for something
+  allowed but worth a second look ("O valor é maior que o saldo da fatura."); an error replaces it.
 - `ConfirmDialog` (`components/feedback/confirm-dialog`, Base UI `AlertDialog`): the title
   (`dialog-title`), what will happen (`dialog-text`), the secondary "keep" action and the danger one side by side (keep on the left; they
   share the width on the phone and sit at the right, 440 px wide, on the desktop), as

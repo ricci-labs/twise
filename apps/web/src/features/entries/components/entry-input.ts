@@ -16,6 +16,11 @@ const FIELDS_OF_TYPE: Readonly<Record<EntryFormValues['entryType'], EntryInputFi
     paymentMethod: values.paymentMethod || null,
   }),
   transfer: (values) => ({ fromAccountId: values.accountId, toAccountId: values.toAccountId }),
+  invoice_payment: (values) => ({
+    cardAccountId: values.cardAccountId,
+    invoiceId: values.invoiceId,
+    paidFromAccountId: values.accountId,
+  }),
   opening_balance: (values) => {
     const cents = centsOfTypedAmount(values.amount) ?? 0
     return { accountId: values.accountId, balanceCents: values.isNegative ? -cents : cents }

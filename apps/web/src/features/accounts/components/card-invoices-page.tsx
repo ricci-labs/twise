@@ -36,6 +36,7 @@ import { CardPageFrame } from '@web/features/accounts/components/card-page-frame
 import { CardPageHeader } from '@web/features/accounts/components/card-page-header'
 import { InvoiceLinesPreview } from '@web/features/accounts/components/invoice-lines-preview'
 import { InvoiceYearPicker } from '@web/features/accounts/components/invoice-year-picker'
+import { PayInvoiceButton } from '@web/features/accounts/components/pay-invoice-button'
 import { useMediaQuery } from '@web/hooks/use-media-query'
 import { usePageTitle } from '@web/hooks/use-page-title'
 import { ApiError } from '@web/lib/api/api-error'
@@ -175,7 +176,7 @@ function CardInvoicesLoaded({
           months={months}
         />
       </div>
-      <div className="flex flex-col gap-6 px-4">
+      <div className="flex flex-col gap-4 px-4">
         <InvoiceSummary
           title={messages.title(formatMonthName(chosen.referenceMonth))}
           status={{ label: stateLabelOf(chosen.state), tone: stateToneOf(chosen.state) }}
@@ -187,6 +188,9 @@ function CardInvoicesLoaded({
           fronted={{ label: messages.parts.fronted, cents: chosen.frontedCents }}
           splitLabel={splitLabelOf(chosen)}
           note={noteOf(chosen, card, lines.data, accounts.data)}
+          action={
+            <PayInvoiceButton permissions={permissions} card={card} invoice={chosen} width="full" />
+          }
         />
         <InvoiceLinesPreview
           workspaceId={workspaceId}

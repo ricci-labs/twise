@@ -35,6 +35,7 @@ import { CardMissing } from '@web/features/accounts/components/card-missing'
 import { CardPageFrame } from '@web/features/accounts/components/card-page-frame'
 import { CardPageHeader } from '@web/features/accounts/components/card-page-header'
 import { InvoiceLineList } from '@web/features/accounts/components/invoice-line-list'
+import { PayInvoiceButton } from '@web/features/accounts/components/pay-invoice-button'
 import { usePageTitle } from '@web/hooks/use-page-title'
 import { ApiError } from '@web/lib/api/api-error'
 import { formatMonthName, formatShortDate } from '@web/lib/format/calendar'
@@ -133,6 +134,7 @@ function InvoiceDetail({ workspaceId, permissions, card, invoice, lines }: Invoi
           </Alert>
         )}
         <InvoiceFacts label={messages.facts} facts={factsOf(invoice)} />
+        <PayInvoiceButton permissions={permissions} card={card} invoice={invoice} width="full" />
         <ChoiceChips
           label={messages.filter}
           className="mb-1"
