@@ -595,6 +595,13 @@ component here, so the form, and later the account, card and planning forms, sha
   160,00 de terceiros") and the amount; `isPayment` uses the `invoice-paid` drawing and the
   positive tone.
 
+- `CalendarSheet` (`components/inputs/calendar-sheet`): the app's calendar, never the browser's
+  date picker (`../product/requirements/ui-standards.md` → Lists, pickers and long content). A
+  `Sheet` (from the bottom on the phone, a popover under its `anchor` on the desktop) with the month
+  between ‹ › arrows ("Outubro de 2026"), the weekdays D S T Q Q S S and the days as 42 px circles
+  in a radio group (arrow keys move), the first on its weekday's column; today in `mint-ink` with a
+  dot, the chosen day with the selection outline. It opens on the chosen day's month; a pick
+  closes it. "Outra data" of the new entry opens it under the chip.
 - `DayField` (`components/inputs/day-field`): a day of the month, the field the card form uses
   twice side by side: calendar icon, "Escolha" or "Dia 25", chevron. It opens a `Sheet` (a popover under
   the field on the desktop) with the 31 days as 42 px circles, seven per row (the chosen one with the ink outline and heavy weight;

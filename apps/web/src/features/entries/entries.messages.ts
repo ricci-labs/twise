@@ -78,7 +78,6 @@ export const entriesMessages = {
     today: (dayMonth: string) => `Hoje, ${dayMonth}`,
     yesterday: 'Ontem',
     other: 'Outra data',
-    otherLabel: 'Escolher outra data',
   },
   paymentMethods: {
     pix: 'Pix',
