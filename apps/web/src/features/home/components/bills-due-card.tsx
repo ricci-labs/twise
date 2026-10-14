@@ -10,11 +10,13 @@ import { homeMessages } from '@web/features/home/home.messages'
 import type { BillRowProps, BillsDueCardProps, OverviewBill } from '@web/features/home/home.types'
 import { cn } from '@web/lib/cn'
 import { dateBlockOf, formatShortDate, formatWeekday } from '@web/lib/format/calendar'
+import { SHORT_LIST_SIZE } from '@web/lib/long-lists'
 
 const messages = homeMessages.billsDue
 
 export function BillsDueCard({ workspaceId, overview, canWrite, className }: BillsDueCardProps) {
   const { billsDue } = overview.metrics
+  const shown = billsDue.items.slice(0, SHORT_LIST_SIZE)
   const planningLink = (
     <Link to="/w/$workspaceId/$area" params={{ workspaceId, area: 'planning' }} />
   )
@@ -38,13 +40,13 @@ export function BillsDueCard({ workspaceId, overview, canWrite, className }: Bil
         <EmptyState>{messages.empty}</EmptyState>
       ) : (
         <ul className="flex flex-col">
-          {billsDue.items.map((bill, position) => (
+          {shown.map((bill, position) => (
             <BillRow
               key={bill.occurrenceId}
               workspaceId={workspaceId}
               bill={bill}
               canWrite={canWrite}
-              hasDivider={position > 0 && !isLate(bill) && !isLate(billsDue.items[position - 1])}
+              hasDivider={position > 0 && !isLate(bill) && !isLate(shown[position - 1])}
             />
           ))}
         </ul>

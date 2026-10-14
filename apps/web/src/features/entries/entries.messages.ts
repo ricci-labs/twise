@@ -200,6 +200,7 @@ export const entriesMessages = {
     cardDefault: 'Conta padrão do cartão',
     overpaid: 'O valor é maior que o saldo da fatura.',
     none: 'Nada a pagar neste cartão.',
+    search: 'Buscar fatura',
   },
   transfers: {
     sameAccount: 'Escolha uma conta diferente da de origem.',

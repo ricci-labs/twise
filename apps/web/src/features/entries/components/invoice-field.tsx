@@ -45,6 +45,7 @@ export function InvoiceField({ workspaceId }: InvoiceFieldProps) {
           value={chosen?.invoiceId ?? null}
           onSelect={field.onChange}
           onBlur={field.onBlur}
+          searchLabel={messages.search}
           options={invoices.map((invoice) => ({
             value: invoice.invoiceId,
             label: messages.due(formatShortDate(invoice.dueOn)),

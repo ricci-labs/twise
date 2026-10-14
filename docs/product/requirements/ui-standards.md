@@ -203,7 +203,8 @@ Decided by the user on 2026-10-14, for every screen, built or to be built.
 - **Nothing on the desktop depends on swiping.** A strip that scrolls sideways (the invoice
   months, "Repetir um recente") gets ‹ › arrows at its ends on the desktop, shown only while there
   is more on that side; the wheel and the touchpad keep scrolling it.
-- **Many items in a card or a list:** a card of the Home shows at most 5 items with "Ver todos"; a
+- **Many items in a card or a list:** a card of the Home shows at most 5 items, and its footer link
+  ("Ver contas fixas", "Ver cartões", "Ver metas") opens the whole list; a
   row of chips shows what fits on one line and "+N mais"; a list of more than 12 items (the
   categories) gets a search on top; pickers show the most used first, with their search.
 - **Lists inside a dialog or a sheet** (the invoices to pay, the contacts to choose) show at most 5

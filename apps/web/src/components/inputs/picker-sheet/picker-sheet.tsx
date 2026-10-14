@@ -1,5 +1,6 @@
 import { Popover } from '@base-ui/react/popover'
 import { Button } from '@web/components/actions/button'
+import { ShowMoreButton } from '@web/components/actions/show-more-button'
 import { Avatar } from '@web/components/display/avatar'
 import { Badge } from '@web/components/display/badge'
 import { CategoryArt } from '@web/components/display/category-art'
@@ -13,7 +14,9 @@ import type {
   PickerEmptyStateProps,
   PickerItem,
   PickerItemEndProps,
+  PickerLayout,
   PickerRowArtProps,
+  PickerSearchProps,
   PickerSheetProps,
 } from '@web/components/inputs/picker-sheet/picker-sheet.types'
 import {
@@ -38,12 +41,12 @@ import {
 } from '@web/components/inputs/picker-sheet/picker-sheet.variants'
 import { TextInput } from '@web/components/inputs/text-input'
 import { Sheet } from '@web/components/layout/sheet'
+import { useLongList } from '@web/hooks/use-long-list'
 import { useMediaQuery } from '@web/hooks/use-media-query'
 import { DESKTOP_QUERY } from '@web/lib/breakpoints'
+import { GRID_SEARCH_ABOVE, LIST_SEARCH_ABOVE, matchesSearch } from '@web/lib/long-lists'
 import { Check, ChevronRight, Plus, Search } from 'lucide-react'
 import { useState } from 'react'
-
-const DIACRITICS = /\p{Diacritic}/gu
 
 export function PickerSheet({
   title,
@@ -100,17 +103,22 @@ function PickerContent({
   searchLabel,
   empty,
 }: PickerContentProps) {
-  const [search, setSearch] = useState('')
   const [openParent, setOpenParent] = useState(() => parentOf(items, value)?.value ?? null)
+  const list = useLongList({
+    items,
+    isPinned: (item) => isOrHolds(item, value),
+    searchAbove: searchAbove(layout, searchLabel),
+    searchedCount: countWithChildren(items),
+    searchResults,
+    canShorten: layout === 'list',
+  })
   if (items.length === 0 && empty) {
     return <PickerEmptyState empty={empty} />
   }
-  const isSearching = search.trim() !== ''
-  const shown = isSearching ? searchResults(items, search) : items
-  const expanded = isSearching ? undefined : items.find((item) => item.value === openParent)
-  const markedValue = openParent ?? value
+  const expanded = list.isSearching ? undefined : items.find((item) => item.value === openParent)
+  const markedValue = list.isSearching ? value : (openParent ?? value)
   const press = (item: PickerItem) => {
-    if (!isSearching && item.children?.length) {
+    if (!list.isSearching && item.children?.length) {
       setOpenParent(item.value)
       return
     }
@@ -119,33 +127,29 @@ function PickerContent({
 
   return (
     <>
-      {searchLabel && (
-        <div className={pickerSearchVariants()}>
-          <TextInput
-            type="search"
-            aria-label={searchLabel}
-            placeholder={searchLabel}
-            startAdornment={<Search aria-hidden="true" />}
-            className={pickerSearchInputVariants()}
-            value={search}
-            onChange={(event) => setSearch(event.target.value)}
-          />
-        </div>
+      {list.hasSearch && (
+        <PickerSearch label={searchLabel} value={list.search} onChange={list.setSearch} />
       )}
       {subtitle && <p className={pickerSubtitleVariants()}>{subtitle}</p>}
-      {shown.length === 0 && <p className={pickerSubtitleVariants()}>{messages.nothingFound}</p>}
+      {list.shown.length === 0 && (
+        <p className={pickerSubtitleVariants()}>{messages.nothingFound}</p>
+      )}
       <ul className={pickerListVariants({ layout })}>
-        {shown.map((item) => (
+        {list.shown.map((item, position) => (
           <li key={item.value}>
             <PickerChoice
+              ref={list.refAt(position)}
               item={item}
               layout={layout}
-              isCurrent={item.value === (isSearching ? value : markedValue)}
+              isCurrent={item.value === markedValue}
               onPress={press}
             />
           </li>
         ))}
       </ul>
+      {list.hiddenCount > 0 && (
+        <ShowMoreButton hiddenCount={list.hiddenCount} onClick={list.showAll} />
+      )}
       {expanded?.children?.length ? (
         <PickerChildren parent={expanded} value={value} onSelect={onSelect} />
       ) : null}
@@ -153,7 +157,23 @@ function PickerContent({
   )
 }
 
-function PickerChoice({ item, layout, isCurrent, onPress }: PickerChoiceProps) {
+function PickerSearch({ label, value, onChange }: PickerSearchProps) {
+  return (
+    <div className={pickerSearchVariants()}>
+      <TextInput
+        type="search"
+        aria-label={label}
+        placeholder={label}
+        startAdornment={<Search aria-hidden="true" />}
+        className={pickerSearchInputVariants()}
+        value={value}
+        onChange={(event) => onChange(event.target.value)}
+      />
+    </div>
+  )
+}
+
+function PickerChoice({ ref, item, layout, isCurrent, onPress }: PickerChoiceProps) {
   const current = isCurrent ? true : undefined
   const detail = item.children?.length
     ? messages.subcategoryCount(item.children.length)
@@ -187,6 +207,7 @@ function PickerChoice({ item, layout, isCurrent, onPress }: PickerChoiceProps) {
   }
   return (
     <button
+      ref={ref}
       type="button"
       aria-current={current}
       onClick={() => onPress(item)}
@@ -269,11 +290,10 @@ function PickerEmptyState({ empty }: PickerEmptyStateProps) {
 }
 
 function searchResults(items: readonly PickerItem[], search: string): PickerItem[] {
-  const wanted = folded(search.trim())
   return items.flatMap((item) => [
-    ...(folded(item.label).includes(wanted) ? [{ ...item, children: undefined }] : []),
+    ...(matchesSearch(item.label, search) ? [{ ...item, children: undefined }] : []),
     ...(item.children ?? [])
-      .filter((child) => folded(child.label).includes(wanted))
+      .filter((child) => matchesSearch(child.label, search))
       .map((child) => ({
         ...child,
         icon: child.icon ?? item.icon,
@@ -286,6 +306,17 @@ function parentOf(items: readonly PickerItem[], value: string | null): PickerIte
   return items.find((item) => item.children?.some((child) => child.value === value))
 }
 
-function folded(text: string): string {
-  return text.normalize('NFD').replace(DIACRITICS, '').toLocaleLowerCase('pt-BR')
+function isOrHolds(item: PickerItem, value: string | null): boolean {
+  return item.value === value || Boolean(item.children?.some((child) => child.value === value))
+}
+
+function countWithChildren(items: readonly PickerItem[]): number {
+  return items.reduce((count, item) => count + 1 + (item.children?.length ?? 0), 0)
+}
+
+function searchAbove(layout: PickerLayout, searchLabel: string | undefined): number | undefined {
+  if (searchLabel === undefined) {
+    return undefined
+  }
+  return layout === 'grid' ? GRID_SEARCH_ABOVE : LIST_SEARCH_ABOVE
 }

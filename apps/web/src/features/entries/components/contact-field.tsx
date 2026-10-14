@@ -11,6 +11,7 @@ import { entriesMessages } from '@web/features/entries/entries.messages'
 import type {
   ContactBalance,
   ContactFieldProps,
+  EntryContact,
   EntryFormInput,
 } from '@web/features/entries/entries.types'
 import { formatShortDate } from '@web/lib/format/calendar'
@@ -43,13 +44,25 @@ export function ContactField({ workspaceId }: ContactFieldProps) {
           title={entriesMessages.fields.contact}
           placeholder={messages.placeholder}
           searchLabel={entriesMessages.shares.search}
-          items={contacts.map((contact) =>
+          items={byMostOwed(contacts, balanceOf).map((contact) =>
             itemOf(contact.id, contact.name, balanceOf.get(contact.id)),
           )}
           empty={EMPTY}
         />
       )}
     </FormField>
+  )
+}
+
+function byMostOwed(
+  contacts: readonly EntryContact[],
+  balanceOf: ReadonlyMap<string, ContactBalance>,
+): EntryContact[] {
+  const owed = (contact: EntryContact) => balanceOf.get(contact.id)
+  return [...contacts].sort(
+    (first, second) =>
+      (owed(second)?.overdueCents ?? 0) - (owed(first)?.overdueCents ?? 0) ||
+      (owed(second)?.owedCents ?? 0) - (owed(first)?.owedCents ?? 0),
   )
 }
 

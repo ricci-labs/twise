@@ -10,6 +10,7 @@ import type { InvoicesCardProps } from '@web/features/home/home.types'
 import { cn } from '@web/lib/cn'
 import { formatShortDate } from '@web/lib/format/calendar'
 import { formatWholeReais } from '@web/lib/format/money'
+import { SHORT_LIST_SIZE } from '@web/lib/long-lists'
 
 const messages = homeMessages.invoices
 
@@ -32,7 +33,7 @@ export function InvoicesCard({ workspaceId, overview, nameOf, className }: Invoi
       }
     >
       <ul className="flex flex-col">
-        {invoices.map((invoice) => (
+        {invoices.slice(0, SHORT_LIST_SIZE).map((invoice) => (
           <li
             key={invoice.cardAccountId}
             className="flex gap-2.5 border-t border-border py-2.5 first:border-t-0 first:pt-0"

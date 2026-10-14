@@ -305,7 +305,7 @@ updated: 2026-10-14
   3. [x] The app's own select (the payment method) instead of the browser's
   4. [x] The app's own calendar ("Outra data") instead of the browser's
   5. [x] ‹ › arrows on sideways strips on the desktop
-  6. [ ] At most 5 items in a dialog or sheet list, with "Mostrar mais" and search over 10
+  6. [x] At most 5 items in a dialog or sheet list, with "Mostrar mais" and search over 10
   7. [ ] "Mostrar mais" and paging for the lines of an invoice
 - [ ] Remaining project skills (`new-module`, `db-migration`, `domain-rule`, `pr`) and Claude Code hooks
 

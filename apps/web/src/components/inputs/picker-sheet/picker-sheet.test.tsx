@@ -20,6 +20,20 @@ const CATEGORIES = [
   { value: 'transport', label: 'Transporte', icon: 'transport' },
 ]
 
+const MANY_CATEGORIES = [
+  ...CATEGORIES,
+  ...Array.from({ length: 10 }, (_, position) => ({
+    value: `extra-${position + 1}`,
+    label: `Extra ${position + 1}`,
+  })),
+]
+
+const CONTACTS = Array.from({ length: 12 }, (_, position) => ({
+  value: `contact-${position + 1}`,
+  label: `Member ${position + 1}`,
+  isPerson: true,
+}))
+
 function AnchoredPicker({ className }: { className: string }) {
   const field = useRef<HTMLDivElement>(null)
   return (
@@ -117,7 +131,11 @@ describe('PickerSheet', () => {
   })
 
   it('finds subcategories in the search, with their parent', async () => {
-    const { onSelect } = renderSheet({ layout: 'grid', searchLabel: 'Buscar categoria' })
+    const { onSelect } = renderSheet({
+      layout: 'grid',
+      items: MANY_CATEGORIES,
+      searchLabel: 'Buscar categoria',
+    })
 
     await page.getByRole('searchbox', { name: 'Buscar categoria' }).fill('feira')
     await expect.element(page.getByText('em Mercado')).toBeVisible()
@@ -126,13 +144,41 @@ describe('PickerSheet', () => {
   })
 
   it('filters by the search, ignoring case and accents', async () => {
-    renderSheet({ layout: 'grid', searchLabel: 'Buscar categoria' })
+    renderSheet({ layout: 'grid', items: MANY_CATEGORIES, searchLabel: 'Buscar categoria' })
 
     await page.getByRole('searchbox', { name: 'Buscar categoria' }).fill('SAUDE')
     await expect.element(page.getByRole('button', { name: 'Saúde' })).toBeVisible()
     await expect.element(page.getByRole('button', { name: 'Mercado' })).not.toBeInTheDocument()
     await page.getByRole('searchbox', { name: 'Buscar categoria' }).fill('xyz')
     await expect.element(page.getByText('Nada encontrado com essa busca.')).toBeVisible()
+  })
+
+  it('searches a grid only when it holds more than 12 categories', async () => {
+    renderSheet({ layout: 'grid', searchLabel: 'Buscar categoria' })
+
+    await expect.element(page.getByRole('button', { name: 'Saúde' })).toBeVisible()
+    await expect.element(page.getByRole('searchbox')).not.toBeInTheDocument()
+  })
+
+  it('shows the first 5 of a long list, then the rest on asking, focusing the first revealed', async () => {
+    renderSheet({ title: 'Contato', items: CONTACTS, value: null, searchLabel: 'Buscar contato' })
+
+    await expect.element(page.getByRole('searchbox', { name: 'Buscar contato' })).toBeVisible()
+    await expect.element(page.getByRole('button', { name: 'Member 5' })).toBeVisible()
+    await expect.element(page.getByRole('button', { name: 'Member 6' })).not.toBeInTheDocument()
+    await page.getByRole('button', { name: 'Mostrar mais (7)' }).click()
+    await expect.element(page.getByRole('button', { name: 'Member 6' })).toHaveFocus()
+    await expect.element(page.getByRole('button', { name: 'Member 12' })).toBeVisible()
+    await expect.element(page.getByRole('button', { name: /Mostrar mais/ })).not.toBeInTheDocument()
+  })
+
+  it('shows the whole list when the current choice is past the first 5', async () => {
+    renderSheet({ title: 'Contato', items: CONTACTS, value: 'contact-9' })
+
+    await expect
+      .element(page.getByRole('button', { name: 'Member 9' }))
+      .toHaveAttribute('aria-current', 'true')
+    await expect.element(page.getByRole('button', { name: /Mostrar mais/ })).not.toBeInTheDocument()
   })
 
   it('offers to register the first one when there is nothing to pick', async () => {

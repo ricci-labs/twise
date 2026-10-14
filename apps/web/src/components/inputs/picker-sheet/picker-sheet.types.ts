@@ -5,7 +5,7 @@ import type {
   pickerPopupVariants,
 } from '@web/components/inputs/picker-sheet/picker-sheet.variants'
 import type { VariantProps } from 'class-variance-authority'
-import type { RefObject } from 'react'
+import type { Ref, RefObject } from 'react'
 
 export type PickerItem = {
   value: string
@@ -63,7 +63,14 @@ export type PickerContentProps = Omit<
   'title' | 'isOpen' | 'onOpenChange' | 'anchor' | 'popupWidth'
 >
 
+export type PickerSearchProps = {
+  label?: string
+  value: string
+  onChange: (search: string) => void
+}
+
 export type PickerChoiceProps = {
+  ref?: Ref<HTMLButtonElement>
   item: PickerItem
   layout: PickerLayout
   isCurrent: boolean

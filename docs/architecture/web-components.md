@@ -32,7 +32,7 @@ where it's used.
 
 | Family | Components (from the brief) |
 |---|---|
-| `actions/` | `Button`, `IconButton`, `SubmitButton`, `FloatingActionButton`, `ActionMenu`, `ItemActions`, `SegmentedControl`, `AddTile` |
+| `actions/` | `Button`, `IconButton`, `SubmitButton`, `FloatingActionButton`, `ActionMenu`, `ItemActions`, `SegmentedControl`, `AddTile`, `ShowMoreButton` |
 | `inputs/` | `TextInput`, `PasswordInput`, `EmailInput`, `PhoneInput`, `SearchInput`, `TextArea`, `MoneyInput`, `ChoiceChips`, `PickerField`, `PickerSheet`, `Stepper`, `RadioCardList`, `DateInput`, `PeriodPicker`, `Select`, `Combobox`, `Checkbox`, `RadioGroup`, `Switch`, `DayOfMonthPicker`, `FileUpload`, `ColorSwatch` |
 | `forms/` | `Form`, `FormField`, `FieldGroup`, `LockedField`, `FormErrorSummary`, `FormFooter`, `RequiredLegend` |
 | `feedback/` | `Toast`, `InlineAlert`, `AutoFillTip`, `Banner`, `ConfirmDialog`, `EmptyState`, `EmptyBlock`, `Skeleton`, `ListSkeleton`, `KpiSkeleton`, `ErrorState` |
@@ -415,7 +415,11 @@ component here, so the form, and later the account, card and planning forms, sha
   atraso") at the end; `fieldDetail` is what the `PickerField` shows under the chosen one. An item with `children` shows "N sub";
   pressing it opens the row "Em {mãe}" below the grid with "Só {mãe}" and the children as chips.
   `searchLabel` adds a 44 px search (with its icon) that ignores case and accents and also finds children,
-  shown "em {mãe}" with the parent's drawing; `empty` replaces the list with the drawing, a sentence
+  shown "em {mãe}" with the parent's drawing, once the list holds more than 10 items (more than 12
+  in the `grid`, children counted). The `list` layout shows the first 5 and a `ShowMoreButton`
+  ("Mostrar mais (n)") that reveals the rest and focuses the first revealed row; the whole list
+  shows from the start when the current choice is past the first 5. The caller orders the items,
+  the most relevant first; `empty` replaces the list with the drawing, a sentence
   and, when it has `actionLabel` and `onAction`, the primary action with a "+" ("Cadastrar conta"). An item with
   `placeholderIcon` shows that icon in a dashed square instead of a drawing ("Nenhuma" in the move
   sheet),
@@ -435,6 +439,14 @@ component here, so the form, and later the account, card and planning forms, sha
   15 px semibold; the chosen row gets the ink outline.
   `layout="pair"` puts two cards side by side, the dot at the top and a grey example under the title
   (the income nature: "Renda fixa" / "ex.: salário").
+  A `stack` of more than 5 shows the first 5 and "Mostrar mais (n)" (the chosen one past them shows
+  the whole list); with `searchLabel` and more than 10 options a search on top filters the title and
+  the detail.
+- `ShowMoreButton` (`components/actions/show-more-button`): the full-width subtle button at the end
+  of a long list, "Mostrar mais (n)" when the count of what is left is known, "Mostrar mais" when
+  the next page is fetched from the API (`isLoading` keeps it busy until it arrives).
+  `useLongList` (`hooks/use-long-list.ts`) holds the 5-first rule, the search threshold and the
+  focus move; the sizes live in `lib/long-lists.ts`.
 - `InvoicePreview` (`components/finance/invoice-preview`): the sunken box under the card with the
   calendar drawing, the sentence ("A 1ª parcela entra na fatura que vence em **04/11**.") and, with
   more than one installment or a closed invoice, one row per installment ("1/3 · vence 04/11 · R$
