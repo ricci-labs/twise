@@ -98,7 +98,10 @@ When to use each one: the design system guide → Colour, and each token's notes
   700, display), the workspace name in the phone's top bar; `tab` (11.5/14, 550), the bottom bar's
   labels; `note` (13/18, 400), the small lines of a form (the
   "* obrigatório" legend, a sheet's subtitle, the auto-fill tip, the "Repetir um recente" title,
-  with a weight class where the design sets one).
+  with a weight class where the design sets one). From the cards design CSS: `amount-total`
+  (34/40, 750), an invoice's total; `amount-card` (20/24, 750), the open invoice inside a card
+  block; `fine` (12.5/16), the smallest grey lines (a month's status, "vence 04/11", the year
+  label of the month strip).
 - **Amounts** always use `tabular-nums`. It lives inside the `Amount` component, so no screen has
   to remember it (`web-components.md`). Inputs use 16 px (`body`) so iPhones don't zoom.
 
@@ -109,17 +112,20 @@ When to use each one: the design system guide → Colour, and each token's notes
   `control-sm` 36 px, `control-xs` 30 px (the small button inside a list row, with the
   `button-sm` type style), `fab` 56 px (`size-fab`).
 - **Radius:** the design's fixed scale, `sm` 8 px, `md` 14 px (fields, alerts), `lg` 20 px (cards,
-  dialogs), `xl` 28 px (main card, bottom sheet), `full` (buttons, badges, chips).
+  dialogs), `xl` 28 px (main card, bottom sheet), `full` (buttons, badges, chips), and `swatch`
+  3 px, a chart legend's square.
 - **Elevation:** flat by default (cards use `border`). `shadow-raised` (the selected option of a
   segmented control), `shadow-float` (floating button, menus,
   toasts), `shadow-bar` (the phone's bottom bar, cast upwards) and `shadow-dialog` (dialogs, bottom
   sheet) only, from the `--elevation-*` values of each
   theme.
 - **Borders:** `1px` for cards and fields, `2px` for focus and errors. The design's thinner
-  emphasis stroke (`--stroke-emphasis`, 1.5 px) has three utilities, because Tailwind makes no
+  emphasis stroke (`--stroke-emphasis`, 1.5 px) has these utilities, because Tailwind makes no
   fractional ring, border or decoration widths: `inset-stroke` (an inset outline in the current
-  colour, the outline button), `underline-stroke` (the tertiary link underline) and `border-stroke`
-  (the dashed outlines of an empty picker and "+ Dividir com contatos").
+  colour, the outline button), `underline-stroke` (the tertiary link underline), `border-stroke`
+  (the dashed outlines of an empty picker and "+ Dividir com contatos"), and the one-side
+  `border-t-stroke` (a card block's dashed footer rule) and `border-l-stroke` (the dashed rule
+  beside the month strip's year). `text-vertical` sets that year label upright, read bottom to top.
 
 ## Motion and layers
 Tailwind has no duration or z-index namespace, so these are `:root` variables with one `@utility`

@@ -10,6 +10,7 @@ export const categoryArtVariants = cva(
       },
       size: {
         sm: 'size-8 text-caption font-bold',
+        row: 'size-10 text-letter',
         md: 'size-10.5 text-letter',
         list: 'size-11 text-letter',
         lg: 'size-11.5 text-label font-bold',

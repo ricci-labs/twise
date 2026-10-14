@@ -40,7 +40,7 @@ where it's used.
 | `charts/` | `BarChart`, `ForecastChart`, `DonutChart`, each with its text alternative |
 | `navigation/` | `BottomBar`, `Sidebar`, `TopBar`, `WorkspaceSwitcher`, `BackLink`, `Breadcrumb` |
 | `layout/` | `AppShell`, `FormOverlay`, `Page`, `PageHeader`, `Section`, `Stack`, `Grid` |
-| `finance/` | `StatHero`, `InsightCard`, `InvoiceCard`, `InvoicePreview`, `SharesList`, `RecentEntries`, `AccountRow`, `AccountGroup`, `EntryRow`, `OccurrenceRow`, `ContactRow`, `ChargePreview`, `AmountSplitEditor` |
+| `finance/` | `StatHero`, `InsightCard`, `InvoiceCard`, `InvoicePreview`, `SharesList`, `RecentEntries`, `AccountRow`, `AccountGroup`, `CardBlock`, `InvoiceSummary`, `InvoiceLine`, `EntryRow`, `OccurrenceRow`, `ContactRow`, `ChargePreview`, `AmountSplitEditor` |
 | `brand/` | `Logo`, `OwlScene` (the layered owl scenes and their motion), `AppSplash` |
 | `icons/` | `TwiseIcon` and the icon registries (see Icons) |
 
@@ -487,6 +487,32 @@ component here, so the form, and later the account, card and planning forms, sha
   title names the item ("Não dá para excluir a Conta Y"), the text says why, "Cancelar" and the way
   out ("Arquivar"). The undo is a toast with "Desfazer"; a refusal that needs an answer, a `danger`
   toast. A list with nothing yet is an `EmptyBlock`; a failed load, a `SectionError`.
+
+## Cards building blocks
+`../design/accounts/components.md` items 17–21; the cards and invoice screens share them.
+- `CardBlock` (`components/finance/card-block`): one card in the list: the drawing, the name with
+  its colour dot and the grey cycle line ("Fecha dia 25 · vence dia 4 · Member A") inside the
+  `link` element, the `actions` slot, the sunken "Fatura aberta" row (big amount, "vence 04/11",
+  chevron) inside `invoice.link`, the limit line and its `ProgressBar` when there is a limit, the
+  "Em aberto no cartão" sentence and, under a dashed rule, "Melhor dia de compra". The footer stays
+  at the bottom when a grid row stretches the blocks.
+- `InvoiceMonthStrip` (`components/finance/invoice-month-strip`): the scrolling row of month
+  pills (month and status), the current one with the 2 px ink outline and `aria-current`; a small
+  vertical year label before a January (`yearBefore`); "Todas" at the end calls `onAll`. It
+  scrolls the current month into view.
+- `InvoiceYearSheet` (`components/finance/invoice-year-sheet`): the `Sheet` behind "Todas": the
+  year between arrows (no arrow when there is nowhere to go), the months in three columns with the
+  status `Badge` and the total, and the footnote. Choosing a month closes it.
+- `InvoiceSummary` (`components/finance/invoice-summary`): the chosen invoice: title and status
+  badge, the dates, the total (`Amount` size `total`), the "Pago" / "Falta pagar" tiles, the
+  "Seu" / "De terceiros" bar (an SVG with a surface gap) with its legend, an optional `note` (the
+  future or paid sentence) and the `action` slot ("Pagar fatura").
+- `InvoiceFacts` (`components/finance/invoice-facts`): a `dl` in three columns, the invoice
+  detail header (total, pago, falta pagar, seu, de terceiros, situação).
+- `InvoiceLine` (`components/finance/invoice-line`): one line of an invoice: the date, the
+  category drawing, the description with the installment `Badge` ("1/3"), the grey detail ("R$
+  160,00 de terceiros") and the amount; `isPayment` uses the `invoice-paid` drawing and the
+  positive tone.
 
 ## Account layouts
 - `AuthLayout` (`components/layout/auth-layout`): the auth screen of

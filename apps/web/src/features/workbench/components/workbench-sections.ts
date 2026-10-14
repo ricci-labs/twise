@@ -40,8 +40,14 @@ import { tipExamples } from '@web/components/feedback/tip'
 import { toastExamples } from '@web/components/feedback/toast'
 import { accountGroupExamples } from '@web/components/finance/account-group'
 import { accountRowExamples } from '@web/components/finance/account-row'
+import { cardBlockExamples } from '@web/components/finance/card-block'
 import { categoryRowExamples } from '@web/components/finance/category-row'
+import { invoiceFactsExamples } from '@web/components/finance/invoice-facts'
+import { invoiceLineExamples } from '@web/components/finance/invoice-line'
+import { invoiceMonthStripExamples } from '@web/components/finance/invoice-month-strip'
 import { invoicePreviewExamples } from '@web/components/finance/invoice-preview'
+import { invoiceSummaryExamples } from '@web/components/finance/invoice-summary'
+import { invoiceYearSheetExamples } from '@web/components/finance/invoice-year-sheet'
 import { recentEntriesExamples } from '@web/components/finance/recent-entries'
 import { sharesListExamples } from '@web/components/finance/shares-list'
 import { subcategoryAddChipExamples } from '@web/components/finance/subcategory-add-chip'
@@ -114,6 +120,12 @@ export const workbenchSections: readonly ComponentExamples[] = [
   categoryRowExamples,
   subcategoryChipExamples,
   subcategoryAddChipExamples,
+  cardBlockExamples,
+  invoiceMonthStripExamples,
+  invoiceSummaryExamples,
+  invoiceLineExamples,
+  invoiceFactsExamples,
+  invoiceYearSheetExamples,
   forecastChartExamples,
   committedChartExamples,
   paceRingExamples,

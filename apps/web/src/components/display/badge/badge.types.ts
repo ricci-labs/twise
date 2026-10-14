@@ -3,6 +3,7 @@ import type { VariantProps } from 'class-variance-authority'
 import type { ReactNode } from 'react'
 
 export type BadgeProps = VariantProps<typeof badgeVariants> & {
+  hasDot?: boolean
   children: ReactNode
   className?: string
 }

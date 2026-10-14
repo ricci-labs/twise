@@ -8,6 +8,7 @@ export const amountVariants = cva('whitespace-nowrap tabular-nums', {
       md: 'text-amount',
       lg: 'text-amount-lg',
       kpi: 'font-display text-amount-kpi',
+      total: 'font-display text-amount-total',
       hero: 'text-amount-hero',
     },
     tone: {

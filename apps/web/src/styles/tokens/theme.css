@@ -16,6 +16,10 @@
   --text-amount-hero--line-height: 3rem;
   --text-amount-hero--font-weight: 750;
   --text-amount-hero--letter-spacing: -0.02em;
+  --text-amount-total: 2.125rem;
+  --text-amount-total--line-height: 2.5rem;
+  --text-amount-total--font-weight: 750;
+  --text-amount-total--letter-spacing: -0.02em;
   --text-amount-kpi: 1.875rem;
   --text-amount-kpi--line-height: 2.25rem;
   --text-amount-kpi--font-weight: 750;
@@ -96,6 +100,12 @@
   --text-group-note: 0.78125rem;
   --text-group-note--line-height: 1.0625rem;
   --text-group-note--font-weight: 400;
+  --text-fine: 0.78125rem;
+  --text-fine--line-height: 1rem;
+  --text-fine--font-weight: 400;
+  --text-amount-card: 1.25rem;
+  --text-amount-card--line-height: 1.5rem;
+  --text-amount-card--font-weight: 750;
   --text-lead: 1.0625rem;
   --text-lead--line-height: 1.4375rem;
   --text-lead--font-weight: 650;
@@ -151,6 +161,7 @@
   --text-base: var(--text-body);
   --text-base--line-height: var(--text-body--line-height);
 
+  --radius-swatch: 0.1875rem;
   --radius-sm: 0.5rem;
   --radius-md: 0.875rem;
   --radius-lg: 1.25rem;
@@ -290,6 +301,19 @@
 
 @utility border-stroke {
   border-width: var(--stroke-emphasis);
+}
+
+@utility border-t-stroke {
+  border-top-width: var(--stroke-emphasis);
+}
+
+@utility border-l-stroke {
+  border-left-width: var(--stroke-emphasis);
+}
+
+@utility text-vertical {
+  writing-mode: vertical-rl;
+  rotate: 180deg;
 }
 
 @utility underline-stroke {

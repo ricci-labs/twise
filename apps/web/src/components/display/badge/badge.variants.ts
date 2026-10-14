@@ -7,7 +7,9 @@ export const badgeVariants = cva(
       size: {
         md: 'h-6 px-2.5',
         sm: 'h-5.5 px-2.25',
+        xs: 'h-5 px-2 text-tab font-semibold',
       },
+
       tone: {
         neutral: 'bg-sunken text-ink',
         info: 'bg-info-soft text-info',
@@ -19,3 +21,5 @@ export const badgeVariants = cva(
     defaultVariants: { tone: 'neutral', size: 'md' },
   },
 )
+
+export const badgeDotVariants = cva('size-1.5 shrink-0 rounded-full bg-current')
