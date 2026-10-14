@@ -1,7 +1,7 @@
 ---
 summary: Twise design system guide — principles, voice, colour, type, spacing, states and owl motion, icons and illustrations, brand, the component list, and how it maps to Tailwind v4 + shadcn in apps/web.
 read_when: Any visual decision, or before building a component or an owl animation.
-updated: 2026-10-01
+updated: 2026-10-14
 ---
 
 # Twise design system
@@ -151,14 +151,20 @@ layered SVG (`kit-…`) with an `id` per piece: `k-base`, `k-olhos-abertos`, `k-
 `k-olho-dir`, `k-olhos-sono`, `k-piscadinha` and one group per object.
 
 ## Icons and illustrations
-- **Interface icons:** Lucide (`lucide-react`, shadcn/ui's default), 2 px stroke, 20–24 px, in the
-  colour of the text next to them. Bundled with the app, never from a CDN.
+- **Interface icons:** the Twise set (`../assets/icones/`, decided with the Home design,
+  `../home/decisions.md`): two layers, a stroke in the colour of the text next to them and an inner
+  fill only when selected or in an alert, 20–24 px. Lucide (`lucide-react`) only for small utility
+  glyphs (chevrons, close, the calendar). Bundled with the app, never from a CDN.
 - **Illustrations:** the `Ilustracoes` group is the brand's hand. Brush and pen drawings: a
   `sketch-ink` stroke that thickens and thins, outlines that don't close perfectly, `mint` printed
   slightly off register, texture dots in threes, curls and sparkle strokes. Always on
   `sketch-paper` (cream) or `mint-soft`. No perfect geometric shapes, gradients or 3D.
-- **Where they go:** category icons in lists, empty states, onboarding and the corner of the
-  "Livre para gastar" card. Buttons and navigation use Lucide only.
+- **Where they go:** category icons in lists, pickers and sheets, empty states, onboarding and the
+  corner of the "Livre para gastar" card. Navigation uses the Twise icon set.
+- **Never clipped in a circle** (decided with the new-entry design, `../entries/decisions.md`): on
+  white or light surfaces use the loose versions without the paper square
+  (`../assets/ilustracoes/soltas/`, 42–46 px); the paper square only when the illustration is the
+  button itself (the category grid).
 
 ## Brand: name, slogan and logo
 **The name.** "Twise" joins *two* with *wise*: the couple's money looked after wisely. In the logo
@@ -220,7 +226,7 @@ ADR 0027 (`../../architecture/web-design-tokens.md`, `../../architecture/web-com
   state. Each component's README says which shadcn piece to use and what changes in it. Where it
   lives in `apps/web` follows ADR 0027's layers: shadcn primitives in `components/ui`, our
   components in `components/<family>/<component>/`.
-- **Icons:** `lucide-react`. **Toasts:** `sonner`. **Forms:** shadcn's `Field` parts with React Hook
+- **Icons:** the Twise set (`TwiseIcon`), `lucide-react` for utility glyphs. **Toasts:** `sonner`. **Forms:** shadcn's `Field` parts with React Hook
   Form + Zod from `@financas/shared`. **Tables:** TanStack Table on desktop, a list on phones.
 - **Illustrations and logo:** ready SVGs for `<img>` (or imported by Vite), with fixed colours. The
   PWA icons (192 and 512 px, and the `apple-touch-icon`) come from `twise-icone.svg`; the manifest

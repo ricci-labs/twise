@@ -1,7 +1,7 @@
 ---
-summary: API gaps and defects found while writing the web requirements (2026-09-29) and the Home design (2026-10-09) — errors that surface as 500, reads the screens need, overview fields the Home needs, and behaviours to decide — with the proposed fix and when.
+summary: API gaps and defects found while writing the web requirements (2026-09-29), the Home design (2026-10-09) and the new-entry design (2026-10-10) — errors that surface as 500, reads the screens need, overview fields the Home needs, and behaviours to decide — with the proposed fix and when.
 read_when: Planning the web work, fixing the API before a screen, or wondering why a requirement works around something.
-updated: 2026-10-09
+updated: 2026-10-14
 ---
 
 # API gaps found by the requirements
@@ -28,6 +28,8 @@ matching screen would be wrong or fragile without it.
 | G9 | `occurrence_overdue` insights carry the occurrence id but not its description or type. | Looks it up in `GET /occurrences` when it's in range. | **Done:** `description` and `entryType` are in the insight values. | Home round (with G29) |
 | G10 | Reminder e-mails link to the app's home. | — | Link bills to `PLAN-03` and invoices to `CARD-03` with the ids. | With notifications |
 | G11 | The version history of an edited entry is only readable through `GET /audit`, which members and viewers can't open. | `ENT-03` shows "Histórico" only with `audit:view`. | Decide: a small `GET /entries/:id/versions` for `entries:view`. | Later |
+| G38 | `ENT-02` design (2026-10-10): the description suggestions (RF-ENT-14) have no route, and choosing one also fills the category, account and payment method used last time. | No suggestions. | `GET /entries/suggestions?type=&q=`: up to 3 of the workspace's recent descriptions of that type containing `q` (case- and accent-insensitive), one per description, each as it was last used: `description`, `categoryId`, `accountId` (paid from, received in, or the card), `paymentMethod`, `lastAmountCents`, `lastUsedOn`. An account or category no longer active comes as `null`. Types with a category only (`expense`, `card_purchase`, `income`). Permission `entries:view`. | Entries round |
+| G39 | `ENT-02` design: "Repetir um recente" (RF-ENT-13) needs the entries the current person repeats most. | The row is not shown. | `GET /entries/frequent?type=&limit=`: the same item shape as G38, from the entries the **current user** recorded in the last 90 days (by date of the entry), one per description, used at least twice, the most repeated first (ties: the latest); `limit` 1–8, default 8. Permission `entries:view`. | Entries round |
 
 ## Overview fields the Home needs
 From the Home design (`../../design/home/data.md`), approved by the user on 2026-10-09. The web

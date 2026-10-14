@@ -1,7 +1,7 @@
 ---
 summary: Overview of the ENT-02 "Novo lançamento" design: layouts, rules, build order and what is still not designed.
 read_when: Starting ENT-02 or any form that reuses its pieces (pickers, money field, date shortcuts, shares).
-updated: 2026-10-10
+updated: 2026-10-14
 ---
 
 # New entry (ENT-02)
@@ -35,4 +35,4 @@ Requirement: `../../product/requirements/modules/entries.md` (ENT-02, RF-ENT-5 t
 
 - ENT-01 list, ENT-03 detail, ENT-04 edit (reuses this form; closed-invoice entries only change description and notes), ENT-05 trash.
 - "Novo contato" inside the contact picker opens CON-05 in a dialog (contacts round).
-- "Cadastrar conta" / "Cadastrar cartão" from the empty pickers open ACC-02 / CARD-01 (accounts and cards round) and come back with the new item selected.
+- "Cadastrar conta" / "Cadastrar cartão" from the empty pickers open ACC-03 / CARD-04, the new account and new card forms (accounts and cards round) and come back with the new item selected.

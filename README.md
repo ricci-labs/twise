@@ -12,7 +12,7 @@
 
 Household finance for couples, with a web dashboard and (soon) a WhatsApp assistant.
 
-[![Status](https://img.shields.io/badge/status-API%20%2B%20account%20screens%20live-80dca5?style=flat-square)](docs/product/roadmap.md)
+[![Status](https://img.shields.io/badge/status-API%20%2B%20account%20and%20Home%20live-80dca5?style=flat-square)](docs/product/roadmap.md)
 [![Node](https://img.shields.io/badge/node-24%20LTS-339933?style=flat-square&logo=nodedotjs&logoColor=white)](https://nodejs.org)
 [![TypeScript](https://img.shields.io/badge/typescript-strict-3178C6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org)
 [![pnpm](https://img.shields.io/badge/pnpm-workspaces-F69220?style=flat-square&logo=pnpm&logoColor=white)](https://pnpm.io)
@@ -27,8 +27,8 @@ Household finance for couples, with a web dashboard and (soon) a WhatsApp assist
 
 > [!NOTE]
 > **The backend is done and running in production** on a home server: ledger, cards and invoices, shared purchases and charges, planning, dashboard metrics and alerts, reminders, attachments and an audit log, all behind a typed HTTP API ([Postman collection](docs/api/postman.md)).
-> **The web app has started:** its foundation (design tokens, components, checks) and every account screen are live: log in, sign up, email confirmation, password reset, invitations and the app opening, as an installable PWA.
-> **Next:** the dashboard and the other screens, whose [requirements](docs/product/requirements/README.md) are written screen by screen, and then the WhatsApp channel with the Claude agent. Follow along in the [roadmap](docs/product/roadmap.md).
+> **The web app is taking shape:** its foundation (design tokens, components, checks), every account screen (log in, sign up, email confirmation, password reset, invitations, the app opening) and the **Home** (the app shell, the period overview with its indicators, alerts, forecasts and budgets, the first run and a public demo page) are live, as an installable PWA.
+> **Next:** the **new entry form** (designed, being built), then the other screens, whose [requirements](docs/product/requirements/README.md) are written screen by screen, and then the WhatsApp channel with the Claude agent. Follow along in the [roadmap](docs/product/roadmap.md).
 
 ## A first look
 
@@ -95,7 +95,7 @@ The web dashboard shows the **period overview** (fixed income, spent, committed,
 | 📎 | **Receipts** | Attach receipts to entries and charges | ✅ API · WhatsApp photos next |
 | 👥 | **Workspaces** | Isolated spaces ("Home", "Personal") with members, invitations and module-level permissions | ✅ API |
 | 🕵️ | **History** | Append-only audit log of every change, with who, when and from where | ✅ API |
-| 🖥️ | **Web app** | Mobile-first PWA for the couple: installable, works with a weak signal, light and dark themes | ✅ account screens · 🔜 dashboard |
+| 🖥️ | **Web app** | Mobile-first PWA for the couple: installable, works with a weak signal, light and dark themes | ✅ account screens and Home · 🔜 new entry |
 | 💬 | **WhatsApp agent** | Records expenses, income, transfers and paybacks in natural language. Always asks before saving | 🔜 after the web |
 
 ## How it works
@@ -203,7 +203,8 @@ The docs are written to be read by people **and by AI agents**: every file start
 - [x] Web requirements: experience, UI standards, design system brief, every screen
 - [x] **Web foundation**: design tokens, components, checks, PWA and the bundle budget
 - [x] **Account screens**: log in, sign up, email confirmation, password reset, invitations, app opening, owl motion
-- [ ] **Web app**: the dashboard and the other screens, one by one
+- [x] **Home**: app shell, period overview, alerts, forecasts, budgets, first run, demo page
+- [ ] **Web app**: the new entry form, then the other screens, one by one
 - [ ] **WhatsApp channel and Claude agent**
 - [ ] Voice notes and receipt photos on WhatsApp
 - [ ] Bank statement and invoice import

@@ -1,7 +1,7 @@
 ---
 summary: Catalog of every API error code — HTTP status, when it happens, the pt-BR message the user sees, and where it shows (field, form, page, toast).
 read_when: Showing any API error in the web, writing a screen spec, or adding an error code to the API (add it here in the same PR).
-updated: 2026-10-01
+updated: 2026-10-14
 ---
 
 # Error messages
@@ -118,7 +118,7 @@ message.
 | `SAME_ACCOUNT` | 400 | Transfer to the same account | "Escolha uma conta diferente da de origem." | field "Para" |
 | `NOT_A_CARD` | 400 | Not a card (guard) | "Escolha um cartão." | field card |
 | `CARD_NOT_SET_UP` | 400 | Card without cycle | "Este cartão não tem fechamento e vencimento. Configure o cartão primeiro." | field card |
-| `INVOICE_CLOSED` | 400 | An installment would land on a closed invoice | "A fatura de {mês} já fechou. Registre a partir da parcela {N}." (month and N computed by the web) | field first installment |
+| `INVOICE_CLOSED` | 400 | An installment would land on a closed invoice | "A fatura de {mês} já fechou. Registre a partir da parcela {N}." (month and N computed by the web) | warning Alert under the invoice preview, with "Começar da parcela {N}" (RF-ENT-7) |
 | `TOO_MANY_INSTALLMENTS` | 400 | More than 48, or more than the amount in cents | "Use de 1 a 48 parcelas." | field installments |
 | `FIRST_INSTALLMENT_OUT_OF_RANGE` | 400 | First installment above the count | "A parcela inicial não pode passar do número de parcelas." | field first installment |
 | `PAYMENT_ACCOUNT_REQUIRED` | 400 | Invoice payment without a paying account | "Escolha de qual conta sai o pagamento." | field "Pago com" |
