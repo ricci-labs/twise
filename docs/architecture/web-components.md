@@ -33,7 +33,7 @@ where it's used.
 | Family | Components (from the brief) |
 |---|---|
 | `actions/` | `Button`, `IconButton`, `SubmitButton`, `FloatingActionButton`, `ActionMenu`, `SegmentedControl` |
-| `inputs/` | `TextInput`, `PasswordInput`, `EmailInput`, `PhoneInput`, `SearchInput`, `TextArea`, `MoneyInput`, `ChoiceChips`, `DateInput`, `PeriodPicker`, `Select`, `Combobox`, `CategoryPicker`, `Checkbox`, `RadioGroup`, `Switch`, `DayOfMonthPicker`, `InstallmentsStepper`, `FileUpload`, `ColorSwatch` |
+| `inputs/` | `TextInput`, `PasswordInput`, `EmailInput`, `PhoneInput`, `SearchInput`, `TextArea`, `MoneyInput`, `ChoiceChips`, `PickerField`, `PickerSheet`, `DateInput`, `PeriodPicker`, `Select`, `Combobox`, `CategoryPicker`, `Checkbox`, `RadioGroup`, `Switch`, `DayOfMonthPicker`, `InstallmentsStepper`, `FileUpload`, `ColorSwatch` |
 | `forms/` | `Form`, `FormField`, `FormErrorSummary`, `FormFooter`, `RequiredLegend` |
 | `feedback/` | `Toast`, `InlineAlert`, `Banner`, `ConfirmDialog`, `EmptyState`, `Skeleton`, `ErrorState` |
 | `display/` | `Amount`, `StatusBadge`, `Avatar`, `ListItem`, `Card`, `StatCard`, `ThresholdProgress`, `Tabs`, `Accordion`, `DataList` (table on desktop, list on mobile), `LoadMore`, `Tooltip`, `HelpPopover`, `FilterChips`, `CategoryIcon` |
@@ -301,6 +301,20 @@ component here, so the form, and later the account, card and planning forms, sha
   (who spent, two cards with an initial). An option can open a dialog (`opensDialog`,
   `aria-haspopup`) and carry an icon (`calendar` before the label, `chevron` after it); `onSelect`
   fires for every press, even on the chosen option, so "Mais" and "Outra data" reopen their sheet.
+- `PickerField` (`components/inputs/picker-field`): the field of an account, card, category or
+  contact: a button named by its `FormField` label that opens a dialog, with the drawing, the name
+  and a grey second line ("Saldo de hoje: R$ 4.200,00"); a subcategory reads with its parent
+  (`parentLabel`: "Mercado › Feira", the separator in `ink-subtle`); empty, a dashed "+" square and
+  the placeholder. 56 px on the phone, 48 px from 1024 px.
+- `PickerSheet` (`components/inputs/picker-sheet`): what a `PickerField` opens. A bottom `Sheet`
+  with "Fechar" on the phone; from 1024 px a popover anchored to the field (`anchor`), above a
+  dialog. `layout` `list` (rows with the drawing and the detail, the current one on `mint-soft` with
+  a check) or `grid` (the category tiles on paper; the current one keeps its paper and gets a 2 px
+  sketch-ink outline and a bold label, no mint and no check). An item with `children` shows "N sub";
+  pressing it opens the row "Em {mãe}" below the grid with "Só {mãe}" and the children as chips.
+  `searchLabel` adds a search (with its icon) that ignores case and accents and also finds children,
+  shown "em {mãe}" with the parent's drawing; `empty` replaces the list with the drawing, a sentence
+  and the primary action ("Cadastrar conta"). A pick calls `onSelect` and closes.
 - `CategoryArt` (`components/display/category-art`): the category drawing of an account's `icon`,
   never clipped in a circle (`../product/requirements/ui-standards.md` → Visual rules across
   screens). By default (`loose`) it is the drawing without its paper square, from
@@ -308,7 +322,7 @@ component here, so the form, and later the account, card and planning forms, sha
   surfaces; in the dark theme it switches to the drawing on its paper square, since the loose black
   ink would vanish. `onLight` keeps the loose drawing in both themes, for a surface that is always
   light (the paper or mint tiles of the category grid). Sizes `sm` 32, `md` 42, `lg` 46, `xl` 64 and
-  `2xl` 88 px. A drawing with no loose version (travel) uses its paper one; no icon shows the
+  `2xl` 88 px. A drawing with no loose version uses its paper one; no icon shows the
   initial on a paper square.
 
 ## Account layouts

@@ -9,3 +9,19 @@ export const sheetPopupVariants = cva(
 )
 
 export const sheetHandleVariants = cva('mx-auto mb-2 h-1 w-10 rounded-full bg-border')
+
+export const sheetHeadVariants = cva('flex items-center justify-between gap-2')
+
+export const sheetTitleVariants = cva('text-title-sm', {
+  variants: {
+    hasClose: {
+      true: 'font-display text-title',
+      false: '',
+    },
+  },
+  defaultVariants: { hasClose: false },
+})
+
+export const sheetCloseVariants = cva(
+  'grid size-touch cursor-pointer place-items-center rounded-full text-ink outline-none hover:bg-sunken focus-visible:ring-2 focus-visible:ring-focus-ring [&_svg]:size-5',
+)

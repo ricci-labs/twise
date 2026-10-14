@@ -1,7 +1,7 @@
 ---
 summary: The web's single source of visual values — token tiers and files, naming, colour roles, type, spacing, radius, elevation, motion, layers, breakpoints, dark mode, tokens in JS, and the checks that keep raw values out.
 read_when: Adding or changing a colour, font, size, shadow, animation or theme; styling anything in apps/web; reviewing a web PR.
-updated: 2026-10-09
+updated: 2026-10-14
 ---
 
 # Web design tokens
@@ -99,9 +99,10 @@ When to use each one: the design system guide → Colour, and each token's notes
   toasts) and `shadow-dialog` (dialogs, bottom sheet) only, from the `--elevation-*` values of each
   theme.
 - **Borders:** `1px` for cards and fields, `2px` for focus and errors. The design's thinner
-  emphasis stroke (`--stroke-emphasis`, 1.5 px) has two utilities, because Tailwind makes no
-  fractional ring or decoration widths: `inset-stroke` (an inset outline in the current colour, the
-  outline button) and `underline-stroke` (the tertiary link underline).
+  emphasis stroke (`--stroke-emphasis`, 1.5 px) has three utilities, because Tailwind makes no
+  fractional ring, border or decoration widths: `inset-stroke` (an inset outline in the current
+  colour, the outline button), `underline-stroke` (the tertiary link underline) and `border-stroke`
+  (the dashed outlines of an empty picker and "+ Dividir com contatos").
 
 ## Motion and layers
 Tailwind has no duration or z-index namespace, so these are `:root` variables with one `@utility`
