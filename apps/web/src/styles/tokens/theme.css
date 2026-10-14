@@ -81,6 +81,12 @@
   --text-screen-title-lg--line-height: 2.625rem;
   --text-screen-title-lg--font-weight: 750;
   --text-screen-title-lg--letter-spacing: -0.02em;
+  --text-letter: 1.125rem;
+  --text-letter--line-height: 1;
+  --text-letter--font-weight: 750;
+  --text-sub-page: 0.84375rem;
+  --text-sub-page--line-height: 1.1875rem;
+  --text-sub-page--font-weight: 400;
   --text-lead: 1.0625rem;
   --text-lead--line-height: 1.4375rem;
   --text-lead--font-weight: 650;

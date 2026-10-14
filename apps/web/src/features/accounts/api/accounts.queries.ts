@@ -40,6 +40,17 @@ export function membersQueryOptions(workspaceId: string) {
   })
 }
 
+export function trashedAccountsQueryOptions(workspaceId: string) {
+  return queryOptions({
+    queryKey: [...queryKeys.workspace(workspaceId), 'accounts-trash'] as const,
+    queryFn: () => fetchTrashedAccounts(workspaceId),
+  })
+}
+
+export function fetchTrashedAccounts(workspaceId: string) {
+  return unwrap(workspaceApi.accounts.trash.$get({ param: { workspaceId } }))
+}
+
 export function fetchAccounts(workspaceId: string) {
   return unwrap(workspaceApi.accounts.$get({ param: { workspaceId } }))
 }

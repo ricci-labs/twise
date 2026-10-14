@@ -23,10 +23,8 @@ export const emptyBlockExamples: ComponentExamples = {
       ),
     },
     {
-      name: 'Para quem só vê',
-      render: () => (
-        <EmptyBlock icon="trash" title="A lixeira está vazia." text="Nada foi excluído." />
-      ),
+      name: 'Só a frase',
+      render: () => <EmptyBlock icon="receipt" title="A lixeira está vazia." />,
     },
   ],
 }

@@ -101,4 +101,33 @@ export const accountsMessages = {
     },
   },
   failed: 'Não foi possível carregar as contas.',
+  trashPage: {
+    pageTitle: 'Lixeira de contas',
+    title: 'Lixeira de contas',
+    description: 'Contas, cartões e categorias excluídos. Restaurar traz de volta com o histórico.',
+    back: 'Voltar para Contas',
+    kinds: {
+      expense_category: 'Categoria de despesa',
+      income_category: 'Categoria de receita',
+    },
+    inside: (kind: string, parent: string) => `${kind} · dentro de ${parent}`,
+    deleted: (date: string, isMasculine: boolean) =>
+      `${isMasculine ? 'Excluído' : 'Excluída'} em ${date}`,
+    deletedBy: (deleted: string, name: string) => `${deleted} por ${name}`,
+    reason: (reason: string) => `Motivo: ${reason}`,
+    restore: 'Restaurar',
+    restoreLabel: (name: string) => `Restaurar ${name}`,
+    restored: {
+      account: 'Conta restaurada.',
+      card: 'Cartão restaurado.',
+      category: 'Categoria restaurada.',
+    },
+    see: 'Ver',
+    parentInTrash: (parent: string, isCategory: boolean) =>
+      `${parent}, a ${isCategory ? 'categoria' : 'conta'} mãe, está na lixeira.`,
+    restoreBoth: 'Restaurar as duas',
+    nameTaken: 'Já existe outra conta com esse nome. Renomeie a outra e tente de novo.',
+    empty: 'A lixeira está vazia.',
+    failed: 'Não foi possível carregar a lixeira.',
+  },
 } as const

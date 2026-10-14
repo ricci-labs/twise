@@ -90,7 +90,8 @@ When to use each one: the design system guide → Colour, and each token's notes
   `dialog-text` (15/22), a confirmation dialog's title and text; `form-title` (24/30, 750) and `form-title-lg` (26/32,
   desktop), the title of a full-screen form or form dialog; `choice` (15/20, 500), the text of
   choice chips and of a filled picker field (with `font-semibold` where the design sets it);
-  `row` (15.5/20, 600) and `row-detail` (13/17), an account row's name and value (`font-bold`) and
+  `letter` (18, 750, display), the initial that stands in for a missing drawing; `sub-page`
+  (13.5/19), a sub page's description; `row` (15.5/20, 600) and `row-detail` (13/17), an account row's name and value (`font-bold`) and
   its grey second line; `message` (15/21), the sentence of a section error; `bar-title` (18/24,
   700, display), the workspace name in the phone's top bar; `tab` (11.5/14, 550), the bottom bar's
   labels; `note` (13/18, 400), the small lines of a form (the

@@ -43,6 +43,7 @@ import { accountRowExamples } from '@web/components/finance/account-row'
 import { invoicePreviewExamples } from '@web/components/finance/invoice-preview'
 import { recentEntriesExamples } from '@web/components/finance/recent-entries'
 import { sharesListExamples } from '@web/components/finance/shares-list'
+import { trashRowExamples } from '@web/components/finance/trash-row'
 import { fieldGroupExamples } from '@web/components/forms/field-group'
 import { formFieldExamples } from '@web/components/forms/form-field'
 import { lockedFieldExamples } from '@web/components/forms/locked-field'
@@ -65,6 +66,7 @@ import { authLayoutExamples } from '@web/components/layout/auth-layout'
 import { formOverlayExamples } from '@web/components/layout/form-overlay'
 import { momentScreenExamples } from '@web/components/layout/moment-screen'
 import { sheetExamples } from '@web/components/layout/sheet'
+import { subPageHeaderExamples } from '@web/components/layout/sub-page-header'
 import { appSidebarExamples } from '@web/components/navigation/app-sidebar'
 import { bottomTabBarExamples } from '@web/components/navigation/bottom-tab-bar'
 import type { ComponentExamples } from '@web/lib/examples.types'
@@ -104,6 +106,8 @@ export const workbenchSections: readonly ComponentExamples[] = [
   colorPickerExamples,
   lockedFieldExamples,
   fieldGroupExamples,
+  subPageHeaderExamples,
+  trashRowExamples,
   forecastChartExamples,
   committedChartExamples,
   paceRingExamples,

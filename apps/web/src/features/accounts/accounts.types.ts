@@ -7,6 +7,7 @@ import type {
   fetchBalances,
   fetchCards,
   fetchMembers,
+  fetchTrashedAccounts,
 } from '@web/features/accounts/api/accounts.queries'
 import type { z } from 'zod'
 
@@ -143,4 +144,40 @@ export type AccountChangeRequest = {
 
 export type ChangeAccountProps = AccountEditorProps & {
   accountId: string
+}
+
+export type TrashedAccount = Awaited<ReturnType<typeof fetchTrashedAccounts>>[number]
+
+export type TrashPageProps = {
+  workspaceId: string
+  permissions: readonly Permission[]
+}
+
+export type TrashedItem = {
+  id: string
+  name: string
+  icon: string | null
+  kindLine: string
+  deletedLine: string
+  reason: string | null
+  parent: TrashedParent | null
+  restoredMessage: string
+  isListedInAccounts: boolean
+}
+
+export type TrashedParent = {
+  id: string
+  name: string
+  isInTrash: boolean
+  isCategory: boolean
+}
+
+export type TrashListProps = {
+  workspaceId: string
+  items: readonly TrashedItem[]
+}
+
+export type TrashRowProps = {
+  item: TrashedItem
+  onRestore: () => void
 }
