@@ -63,6 +63,9 @@
   --text-caption: 0.75rem;
   --text-caption--line-height: 1rem;
   --text-caption--font-weight: 600;
+  --text-note: 0.8125rem;
+  --text-note--line-height: 1.125rem;
+  --text-note--font-weight: 400;
   --text-screen-title: 1.875rem;
   --text-screen-title--line-height: 2.25rem;
   --text-screen-title--font-weight: 750;
