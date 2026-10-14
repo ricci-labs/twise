@@ -97,3 +97,33 @@ export function accountsAnswers(overrides: Record<string, FakeAnswer> = {}) {
     ...overrides,
   }
 }
+
+export const TRASHED_ACCOUNT = '00000000-0000-4000-8000-0000000000d1'
+export const TRASHED_CHILD = '00000000-0000-4000-8000-0000000000d2'
+export const TRASHED_PARENT = '00000000-0000-4000-8000-0000000000d3'
+
+export const TRASH = [
+  {
+    ...ledgerAccount(TRASHED_ACCOUNT, 'checking', 'Conta antiga'),
+    deletedAt: '2026-10-12T15:00:00.000Z',
+    deletedByUserId: MEMBER_A,
+    deleteReason: 'conta encerrada no banco.',
+  },
+  {
+    ...ledgerAccount(TRASHED_CHILD, 'expense_category', 'Academia', {
+      parentId: TRASHED_PARENT,
+      icon: null,
+    }),
+    class: 'expense',
+    deletedAt: '2026-10-02T15:00:00.000Z',
+    deletedByUserId: MEMBER_B,
+    deleteReason: null,
+  },
+  {
+    ...ledgerAccount(TRASHED_PARENT, 'expense_category', 'Saúde', { icon: 'health' }),
+    class: 'expense',
+    deletedAt: '2026-10-01T15:00:00.000Z',
+    deletedByUserId: null,
+    deleteReason: null,
+  },
+]

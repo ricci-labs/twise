@@ -37,6 +37,7 @@ tests build their own with a memory history.
 | `_app/w/$workspaceId/index.tsx` | `HOME-01` (`features/home`): `?period=YYYY-MM` (omitted = the current period) picks the overview; the page gets the member's permissions from the route context `openWorkspace` returned |
 | `_app/w/$workspaceId/$area.tsx` | Areas not built yet (`entries`, `cards`, `planning`, `contacts`, `categories`, `members`, `settings`, `history`, `trash`, `account`): a calm "Em breve" page inside the shell; each real area's route replaces it |
 | `_app/w/$workspaceId/accounts.tsx` | `ACC-01`, the accounts and cards with their balances (`features/accounts`): the summary carousel, the "Dinheiro" and "Cartões" groups, the archived ones folded, and each row's actions as the permissions allow. `?created={id}` marks the account just created on `mint-soft` for 4 s, then leaves the URL |
+| `_app/w/$workspaceId/accounts_.trash.tsx` | `ACC-04` at `/w/:id/accounts/trash` (not nested in the accounts page), for `accounts:delete`: the deleted accounts, cards and categories, newest first, each with "Restaurar"; a child whose parent is in the trash offers "Restaurar as duas" in an error toast, and "Ver" in the success toast goes back to the list with the item highlighted |
 | `_app/w/$workspaceId/entries/index.tsx`... | One folder per area: `entries`, `cards`, `planning`, `contacts`, `accounts`, `members`, `settings`, `history`, `trash` |
 | `_app/account.tsx` | My account and preferences (`ME-01`) |
 | `dev/components.tsx` | Workbench, development only (`web-components.md`) |

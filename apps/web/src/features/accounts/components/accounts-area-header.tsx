@@ -14,8 +14,8 @@ export function AccountsAreaHeader({ workspaceId, current, canSeeTrash }: Accoun
         <h1 className="font-display text-form-title-lg">{messages.title}</h1>
         {canSeeTrash && (
           <Link
-            to="/w/$workspaceId/$area"
-            params={{ workspaceId, area: 'trash' }}
+            to="/w/$workspaceId/accounts/trash"
+            params={{ workspaceId }}
             aria-label={messages.trash}
             className="grid size-touch place-items-center rounded-full text-ink outline-none hover:bg-sunken focus-visible:ring-2 focus-visible:ring-focus-ring"
           >

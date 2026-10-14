@@ -23,6 +23,7 @@ export type TwiseIconName =
   | 'plan'
   | 'plus'
   | 'refresh'
+  | 'restore'
   | 'shield'
   | 'sliders'
   | 'subcategory'

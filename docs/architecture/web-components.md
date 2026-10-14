@@ -420,7 +420,8 @@ component here, so the form, and later the account, card and planning forms, sha
 - `ColorPicker` (`components/inputs/color-picker`, Base UI `RadioGroup`): "Sem cor" (a crossed
   circle) and the palette of `styles/account-colors.ts` as 36 px `ColorSwatch`es named by colour
   ("Petróleo"); the chosen one gets a 2 px ink ring 3 px away.
-- `CategoryArt` (`components/display/category-art`): the category drawing of an account's `icon`,
+- `CategoryArt` (`components/display/category-art`): the category drawing of an account's `icon`
+  (without one, its initial in display `letter` type on a paper square with the `md` radius),
   never clipped in a circle (`../product/requirements/ui-standards.md` → Visual rules across
   screens). By default (`loose`) it is the drawing without its paper square, from
   `assets/illustrations/loose/` (copied from `docs/design/assets/ilustracoes/soltas/`), for white
@@ -456,7 +457,15 @@ component here, so the form, and later the account, card and planning forms, sha
   value blocks), what the carousel shows before its numbers arrive.
 - `EmptyBlock` (`components/feedback/empty-block`): a whole list with nothing in it yet: the 96 px
   loose drawing, the `lead` sentence ("Nenhuma conta ainda."), the reason or next step, and the
-  first action, centred in a white card.
+  first action, centred in a white card. The second sentence and the action are optional ("A
+  lixeira está vazia.").
+- `TrashRow` (`components/finance/trash-row`): a deleted account, card or category: the drawing
+  (or the initial), the name, the grey lines (kind, "dentro de {mãe}", "Excluída em {data} por
+  {nome}"), the reason in ink, and the small secondary "Restaurar" with the restore arrow; the
+  button's name says what it restores ("Restaurar Conta antiga").
+- `SubPageHeader` (`components/layout/sub-page-header`): a page one level down on the phone: the
+  40 px "‹" back link (named "Voltar para {page}"), the title in `form-title-lg` and a grey
+  `sub-page` description under it.
 - The refused action is a `ConfirmDialog` with `confirmVariant="primary"` and `confirmIcon`: the
   title names the item ("Não dá para excluir a Conta Y"), the text says why, "Cancelar" and the way
   out ("Arquivar"). The undo is a toast with "Desfazer"; a refusal that needs an answer, a `danger`

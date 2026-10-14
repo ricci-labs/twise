@@ -237,7 +237,8 @@ updated: 2026-10-14
      refused delete, loading, empty, error, viewer; the phone's top and bottom bars to the approved
      model), `ACC-03` (done: new and edit account, "Nova conta" links, "Cadastrar conta" in the new
      entry's empty sheet; the "{nome} criada" sheet and "Informar saldo inicial" come with the
-     entry's opening balance), `ACC-04`
+     entry's opening balance), `ACC-04` (done: list, restore with "Ver", "Restaurar as duas",
+     empty and error)
   5. [ ] Web: `ACC-02` with subcategories and every subcategory action, `ACC-03` (category, edit,
      move)
   6. [ ] Web: `CARD-01`, `CARD-02` (strip, year sheet), `CARD-03`, `CARD-04` (days); "Cadastrar

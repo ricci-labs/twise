@@ -8,10 +8,10 @@ import {
 
 export function EmptyBlock({ icon, title, text, action }: EmptyBlockProps) {
   return (
-    <div data-slot="empty-block" className={emptyBlockVariants()}>
+    <div data-slot="empty-block" className={emptyBlockVariants({ hasText: Boolean(text) })}>
       <CategoryArt name={title} icon={icon} size="empty" />
       <p className={emptyBlockTitleVariants()}>{title}</p>
-      <p>{text}</p>
+      {text && <p>{text}</p>}
       {action && <div className={emptyBlockActionVariants()}>{action}</div>}
     </div>
   )

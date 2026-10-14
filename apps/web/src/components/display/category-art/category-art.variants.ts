@@ -1,26 +1,26 @@
 import { cva } from 'class-variance-authority'
 
 export const categoryArtVariants = cva(
-  'inline-grid shrink-0 place-items-center overflow-hidden font-bold text-sketch-ink',
+  'inline-grid shrink-0 place-items-center overflow-hidden text-sketch-ink',
   {
     variants: {
       variant: {
-        loose: 'rounded-sm',
-        onLight: 'rounded-sm',
+        loose: '',
+        onLight: '',
       },
       size: {
-        sm: 'size-8 text-caption',
-        md: 'size-10.5 text-label',
-        list: 'size-11 text-label',
-        lg: 'size-11.5 text-label',
+        sm: 'size-8 text-caption font-bold',
+        md: 'size-10.5 text-letter',
+        list: 'size-11 text-letter',
+        lg: 'size-11.5 text-label font-bold',
         xl: 'size-16 text-title',
         '2xl': 'size-22 text-title',
         empty: 'size-24 text-title',
         fill: 'size-full text-title',
       },
       hasArt: {
-        true: '',
-        false: 'bg-sketch-paper',
+        true: 'rounded-sm',
+        false: 'rounded-md bg-sketch-paper font-display',
       },
     },
     defaultVariants: { variant: 'loose', size: 'md', hasArt: true },
