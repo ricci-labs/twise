@@ -631,7 +631,8 @@ component here, so the form, and later the account, card and planning forms, sha
   SVG, keeping the two layers. Drawn icons use a 1.75 stroke; the plain line icons of the action
   sheets and menus (`edit`, `flag`, `archive`, `unarchive`, `calendar`, `subcategory`, `move`,
   `more`) keep the design's 2 (`weight` in the shape), and the sidebar's `collapse` / `expand`
-  arrows its 1.5.
+  arrows its 1.5. `install` (a phone with a down arrow, for "Instalar o app") was drawn here in
+  the same style, as the design set has none.
 - `lucide-react` only for small utility glyphs (chevrons, close, the period calendar), named
   imports only (each icon is its own module). Never the `icons` namespace or
   `DynamicIcon`, which pull in the whole set.

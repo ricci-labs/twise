@@ -1,4 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
+import { InstallOffer } from '@web/features/app-install'
 import { HomePage, homeSearchSchema } from '@web/features/home'
 
 export const Route = createFileRoute('/_app/w/$workspaceId/')({
@@ -15,6 +16,7 @@ export const Route = createFileRoute('/_app/w/$workspaceId/')({
         permissions={access.permissions}
         workspaceName={access.workspace.name}
         memberCount={access.memberNames.length}
+        installOffer={<InstallOffer />}
       />
     )
   },

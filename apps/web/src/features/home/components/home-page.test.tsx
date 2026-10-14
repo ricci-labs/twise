@@ -1,6 +1,7 @@
 import { createMemoryHistory } from '@tanstack/react-router'
 import { AppProviders } from '@web/app/providers'
 import { createApp } from '@web/app/router'
+import { listenForInstallOffer } from '@web/lib/install-prompt'
 import { expectNoAccessibilityViolations } from '@web/testing/accessibility'
 import { backgroundOfClass } from '@web/testing/colors'
 import { demoAnswers } from '@web/testing/demo-api'
@@ -14,6 +15,7 @@ import {
   workspaceAccess,
   workspaceList,
 } from '@web/testing/fake-api'
+import { finishInstall, offerInstall } from '@web/testing/install-offer'
 import type { FakeAnswer } from '@web/testing/testing.types'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { page } from 'vitest/browser'
@@ -146,6 +148,24 @@ describe('HOME-01 period overview', () => {
     await expect
       .element(screen.getByRole('link', { name: 'Ir para o período atual' }))
       .toBeVisible()
+  })
+
+  it('offers to install the app on the phone, under "Posso comprar?"', async () => {
+    await page.viewport(390, 844)
+    listenForInstallOffer()
+    offerInstall()
+    const { screen } = await openHome()
+
+    const offer = screen.getByRole('region', { name: 'Instale o Twise' })
+    await expect.element(offer).toBeVisible()
+    const shortcut = screen.getByRole('link', { name: /Posso comprar\?/ }).element()
+    expect(
+      shortcut.compareDocumentPosition(offer.element()) & Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy()
+
+    await page.viewport(1440, 900)
+    await expect.element(offer).not.toBeInTheDocument()
+    finishInstall()
   })
 
   it('moves to the next period through the address', async () => {

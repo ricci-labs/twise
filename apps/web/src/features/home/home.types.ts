@@ -22,6 +22,7 @@ export type HomePageProps = {
   permissions: readonly Permission[]
   workspaceName: string
   memberCount: number
+  installOffer?: ReactNode
 }
 
 export type HomeSectionProps = {
@@ -209,4 +210,5 @@ export type HomeContentProps = {
   isFirstVisit: boolean
   isStale: boolean
   updatedAt: number
+  installOffer?: ReactNode
 }

@@ -15,6 +15,7 @@ export type TwiseIconName =
   | 'history'
   | 'home'
   | 'info'
+  | 'install'
   | 'list'
   | 'lock'
   | 'menu'

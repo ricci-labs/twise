@@ -1,7 +1,7 @@
 ---
 summary: Non-functional requirements of the web app (RNF-*) — security, privacy, performance, accessibility, responsiveness and PWA, locale and formatting, reliability, compatibility and quality.
 read_when: Designing the design system, building the web shell, choosing a library, or reviewing a screen before merge.
-updated: 2026-10-01
+updated: 2026-10-14
 ---
 
 # Non-functional requirements
@@ -68,6 +68,20 @@ Target: WCAG 2.2 level AA.
 1. Designed first at 360 px wide; breakpoints for tablet (≥ 768 px) and desktop (≥ 1024 px).
    Nothing scrolls sideways except tables that say so.
 2. Installable PWA (manifest, icons, standalone display), respecting the phone's safe areas.
+   The app offers the install itself instead of waiting for the browser's banner (asked by the
+   user, 2026-10-14), where the browser allows it (Chrome, Edge and Samsung Internet on Android,
+   Chrome and Edge on the desktop):
+   - Home, phone only, under "Posso comprar?": the card "Instale o Twise" ("Abra direto da tela
+     inicial, em tela cheia, como um app.") with "Agora não" and "Instalar". "Instalar" opens the
+     browser's own install dialog. "Agora não", or closing that dialog without installing, hides
+     the card for 30 days on that device. Never on the first run or the public demo.
+   - "Instalar o app" at the end of the "Mais" sheet and of the sidebar's "Mais" group, for
+     anyone, whatever the role.
+   - Both appear only while the browser can install the app, so never once it is installed or
+     when the app is already open as the installed app.
+   - **iPhone and iPad: later.** Safari opens no install dialog for a site; the only way is
+     Compartilhar → "Adicionar à Tela de Início". A short illustrated guide is the planned answer,
+     and it matters for push notifications, which iOS gives only to installed apps.
 3. Light and dark themes. The app **always opens in the light theme**, even when the system is
    dark; dark only by the person's choice in `ME-01` ("Escuro", or "Automático" with a dark
    system). Account screens are always light (design decision, 2026-10-01).

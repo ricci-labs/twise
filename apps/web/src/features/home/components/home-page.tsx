@@ -65,6 +65,7 @@ export function HomePage({
   permissions,
   workspaceName,
   memberCount,
+  installOffer,
 }: HomePageProps) {
   usePageTitle(homeMessages.pageTitle)
   const isFirstVisit = useFirstTimeThisSession('home')
@@ -118,6 +119,7 @@ export function HomePage({
       isFirstVisit={isFirstVisit}
       isStale={overview.isPlaceholderData}
       updatedAt={overview.dataUpdatedAt}
+      installOffer={installOffer}
     />
   )
 }
@@ -166,6 +168,7 @@ function HomeContent({
   isFirstVisit,
   isStale,
   updatedAt,
+  installOffer,
 }: HomeContentProps) {
   const canWrite = hasPermission(permissions, 'entries', 'create')
   const stage = periodStageOf(data)
@@ -200,6 +203,7 @@ function HomeContent({
           <HomeIndicators workspaceId={workspaceId} overview={data} stage={stage} />
         </div>
         {stage !== 'closed' && <CanIBuyCard workspaceId={workspaceId} className="lg:hidden" />}
+        <div className="contents lg:hidden">{installOffer}</div>
       </div>
       <div
         ref={gridRef}

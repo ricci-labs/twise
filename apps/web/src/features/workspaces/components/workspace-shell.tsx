@@ -19,14 +19,22 @@ import {
 import { WorkspaceSwitcher } from '@web/features/workspaces/components/workspace-switcher'
 import { workspacesMessages } from '@web/features/workspaces/workspaces.messages'
 import type { WorkspaceShellProps } from '@web/features/workspaces/workspaces.types'
+import { useCanInstall } from '@web/hooks/use-can-install'
 import { useMediaQuery } from '@web/hooks/use-media-query'
 import { useSidebarCollapsed } from '@web/hooks/use-sidebar-collapsed'
 import { DESKTOP_QUERY } from '@web/lib/breakpoints'
+import { install } from '@web/lib/install-prompt'
 import { isReadOnly } from '@web/lib/permissions'
 import { cloneElement, type MouseEvent, useState } from 'react'
 
 const messages = workspacesMessages.shell
 const MAIN_TABS = 4
+const INSTALL_ITEM: NavItem = {
+  key: 'install',
+  label: messages.nav.install,
+  icon: 'install',
+  render: <button type="button" onClick={() => void install()} />,
+}
 
 export function WorkspaceShell({
   workspaceId,
@@ -40,7 +48,9 @@ export function WorkspaceShell({
   const sidebar = useSidebarCollapsed()
   const isDesktop = useMediaQuery(DESKTOP_QUERY)
   const [isMoreOpen, setIsMoreOpen] = useState(false)
+  const canInstall = useCanInstall()
   const navigation = workspaceNavigation(workspaceId, access.permissions, currentAreaOf(pathname))
+  const moreItems = canInstall ? [...navigation.more, INSTALL_ITEM] : navigation.more
   const moreTab: NavItem = {
     key: 'more',
     label: messages.nav.more,
@@ -55,7 +65,7 @@ export function WorkspaceShell({
         sidebar={
           <AppSidebar
             items={navigation.main}
-            moreItems={navigation.more}
+            moreItems={moreItems}
             primaryAction={
               navigation.newEntry
                 ? { label: messages.newEntry, render: navigation.newEntry }
@@ -82,7 +92,7 @@ export function WorkspaceShell({
           <>
             <BottomTabBar items={[...navigation.main.slice(0, MAIN_TABS), moreTab]} />
             <MoreSheet
-              items={navigation.more}
+              items={moreItems}
               accountActions={accountActions}
               isOpen={isMoreOpen}
               onOpenChange={setIsMoreOpen}

@@ -1,6 +1,7 @@
 import { createMemoryHistory } from '@tanstack/react-router'
 import { AppProviders } from '@web/app/providers'
 import { createApp } from '@web/app/router'
+import { listenForInstallOffer } from '@web/lib/install-prompt'
 import { expectNoAccessibilityViolations } from '@web/testing/accessibility'
 import { demoAnswers } from '@web/testing/demo-api'
 import {
@@ -12,6 +13,7 @@ import {
   workspaceAccess,
   workspaceList,
 } from '@web/testing/fake-api'
+import { finishInstall, offerInstall } from '@web/testing/install-offer'
 import type { FakeAnswer } from '@web/testing/testing.types'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { page, userEvent } from 'vitest/browser'
@@ -116,6 +118,25 @@ describe('SHELL-01 workspace shell', () => {
     await expect.element(sheet.getByRole('link', { name: 'Contatos e cobranças' })).toBeVisible()
     await expect.element(sheet.getByRole('link', { name: 'Minha conta' })).toBeVisible()
     await expect.element(sheet.getByRole('button', { name: 'Sair' })).toBeVisible()
+  })
+
+  it('offers "Instalar o app" under "Mais" only when the browser can install it', async () => {
+    await page.viewport(390, 844)
+    listenForInstallOffer()
+    const { screen } = await openWorkspace()
+    const tabs = screen.getByRole('navigation', { name: 'Navegação' })
+    await tabs.getByRole('button', { name: 'Mais' }).click()
+    const sheet = screen.getByRole('dialog', { name: 'Mais' })
+    await expect.element(sheet.getByRole('link', { name: 'Lixeira' })).toBeVisible()
+    await expect
+      .element(sheet.getByRole('button', { name: 'Instalar o app' }))
+      .not.toBeInTheDocument()
+
+    const { prompt } = offerInstall()
+    await sheet.getByRole('button', { name: 'Instalar o app' }).click()
+
+    expect(prompt).toHaveBeenCalledOnce()
+    finishInstall()
   })
 
   it('lets the phone switch workspaces from the name at the top', async () => {
