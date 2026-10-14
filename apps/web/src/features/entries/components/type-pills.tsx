@@ -6,9 +6,9 @@ import { useState } from 'react'
 
 const messages = entriesMessages.newEntry
 const MAIN_TYPES: readonly FormEntryType[] = ['expense', 'card_purchase', 'income', 'transfer']
-const MORE_TYPES = ['opening_balance'] as const
+const MORE_TYPES = ['invoice_payment', 'opening_balance'] as const
 const MORE = 'more'
-const DRAWINGS = { opening_balance: 'opening-balance' } as const
+const DRAWINGS = { invoice_payment: 'invoice-paid', opening_balance: 'opening-balance' } as const
 const MORE_ITEMS = MORE_TYPES.map((entryType) => ({
   value: entryType,
   label: messages.types[entryType],

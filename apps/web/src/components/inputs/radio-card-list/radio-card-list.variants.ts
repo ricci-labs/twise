@@ -19,7 +19,7 @@ export const radioCardVariants = cva(
   {
     variants: {
       layout: {
-        stack: 'min-h-14 items-center py-2 text-body-sm font-semibold',
+        stack: 'min-h-14 items-center py-2 text-choice font-semibold',
         pair: 'items-start gap-2.5 py-3 text-choice font-emphasis [&>[data-slot=radio-dot]]:mt-px',
       },
     },
@@ -34,14 +34,5 @@ export const radioDotVariants = cva(
 export const radioCardTextVariants = cva('flex min-w-0 flex-1 flex-col')
 
 export const radioCardDetailVariants = cva(
-  'font-normal text-ink-muted [&_strong]:font-emphasis [&_strong]:text-ink [&_strong]:tabular-nums',
-  {
-    variants: {
-      layout: {
-        stack: 'text-caption',
-        pair: 'text-note',
-      },
-    },
-    defaultVariants: { layout: 'stack' },
-  },
+  'text-note font-normal text-ink-muted [&_strong]:font-emphasis [&_strong]:text-ink [&_strong]:tabular-nums',
 )

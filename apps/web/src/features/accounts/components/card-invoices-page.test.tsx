@@ -2,7 +2,7 @@ import { createMemoryHistory } from '@tanstack/react-router'
 import { AppProviders } from '@web/app/providers'
 import { createApp } from '@web/app/router'
 import { expectNoAccessibilityViolations } from '@web/testing/accessibility'
-import { accountsAnswers, CARD, MEMBER_A } from '@web/testing/accounts-api'
+import { accountsAnswers, CARD, MEMBER_A, OPEN_INVOICE } from '@web/testing/accounts-api'
 import { fakeApi, WORKSPACE_ID, workspaceAccess, workspaceList } from '@web/testing/fake-api'
 import type { FakeAnswer } from '@web/testing/testing.types'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
@@ -50,6 +50,27 @@ describe('CARD-02 invoices of a card', () => {
     await expect.element(page.getByText('1/3')).toBeVisible()
     await expect.element(page.getByRole('link', { name: 'Ver todos (3)' })).toBeVisible()
     await expectNoAccessibilityViolations(page.getByRole('main').element())
+  })
+
+  it('pays the chosen invoice through the new entry', async () => {
+    const app = await openInvoices()
+    await page.getByRole('link', { name: 'Pagar fatura' }).click()
+
+    await expect
+      .poll(() => app.router.state.location.search)
+      .toMatchObject({
+        entry: 'new',
+        entryType: 'invoice_payment',
+        entryCard: CARD,
+        entryInvoice: OPEN_INVOICE,
+      })
+  })
+
+  it('has nothing to pay on a paid invoice', async () => {
+    await openInvoices('?month=2026-10')
+
+    await expect.element(page.getByText('Paga em 03/10 com a Conta X.')).toBeVisible()
+    await expect.element(page.getByRole('link', { name: 'Pagar fatura' })).not.toBeInTheDocument()
   })
 
   it('says when a future invoice opens', async () => {

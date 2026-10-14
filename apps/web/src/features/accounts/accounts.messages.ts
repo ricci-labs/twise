@@ -277,6 +277,7 @@ export const accountsMessages = {
       title: 'Próximas faturas',
       description: 'De todos os cartões, das que vencem primeiro.',
       failed: 'Não foi possível carregar as próximas faturas.',
+      pay: 'Pagar',
       columns: {
         card: 'Cartão',
         invoice: 'Fatura',
@@ -333,6 +334,7 @@ export const accountsMessages = {
   },
   invoicesPage: {
     back: 'Voltar para Cartões',
+    pay: 'Pagar fatura',
     failed: 'Não foi possível carregar as faturas.',
     cardNotFound: 'Cartão não encontrado.',
     strip: (card: string) => `Faturas do ${card}`,

@@ -23,6 +23,8 @@ export const Route = createFileRoute('/_app/w/$workspaceId')({
       entry,
       entryType,
       entryAccount,
+      entryCard,
+      entryInvoice,
       account: accountParam,
       category,
       parent,
@@ -55,8 +57,12 @@ export const Route = createFileRoute('/_app/w/$workspaceId')({
           currentUserName={account.displayName}
           permissions={access.permissions}
           isOpen={entry === 'new'}
-          initialType={entryType}
-          initialAccountId={entryAccount}
+          prefill={{
+            entryType,
+            accountId: entryAccount,
+            cardAccountId: entryCard,
+            invoiceId: entryInvoice,
+          }}
           onClose={() =>
             navigate({
               to: '.',
@@ -65,6 +71,8 @@ export const Route = createFileRoute('/_app/w/$workspaceId')({
                 entry: undefined,
                 entryType: undefined,
                 entryAccount: undefined,
+                entryCard: undefined,
+                entryInvoice: undefined,
               }),
             })
           }

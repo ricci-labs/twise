@@ -12,6 +12,7 @@ import { preferredAccountOf } from '@web/features/entries/components/preferred-a
 import { entriesMessages } from '@web/features/entries/entries.messages'
 import type {
   AccountBalance,
+  AccountDetailOptions,
   AccountFieldProps,
   EntryFormInput,
   LatestEntry,
@@ -29,6 +30,7 @@ export function AccountField({
   name = 'accountId',
   label,
   detail = 'balance',
+  note,
 }: AccountFieldProps) {
   const navigate = useNavigate()
   const accounts = useQuery(accountsQueryOptions(workspaceId)).data ?? []
@@ -37,7 +39,7 @@ export function AccountField({
     value: account.id,
     label: account.name,
     icon: account.icon,
-    detail: detail === 'kind' ? kindText(account.kind) : balanceText(account.id, balances),
+    detail: detailOf(account, { detail, note, balances }),
   }))
   usePreferredAccount(
     name === 'accountId' ? items.map((item) => item.value) : [],
@@ -90,6 +92,16 @@ function isUsableMoneyAccount(account: LedgerAccount): boolean {
 function balanceText(accountId: string, balances: readonly AccountBalance[]): string | undefined {
   const balance = balances.find((item) => item.accountId === accountId)
   return balance ? messages.balance(formatBrl(balance.naturalBalanceCents)) : undefined
+}
+
+function detailOf(
+  account: LedgerAccount,
+  { detail, note, balances }: AccountDetailOptions,
+): string | undefined {
+  if (account.id === note?.accountId) {
+    return note.text
+  }
+  return detail === 'kind' ? kindText(account.kind) : balanceText(account.id, balances)
 }
 
 function kindText(kind: string): string | undefined {

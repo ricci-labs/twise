@@ -21,12 +21,19 @@ const FORM_ENTRY_TYPES = [
   'income',
   'transfer',
   'opening_balance',
+  'invoice_payment',
 ] as const
+
+const CARD_TYPES: readonly string[] = ['card_purchase', 'invoice_payment']
+
+const INVOICE_PAYMENT = 'invoice_payment'
 
 export const newEntrySearchSchema = z.object({
   entry: z.literal(NEW_ENTRY).optional().catch(undefined),
   entryType: z.enum(FORM_ENTRY_TYPES).optional().catch(undefined),
   entryAccount: z.uuid().optional().catch(undefined),
+  entryCard: z.uuid().optional().catch(undefined),
+  entryInvoice: z.uuid().optional().catch(undefined),
 })
 
 const CARD_PURCHASE = 'card_purchase'
@@ -47,6 +54,7 @@ export const entryFormSchema = z
     accountId: z.string(),
     toAccountId: z.string(),
     cardAccountId: z.string(),
+    invoiceId: z.string(),
     installmentCount: installmentSchema,
     isInProgress: z.boolean(),
     isNegative: z.boolean(),
@@ -78,9 +86,14 @@ export const entryFormSchema = z
     message: entriesMessages.required.categoryId,
     when: () => true,
   })
-  .refine((values) => values.entryType !== CARD_PURCHASE || Boolean(values.cardAccountId), {
+  .refine((values) => !CARD_TYPES.includes(values.entryType) || Boolean(values.cardAccountId), {
     path: ['cardAccountId'],
     message: entriesMessages.required.cardAccountId,
+    when: () => true,
+  })
+  .refine((values) => values.entryType !== INVOICE_PAYMENT || Boolean(values.invoiceId), {
+    path: ['invoiceId'],
+    message: entriesMessages.required.invoiceId,
     when: () => true,
   })
   .refine(

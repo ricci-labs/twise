@@ -3,14 +3,13 @@ import { ConfirmDialog } from '@web/components/feedback/confirm-dialog'
 import { OfflineBanner } from '@web/components/feedback/offline-banner'
 import { showToast } from '@web/components/feedback/toast'
 import { FormField } from '@web/components/forms/form-field'
-import { MoneyInput } from '@web/components/inputs/money-input'
 import { Select } from '@web/components/inputs/select'
-import { Switch } from '@web/components/inputs/switch'
 import { TextArea } from '@web/components/inputs/text-area'
 import { TextInput } from '@web/components/inputs/text-input'
 import { FormOverlay } from '@web/components/layout/form-overlay'
 import { useRecordEntry } from '@web/features/entries/api/use-record-entry'
 import { AccountField } from '@web/features/entries/components/account-field'
+import { AmountField } from '@web/features/entries/components/amount-field'
 import { DateField } from '@web/features/entries/components/date-field'
 import { toEntryInput } from '@web/features/entries/components/entry-input'
 import {
@@ -30,9 +29,11 @@ import type {
   EntryFormInput,
   EntryFormProps,
   EntryFormValues,
+  EntryPrefill,
   FormEntryType,
 } from '@web/features/entries/entries.types'
 import { useCardPlan } from '@web/features/entries/hooks/use-card-plan'
+import { useInvoiceOverpaid } from '@web/features/entries/hooks/use-invoice-overpaid'
 import { useShareTotals } from '@web/features/entries/hooks/use-share-totals'
 import { useIsOnline } from '@web/hooks/use-is-online'
 import { ApiError } from '@web/lib/api/api-error'
@@ -41,7 +42,7 @@ import { formatMonthName } from '@web/lib/format/calendar'
 import { fill } from '@web/lib/format/template'
 import { useSchemaForm } from '@web/lib/forms/use-schema-form'
 import { type BaseSyntheticEvent, useRef, useState } from 'react'
-import { Controller, FormProvider, useFormState, useWatch } from 'react-hook-form'
+import { FormProvider, useFormState, useWatch } from 'react-hook-form'
 
 const messages = entriesMessages.newEntry
 const fields = entriesMessages.fields
@@ -57,6 +58,9 @@ const FIELD_OF_CODE: Readonly<Record<string, keyof EntryFormInput>> = {
   CONTACT_TWICE: 'shares',
   SHARES_EXCEED_AMOUNT: 'shares',
   SHARE_NOT_POSITIVE: 'shares',
+  INVOICE_NOT_FOUND: 'invoiceId',
+  PAYMENT_ACCOUNT_REQUIRED: 'accountId',
+  PAYMENT_ACCOUNT_NOT_AVAILABLE: 'accountId',
   BALANCE_IS_ZERO: 'amount',
   AMOUNT_NOT_POSITIVE: 'amount',
 }
@@ -79,8 +83,7 @@ export function EntryForm({
   canCreateAccounts,
   canCreateCards,
   today,
-  initialType = 'expense',
-  initialAccountId = '',
+  prefill = {},
   onClose,
 }: EntryFormProps) {
   const isOnline = useIsOnline()
@@ -88,12 +91,7 @@ export function EntryForm({
   const [problem, setProblem] = useState<string | null>(null)
   const [isDiscarding, setIsDiscarding] = useState(false)
   const amountInput = useRef<HTMLInputElement>(null)
-  const blank = {
-    ...blankExpense(today, canSeeMembers ? currentUserId : ''),
-    ...(initialType === OPENING_BALANCE && { description: messages.openingDescription }),
-    entryType: initialType,
-    accountId: initialAccountId,
-  }
+  const blank = prefilled(blankExpense(today, canSeeMembers ? currentUserId : ''), prefill)
   const form = useSchemaForm({
     schema: entryFormSchema,
     requiredMessages: entriesMessages.required,
@@ -104,9 +102,18 @@ export function EntryForm({
   const plan = useCardPlan(form.control, workspaceId, today)
   const isCardPurchase = entryType === CARD_PURCHASE
   const isOpeningBalance = entryType === OPENING_BALANCE
-  const isNegative = useWatch({ control: form.control, name: 'isNegative' })
+  const isInvoicePayment = entryType === 'invoice_payment'
+  const isOverpaid = useInvoiceOverpaid(form.control, workspaceId)
   const isSpendingEntry = isSpending(entryType)
   const shareTotals = useShareTotals(form.control)
+
+  const descriptionField = (
+    <FormField<EntryFormInput> name="description" label={fields.description} isRequired>
+      {(control) => (
+        <TextInput autoComplete="off" placeholder={fields.descriptionPlaceholder} {...control} />
+      )}
+    </FormField>
+  )
 
   function requestClose() {
     if (isDirty) {
@@ -228,52 +235,12 @@ export function EntryForm({
               detail="kind"
             />
           )}
-          <div className="flex flex-col gap-2">
-            <FormField<EntryFormInput>
-              name="amount"
-              label={isOpeningBalance ? fields.balance : fields.amount}
-              isRequired
-            >
-              {(control) => (
-                <MoneyInput
-                  size="lg"
-                  isNegative={isOpeningBalance && isNegative}
-                  {...control}
-                  onBlur={() => {
-                    if (control.value !== '') {
-                      control.onBlur()
-                    }
-                  }}
-                  ref={(element) => {
-                    amountInput.current = element
-                    control.ref(element)
-                  }}
-                />
-              )}
-            </FormField>
-            {isOpeningBalance && (
-              <Controller
-                control={form.control}
-                name="isNegative"
-                render={({ field }) => (
-                  <Switch
-                    label={fields.isNegative}
-                    isChecked={field.value}
-                    onCheckedChange={field.onChange}
-                  />
-                )}
-              />
-            )}
-          </div>
-          <FormField<EntryFormInput> name="description" label={fields.description} isRequired>
-            {(control) => (
-              <TextInput
-                autoComplete="off"
-                placeholder={fields.descriptionPlaceholder}
-                {...control}
-              />
-            )}
-          </FormField>
+          <AmountField
+            isOpeningBalance={isOpeningBalance}
+            isOverpaid={isOverpaid}
+            inputRef={amountInput}
+          />
+          {!isInvoicePayment && descriptionField}
           <MoneyFields
             entryType={entryType}
             workspaceId={workspaceId}
@@ -282,6 +249,7 @@ export function EntryForm({
             plan={plan}
             today={today}
           />
+          {isInvoicePayment && descriptionField}
           <DateField today={today} />
           {hasPaymentMethod(entryType) && (
             <FormField<EntryFormInput> name="paymentMethod" label={fields.paymentMethod}>
@@ -329,6 +297,18 @@ function afterSaveOf(event: BaseSyntheticEvent | undefined): AfterSave {
   return submitter?.dataset.afterSave === 'another' ? 'another' : 'close'
 }
 
+function prefilled(blank: EntryFormInput, prefill: EntryPrefill): EntryFormInput {
+  const entryType = prefill.entryType ?? blank.entryType
+  return {
+    ...blank,
+    entryType,
+    description: entryType === OPENING_BALANCE ? messages.openingDescription : blank.description,
+    accountId: prefill.accountId ?? blank.accountId,
+    cardAccountId: prefill.cardAccountId ?? blank.cardAccountId,
+    invoiceId: prefill.invoiceId ?? blank.invoiceId,
+  }
+}
+
 function blankExpense(today: string, spentByUserId: string): EntryFormInput {
   return {
     entryType: 'expense',
@@ -337,6 +317,7 @@ function blankExpense(today: string, spentByUserId: string): EntryFormInput {
     accountId: '',
     toAccountId: '',
     cardAccountId: '',
+    invoiceId: '',
     installmentCount: 1,
     isInProgress: false,
     isNegative: false,

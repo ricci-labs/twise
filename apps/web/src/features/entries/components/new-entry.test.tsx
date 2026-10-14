@@ -67,6 +67,30 @@ const CARD_SUMMARY = {
   },
 }
 
+const OPEN_INVOICE = '00000000-0000-4000-8000-0000000000b1'
+const NEXT_INVOICE = '00000000-0000-4000-8000-0000000000b2'
+
+function invoiceTotal(invoiceId: string, month: string, status: string, dueCents: number) {
+  return {
+    invoiceId,
+    referenceMonth: month,
+    closingOn: `${month}-25`,
+    dueOn: `${month}-04`,
+    status,
+    totalCents: dueCents,
+    paidCents: 0,
+    dueCents,
+    frontedCents: 0,
+    ownCents: dueCents,
+  }
+}
+
+const CARD_X_INVOICES = [
+  invoiceTotal(NEXT_INVOICE, '2026-12', 'future', 64_000),
+  invoiceTotal(OPEN_INVOICE, '2026-11', 'open', 195_000),
+  invoiceTotal('00000000-0000-4000-8000-0000000000b0', '2026-10', 'closed', 0),
+]
+
 function ledgerAccount(id: string, kind: string, name: string, parentId: string | null = null) {
   return {
     id,
@@ -152,6 +176,7 @@ function entryAnswers(
       ]),
     [`GET ${BASE}/members`]: () => Response.json([]),
     [`GET ${BASE}/cards`]: () => Response.json(cards),
+    [`GET ${BASE}/cards/${CARD_X}/invoices`]: () => Response.json(CARD_X_INVOICES),
     [`GET ${BASE}/contacts`]: () =>
       Response.json([contact(MEMBER_C, 'Member C'), contact(MEMBER_D, 'Member D')]),
     [`GET ${BASE}/entries`]: () =>
@@ -663,5 +688,62 @@ describe('ENT-02 opening balance', () => {
 
     await expect.element(page.getByRole('radio', { name: 'Saldo inicial' })).toBeChecked()
     await expectText(page.getByRole('button', { name: /^Conta/ }), /Conta XConta corrente/)
+  })
+})
+
+describe('ENT-02 invoice payment', () => {
+  afterEach(async () => {
+    vi.restoreAllMocks()
+    await page.viewport(414, 896)
+  })
+
+  it('pays the oldest invoice with something due from the card default account', async () => {
+    const { recorded } = await openNewEntry()
+    await page.getByRole('radio', { name: 'Mais' }).click()
+    await page.getByRole('button', { name: /^Pagamento de fatura/ }).click()
+
+    await expect.element(page.getByRole('radio', { name: /^Vence 04\/11/ })).toBeChecked()
+    await expect.element(page.getByRole('radio', { name: /^Vence 04\/12/ })).not.toBeChecked()
+    await expect.element(page.getByLabelText(/^Valor/)).toHaveValue('1.950,00')
+    await expect
+      .element(page.getByLabelText(/^Descrição/))
+      .toHaveValue('Fatura Cartão X · vence 04/11')
+    await expectText(page.getByRole('button', { name: /^Pago com/ }), /Conta padrão do cartão/)
+    await page.getByLabelText(/^Valor/).fill('2000')
+
+    await expect.element(page.getByText('O valor é maior que o saldo da fatura.')).toBeVisible()
+    await page.getByRole('button', { name: 'Salvar lançamento' }).click()
+
+    await expect.element(page.getByText('Lançamento registrado.')).toBeVisible()
+    expect(recorded).toEqual([
+      expect.objectContaining({
+        entryType: 'invoice_payment',
+        amountCents: 200_000,
+        cardAccountId: CARD_X,
+        invoiceId: OPEN_INVOICE,
+        paidFromAccountId: CHECKING,
+      }),
+    ])
+  })
+
+  it('opens on the invoice chosen on the card page', async () => {
+    await openNewEntry({
+      search: `&entryType=invoice_payment&entryCard=${CARD_X}&entryInvoice=${NEXT_INVOICE}`,
+    })
+
+    await expect.element(page.getByRole('radio', { name: /^Vence 04\/12/ })).toBeChecked()
+    await expect.element(page.getByLabelText(/^Valor/)).toHaveValue('640,00')
+  })
+
+  it('fills the amount of another invoice when it is picked', async () => {
+    await openNewEntry()
+    await page.getByRole('radio', { name: 'Mais' }).click()
+    await page.getByRole('button', { name: /^Pagamento de fatura/ }).click()
+    await page.getByRole('radio', { name: /^Vence 04\/12/ }).click()
+
+    await expect.element(page.getByLabelText(/^Valor/)).toHaveValue('640,00')
+    await expect
+      .element(page.getByLabelText(/^Descrição/))
+      .toHaveValue('Fatura Cartão X · vence 04/12')
   })
 })

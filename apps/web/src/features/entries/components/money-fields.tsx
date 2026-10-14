@@ -2,6 +2,7 @@ import { AccountField } from '@web/features/entries/components/account-field'
 import { CardField } from '@web/features/entries/components/card-field'
 import { CardInstallments } from '@web/features/entries/components/card-installments'
 import { CategoryField } from '@web/features/entries/components/category-field'
+import { InvoiceField, PaymentAccountField } from '@web/features/entries/components/invoice-field'
 import { entriesMessages } from '@web/features/entries/entries.messages'
 import type { MoneyFieldsProps } from '@web/features/entries/entries.types'
 
@@ -35,6 +36,17 @@ export function MoneyFields({
   }
   if (entryType === 'opening_balance') {
     return null
+  }
+  if (entryType === 'invoice_payment') {
+    return (
+      <>
+        <CardField workspaceId={workspaceId} canCreateCards={canCreateCards} />
+        <div className="lg:col-span-2">
+          <InvoiceField workspaceId={workspaceId} />
+        </div>
+        <PaymentAccountField workspaceId={workspaceId} canCreateAccounts={canCreateAccounts} />
+      </>
+    )
   }
   if (entryType === 'transfer') {
     return (

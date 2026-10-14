@@ -27,6 +27,14 @@ export function cardsQueryOptions(workspaceId: string) {
   })
 }
 
+export function cardInvoicesQueryOptions(workspaceId: string, cardId: string) {
+  return queryOptions({
+    queryKey: [...queryKeys.workspace(workspaceId), 'cards', cardId, 'invoices'] as const,
+    queryFn: () => fetchCardInvoices(workspaceId, cardId),
+    enabled: cardId !== '',
+  })
+}
+
 export function contactsQueryOptions(workspaceId: string) {
   return queryOptions({
     queryKey: [...queryKeys.workspace(workspaceId), 'contacts', 'list'] as const,
@@ -58,6 +66,10 @@ export function fetchBalances(workspaceId: string) {
 
 export function fetchCards(workspaceId: string) {
   return unwrap(workspaceApi.cards.$get({ param: { workspaceId } }))
+}
+
+export function fetchCardInvoices(workspaceId: string, cardId: string) {
+  return unwrap(workspaceApi.cards[':cardId'].invoices.$get({ param: { workspaceId, cardId } }))
 }
 
 export function fetchContacts(workspaceId: string) {

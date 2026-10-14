@@ -28,6 +28,7 @@ import { AccountRowActions } from '@web/features/accounts/components/account-row
 import { cardEditActionsOf } from '@web/features/accounts/components/card-edit-actions'
 import { filteredLines, stateLabelOf } from '@web/features/accounts/components/card-invoices'
 import { listedCardOf } from '@web/features/accounts/components/listed-accounts'
+import { PayInvoiceButton } from '@web/features/accounts/components/pay-invoice-button'
 import { formatShortDate } from '@web/lib/format/calendar'
 import { hasPermission } from '@web/lib/permissions'
 import { useState } from 'react'
@@ -82,12 +83,15 @@ export function CardInvoicesDesktop({
         title={card.name}
         description={descriptionOf(card, members.data ?? null)}
         actions={
-          <AccountRowActions
-            workspaceId={workspaceId}
-            permissions={permissions}
-            account={listedCardOf(card)}
-            leadingActions={cardEditActionsOf(permissions, card.accountId)}
-          />
+          <>
+            <AccountRowActions
+              workspaceId={workspaceId}
+              permissions={permissions}
+              account={listedCardOf(card)}
+              leadingActions={cardEditActionsOf(permissions, card.accountId)}
+            />
+            <PayInvoiceButton permissions={permissions} card={card} invoice={invoice} />
+          </>
         }
       />
       <div className="mt-4.5">

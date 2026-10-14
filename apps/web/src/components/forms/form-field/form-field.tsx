@@ -1,6 +1,7 @@
 import type {
   FieldErrorProps,
   FieldLabelProps,
+  FieldWarningProps,
   FormFieldProps,
 } from '@web/components/forms/form-field/form-field.types'
 import {
@@ -10,7 +11,9 @@ import {
   helpVariants,
   labelVariants,
   requiredMarkVariants,
+  warningVariants,
 } from '@web/components/forms/form-field/form-field.variants'
+import { TwiseIcon } from '@web/components/icons/twise-icon'
 import { afterPointerRelease, watchPointerPresses } from '@web/lib/forms/after-pointer-release'
 import { formMessages } from '@web/lib/forms/forms.messages'
 import { CircleAlert } from 'lucide-react'
@@ -24,6 +27,7 @@ export function FormField<Values extends FieldValues>({
   label,
   help,
   helpGap,
+  warning,
   isRequired = false,
   isReadOnly = false,
   maxLength,
@@ -31,13 +35,16 @@ export function FormField<Values extends FieldValues>({
 }: FormFieldProps<Values>) {
   const id = useId()
   useEffect(watchPointerPresses, [])
-  const ids = { help: `${id}-help`, error: `${id}-error` }
+  const ids = { help: `${id}-help`, error: `${id}-error`, warning: `${id}-warning` }
   const { control } = useFormContext<Values>()
   const { isSubmitting } = useFormState({ control })
   const { field, fieldState } = useController({ name, control })
   const value = String(field.value ?? '')
   const error = fieldState.error?.message
-  const describedBy = [help && ids.help, error && ids.error].filter(Boolean).join(' ')
+  const shownWarning = error ? undefined : warning
+  const describedBy = [help && ids.help, error && ids.error, shownWarning && ids.warning]
+    .filter(Boolean)
+    .join(' ')
 
   return (
     <div data-slot="form-field" className={fieldVariants()}>
@@ -61,6 +68,7 @@ export function FormField<Values extends FieldValues>({
         'aria-describedby': describedBy || undefined,
       })}
       <FieldError id={ids.error} message={error} />
+      <FieldWarning id={ids.warning} message={shownWarning} />
       {isNearLimit(value, maxLength) && (
         <p className={counterVariants()}>{`${value.length}/${maxLength}`}</p>
       )}
@@ -78,6 +86,19 @@ function FieldLabel({ htmlFor, label, isRequired }: FieldLabelProps) {
         </span>
       )}
     </label>
+  )
+}
+
+function FieldWarning({ id, message }: FieldWarningProps) {
+  return (
+    <p id={id} className={warningVariants()} aria-live="polite">
+      {message && (
+        <>
+          <TwiseIcon name="warn" tone="warning" />
+          {message}
+        </>
+      )}
+    </p>
   )
 }
 

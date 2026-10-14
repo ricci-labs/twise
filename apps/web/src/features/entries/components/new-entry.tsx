@@ -11,8 +11,7 @@ export function NewEntry({
   currentUserName,
   permissions,
   isOpen,
-  initialType,
-  initialAccountId,
+  prefill,
   onClose,
 }: NewEntryProps) {
   if (!isOpen || !hasPermission(permissions, 'entries', 'create')) {
@@ -28,8 +27,7 @@ export function NewEntry({
       canCreateAccounts={hasPermission(permissions, 'accounts', 'create')}
       canCreateCards={hasPermission(permissions, 'cards', 'create')}
       today={todayIn(TIME_ZONE, new Date())}
-      initialType={initialType}
-      initialAccountId={initialAccountId}
+      prefill={prefill}
       onClose={onClose}
     />
   )
