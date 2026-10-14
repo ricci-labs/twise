@@ -8,6 +8,7 @@ import {
   frequentEntryQuerySchema,
   newAccountSchema,
   newCardSchema,
+  upcomingInvoiceQuerySchema,
 } from '@shared/ledger/ledger/ledger.schemas'
 import { describe, expect, it } from 'vitest'
 
@@ -242,5 +243,14 @@ describe('frequentEntryQuerySchema', () => {
   it('refuses a limit outside 1 to 8', () => {
     expect(frequentEntryQuerySchema.safeParse({ type: 'expense', limit: '0' }).success).toBe(false)
     expect(frequentEntryQuerySchema.safeParse({ type: 'expense', limit: '9' }).success).toBe(false)
+  })
+})
+
+describe('upcomingInvoiceQuerySchema', () => {
+  it('asks for 6 invoices unless told otherwise, up to 24', () => {
+    expect(upcomingInvoiceQuerySchema.parse({})).toEqual({ limit: 6 })
+    expect(upcomingInvoiceQuerySchema.parse({ limit: '12' }).limit).toBe(12)
+    expect(upcomingInvoiceQuerySchema.safeParse({ limit: '0' }).success).toBe(false)
+    expect(upcomingInvoiceQuerySchema.safeParse({ limit: '25' }).success).toBe(false)
   })
 })

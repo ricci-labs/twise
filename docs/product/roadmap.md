@@ -226,11 +226,11 @@ updated: 2026-10-14
 - [ ] **Accounts round: ACC-01..04 and CARD-01..04** (design `../design/accounts/`, exported
   2026-10-14; the user asked for the same flow as the new entry round: one PR per step, merged by
   Claude when CI is green, every screen checked side by side with its PNG):
-  1. [ ] Design package in `docs/design/accounts/`, the system illustrations, the updated "Mais"
+  1. [x] Design package in `docs/design/accounts/`, the system illustrations, the updated "Mais"
      sheet; requirements from `../design/accounts/decisions.md`
      (`requirements/modules/accounts-and-cards.md`, `requirements/error-messages.md`,
      `requirements/ui-standards.md`), API gaps G40–G42
-  2. [ ] API: the accounts summary (G40) and the cards summary and upcoming invoices (G41)
+  2. [x] API: the accounts summary (G40) and the cards summary and upcoming invoices (G41)
   3. [ ] Web components 1–8 of `../design/accounts/components.md` (rows, groups, KPI carousel,
      action sheet and menu, undo toast, refused-action dialog, archived toggle, list states)
   4. [ ] Web: `ACC-01` with every state, `ACC-03` (account), `ACC-04`; "Cadastrar conta" in the new

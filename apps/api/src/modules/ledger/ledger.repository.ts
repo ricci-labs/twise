@@ -360,6 +360,22 @@ export function selectInvoiceTotals(tx: WorkspaceTransaction, cardAccountId: str
     .orderBy(asc(invoiceTotals.referenceMonth))
 }
 
+export function selectInvoiceTotalsDueFrom(tx: WorkspaceTransaction, from: IsoDate) {
+  return tx
+    .select({
+      invoiceId: invoiceTotals.invoiceId,
+      cardAccountId: invoiceTotals.cardAccountId,
+      referenceMonth: invoiceTotals.referenceMonth,
+      closingOn: invoiceTotals.closingOn,
+      dueOn: invoiceTotals.dueOn,
+      totalCents: invoiceTotals.totalCents,
+      dueCents: invoiceTotals.dueCents,
+    })
+    .from(invoiceTotals)
+    .where(gte(invoiceTotals.dueOn, from))
+    .orderBy(asc(invoiceTotals.dueOn))
+}
+
 export function selectActiveAccounts(tx: WorkspaceTransaction) {
   return tx
     .select(ACCOUNT_COLUMNS)

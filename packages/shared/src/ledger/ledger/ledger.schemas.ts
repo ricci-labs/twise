@@ -154,6 +154,21 @@ export const frequentEntryQuerySchema = z.object({
 
 export type FrequentEntryQuery = z.infer<typeof frequentEntryQuerySchema>
 
+export const UPCOMING_INVOICES_DEFAULT_LIMIT = 6
+
+export const UPCOMING_INVOICES_MAX_LIMIT = 24
+
+export const upcomingInvoiceQuerySchema = z.object({
+  limit: z.coerce
+    .number()
+    .int()
+    .min(1)
+    .max(UPCOMING_INVOICES_MAX_LIMIT)
+    .default(UPCOMING_INVOICES_DEFAULT_LIMIT),
+})
+
+export type UpcomingInvoiceQuery = z.infer<typeof upcomingInvoiceQuerySchema>
+
 export const trashQuerySchema = z.object({
   cursor: pageCursorSchema(z.iso.datetime()).optional(),
   limit: pageLimitSchema,
