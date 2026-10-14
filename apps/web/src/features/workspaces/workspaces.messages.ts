@@ -27,6 +27,7 @@ export const workspacesMessages = {
       settings: 'Configurações',
       history: 'Histórico',
       trash: 'Lixeira',
+      install: 'Instalar o app',
     },
     newEntry: 'Novo lançamento',
     workspace: 'Espaço',

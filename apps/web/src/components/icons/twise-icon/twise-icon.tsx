@@ -152,6 +152,19 @@ const TWISE_ICON_SHAPES: Record<TwiseIconName, TwiseIconShape> = {
       </>
     ),
   },
+  install: {
+    fill: (
+      <>
+        <rect x="6.5" y="2.5" width="11" height="19" rx="2.6" />
+      </>
+    ),
+    stroke: (
+      <>
+        <rect x="6.5" y="2.5" width="11" height="19" rx="2.6" />
+        <path d="M12 7v6.5M9.4 11 12 13.6l2.6-2.6M10.6 18.2h2.8" />
+      </>
+    ),
+  },
   list: {
     fill: (
       <>

@@ -186,6 +186,14 @@ hidden, not disabled (`../product/requirements/ui-standards.md` → Permissions)
   stays until "Atualizar" activates the new worker and reloads (`useRegisterSW` from
   `virtual:pwa-register/react`, so the worker is registered from code, never with an inline
   script). It was a toast at first, too easy to miss at the bottom (2026-10-02).
+- **Install offer:** `lib/install-prompt.ts`, started in `main.tsx` before React mounts, keeps
+  the browser's `beforeinstallprompt` (and cancels the browser's own banner) until the person
+  asks: `install()` opens the browser dialog once and answers `accepted` or `dismissed`;
+  `appinstalled` forgets the offer. `useCanInstall()` (`hooks/use-can-install.ts`) says whether an
+  offer is kept. `features/app-install` draws the Home card (`InstallOffer`, passed to `HomePage`
+  by the app's Home route only, so never on `/demo`) and remembers "Agora não" for 30 days in
+  `localStorage` (`installOfferSnoozedAt`); the shell adds "Instalar o app" to the "Mais" items.
+  Rules in `../product/requirements/non-functional.md` → RNF-RESP-2.
 - **Manifest:** name "Twise", description "Leve, claro, a dois.", `lang: 'pt-BR'`, `display:
   'standalone'`, `start_url: '/'`. `background_color` and `theme_color` are the `mint` token, read
   from `semantic.css` at build time: the design hands off from the icon to the mint app opening

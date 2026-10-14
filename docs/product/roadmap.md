@@ -291,6 +291,9 @@ updated: 2026-10-14
      style everywhere (the type pills keep the mint fill, as the updated `ENT-mais.png` shows), the
      "Mais" sheet with the system illustrations
   9. [x] G42 (archive a category with its subcategories), approved by the product owner
+- [x] **Install offer** (asked by the user 2026-10-14): "Instale o Twise" on the phone's Home and
+  "Instalar o app" under "Mais", where the browser allows it (Android, desktop Chrome and Edge);
+  the iPhone guide ("Adicionar à Tela de Início") comes later (RNF-RESP-2)
 - [ ] Remaining project skills (`new-module`, `db-migration`, `domain-rule`, `pr`) and Claude Code hooks
 
 ## Phase 1: MVP

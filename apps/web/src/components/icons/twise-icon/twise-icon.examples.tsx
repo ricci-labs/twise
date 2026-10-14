@@ -26,6 +26,7 @@ const INTERFACE_ICONS: readonly TwiseIconName[] = [
   'subcategory',
   'move',
   'more',
+  'install',
 ]
 
 const ALERT_ICONS = [
