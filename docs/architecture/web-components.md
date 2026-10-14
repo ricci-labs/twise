@@ -515,6 +515,14 @@ component here, so the form, and later the account, card and planning forms, sha
   160,00 de terceiros") and the amount; `isPayment` uses the `invoice-paid` drawing and the
   positive tone.
 
+- `DayField` (`components/inputs/day-field`): a day of the month, the field the card form uses
+  twice side by side: calendar icon, "Escolha" or "Dia 25", chevron. It opens a `Sheet` with the
+  31 days as 42 px circles, seven per row (the chosen one with the ink outline and heavy weight;
+  29, 30 and 31 with a dot explained below) and, once a day is chosen, the `summary` line ("Fecha
+  todo dia **25**"). Tapping a day picks it and closes the sheet. It takes the `FormField` control.
+- `CyclePreview` (`components/finance/cycle-preview`): the sunken box with the calendar drawing
+  that says where purchases land ("…vence em **04/11**."), live while the days change.
+
 ## Account layouts
 - `AuthLayout` (`components/layout/auth-layout`): the auth screen of
   `../product/requirements/ui-standards.md` → Account screens. On phones, a mint block with the

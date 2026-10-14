@@ -1,7 +1,7 @@
 import { cva } from 'class-variance-authority'
 
 export const switchRowVariants = cva(
-  'flex min-h-control items-center gap-3 text-body font-medium text-ink lg:justify-start lg:gap-4',
+  'flex min-h-control items-center gap-3 text-choice text-ink lg:justify-start lg:gap-4',
 )
 
 export const switchLabelVariants = cva('flex-1 lg:flex-none')
@@ -13,5 +13,5 @@ export const switchVariants = cva([
 ])
 
 export const switchThumbVariants = cva(
-  'block size-6 rounded-full bg-surface shadow-float transition-transform duration-fast data-checked:translate-x-5',
+  'block size-6 rounded-full bg-surface shadow-raised transition-transform duration-fast data-checked:translate-x-5',
 )

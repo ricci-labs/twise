@@ -13,6 +13,7 @@ import type {
   WorkspaceMember,
 } from '@web/features/accounts/accounts.types'
 import { AccountRowActions } from '@web/features/accounts/components/account-row-actions'
+import { cardEditActionsOf } from '@web/features/accounts/components/card-edit-actions'
 import { listedCardOf } from '@web/features/accounts/components/listed-accounts'
 import { formatShortDate } from '@web/lib/format/calendar'
 import { hasPermission } from '@web/lib/permissions'
@@ -96,7 +97,7 @@ function CardItem({ workspaceId, permissions, card, holder }: CardItemProps) {
           workspaceId={workspaceId}
           permissions={permissions}
           account={listedCardOf(card)}
-          leadingActions={invoiceActionsFor(permissions, invoices)}
+          leadingActions={invoiceActionsFor(permissions, card.accountId, invoices)}
         />
       }
     />
@@ -105,13 +106,19 @@ function CardItem({ workspaceId, permissions, card, holder }: CardItemProps) {
 
 function invoiceActionsFor(
   permissions: CardItemProps['permissions'],
+  cardId: string,
   invoices: NonNullable<ItemAction['render']>,
 ): ItemAction[] {
+  const editActions = cardEditActionsOf(permissions, cardId)
   const canManage =
+    editActions.length > 0 ||
     hasPermission(permissions, 'accounts', 'update') ||
     hasPermission(permissions, 'accounts', 'delete')
   return canManage
-    ? [{ key: 'invoices', label: messages.invoices, icon: 'list', render: invoices }]
+    ? [
+        { key: 'invoices', label: messages.invoices, icon: 'list', render: invoices },
+        ...editActions,
+      ]
     : []
 }
 

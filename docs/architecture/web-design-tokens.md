@@ -76,8 +76,9 @@ When to use each one: the design system guide → Colour, and each token's notes
   `amount-hero`, `amount-kpi` (the Home indicators), `display`, `title-lg`, `title` (display family), `amount-lg`, `amount`,
   `amount-sm`, `title-sm`, `body`, `body-sm`, `label`, `button`, `button-sm`, `caption` (sans). Use one class:
   `text-title-sm`. A display style also needs `font-display`.
-- `font-emphasis` (650, `--font-weight-emphasis`) is the one extra weight: the current item of the
-  sidebar. Tailwind's `font-semibold` and `font-bold` cover the rest.
+- `font-emphasis` (650, `--font-weight-emphasis`) is an extra weight: the current item of the
+  sidebar. `font-heavy` (750, `--font-weight-heavy`) is the chosen day in the day sheet. Tailwind's
+  `font-semibold` and `font-bold` cover the rest.
 - `text-xs`, `text-sm` and `text-base` exist only as aliases of `caption`, `body-sm` and `body`, so
   shadcn components work.
 - **Component type styles** (tier 3), from the account components' design CSS: `screen-title`
@@ -101,7 +102,8 @@ When to use each one: the design system guide → Colour, and each token's notes
   with a weight class where the design sets one). From the cards design CSS: `amount-total`
   (34/40, 750), an invoice's total; `amount-card` (20/24, 750), the open invoice inside a card
   block; `fine` (12.5/16), the smallest grey lines ("vence 04/11", an invoice line's detail); `status`
-  (11.5/15, 500), a month's status in the invoice strip.
+  (11.5/15, 500), a month's status in the invoice strip; `confirm` (14.5/20), the day sheet's
+  "Fecha todo dia 25".
 - **Amounts** always use `tabular-nums`. It lives inside the `Amount` component, so no screen has
   to remember it (`web-components.md`). Inputs use 16 px (`body`) so iPhones don't zoom.
 

@@ -42,6 +42,7 @@ import { accountGroupExamples } from '@web/components/finance/account-group'
 import { accountRowExamples } from '@web/components/finance/account-row'
 import { cardBlockExamples } from '@web/components/finance/card-block'
 import { categoryRowExamples } from '@web/components/finance/category-row'
+import { cyclePreviewExamples } from '@web/components/finance/cycle-preview'
 import { invoiceFactsExamples } from '@web/components/finance/invoice-facts'
 import { invoiceLineExamples } from '@web/components/finance/invoice-line'
 import { invoiceMonthStripExamples } from '@web/components/finance/invoice-month-strip'
@@ -60,6 +61,7 @@ import { twiseIconExamples } from '@web/components/icons/twise-icon'
 import { choiceChipsExamples } from '@web/components/inputs/choice-chips'
 import { colorPickerExamples } from '@web/components/inputs/color-picker'
 import { colorSwatchExamples } from '@web/components/inputs/color-swatch'
+import { dayFieldExamples } from '@web/components/inputs/day-field'
 import { illustrationPickerExamples } from '@web/components/inputs/illustration-picker'
 import { moneyInputExamples } from '@web/components/inputs/money-input'
 import { passwordInputExamples } from '@web/components/inputs/password-input'
@@ -86,6 +88,7 @@ export const workbenchSections: readonly ComponentExamples[] = [
   moneyInputExamples,
   choiceChipsExamples,
   pickerFieldExamples,
+  dayFieldExamples,
   pickerSheetExamples,
   stepperExamples,
   switchExamples,
@@ -121,6 +124,7 @@ export const workbenchSections: readonly ComponentExamples[] = [
   subcategoryChipExamples,
   subcategoryAddChipExamples,
   cardBlockExamples,
+  cyclePreviewExamples,
   invoiceMonthStripExamples,
   invoiceSummaryExamples,
   invoiceLineExamples,

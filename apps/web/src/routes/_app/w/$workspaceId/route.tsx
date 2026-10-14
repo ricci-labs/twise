@@ -2,7 +2,9 @@ import { createFileRoute, Link, Outlet, useNavigate } from '@tanstack/react-rout
 import {
   AccountEditor,
   accountSearchSchema,
+  CardEditor,
   CategoryEditor,
+  cardSearchSchema,
   categorySearchSchema,
 } from '@web/features/accounts'
 import { AccountActions, AccountMenu } from '@web/features/auth'
@@ -12,11 +14,12 @@ import { openWorkspace, WorkspaceShell } from '@web/features/workspaces'
 export const Route = createFileRoute('/_app/w/$workspaceId')({
   validateSearch: newEntrySearchSchema
     .extend(accountSearchSchema.shape)
-    .extend(categorySearchSchema.shape),
+    .extend(categorySearchSchema.shape)
+    .extend(cardSearchSchema.shape),
   beforeLoad: ({ context, params }) => openWorkspace(context.queryClient, params.workspaceId),
   component: function WorkspaceRoute() {
     const { workspaceId } = Route.useParams()
-    const { entry, account: accountParam, category, parent, kind } = Route.useSearch()
+    const { entry, account: accountParam, category, parent, kind, card, part } = Route.useSearch()
     const { account, access } = Route.useRouteContext()
     const navigate = useNavigate()
     const accountLink = (
@@ -57,6 +60,20 @@ export const Route = createFileRoute('/_app/w/$workspaceId')({
               search: { created: accountId },
             })
           }}
+        />
+        <CardEditor
+          workspaceId={workspaceId}
+          currentUserId={account.userId}
+          permissions={access.permissions}
+          param={card}
+          part={part}
+          onClose={() =>
+            navigate({
+              to: '.',
+              search: (previous) => ({ ...previous, card: undefined, part: undefined }),
+            })
+          }
+          onCreated={() => navigate({ to: '/w/$workspaceId/cards', params: { workspaceId } })}
         />
         <CategoryEditor
           workspaceId={workspaceId}

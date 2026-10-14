@@ -1,7 +1,11 @@
-import type { NewAccountInput, Permission } from '@financas/shared'
+import type { CardChange, NewAccountInput, NewCardInput, Permission } from '@financas/shared'
 import type { ItemAction } from '@web/components/actions/item-actions'
 import type { BackLinkProps } from '@web/components/layout/sub-page-header'
-import type { accountFormSchema, categoryFormSchema } from '@web/features/accounts/accounts.schemas'
+import type {
+  accountFormSchema,
+  cardFormSchema,
+  categoryFormSchema,
+} from '@web/features/accounts/accounts.schemas'
 import type {
   fetchAccounts,
   fetchAccountsSummary,
@@ -414,4 +418,59 @@ export type InvoiceLineListProps = {
 export type PreviewBodyProps = {
   hasInvoice: boolean
   lines: readonly InvoiceLineView[] | undefined
+}
+
+export type CardPart = 'cycle' | 'name'
+
+export type CardFormInput = z.input<typeof cardFormSchema>
+
+export type CardFormValues = z.output<typeof cardFormSchema>
+
+export type CardFormMode = { kind: 'create' } | { kind: 'edit'; card: CardSummary; part?: CardPart }
+
+export type CardEditorProps = {
+  workspaceId: string
+  currentUserId: string
+  permissions: readonly Permission[]
+  param: string | undefined
+  part: CardPart | undefined
+  onClose: () => void
+  onCreated: (cardId: string) => void
+}
+
+export type CardFormProps = {
+  workspaceId: string
+  mode: CardFormMode
+  accounts: readonly LedgerAccount[]
+  members: readonly WorkspaceMember[] | null
+  defaults: CardFormInput
+  canRename: boolean
+  canChangeCycle: boolean
+  onClose: () => void
+  onCreated: (cardId: string) => void
+}
+
+export type CardDaysProps = {
+  isEditing: boolean
+}
+
+export type PaymentAccountFieldProps = {
+  accounts: readonly LedgerAccount[]
+}
+
+export type CardNameChange = {
+  name?: string
+  color?: string | null
+}
+
+export type SaveCardRequest =
+  | { kind: 'create'; input: NewCardInput }
+  | { kind: 'edit'; cardId: string; rename: CardNameChange | null; cycle: CardChange | null }
+
+export type CardDirtyFields = Partial<Record<keyof CardFormInput, boolean>>
+
+export type ChangeCardProps = CardEditorProps & {
+  cardId: string
+  canRename: boolean
+  canChangeCycle: boolean
 }

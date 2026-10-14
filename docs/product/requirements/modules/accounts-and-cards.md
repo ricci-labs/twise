@@ -257,6 +257,10 @@ tapping a day closes it.
 entram na fatura que vence dia {vence}. Uma compra hoje entra na fatura que vence em {dd/mm}."
 **RF-CARD-8** Editing the days warns: "Faturas já criadas mantêm as datas atuais; a mudança vale
 para as próximas."
+A new card starts with the switch on, the colour "Cinza", the first active money account as the
+payer and the person creating it as the holder. "Editar ciclo" and "Renomear e cor" open the same
+"Editar cartão" with what the person may change: name and colour with `accounts:update`, the rest
+with `cards:update`; "Renomear e cor" puts the focus on the name.
 Actions: "Criar cartão" / "Salvar" (when something changed). Errors: `CARD_INVALID`,
 `PAYMENT_ACCOUNT_NOT_AVAILABLE` (field payment account: "Escolha uma conta ativa de dinheiro."),
 `ACCOUNT_NAME_TAKEN` (field name), `CARD_NOT_FOUND` (page state). Opened from `ENT-02`'s empty

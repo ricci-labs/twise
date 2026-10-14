@@ -1,17 +1,14 @@
-import { isMoneyAccountKind, type Permission } from '@financas/shared'
+import { isMoneyAccountKind } from '@financas/shared'
 import { useQuery } from '@tanstack/react-query'
 import type {
   AccountEditorProps,
   AccountFormInput,
   ChangeAccountProps,
   LedgerAccount,
-  WorkspaceMember,
 } from '@web/features/accounts/accounts.types'
-import {
-  accountsQueryOptions,
-  membersQueryOptions,
-} from '@web/features/accounts/api/accounts.queries'
+import { accountsQueryOptions } from '@web/features/accounts/api/accounts.queries'
 import { AccountForm } from '@web/features/accounts/components/account-form'
+import { useWorkspaceMembers } from '@web/features/accounts/hooks/use-workspace-members'
 import { hasPermission } from '@web/lib/permissions'
 
 const NEW_ACCOUNT = 'new'
@@ -35,7 +32,7 @@ function NewAccount({
   onClose,
   onCreated,
 }: AccountEditorProps) {
-  const members = useMembers(workspaceId, permissions)
+  const members = useWorkspaceMembers(workspaceId, permissions)
   if (members === undefined) {
     return null
   }
@@ -58,7 +55,7 @@ function ChangeAccount({
   onClose,
   onCreated,
 }: ChangeAccountProps) {
-  const members = useMembers(workspaceId, permissions)
+  const members = useWorkspaceMembers(workspaceId, permissions)
   const accounts = useQuery(accountsQueryOptions(workspaceId)).data
   const account = accounts?.find((candidate) => candidate.id === accountId)
   if (members === undefined || !account || account.isSystem || !isMoneyAccountKind(account.kind)) {
@@ -75,15 +72,6 @@ function ChangeAccount({
       onCreated={onCreated}
     />
   )
-}
-
-function useMembers(
-  workspaceId: string,
-  permissions: readonly Permission[],
-): readonly WorkspaceMember[] | null | undefined {
-  const canSeeMembers = hasPermission(permissions, 'members', 'view')
-  const members = useQuery({ ...membersQueryOptions(workspaceId), enabled: canSeeMembers }).data
-  return canSeeMembers ? members : null
 }
 
 function blankAccount(ownerUserId: string): AccountFormInput {
