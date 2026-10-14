@@ -103,7 +103,9 @@ When to use each one: the design system guide → Colour, and each token's notes
   (34/40, 750), an invoice's total; `amount-card` (20/24, 750), the open invoice inside a card
   block; `fine` (12.5/16), the smallest grey lines ("vence 04/11", an invoice line's detail); `status`
   (11.5/15, 500), a month's status in the invoice strip; `confirm` (14.5/20), the day sheet's
-  "Fecha todo dia 25".
+  "Fecha todo dia 25". From the shell's design CSS: `wordmark` (30, 750, display), the sidebar's
+  "twise"; `overline` (11.5/16, 600, 0.06em), the sidebar's group labels ("MAIS", "ESPAÇO");
+  `account-name` (14/18, 600), the workspace and account names in its foot.
 - **Amounts** always use `tabular-nums`. It lives inside the `Amount` component, so no screen has
   to remember it (`web-components.md`). Inputs use 16 px (`body`) so iPhones don't zoom.
 

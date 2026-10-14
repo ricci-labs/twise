@@ -6,7 +6,7 @@ export const navLinkVariants = cva(
     variants: {
       layout: {
         sidebar:
-          'min-h-11 gap-3 rounded-md px-3 text-body text-ink hover:not-aria-[current=page]:bg-page aria-[current=page]:bg-mint aria-[current=page]:font-emphasis aria-[current=page]:text-on-mint',
+          'min-h-10.5 gap-3 rounded-md px-3 text-choice text-ink hover:not-aria-[current=page]:bg-page aria-[current=page]:bg-mint aria-[current=page]:font-emphasis aria-[current=page]:text-on-mint',
         icon: 'h-11 w-12 justify-center self-center rounded-md hover:not-aria-[current=page]:bg-page aria-[current=page]:bg-mint aria-[current=page]:text-on-mint',
         tab: 'flex-col justify-center gap-0.75 rounded-md text-tab text-ink-muted transition-colors duration-select aria-[current=page]:font-bold aria-[current=page]:text-mint-ink',
       },

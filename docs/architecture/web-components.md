@@ -212,7 +212,8 @@ React Hook Form v7 + `zodResolver` with the **schemas from `@financas/shared`** 
   generator.
 - With `prefers-reduced-motion`, every duration and delay is zero (`globals.css`), so each
   sequence shows its final state at once.
-- `Logo` is the full logo, the icon (32 px, the collapsed sidebar) or the `mark` (30 px, the
+- `Logo` is the full logo, the `lockup` (the 42 px icon and the "twise" wordmark set in
+  `wordmark`, the sidebar), the icon (42 px, the collapsed sidebar) or the `mark` (30 px, the
   phone's top bar), named "twise" for screen readers.
 - `Spinner` (`components/feedback/spinner`, `sm`/`md`/`lg`) is the one spinner: buttons, the
   step track, the app opening and "Abrindo o espaço…" all use it.
@@ -226,11 +227,14 @@ React Hook Form v7 + `zodResolver` with the **schemas from `@financas/shared`** 
   is the element that navigates (a router `Link`, or a `button` for "Mais"); `NavLink` draws it
   with the Twise icon (mint fill when current) and forwards any props, so it can be a tooltip
   trigger. `aria-current="page"` marks the current item.
-- `AppSidebar`: 264 px (`w-66`) with the logo, the collapse button (`chevrons-left`), the primary
-  action ("Novo lançamento"), the items, the group "Mais" and a `foot` slot (workspace switcher and
-  account); collapsed, 76 px (`w-19`) of icons that keep their names (`aria-label`) with a tooltip
-  on hover, the owl logo, a round "+" and a divider for "Mais". It's sticky at the window height.
-  The collapsed state is the caller's (`isCollapsed`, `onToggle`).
+- `AppSidebar`: 264 px (`w-66`) with the logo lockup, the collapse button (the thin `collapse` /
+  `expand` arrows), the primary action ("Novo lançamento"), the items (42 px, `choice` type, 22 px
+  icons, 2 px apart), the group "Mais" (`overline`) and a `foot` slot (workspace switcher and,
+  under a divider, the account); collapsed, 76 px (`w-19`) of icons that keep their names
+  (`aria-label`) with a tooltip on hover, the owl icon, a round "+", a divider for "Mais" and the
+  foot reduced to the house and the avatar (the foot items read `group-data-collapsed/sidebar`).
+  It's sticky at the window height. The collapsed state is the caller's (`isCollapsed`,
+  `onToggle`).
 - `BottomTabBar`: the phone's five items, fixed at the bottom with the safe area (`pb-safe`), 94 px
   tall as the approved model: each item centred, a 44 × 30 box with the 25 px icon over the `tab`
   label (11.5 px); the current one bold in `mint-ink`, with no fill, pill or mark; the bar casts
@@ -561,9 +565,10 @@ component here, so the form, and later the account, card and planning forms, sha
   control around it carries the name. A new design icon is added to its shape map by hand from the
   SVG, keeping the two layers. Drawn icons use a 1.75 stroke; the plain line icons of the action
   sheets and menus (`edit`, `flag`, `archive`, `unarchive`, `calendar`, `subcategory`, `move`,
-  `more`) keep the design's 2 (`weight` in the shape).
-- `lucide-react` only for small utility glyphs (chevrons, close, the period calendar, the sidebar
-  collapse), named imports only (each icon is its own module). Never the `icons` namespace or
+  `more`) keep the design's 2 (`weight` in the shape), and the sidebar's `collapse` / `expand`
+  arrows its 1.5.
+- `lucide-react` only for small utility glyphs (chevrons, close, the period calendar), named
+  imports only (each icon is its own module). Never the `icons` namespace or
   `DynamicIcon`, which pull in the whole set.
 - **Icons that carry meaning come from a registry** in `components/icons/`: `entryKindIcons`,
   `statusIcons`, `feedbackIcons`, and `accountIcons` (the names a user can pick, stored as the

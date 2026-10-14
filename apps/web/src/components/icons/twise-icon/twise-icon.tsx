@@ -36,6 +36,8 @@ const DRAWN_WEIGHT = 1.75
 
 const LINE_WEIGHT = 2
 
+const FINE_WEIGHT = 1.5
+
 const TWISE_ICON_SHAPES: Record<TwiseIconName, TwiseIconShape> = {
   alert: {
     fill: (
@@ -171,6 +173,14 @@ const TWISE_ICON_SHAPES: Record<TwiseIconName, TwiseIconShape> = {
         <path d="M8 11V7a4 4 0 0 1 8 0v4" />
       </>
     ),
+  },
+  collapse: {
+    weight: FINE_WEIGHT,
+    stroke: <path d="m11.5 16.5-4.5-4.5 4.5-4.5M17.5 16.5 13 12l4.5-4.5" />,
+  },
+  expand: {
+    weight: FINE_WEIGHT,
+    stroke: <path d="m12.5 7.5 4.5 4.5-4.5 4.5M6.5 7.5 11 12l-4.5 4.5" />,
   },
   menu: {
     stroke: (
