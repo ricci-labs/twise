@@ -301,6 +301,15 @@ component here, so the form, and later the account, card and planning forms, sha
   (who spent, two cards with an initial). An option can open a dialog (`opensDialog`,
   `aria-haspopup`) and carry an icon (`calendar` before the label, `chevron` after it); `onSelect`
   fires for every press, even on the chosen option, so "Mais" and "Outra data" reopen their sheet.
+- `CategoryArt` (`components/display/category-art`): the category drawing of an account's `icon`,
+  never clipped in a circle (`../product/requirements/ui-standards.md` → Visual rules across
+  screens). By default (`loose`) it is the drawing without its paper square, from
+  `assets/illustrations/loose/` (copied from `docs/design/assets/ilustracoes/soltas/`), for white
+  surfaces; in the dark theme it switches to the drawing on its paper square, since the loose black
+  ink would vanish. `onLight` keeps the loose drawing in both themes, for a surface that is always
+  light (the paper or mint tiles of the category grid). Sizes `sm` 32, `md` 42, `lg` 46, `xl` 64 and
+  `2xl` 88 px. A drawing with no loose version (travel) uses its paper one; no icon shows the
+  initial on a paper square.
 
 ## Account layouts
 - `AuthLayout` (`components/layout/auth-layout`): the auth screen of
