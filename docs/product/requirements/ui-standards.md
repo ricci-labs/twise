@@ -206,7 +206,7 @@ Decided by the user on 2026-10-14, for every screen, built or to be built.
 - **Many items in a card or a list:** a card of the Home shows at most 5 items, and its footer link
   ("Ver contas fixas", "Ver cartões", "Ver metas") opens the whole list; a
   row of chips shows what fits on one line and "+N mais"; a list of more than 12 items (the
-  categories) gets a search on top; pickers show the most used first, with their search.
+  categories, on their page and in the picker) gets a search on top; pickers show the most used first, with their search.
 - **Lists inside a dialog or a sheet** (the invoices to pay, the contacts to choose) show at most 5
   items, the most relevant first (the oldest invoice with something due), then "Mostrar mais
   ({n})"; more than 10 items add a search on top.

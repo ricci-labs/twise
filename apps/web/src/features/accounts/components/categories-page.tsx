@@ -4,23 +4,33 @@ import { EmptyBlock } from '@web/components/feedback/empty-block'
 import { SectionError } from '@web/components/feedback/section-error'
 import { AccountGroup } from '@web/components/finance/account-group'
 import { ChoiceChips } from '@web/components/inputs/choice-chips'
+import { TextInput } from '@web/components/inputs/text-input'
 import { PageFrame } from '@web/components/layout/page-frame'
 import { accountsMessages } from '@web/features/accounts/accounts.messages'
 import type {
   CategoriesBodyProps,
+  CategoriesLoadedProps,
   CategoriesPageProps,
+  CategoriesShownProps,
   CategoryKind,
 } from '@web/features/accounts/accounts.types'
 import { accountsQueryOptions } from '@web/features/accounts/api/accounts.queries'
 import { AccountsAreaHeader } from '@web/features/accounts/components/accounts-area-header'
 import { CategoryList } from '@web/features/accounts/components/category-list'
 import { CategoryTables } from '@web/features/accounts/components/category-tables'
-import { categoryTreeOf } from '@web/features/accounts/components/category-tree'
+import {
+  activeCategoryCount,
+  categoriesMatching,
+  categoryTreeOf,
+} from '@web/features/accounts/components/category-tree'
 import { useMediaQuery } from '@web/hooks/use-media-query'
 import { usePageTitle } from '@web/hooks/use-page-title'
 import { ApiError } from '@web/lib/api/api-error'
 import { DESKTOP_QUERY } from '@web/lib/breakpoints'
+import { CATEGORIES_SEARCH_ABOVE } from '@web/lib/long-lists'
 import { hasPermission } from '@web/lib/permissions'
+import { Search } from 'lucide-react'
+import { useState } from 'react'
 
 const messages = accountsMessages.categories
 const KIND_OPTIONS = [
@@ -95,19 +105,72 @@ function CategoriesBody({
   if (!accounts.data) {
     return <AccountGroup title={messages.groups[kind]} loadingRows={4} />
   }
+  return (
+    <CategoriesLoaded
+      workspaceId={workspaceId}
+      permissions={permissions}
+      kind={kind}
+      createdId={createdId}
+      isDesktop={isDesktop}
+      accounts={accounts.data}
+    />
+  )
+}
+
+function CategoriesLoaded({ accounts, ...body }: CategoriesLoadedProps) {
+  const [search, setSearch] = useState('')
+  const count = activeCategoryCount(accounts, body.isDesktop ? undefined : body.kind)
+  const hasSearch = count > CATEGORIES_SEARCH_ABOVE
+  const isSearching = hasSearch && search.trim() !== ''
+  return (
+    <>
+      {hasSearch && (
+        <TextInput
+          type="search"
+          aria-label={messages.search}
+          placeholder={messages.search}
+          startAdornment={<Search aria-hidden="true" />}
+          className="min-h-touch lg:max-w-90"
+          value={search}
+          onChange={(event) => setSearch(event.target.value)}
+        />
+      )}
+      <CategoriesShown
+        {...body}
+        accounts={isSearching ? categoriesMatching(accounts, search) : accounts}
+        isSearching={isSearching}
+      />
+    </>
+  )
+}
+
+function CategoriesShown({
+  workspaceId,
+  permissions,
+  kind,
+  createdId,
+  isDesktop,
+  accounts,
+  isSearching,
+}: CategoriesShownProps) {
   if (isDesktop) {
     return (
       <CategoryTables
         workspaceId={workspaceId}
         permissions={permissions}
-        accounts={accounts.data}
+        accounts={accounts}
         createdId={createdId}
+        isSearching={isSearching}
       />
     )
   }
-  const tree = categoryTreeOf(accounts.data, kind)
+  const tree = categoryTreeOf(accounts, kind)
   if (tree.active.length === 0 && tree.archivedCount === 0) {
-    return <EmptyBlock icon="groceries" title={messages.empty[kind]} />
+    return isSearching ? (
+      <p className="px-0.5 text-body-sm text-ink-muted">{messages.nothingFound}</p>
+    ) : (
+      <EmptyBlock icon="groceries" title={messages.empty[kind]} />
+    )
   }
   return (
     <CategoryList
@@ -116,6 +179,7 @@ function CategoriesBody({
       tree={tree}
       kind={kind}
       createdId={createdId}
+      isSearching={isSearching}
     />
   )
 }

@@ -24,6 +24,7 @@ export function CategoryList({
   tree,
   kind,
   createdId,
+  isSearching = false,
 }: CategoryListProps) {
   const open = useRememberedIds(`openCategories:${workspaceId}`)
   const canCreate = hasPermission(permissions, 'accounts', 'create')
@@ -56,7 +57,7 @@ export function CategoryList({
             icon={node.icon}
             badge={<NatureBadge node={node} />}
             subcategoryCount={node.children.length}
-            isOpen={open.ids.has(node.id)}
+            isOpen={open.ids.has(node.id) || (isSearching && node.children.length > 0)}
             onOpenChange={(isOpen) => open.setRemembered(node.id, isOpen)}
             actions={<CategoryActions {...shared} node={node} />}
           >

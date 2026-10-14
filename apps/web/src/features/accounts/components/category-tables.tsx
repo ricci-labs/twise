@@ -40,10 +40,11 @@ export function CategoryTables({
   permissions,
   accounts,
   createdId,
+  isSearching = false,
 }: CategoryTablesProps) {
   const expense = categoryTreeOf(accounts, 'expense')
   const income = categoryTreeOf(accounts, 'income')
-  const shared = { workspaceId, permissions, createdId }
+  const shared = { workspaceId, permissions, createdId, isSearching }
   return (
     <div className="flex flex-col gap-5">
       <Card title={messages.kinds.expense} description={summaryOf(expense)}>
@@ -69,7 +70,14 @@ export function CategoryTables({
   )
 }
 
-function CategoryTable({ workspaceId, permissions, tree, kind, createdId }: CategoryTableProps) {
+function CategoryTable({
+  workspaceId,
+  permissions,
+  tree,
+  kind,
+  createdId,
+  isSearching,
+}: CategoryTableProps) {
   const createdParent = tree.active.find((main) =>
     main.children.some((child) => child.id === createdId),
   )
@@ -78,7 +86,11 @@ function CategoryTable({ workspaceId, permissions, tree, kind, createdId }: Cate
   )
   const [hidden, setHidden] = useState<Readonly<Record<string, number>>>({})
   if (tree.active.length === 0) {
-    return <p className="text-body-sm text-ink-muted">{messages.empty[kind]}</p>
+    return (
+      <p className="text-body-sm text-ink-muted">
+        {isSearching ? messages.nothingFound : messages.empty[kind]}
+      </p>
+    )
   }
   const shared = { workspaceId, permissions, tree }
   const setExpandedOf = (id: string, isExpanded: boolean) =>

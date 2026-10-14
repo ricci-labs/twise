@@ -252,12 +252,21 @@ export type CategoriesBodyProps = CategoriesPageProps & {
   isDesktop: boolean
 }
 
+export type CategoriesLoadedProps = CategoriesBodyProps & {
+  accounts: readonly LedgerAccount[]
+}
+
+export type CategoriesShownProps = CategoriesLoadedProps & {
+  isSearching: boolean
+}
+
 export type CategoryListProps = {
   workspaceId: string
   permissions: readonly Permission[]
   tree: CategoryTree
   kind: CategoryKind
   createdId?: string
+  isSearching?: boolean
 }
 
 export type CategoryTablesProps = {
@@ -265,6 +274,7 @@ export type CategoryTablesProps = {
   permissions: readonly Permission[]
   accounts: readonly LedgerAccount[]
   createdId?: string
+  isSearching?: boolean
 }
 
 export type CategoryTableProps = {
@@ -273,6 +283,7 @@ export type CategoryTableProps = {
   tree: CategoryTree
   kind: CategoryKind
   createdId?: string
+  isSearching: boolean
 }
 
 export type CategoryChipsCellProps = CategoryNodeProps & {

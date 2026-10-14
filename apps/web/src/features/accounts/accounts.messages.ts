@@ -195,6 +195,8 @@ export const accountsMessages = {
       income: 'Nenhuma categoria de receita ainda.',
     },
     failed: 'Não foi possível carregar as categorias.',
+    search: 'Buscar categoria',
+    nothingFound: 'Nenhuma categoria com esse nome.',
     and: ' e ',
     table: {
       summary: (categories: number, subcategories: number) =>

@@ -44,7 +44,7 @@ import { Sheet } from '@web/components/layout/sheet'
 import { useLongList } from '@web/hooks/use-long-list'
 import { useMediaQuery } from '@web/hooks/use-media-query'
 import { DESKTOP_QUERY } from '@web/lib/breakpoints'
-import { GRID_SEARCH_ABOVE, LIST_SEARCH_ABOVE, matchesSearch } from '@web/lib/long-lists'
+import { CATEGORIES_SEARCH_ABOVE, LIST_SEARCH_ABOVE, matchesSearch } from '@web/lib/long-lists'
 import { Check, ChevronRight, Plus, Search } from 'lucide-react'
 import { useState } from 'react'
 
@@ -318,5 +318,5 @@ function searchAbove(layout: PickerLayout, searchLabel: string | undefined): num
   if (searchLabel === undefined) {
     return undefined
   }
-  return layout === 'grid' ? GRID_SEARCH_ABOVE : LIST_SEARCH_ABOVE
+  return layout === 'grid' ? CATEGORIES_SEARCH_ABOVE : LIST_SEARCH_ABOVE
 }
