@@ -160,6 +160,7 @@ export type CardItem = {
   icon: string | null
   sortOrder: number
   archivedAt: Date | null
+  createdAt: Date
   closingDay: number
   dueDay: number
   purchaseOnClosingDayGoesNext: boolean

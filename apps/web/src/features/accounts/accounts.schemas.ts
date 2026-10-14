@@ -14,6 +14,12 @@ export const accountsPageSearchSchema = z.object({
   created: z.uuid().optional().catch(undefined),
 })
 
+const YEAR_MONTH = /^\d{4}-(0[1-9]|1[0-2])$/
+
+export const cardInvoicesSearchSchema = z.object({
+  month: z.string().regex(YEAR_MONTH).optional().catch(undefined),
+})
+
 export const accountFormSchema = z.object({
   kind: z.enum(MONEY_ACCOUNT_KINDS),
   name: z.string().trim().min(1).max(ACCOUNT_NAME_MAX_LENGTH),

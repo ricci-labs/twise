@@ -10,6 +10,7 @@ export const SAVINGS = '00000000-0000-4000-8000-0000000000c2'
 export const CARD = '00000000-0000-4000-8000-0000000000c3'
 export const OLD = '00000000-0000-4000-8000-0000000000c4'
 export const NEW_ACCOUNT = '00000000-0000-4000-8000-0000000000c9'
+const SHOPPING = '00000000-0000-4000-8000-0000000000c5'
 
 function ledgerAccount(id: string, kind: string, name: string, extra: object = {}) {
   return {
@@ -35,18 +36,91 @@ export const ACCOUNTS = [
   ledgerAccount(SAVINGS, 'savings', 'Poupança'),
   ledgerAccount(CARD, 'credit_card', 'Cartão X', { ownerUserId: MEMBER_B, icon: 'card' }),
   ledgerAccount(OLD, 'checking', 'Conta antiga', { archivedAt: '2026-09-01T12:00:00.000Z' }),
-  ledgerAccount('00000000-0000-4000-8000-0000000000c5', 'expense_category', 'Mercado'),
+  ledgerAccount(SHOPPING, 'expense_category', 'Mercado'),
 ]
 
+export const OPEN_INVOICE = '00000000-0000-4000-8000-0000000000f2'
+export const PAID_INVOICE = '00000000-0000-4000-8000-0000000000f1'
+export const FUTURE_INVOICE = '00000000-0000-4000-8000-0000000000f3'
+
 const INVOICE = {
-  invoiceId: null,
-  referenceMonth: '2026-11-01',
+  invoiceId: OPEN_INVOICE,
+  referenceMonth: '2026-11',
   closingOn: '2026-10-25',
   dueOn: '2026-11-04',
   status: 'open',
   totalCents: 195000,
   dueCents: 195000,
 }
+
+function storedInvoice(
+  invoiceId: string,
+  referenceMonth: string,
+  closingOn: string,
+  amounts: { total: number; paid: number; fronted: number },
+) {
+  return {
+    invoiceId,
+    referenceMonth,
+    closingOn,
+    dueOn: `${referenceMonth}-04`,
+    status: 'closed',
+    totalCents: amounts.total,
+    paidCents: amounts.paid,
+    dueCents: amounts.total - amounts.paid,
+    frontedCents: amounts.fronted,
+    ownCents: amounts.total - amounts.fronted,
+  }
+}
+
+const CARD_INVOICES = [
+  storedInvoice(PAID_INVOICE, '2026-10', '2026-09-25', {
+    total: 162000,
+    paid: 162000,
+    fronted: 12000,
+  }),
+  storedInvoice(OPEN_INVOICE, '2026-11', '2026-10-25', { total: 195000, paid: 0, fronted: 24000 }),
+  storedInvoice(FUTURE_INVOICE, '2026-12', '2026-11-25', { total: 64000, paid: 0, fronted: 0 }),
+]
+
+function invoiceLine(entryId: string, occurredOn: string, description: string, extra: object = {}) {
+  return {
+    entryId,
+    entryType: 'expense',
+    occurredOn,
+    description,
+    installmentNo: null,
+    installmentCount: 1,
+    amountCents: 10000,
+    frontedCents: 0,
+    counterpartAccountId: SHOPPING,
+    ...extra,
+  }
+}
+
+const OPEN_LINES = [
+  invoiceLine('00000000-0000-4000-8000-000000000101', '2026-10-24', 'Mercado da semana', {
+    amountCents: 8640,
+  }),
+  invoiceLine('00000000-0000-4000-8000-000000000102', '2026-10-22', 'Tênis de corrida', {
+    amountCents: 33334,
+    installmentNo: 1,
+    installmentCount: 3,
+  }),
+  invoiceLine('00000000-0000-4000-8000-000000000103', '2026-10-20', 'Jantar de aniversário', {
+    amountCents: 24000,
+    frontedCents: 16000,
+  }),
+]
+
+const PAID_LINES = [
+  invoiceLine('00000000-0000-4000-8000-000000000104', '2026-10-03', 'Pagamento da fatura', {
+    entryType: 'invoice_payment',
+    amountCents: -162000,
+    counterpartAccountId: CHECKING,
+  }),
+  invoiceLine('00000000-0000-4000-8000-000000000105', '2026-09-24', 'Mercado da semana'),
+]
 
 export function accountsAnswers(overrides: Record<string, FakeAnswer> = {}) {
   return {
@@ -78,17 +152,21 @@ export function accountsAnswers(overrides: Record<string, FakeAnswer> = {}) {
           icon: 'card',
           sortOrder: 0,
           archivedAt: null,
+          createdAt: '2026-08-20T12:00:00.000Z',
           closingDay: 25,
           dueDay: 4,
           purchaseOnClosingDayGoesNext: false,
-          limitCents: null,
+          limitCents: 600000,
           holderUserId: MEMBER_B,
           paymentAccountId: CHECKING,
           openCents: 289000,
-          limitUsedPercent: null,
+          limitUsedPercent: 48,
           currentInvoice: INVOICE,
         },
       ]),
+    [`GET ${BASE}/cards/${CARD}/invoices`]: () => Response.json(CARD_INVOICES),
+    [`GET ${BASE}/cards/${CARD}/invoices/${OPEN_INVOICE}/lines`]: () => Response.json(OPEN_LINES),
+    [`GET ${BASE}/cards/${CARD}/invoices/${PAID_INVOICE}/lines`]: () => Response.json(PAID_LINES),
     [`GET ${BASE}/members`]: () =>
       Response.json([
         { userId: MEMBER_A, displayName: 'Member A' },

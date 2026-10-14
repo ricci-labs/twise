@@ -7,6 +7,7 @@ import {
   formatMonthTitle,
   formatRange,
   formatShortDate,
+  formatShortMonthName,
   formatWeekday,
 } from '@web/lib/format/calendar'
 import { describe, expect, it } from 'vitest'
@@ -23,6 +24,7 @@ describe('calendar formats', () => {
   it('names periods by their month and the days of the week', () => {
     expect(formatMonthLabel('2027-01')).toBe('jan/27')
     expect(formatMonthName('2026-09')).toBe('setembro')
+    expect(formatShortMonthName('2026-11')).toBe('nov')
     expect(formatMonthTitle('2027-01')).toBe('Janeiro')
     expect(formatWeekday('2026-10-22')).toBe('Quinta')
   })

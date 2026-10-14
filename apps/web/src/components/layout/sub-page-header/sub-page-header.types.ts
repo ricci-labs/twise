@@ -11,4 +11,5 @@ export type SubPageHeaderProps = {
   backLabel: string
   title: string
   description?: string
+  actions?: ReactNode
 }

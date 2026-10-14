@@ -20,4 +20,17 @@ describe('SubPageHeader', () => {
       .toHaveAttribute('href', '#contas')
     await expectNoAccessibilityViolations(screen.container)
   })
+
+  it('puts the page actions on the right', async () => {
+    const screen = await render(
+      <SubPageHeader
+        back={<a href="#cartoes" />}
+        backLabel="Voltar para Cartões"
+        title="Cartão X"
+        actions={<button type="button">Ações de Cartão X</button>}
+      />,
+    )
+
+    await expect.element(screen.getByRole('button', { name: 'Ações de Cartão X' })).toBeVisible()
+  })
 })

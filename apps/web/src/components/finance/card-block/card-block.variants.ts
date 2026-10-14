@@ -10,6 +10,8 @@ export const cardBlockNameLinkVariants = cva(
   'flex min-w-0 flex-1 items-center gap-3 rounded-md text-ink outline-none focus-visible:ring-2 focus-visible:ring-focus-ring [&>[data-slot=category-art]]:-m-0.75',
 )
 
+export const cardBlockNameTextVariants = cva('flex min-w-0 flex-col gap-0.5')
+
 export const cardBlockNameVariants = cva(
   'flex min-w-0 items-center gap-2 font-display text-section-title [&>span:first-child]:truncate',
 )

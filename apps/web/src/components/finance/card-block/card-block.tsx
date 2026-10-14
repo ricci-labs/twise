@@ -14,6 +14,7 @@ import {
   cardBlockLimitHeadVariants,
   cardBlockLimitVariants,
   cardBlockNameLinkVariants,
+  cardBlockNameTextVariants,
   cardBlockNameVariants,
   cardBlockVariants,
 } from '@web/components/finance/card-block/card-block.variants'
@@ -42,7 +43,7 @@ export function CardBlock({
           { className: cardBlockNameLinkVariants() },
           <>
             <CategoryArt name={name} icon={icon} size="lg" />
-            <span className="min-w-0">
+            <span className={cardBlockNameTextVariants()}>
               <span className={cardBlockNameVariants()}>
                 <span>{name}</span>
                 <ColorSwatch color={color} />
@@ -74,7 +75,7 @@ export function CardBlock({
               <span>{limit.label}</span>
               <b>{limit.used}</b>
             </p>
-            <ProgressBar percent={limit.percent} thickness="lg" />
+            <ProgressBar percent={limit.percent} thickness="lg" className="mt-2" />
           </>
         )}
         <p className={cardBlockFineVariants()}>{open}</p>

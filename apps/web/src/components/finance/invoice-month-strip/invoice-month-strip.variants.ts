@@ -1,7 +1,7 @@
 import { cva } from 'class-variance-authority'
 
 export const invoiceMonthStripVariants = cva(
-  'flex items-stretch gap-2 overflow-x-auto px-4 pb-1 scrollbar-none',
+  'relative -my-0.5 flex items-stretch gap-2 overflow-x-auto px-4 py-0.5 scrollbar-none',
 )
 
 export const invoiceMonthVariants = cva(
@@ -22,7 +22,7 @@ export const invoiceMonthVariants = cva(
 
 export const invoiceMonthNameVariants = cva('text-choice font-bold')
 
-export const invoiceMonthStatusVariants = cva('text-tab font-medium text-ink-muted')
+export const invoiceMonthStatusVariants = cva('text-status text-ink-muted')
 
 export const invoiceYearVariants = cva(
   'shrink-0 self-center border-l-stroke border-dashed border-border-control pl-1.5 text-caption font-bold tracking-wide text-ink-muted text-vertical',

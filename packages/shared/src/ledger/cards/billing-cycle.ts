@@ -1,5 +1,11 @@
 import type { IsoDate, YearMonth } from '@shared/core/calendar/calendar.types'
-import { addMonths, clampedDate, parseIsoDate, toYearMonthLabel } from '@shared/core/calendar/dates'
+import {
+  addDays,
+  addMonths,
+  clampedDate,
+  parseIsoDate,
+  toYearMonthLabel,
+} from '@shared/core/calendar/dates'
 import type { CardCycle, InvoiceRef } from '@shared/ledger/cards/cards.types'
 import type { InvoiceStatus } from '@shared/ledger/ledger/ledger.constants'
 
@@ -37,6 +43,13 @@ export function invoicesForInstallments(
   )
 }
 
+export function invoiceForReferenceMonth(referenceMonth: string, card: CardCycle): InvoiceRef {
+  const { year, month } = parseIsoDate(`${referenceMonth}-01`)
+  const dueMonth = { year, month }
+  const dueFallsInSameMonth = card.dueDay > card.closingDay
+  return invoiceClosingIn(dueFallsInSameMonth ? dueMonth : addMonths(dueMonth, -1), card)
+}
+
 function invoiceClosingIn(closingMonth: YearMonth, card: CardCycle): InvoiceRef {
   const dueFallsInSameMonth = card.dueDay > card.closingDay
   const dueMonth = dueFallsInSameMonth ? closingMonth : addMonths(closingMonth, 1)
@@ -66,4 +79,10 @@ export function invoiceStatusOn(
   }
   const openReferenceMonth = invoiceForPurchase(today, card).referenceMonth
   return invoice.referenceMonth <= openReferenceMonth ? 'open' : 'future'
+}
+
+export function invoiceOpeningOn(invoice: Pick<InvoiceRef, 'closingOn'>, card: CardCycle): IsoDate {
+  const { year, month } = parseIsoDate(invoice.closingOn)
+  const previousClosing = clampedDate(addMonths({ year, month }, -1), card.closingDay)
+  return card.purchaseOnClosingDayGoesNext ? previousClosing : addDays(previousClosing, 1)
 }

@@ -1,5 +1,7 @@
 import {
   invoiceForPurchase,
+  invoiceForReferenceMonth,
+  invoiceOpeningOn,
   invoiceStatusOn,
   invoicesForInstallments,
 } from '@shared/ledger/cards/billing-cycle'
@@ -74,5 +76,45 @@ describe('invoiceStatusOn', () => {
 
   it('stays closed for good once its closing date passed', () => {
     expect(invoiceStatusOn(october, '2027-01-20', cardX)).toBe('closed')
+  })
+})
+
+describe('invoiceOpeningOn', () => {
+  it('opens on the previous closing day when closing-day purchases go to the next invoice', () => {
+    expect(invoiceOpeningOn({ closingOn: '2026-11-03' }, cardX)).toBe('2026-10-03')
+  })
+
+  it('opens the day after the previous closing when the issuer keeps closing-day purchases', () => {
+    const card = { ...cardX, purchaseOnClosingDayGoesNext: false }
+    expect(invoiceOpeningOn({ closingOn: '2026-11-03' }, card)).toBe('2026-10-04')
+  })
+
+  it('follows the last day of a short month', () => {
+    expect(invoiceOpeningOn({ closingOn: '2027-03-31' }, cardZ)).toBe('2027-02-28')
+  })
+
+  it('agrees with the invoice a purchase on that day lands on', () => {
+    const december = invoiceForPurchase('2026-11-15', cardY)
+    expect(invoiceForPurchase(invoiceOpeningOn(december, cardY), cardY)).toEqual(december)
+  })
+})
+
+describe('invoiceForReferenceMonth', () => {
+  it('finds the invoice due in that month', () => {
+    expect(invoiceForReferenceMonth('2026-11', cardY)).toEqual({
+      closingOn: '2026-10-28',
+      dueOn: '2026-11-05',
+      referenceMonth: '2026-11',
+    })
+    expect(invoiceForReferenceMonth('2026-10', cardX)).toEqual({
+      closingOn: '2026-10-03',
+      dueOn: '2026-10-10',
+      referenceMonth: '2026-10',
+    })
+  })
+
+  it('names the same invoice a purchase lands on', () => {
+    const invoice = invoiceForPurchase('2027-02-15', cardZ)
+    expect(invoiceForReferenceMonth(invoice.referenceMonth, cardZ)).toEqual(invoice)
   })
 })

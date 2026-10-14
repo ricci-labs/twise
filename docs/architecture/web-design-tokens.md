@@ -100,8 +100,8 @@ When to use each one: the design system guide → Colour, and each token's notes
   "* obrigatório" legend, a sheet's subtitle, the auto-fill tip, the "Repetir um recente" title,
   with a weight class where the design sets one). From the cards design CSS: `amount-total`
   (34/40, 750), an invoice's total; `amount-card` (20/24, 750), the open invoice inside a card
-  block; `fine` (12.5/16), the smallest grey lines (a month's status, "vence 04/11", the year
-  label of the month strip).
+  block; `fine` (12.5/16), the smallest grey lines ("vence 04/11", an invoice line's detail); `status`
+  (11.5/15, 500), a month's status in the invoice strip.
 - **Amounts** always use `tabular-nums`. It lives inside the `Amount` component, so no screen has
   to remember it (`web-components.md`). Inputs use 16 px (`body`) so iPhones don't zoom.
 

@@ -393,6 +393,7 @@ export function selectActiveCards(tx: WorkspaceTransaction) {
       icon: ledgerAccounts.icon,
       sortOrder: ledgerAccounts.sortOrder,
       archivedAt: ledgerAccounts.archivedAt,
+      createdAt: ledgerAccounts.createdAt,
       closingDay: cardDetails.closingDay,
       dueDay: cardDetails.dueDay,
       purchaseOnClosingDayGoesNext: cardDetails.purchaseOnClosingDayGoesNext,

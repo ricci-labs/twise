@@ -8,7 +8,13 @@ import {
 import { ChevronLeft } from 'lucide-react'
 import { cloneElement } from 'react'
 
-export function SubPageHeader({ back, backLabel, title, description }: SubPageHeaderProps) {
+export function SubPageHeader({
+  back,
+  backLabel,
+  title,
+  description,
+  actions,
+}: SubPageHeaderProps) {
   return (
     <header data-slot="sub-page-header" className={subPageHeaderVariants()}>
       {cloneElement(
@@ -16,10 +22,11 @@ export function SubPageHeader({ back, backLabel, title, description }: SubPageHe
         { 'aria-label': backLabel, className: subPageBackVariants() },
         <ChevronLeft aria-hidden="true" />,
       )}
-      <div className="min-w-0">
+      <div className="min-w-0 flex-1">
         <h1 className={subPageTitleVariants()}>{title}</h1>
         {description && <p className={subPageDescriptionVariants()}>{description}</p>}
       </div>
+      {actions && <div className="-mr-2 shrink-0">{actions}</div>}
     </header>
   )
 }

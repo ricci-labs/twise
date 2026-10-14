@@ -18,7 +18,12 @@ import { useState } from 'react'
 const messages = accountsMessages
 const CANNOT_BE_DELETED = 'ACCOUNT_CANNOT_BE_DELETED'
 
-export function AccountRowActions({ workspaceId, permissions, account }: AccountRowActionsProps) {
+export function AccountRowActions({
+  workspaceId,
+  permissions,
+  account,
+  leadingActions = [],
+}: AccountRowActionsProps) {
   const { mutateAsync } = useAccountAction(workspaceId)
   const [isRefused, setIsRefused] = useState(false)
   const canUpdate = hasPermission(permissions, 'accounts', 'update')
@@ -57,7 +62,10 @@ export function AccountRowActions({ workspaceId, permissions, account }: Account
     )
 
   const edit = <Link to="." search={(previous) => ({ ...previous, account: account.id })} />
-  const actions = actionsOf(account, { edit, canUpdate, canDelete, archive, unarchive, remove })
+  const actions = [
+    ...leadingActions,
+    ...actionsOf(account, { edit, canUpdate, canDelete, archive, unarchive, remove }),
+  ]
   return (
     <>
       <ItemActions
@@ -97,7 +105,7 @@ function actionsOf(account: ListedAccount, can: AccountActionHandlers): ItemActi
       : []
   }
   return [
-    ...(can.canUpdate
+    ...(can.canUpdate && !account.isCard
       ? [
           {
             key: 'edit',
@@ -105,6 +113,10 @@ function actionsOf(account: ListedAccount, can: AccountActionHandlers): ItemActi
             icon: 'edit',
             render: can.edit,
           } as const,
+        ]
+      : []),
+    ...(can.canUpdate
+      ? [
           {
             key: 'archive',
             label: messages.actions.archive,

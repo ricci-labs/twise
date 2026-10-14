@@ -481,8 +481,8 @@ component here, so the form, and later the account, card and planning forms, sha
 - `SubcategoryAddChip` (`components/finance/subcategory-add-chip`): the dashed "+" at the end of
   a category's chips, a link named "Nova subcategoria em {mãe}".
 - `SubPageHeader` (`components/layout/sub-page-header`): a page one level down on the phone: the
-  40 px "‹" back link (named "Voltar para {page}"), the title in `form-title-lg` and a grey
-  `sub-page` description under it.
+  40 px "‹" back link (named "Voltar para {page}"), the title in `form-title-lg`, a grey
+  `sub-page` description under it, and an optional `actions` slot on the right (a card's "⋯").
 - The refused action is a `ConfirmDialog` with `confirmVariant="primary"` and `confirmIcon`: the
   title names the item ("Não dá para excluir a Conta Y"), the text says why, "Cancelar" and the way
   out ("Arquivar"). The undo is a toast with "Desfazer"; a refusal that needs an answer, a `danger`
@@ -498,10 +498,11 @@ component here, so the form, and later the account, card and planning forms, sha
   at the bottom when a grid row stretches the blocks.
 - `InvoiceMonthStrip` (`components/finance/invoice-month-strip`): the scrolling row of month
   pills (month and status), the current one with the 2 px ink outline and `aria-current`; a small
-  vertical year label before a January (`yearBefore`); "Todas" at the end calls `onAll`. It
-  scrolls the current month into view.
-- `InvoiceYearSheet` (`components/finance/invoice-year-sheet`): the `Sheet` behind "Todas": the
-  year between arrows (no arrow when there is nowhere to go), the months in three columns with the
+  vertical year label before a January (`yearBefore`); "Todas" at the end calls `onAll`. It opens
+  with the month after `anchor` (the open invoice) in view and a whole month at the left margin,
+  then keeps the chosen month in view.
+- `InvoiceYearSheet` (`components/finance/invoice-year-sheet`): the `Sheet` behind "Todas", with
+  its close button: the year between arrows (no arrow when there is nowhere to go), the months in three columns with the
   status `Badge` and the total, and the footnote. Choosing a month closes it.
 - `InvoiceSummary` (`components/finance/invoice-summary`): the chosen invoice: title and status
   badge, the dates, the total (`Amount` size `total`), the "Pago" / "Falta pagar" tiles, the

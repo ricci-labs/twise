@@ -103,6 +103,9 @@
   --text-fine: 0.78125rem;
   --text-fine--line-height: 1rem;
   --text-fine--font-weight: 400;
+  --text-status: 0.71875rem;
+  --text-status--line-height: 0.9375rem;
+  --text-status--font-weight: 500;
   --text-amount-card: 1.25rem;
   --text-amount-card--line-height: 1.5rem;
   --text-amount-card--font-weight: 750;

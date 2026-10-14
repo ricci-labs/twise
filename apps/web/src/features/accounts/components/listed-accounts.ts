@@ -3,6 +3,7 @@ import { accountsMessages } from '@web/features/accounts/accounts.messages'
 import type {
   AccountBalance,
   AccountsData,
+  CardSummary,
   LedgerAccount,
   ListedAccount,
   WorkspaceMember,
@@ -71,4 +72,18 @@ function ownerOf(
 
 function balanceOf(accountId: string, balances: readonly AccountBalance[]): number {
   return balances.find((balance) => balance.accountId === accountId)?.naturalBalanceCents ?? 0
+}
+
+export function listedCardOf(card: CardSummary): ListedAccount {
+  return {
+    id: card.accountId,
+    name: card.name,
+    icon: card.icon,
+    color: card.color,
+    detail: '',
+    amountCents: card.openCents,
+    isCard: true,
+    isMoney: false,
+    isArchived: card.archivedAt !== null,
+  }
 }
