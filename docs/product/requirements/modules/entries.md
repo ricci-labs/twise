@@ -195,8 +195,10 @@ in amber under the amount "O valor é maior que o saldo da fatura." (not blocked
 |---|---|---|---|
 | contactId | "Contato" | yes, first field | contact picker showing what each owes and, when overdue, a red badge with text; "Novo contato" at the end |
 | receivedInAccountId | "Recebido em" | yes | active money account |
-The amount defaults to what the contact owes; receiving part is allowed, more warns (not
-blocked). Charges record payments through `CON-04`, which uses this type.
+The amount defaults to what the contact owes and the description to "{nome} pagou"; receiving
+part is allowed, more warns in amber under the amount ("O valor é maior do que {nome} deve.", not
+blocked). The chosen contact reads "deve R$ 120,00 · vence 25/10"; in the picker the due date or
+the overdue badge sits at the end of the row. Charges record payments through `CON-04`, which uses this type.
 
 ### Saldo inicial (`opening_balance`)
 | Field | Label | Required | Rules |

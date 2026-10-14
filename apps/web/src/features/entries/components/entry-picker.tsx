@@ -1,7 +1,8 @@
+import { Avatar } from '@web/components/display/avatar'
 import { CategoryArt } from '@web/components/display/category-art'
 import { PickerField } from '@web/components/inputs/picker-field'
 import { PickerSheet } from '@web/components/inputs/picker-sheet'
-import type { EntryPickerProps } from '@web/features/entries/entries.types'
+import type { ChosenArtProps, EntryPickerProps } from '@web/features/entries/entries.types'
 import { useRef, useState } from 'react'
 
 export function EntryPicker({
@@ -30,9 +31,10 @@ export function EntryPicker({
         aria-describedby={control['aria-describedby']}
         value={chosen?.label ?? null}
         parentLabel={chosen?.parent?.label}
-        detail={chosen?.item.detail}
+        detail={chosen?.item.fieldDetail ?? chosen?.item.detail}
+        isDetailStrong={chosen?.item.isDetailStrong}
         badge={chosen?.item.badge}
-        art={chosen && <CategoryArt name={chosen.label} icon={chosen.icon} />}
+        art={chosen && <ChosenArt item={chosen.item} label={chosen.label} icon={chosen.icon} />}
         placeholder={placeholder}
         onClick={() => setIsOpen(true)}
       />
@@ -64,6 +66,13 @@ export function EntryPicker({
       />
     </>
   )
+}
+
+function ChosenArt({ item, label, icon }: ChosenArtProps) {
+  if (item.isPerson) {
+    return <Avatar name={label} tone="paper" size="lg" />
+  }
+  return <CategoryArt name={label} icon={icon} />
 }
 
 function chosenOf(items: EntryPickerProps['items'], value: string) {

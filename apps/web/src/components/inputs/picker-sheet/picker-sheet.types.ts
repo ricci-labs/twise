@@ -1,3 +1,4 @@
+import type { BadgeProps } from '@web/components/display/badge'
 import type { TwiseIconName } from '@web/components/icons/twise-icon'
 import type { pickerListVariants } from '@web/components/inputs/picker-sheet/picker-sheet.variants'
 import type { VariantProps } from 'class-variance-authority'
@@ -7,12 +8,24 @@ export type PickerItem = {
   value: string
   label: string
   detail?: string
+  fieldDetail?: string
   badge?: string
   icon?: string | null
   placeholderIcon?: TwiseIconName
   isPerson?: boolean
+  isDetailStrong?: boolean
+  end?: PickerItemEnd
   hasChevron?: boolean
   children?: readonly PickerItem[]
+}
+
+export type PickerItemEnd = {
+  label: string
+  tone?: BadgeProps['tone']
+}
+
+export type PickerItemEndProps = {
+  end: PickerItemEnd
 }
 
 export type PickerEmpty = {

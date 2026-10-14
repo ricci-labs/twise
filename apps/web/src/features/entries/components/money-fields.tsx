@@ -2,11 +2,29 @@ import { AccountField } from '@web/features/entries/components/account-field'
 import { CardField } from '@web/features/entries/components/card-field'
 import { CardInstallments } from '@web/features/entries/components/card-installments'
 import { CategoryField } from '@web/features/entries/components/category-field'
+import { ContactField } from '@web/features/entries/components/contact-field'
 import { InvoiceField, PaymentAccountField } from '@web/features/entries/components/invoice-field'
 import { entriesMessages } from '@web/features/entries/entries.messages'
-import type { MoneyFieldsProps } from '@web/features/entries/entries.types'
+import type { LeadFieldsProps, MoneyFieldsProps } from '@web/features/entries/entries.types'
 
 const fields = entriesMessages.fields
+
+export function LeadFields({ entryType, workspaceId, canCreateAccounts }: LeadFieldsProps) {
+  if (entryType === 'settlement') {
+    return <ContactField workspaceId={workspaceId} />
+  }
+  if (entryType === 'opening_balance') {
+    return (
+      <AccountField
+        workspaceId={workspaceId}
+        canCreateAccounts={canCreateAccounts}
+        label={fields.account}
+        detail="kind"
+      />
+    )
+  }
+  return null
+}
 
 export function MoneyFields({
   entryType,
@@ -55,6 +73,9 @@ export function MoneyFields({
         {account(fields.to, 'toAccountId')}
       </>
     )
+  }
+  if (entryType === 'settlement') {
+    return account(fields.receivedIn)
   }
   if (entryType === 'income') {
     return (

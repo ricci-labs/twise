@@ -32,7 +32,17 @@ export const pickerRowVariants = cva([
 
 export const pickerRowTextVariants = cva('flex min-w-0 flex-1 flex-col font-medium')
 
-export const pickerRowDetailVariants = cva('truncate text-body-sm text-ink-muted')
+export const pickerRowDetailVariants = cva('truncate text-note', {
+  variants: {
+    isStrong: {
+      true: 'font-semibold text-ink',
+      false: 'text-ink-muted',
+    },
+  },
+  defaultVariants: { isStrong: false },
+})
+
+export const pickerRowEndVariants = cva('shrink-0 text-note text-ink-muted')
 
 export const pickerTileVariants = cva([
   'relative flex size-full cursor-pointer flex-col items-center gap-0.5 rounded-lg bg-sketch-paper px-1 pt-2.5 pb-3 text-center text-body-sm font-medium text-sketch-ink outline-none',

@@ -391,7 +391,10 @@ component here, so the form, and later the account, card and planning forms, sha
   current one on `mint-soft` with a check) or `grid` (the category tiles on paper; the current one keeps its paper and gets a 2 px
   sketch-ink outline and a bold label, no mint and no check). An item with `isPerson` shows the
   `lg` `Avatar` of its label instead of a drawing (the contact picker); one with `hasChevron` ends
-  in a 16 px muted chevron instead of the check (a choice that leads on, as "Outros tipos"). An item with `children` shows "N sub";
+  in a 16 px muted chevron instead of the check (a choice that leads on, as "Outros tipos").
+  A row's detail is 13 px (`isDetailStrong`: ink semibold, what a contact owes); `end` puts a
+  muted note ("Vence 25/10") or, with a tone, a status `Badge` with its dot ("R$ 200,00 em
+  atraso") at the end; `fieldDetail` is what the `PickerField` shows under the chosen one. An item with `children` shows "N sub";
   pressing it opens the row "Em {mãe}" below the grid with "Só {mãe}" and the children as chips.
   `searchLabel` adds a 44 px search (with its icon) that ignores case and accents and also finds children,
   shown "em {mãe}" with the parent's drawing; `empty` replaces the list with the drawing, a sentence

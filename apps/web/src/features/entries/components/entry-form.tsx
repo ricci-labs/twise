@@ -8,7 +8,6 @@ import { TextArea } from '@web/components/inputs/text-area'
 import { TextInput } from '@web/components/inputs/text-input'
 import { FormOverlay } from '@web/components/layout/form-overlay'
 import { useRecordEntry } from '@web/features/entries/api/use-record-entry'
-import { AccountField } from '@web/features/entries/components/account-field'
 import { AmountField } from '@web/features/entries/components/amount-field'
 import { DateField } from '@web/features/entries/components/date-field'
 import { toEntryInput } from '@web/features/entries/components/entry-input'
@@ -19,21 +18,22 @@ import {
 } from '@web/features/entries/components/entry-kind'
 import { FormFooter } from '@web/features/entries/components/form-footer'
 import { MembersField } from '@web/features/entries/components/members-field'
-import { MoneyFields } from '@web/features/entries/components/money-fields'
+import { LeadFields, MoneyFields } from '@web/features/entries/components/money-fields'
 import { SharesField } from '@web/features/entries/components/shares-field'
 import { TypePills } from '@web/features/entries/components/type-pills'
 import { entriesMessages } from '@web/features/entries/entries.messages'
 import { entryFormSchema } from '@web/features/entries/entries.schemas'
 import type {
   AfterSave,
+  CardPlan,
   EntryFormInput,
   EntryFormProps,
   EntryFormValues,
   EntryPrefill,
   FormEntryType,
 } from '@web/features/entries/entries.types'
+import { useAmountWarning } from '@web/features/entries/hooks/use-amount-warning'
 import { useCardPlan } from '@web/features/entries/hooks/use-card-plan'
-import { useInvoiceOverpaid } from '@web/features/entries/hooks/use-invoice-overpaid'
 import { useShareTotals } from '@web/features/entries/hooks/use-share-totals'
 import { useIsOnline } from '@web/hooks/use-is-online'
 import { ApiError } from '@web/lib/api/api-error'
@@ -65,9 +65,11 @@ const FIELD_OF_CODE: Readonly<Record<string, keyof EntryFormInput>> = {
   AMOUNT_NOT_POSITIVE: 'amount',
 }
 const ACCOUNT_NOT_AVAILABLE = 'ACCOUNT_NOT_AVAILABLE'
+const CONTACT_NOT_AVAILABLE = 'CONTACT_NOT_AVAILABLE'
 const INVOICE_CLOSED = 'INVOICE_CLOSED'
 const CARD_PURCHASE = 'card_purchase'
 const OPENING_BALANCE = 'opening_balance'
+const SETTLEMENT = 'settlement'
 const CREDIT = 'credit'
 const PAYMENT_OPTIONS = PAYMENT_METHODS.map((method) => ({
   value: method,
@@ -102,8 +104,8 @@ export function EntryForm({
   const plan = useCardPlan(form.control, workspaceId, today)
   const isCardPurchase = entryType === CARD_PURCHASE
   const isOpeningBalance = entryType === OPENING_BALANCE
-  const isInvoicePayment = entryType === 'invoice_payment'
-  const isOverpaid = useInvoiceOverpaid(form.control, workspaceId)
+  const isDescriptionLast = entryType === 'invoice_payment' || entryType === SETTLEMENT
+  const amountWarning = useAmountWarning(form.control, workspaceId)
   const isSpendingEntry = isSpending(entryType)
   const shareTotals = useShareTotals(form.control)
 
@@ -169,29 +171,23 @@ export function EntryForm({
     if (error.code === ACCOUNT_NOT_AVAILABLE) {
       return isCardPurchase ? 'cardAccountId' : 'accountId'
     }
+    if (error.code === CONTACT_NOT_AVAILABLE && entryType === SETTLEMENT) {
+      return 'contactId'
+    }
     return FIELD_OF_CODE[error.code]
   }
 
   function showProblem(error: unknown) {
-    if (
-      error instanceof ApiError &&
-      error.code === INVOICE_CLOSED &&
-      plan?.closedAt &&
-      plan.firstOpen
-    ) {
-      setProblem(
-        entriesMessages.cards.closed(
-          formatMonthName(plan.closedAt.invoice.referenceMonth),
-          plan.firstOpen,
-        ),
-      )
+    const closed = closedInvoiceProblem(error, plan)
+    if (closed) {
+      setProblem(closed)
       return
     }
     const field = fieldOf(error)
     if (field) {
       form.setError(
         field,
-        { type: 'server', message: errorMessageFor(error, { Conta: fields.paidFrom }) },
+        { type: 'server', message: fieldMessageOf(field, error) },
         { shouldFocus: true },
       )
       return
@@ -219,7 +215,7 @@ export function EntryForm({
           />
         }
       >
-        <TypePills value={entryType} onChange={changeType} />
+        <TypePills value={entryType} canSeeContacts={canSeeContacts} onChange={changeType} />
         <p className="mx-4 mt-3.5 text-note text-ink-muted lg:mx-8">
           <span aria-hidden="true" className="font-semibold text-danger">
             {messages.requiredMark}
@@ -227,20 +223,17 @@ export function EntryForm({
           {messages.requiredLegend}
         </p>
         <div className="grid gap-4.5 px-4 pt-2.5 lg:grid-cols-2 lg:gap-x-6 lg:px-8">
-          {isOpeningBalance && (
-            <AccountField
-              workspaceId={workspaceId}
-              canCreateAccounts={canCreateAccounts}
-              label={fields.account}
-              detail="kind"
-            />
-          )}
+          <LeadFields
+            entryType={entryType}
+            workspaceId={workspaceId}
+            canCreateAccounts={canCreateAccounts}
+          />
           <AmountField
             isOpeningBalance={isOpeningBalance}
-            isOverpaid={isOverpaid}
+            warning={amountWarning}
             inputRef={amountInput}
           />
-          {!isInvoicePayment && descriptionField}
+          {!isDescriptionLast && descriptionField}
           <MoneyFields
             entryType={entryType}
             workspaceId={workspaceId}
@@ -249,7 +242,7 @@ export function EntryForm({
             plan={plan}
             today={today}
           />
-          {isInvoicePayment && descriptionField}
+          {isDescriptionLast && descriptionField}
           <DateField today={today} />
           {hasPaymentMethod(entryType) && (
             <FormField<EntryFormInput> name="paymentMethod" label={fields.paymentMethod}>
@@ -318,6 +311,7 @@ function blankExpense(today: string, spentByUserId: string): EntryFormInput {
     toAccountId: '',
     cardAccountId: '',
     invoiceId: '',
+    contactId: '',
     installmentCount: 1,
     isInProgress: false,
     isNegative: false,
@@ -329,6 +323,23 @@ function blankExpense(today: string, spentByUserId: string): EntryFormInput {
     shares: [],
     notes: '',
   }
+}
+
+function closedInvoiceProblem(error: unknown, plan: CardPlan | undefined): string | undefined {
+  const isClosed = error instanceof ApiError && error.code === INVOICE_CLOSED
+  if (!isClosed || !plan?.closedAt || !plan.firstOpen) {
+    return undefined
+  }
+  return entriesMessages.cards.closed(
+    formatMonthName(plan.closedAt.invoice.referenceMonth),
+    plan.firstOpen,
+  )
+}
+
+function fieldMessageOf(field: keyof EntryFormInput, error: unknown): string {
+  return field === 'contactId'
+    ? entriesMessages.settlements.gone
+    : errorMessageFor(error, { Conta: fields.paidFrom })
 }
 
 function paymentMethodFor(
