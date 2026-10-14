@@ -1,9 +1,13 @@
 import { cva } from 'class-variance-authority'
 
 export const toastVariants = cva(
-  'flex w-full items-center gap-3 rounded-lg bg-surface px-4 py-3 text-body-sm text-ink shadow-float md:w-90',
+  'flex w-full items-center gap-2.5 rounded-lg bg-action-primary px-3.5 py-3 text-choice text-on-action-primary shadow-float lg:w-100',
 )
 
+export const toastIconVariants = cva('size-5.5 shrink-0 text-accent-on-primary')
+
+export const toastMessageVariants = cva('min-w-0 flex-1')
+
 export const toastActionVariants = cva(
-  'ml-auto shrink-0 font-semibold text-mint-ink underline underline-stroke underline-offset-4',
+  'shrink-0 cursor-pointer font-bold whitespace-nowrap text-accent-on-primary underline underline-offset-3',
 )

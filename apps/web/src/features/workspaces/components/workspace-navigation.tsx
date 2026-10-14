@@ -8,6 +8,8 @@ import { hasPermission } from '@web/lib/permissions'
 
 const labels = workspacesMessages.shell.nav
 
+const NEW_ENTRY = 'new'
+
 const MAIN_AREAS: readonly WorkspaceArea[] = [
   { key: 'entries', icon: 'list', module: 'entries' },
   { key: 'cards', icon: 'card', module: 'cards' },
@@ -49,7 +51,7 @@ export function workspaceNavigation(
     main: [home, ...MAIN_AREAS.filter(visible).map(areaItem)],
     more: MORE_AREAS.filter(visible).map(areaItem),
     newEntry: can('entries', 'create') ? (
-      <Link to="/w/$workspaceId/$area" params={{ workspaceId, area: 'new-entry' }} data-write="" />
+      <Link to="." search={(previous) => ({ ...previous, entry: NEW_ENTRY })} data-write="" />
     ) : null,
   }
 }

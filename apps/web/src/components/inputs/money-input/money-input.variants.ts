@@ -2,7 +2,7 @@ import { cva } from 'class-variance-authority'
 
 export const moneyBoxVariants = cva(
   [
-    'flex items-center gap-1.5 rounded-md border border-border-control bg-surface px-4',
+    'flex items-center gap-3.5 rounded-md border border-border-control bg-surface px-4',
     'focus-within:border-ink focus-within:ring-1 focus-within:ring-ink',
     'has-[input[aria-invalid=true]]:border-danger has-[input[aria-invalid=true]]:ring-1 has-[input[aria-invalid=true]]:ring-danger',
     'has-[input:read-only]:border-border has-[input:read-only]:bg-sunken has-[input:read-only]:ring-0',

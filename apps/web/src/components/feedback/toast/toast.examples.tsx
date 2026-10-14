@@ -14,6 +14,17 @@ export const toastExamples: ComponentExamples = {
       ),
     },
     {
+      name: 'Sucesso',
+      render: () => (
+        <Button
+          variant="secondary"
+          onClick={() => showToast('Lançamento registrado.', { tone: 'success' })}
+        >
+          Mostrar toast de sucesso
+        </Button>
+      ),
+    },
+    {
       name: 'Com "Desfazer"',
       render: () => (
         <Button

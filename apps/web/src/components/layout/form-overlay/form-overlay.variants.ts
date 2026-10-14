@@ -5,23 +5,25 @@ export const formOverlayBackdropVariants = cva(
 )
 
 export const formOverlayPopupVariants = cva([
-  'fixed inset-0 z-modal flex flex-col bg-surface text-ink outline-none',
+  'fixed inset-0 z-modal flex flex-col bg-page text-ink outline-none',
   'lg:inset-x-0 lg:top-10 lg:bottom-10 lg:mx-auto lg:max-h-205 lg:w-220 lg:overflow-hidden lg:rounded-xl lg:shadow-dialog',
   'transition duration-popover ease-out data-ending-style:opacity-0 data-starting-style:opacity-0 lg:data-ending-style:scale-96 lg:data-starting-style:scale-96',
 ])
 
 export const formOverlayHeadVariants = cva(
-  'flex items-center gap-1 pt-2 pr-4 pl-1.5 lg:flex-row-reverse lg:justify-between lg:pt-4.5 lg:pl-8',
+  'flex items-center gap-1 pt-2 pr-4 pl-1.5 lg:sticky lg:top-0 lg:z-sticky lg:flex-row-reverse lg:justify-between lg:bg-page lg:pt-4.5 lg:pl-8',
 )
 
-export const formOverlayTitleVariants = cva('font-display text-title-lg lg:text-display')
+export const formOverlayTitleVariants = cva('font-display text-form-title lg:text-form-title-lg')
 
 export const formOverlayCloseVariants = cva(
-  'grid size-touch shrink-0 cursor-pointer place-items-center rounded-full text-ink outline-none hover:bg-sunken focus-visible:ring-2 focus-visible:ring-focus-ring [&_svg]:size-6',
+  'grid size-touch shrink-0 cursor-pointer place-items-center rounded-full text-ink outline-none hover:bg-sunken focus-visible:ring-2 focus-visible:ring-focus-ring [&_svg]:size-5',
 )
 
-export const formOverlayBodyVariants = cva('flex-1 overflow-y-auto pb-6')
+export const formOverlayContentVariants = cva('flex min-h-0 flex-1 flex-col')
+
+export const formOverlayScrollVariants = cva('min-h-0 flex-1 overflow-y-auto pb-6')
 
 export const formOverlayFootVariants = cva(
-  'flex flex-col gap-2 border-t border-border bg-surface px-4 pt-3 pb-safe lg:px-6 lg:py-4',
+  'flex flex-col gap-2 border-t border-border bg-surface px-4 pt-3 pb-safe lg:pt-3.5 lg:pr-6 lg:pb-4 lg:pl-5',
 )

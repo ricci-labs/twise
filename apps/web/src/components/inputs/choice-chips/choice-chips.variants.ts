@@ -26,7 +26,7 @@ export const choiceChipVariants = cva(
           'data-checked:border-mint data-checked:bg-mint data-checked:text-on-mint',
         ],
         outline: [
-          'min-h-touch gap-1.5 rounded-md px-3.5 text-body-sm lg:min-h-control',
+          'min-h-touch gap-1.5 rounded-md px-3.5 text-choice lg:min-h-control',
           '[&_[data-slot=chip-icon]]:text-ink-muted',
           'data-checked:border-ink data-checked:font-emphasis data-checked:ring-1 data-checked:ring-ink data-checked:ring-inset',
         ],

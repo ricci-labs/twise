@@ -9,6 +9,7 @@
 @import "./owl-motion.gen.css";
 @import "./home-motion.css";
 @import "./owl-transitions.css";
+@import "./toast-placement.css";
 
 @layer base {
   * {

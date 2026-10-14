@@ -15,7 +15,7 @@ export function Sheet({ title, closeLabel, trigger, isOpen, onOpenChange, childr
     <Drawer.Root open={isOpen} onOpenChange={(open) => onOpenChange?.(open)}>
       {trigger && <Drawer.Trigger render={trigger} />}
       <Drawer.Portal>
-        <Drawer.Backdrop className={sheetBackdropVariants()} />
+        <Drawer.Backdrop forceRender className={sheetBackdropVariants()} />
         <Drawer.Viewport>
           <Drawer.Popup data-slot="sheet" className={sheetPopupVariants()}>
             <span aria-hidden="true" className={sheetHandleVariants()} />
