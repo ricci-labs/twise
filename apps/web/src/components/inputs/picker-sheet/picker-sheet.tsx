@@ -18,9 +18,12 @@ import {
   pickerEmptyVariants,
   pickerListVariants,
   pickerPopupVariants,
+  pickerPositionerVariants,
   pickerRowDetailVariants,
   pickerRowTextVariants,
   pickerRowVariants,
+  pickerSearchInputVariants,
+  pickerSearchVariants,
   pickerSubtitleVariants,
   pickerTileDetailVariants,
   pickerTileVariants,
@@ -52,7 +55,13 @@ export function PickerSheet({
     return (
       <Popover.Root open={isOpen} onOpenChange={onOpenChange}>
         <Popover.Portal>
-          <Popover.Positioner anchor={anchor} side="bottom" align="start" sideOffset={6}>
+          <Popover.Positioner
+            anchor={anchor}
+            side="bottom"
+            align="start"
+            sideOffset={6}
+            className={pickerPositionerVariants()}
+          >
             <Popover.Popup data-slot="picker-sheet" className={pickerPopupVariants()}>
               <Popover.Title className="sr-only">{title}</Popover.Title>
               <PickerContent {...content} onSelect={choose} />
@@ -99,14 +108,17 @@ function PickerContent({
   return (
     <>
       {searchLabel && (
-        <TextInput
-          type="search"
-          aria-label={searchLabel}
-          placeholder={searchLabel}
-          startAdornment={<Search aria-hidden="true" />}
-          value={search}
-          onChange={(event) => setSearch(event.target.value)}
-        />
+        <div className={pickerSearchVariants()}>
+          <TextInput
+            type="search"
+            aria-label={searchLabel}
+            placeholder={searchLabel}
+            startAdornment={<Search aria-hidden="true" />}
+            className={pickerSearchInputVariants()}
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
+          />
+        </div>
       )}
       {subtitle && <p className={pickerSubtitleVariants()}>{subtitle}</p>}
       {shown.length === 0 && <p className={pickerSubtitleVariants()}>{messages.nothingFound}</p>}
@@ -190,9 +202,11 @@ function PickerEmptyState({ empty }: PickerEmptyStateProps) {
       <CategoryArt name={empty.title} icon={empty.icon} size="2xl" />
       <b>{empty.title}</b>
       <span>{empty.text}</span>
-      <Button className={pickerEmptyActionVariants()} onClick={empty.onAction}>
-        {empty.actionLabel}
-      </Button>
+      {empty.actionLabel && (
+        <Button className={pickerEmptyActionVariants()} onClick={empty.onAction}>
+          {empty.actionLabel}
+        </Button>
+      )}
     </div>
   )
 }

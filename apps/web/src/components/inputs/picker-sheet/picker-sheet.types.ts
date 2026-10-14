@@ -14,8 +14,8 @@ export type PickerEmpty = {
   icon: string
   title: string
   text: string
-  actionLabel: string
-  onAction: () => void
+  actionLabel?: string
+  onAction?: () => void
 }
 
 export type PickerLayout = NonNullable<VariantProps<typeof pickerListVariants>['layout']>

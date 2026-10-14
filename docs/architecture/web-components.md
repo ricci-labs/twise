@@ -154,9 +154,13 @@ React Hook Form v7 + `zodResolver` with the **schemas from `@financas/shared`** 
   catalog's network message while the device is offline.
   It takes an optional `action` at the end (the update banner's "Atualizar").
 - `Tip`: one centred line of help with the Info icon, in the colour of its background's text.
-- Toasts: `showToast(message, { action })` with the `Toaster` mounted once in `AppProviders`
-  (`sonner`, styled with tokens); bottom-centre on phones, top-right from 1024 px; 4 s, or 8 s with
-  "Desfazer". Toasts with the same message replace each other (never two about the same thing).
+- Toasts: `showToast(message, { action, tone })` with the `Toaster` mounted once in `AppProviders`
+  (`sonner`, styled with tokens): an ink card (`action-primary`) with 15 px text, the action bold and
+  underlined in `accent-on-primary`; `tone: 'success'` adds the mint check before the text. On phones
+  at the bottom, 16 px from the sides, lifted over the tab bar and, while a `FormOverlay` is open,
+  over its buttons (`styles/toast-placement.css`, which also lifts the floating "+" while a toast
+  shows); top-right and 400 px wide from 1024 px. 4 s, or 8 s with an action. Toasts with the same
+  message replace each other (never two about the same thing).
 
 ## Brand and illustrations
 - The owl scenes and the logo are SVG files in `apps/web/src/assets/` (`owls/`, `brand/`), copied
@@ -254,7 +258,9 @@ piggy bank once. `prefers-reduced-motion` zeroes all of it (`globals.css`).
   optional Twise icon, a `detail` line and `isCurrent` (check mark). Keyboard and Escape come from
   Base UI. Desktop popovers of the shell: the account menu and the workspace switcher.
 - `Sheet` (`components/layout/sheet`, Base UI `Drawer`): a titled dialog from the bottom with a
-  handle, a dimmed backdrop and the safe area; the phone's "Mais" and workspace switcher.
+  handle, a dimmed backdrop and the safe area; the phone's "Mais" and workspace switcher. The
+  content keeps 16 px from the sides, the title 20 px; a list may bleed to 8 px (the picker rows).
+  With `closeLabel`, the title is the display `title` and "X" sits 8 px from the edge.
 - `Avatar` (`components/display/avatar`): the initial of a name in a circle (`mint` or `paper`),
   decorative: the name is always written next to it or in the control's label.
 
@@ -306,16 +312,18 @@ component here, so the form, and later the account, card and planning forms, sha
   contact: a button named by its `FormField` label that opens a dialog, with the drawing, the name
   and a grey second line ("Saldo de hoje: R$ 4.200,00"); a subcategory reads with its parent
   (`parentLabel`: "Mercado › Feira", the separator in `ink-subtle`); empty, a dashed "+" square and
-  the placeholder. 56 px on the phone, 48 px from 1024 px.
+  the placeholder. 56 px on the phone, 48 px from 1024 px; the drawing (42 px) overhangs the padding
+  instead of growing the field. A filled field reads in `choice` semibold.
 - `PickerSheet` (`components/inputs/picker-sheet`): what a `PickerField` opens. A bottom `Sheet`
   with "Fechar" on the phone; from 1024 px a popover anchored to the field (`anchor`), above a
-  dialog. `layout` `list` (rows with the drawing and the detail, the current one on `mint-soft` with
-  a check) or `grid` (the category tiles on paper; the current one keeps its paper and gets a 2 px
+  dialog. `layout` `list` (rows with the drawing and the detail, 8 px from the sheet's sides, the
+  current one on `mint-soft` with a check) or `grid` (the category tiles on paper; the current one keeps its paper and gets a 2 px
   sketch-ink outline and a bold label, no mint and no check). An item with `children` shows "N sub";
   pressing it opens the row "Em {mãe}" below the grid with "Só {mãe}" and the children as chips.
-  `searchLabel` adds a search (with its icon) that ignores case and accents and also finds children,
+  `searchLabel` adds a 44 px search (with its icon) that ignores case and accents and also finds children,
   shown "em {mãe}" with the parent's drawing; `empty` replaces the list with the drawing, a sentence
-  and the primary action ("Cadastrar conta"). A pick calls `onSelect` and closes.
+  and, when it has `actionLabel` and `onAction`, the primary action ("Cadastrar conta"). A pick calls
+  `onSelect` and closes. On the desktop the popover sits on the `modal` layer, over a `FormOverlay`.
 - `Stepper` (`components/inputs/stepper`, the design's `InstallmentStepper`): "−  3×  +" between
   `min` and `max` (the ends disable their button), the shown value given by the caller ("À vista"
   for 1), an `output` read when it changes, and an optional line beside it with `**bold**` ("3× de
@@ -346,18 +354,27 @@ component here, so the form, and later the account, card and planning forms, sha
 - `AutoFillTip` (`components/feedback/auto-fill-tip`): the discreet line under a field that says
   what was filled for the person, with a mint check and "Desfazer" on the right; a `status`, so it
   is announced.
+- `Button` `quiet`: a transparent button with ink text that turns `sunken` on hover; the phone's
+  second action under the main one ("Salvar e registrar outro", with size `touch`: 44 px, the
+  smallest touch target, where the design draws it lower) and the desktop's "Cancelar" at the left
+  of a form footer.
 - `Select` (`components/inputs/select`): a native `select` drawn like the fields (the phone's own
   picker opens), with an optional empty first choice; `TextArea` (`components/inputs/text-area`):
   the notes field, two lines to start. Both take the `FormField` control.
 - `ConfirmDialog` (`components/feedback/confirm-dialog`, Base UI `AlertDialog`): the title, what
-  will happen, the secondary "keep" action and the danger one, as
+  will happen, the secondary "keep" action and the danger one side by side (keep on the left; they
+  share the width on the phone and sit at the right, 440 px wide, on the desktop), as
   `../product/requirements/ui-standards.md` → Destructive actions and the discard rule ask
   ("Descartar as alterações?").
 - `FormOverlay` (`components/layout/form-overlay`, Base UI `Dialog`): a form that opens over the
   screen: full screen on the phone (no tab bar), with "X" and the title on top; from 1024 px a
   dialog 880 px wide, 40 px from the top, over the dimmed page, the title on the left and "X" on the
-  right. The body scrolls between a fixed header and the footer of buttons. "X", Escape and a press
-  outside all call `onRequestClose`, so the screen decides whether to ask before discarding.
+  right (a 20 px "X"; the title in `form-title`, `form-title-lg` on the desktop). The body sits on
+  the page colour and scrolls above the white footer of buttons, which has a top border; on the
+  phone the header scrolls away with it, on the desktop it stays on top. "X", Escape and a press outside all call `onRequestClose`, so the screen decides
+  whether to ask before discarding. With `onSubmit` the body and footer are a `form` inside the
+  dialog (submit buttons in the footer and Enter submit it); `initialFocus` names the field that
+  takes the focus when it opens (the amount).
 - `CategoryArt` (`components/display/category-art`): the category drawing of an account's `icon`,
   never clipped in a circle (`../product/requirements/ui-standards.md` → Visual rules across
   screens). By default (`loose`) it is the drawing without its paper square, from

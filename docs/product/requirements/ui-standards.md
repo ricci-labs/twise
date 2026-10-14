@@ -145,6 +145,13 @@ Decided with the new-entry design (2026-10-10, version 2 on 2026-10-14,
   and the value when rows are separated only by a gap; values in one column, the total aligned to
   them. Lists whose rows are split by dividers (the installments) have no leader. On desktop these
   lists take the full width of their container.
+- **Forms over a screen** (full screen on the phone, a dialog on the desktop): the body sits on the
+  page colour, so the white fields stand out, and the footer of buttons is white with a top border.
+  Field labels are 14 px medium (500), as in the design system; the selected option of a choice is
+  semibold.
+- **Toasts** are an ink card with white text and a mint action; a confirmation carries the mint
+  check. On the phone they sit above the tab bar, or above a form's buttons, and the floating "+"
+  moves up while one shows.
 
 ## Permissions in the UI
 - The member's permissions come from `GET /api/workspaces/:workspaceId`. Each action in a screen

@@ -29,7 +29,7 @@ describe('FormOverlay', () => {
     await expectNoAccessibilityViolations(document.body)
   })
 
-  it('can be the form itself, so Enter and the footer buttons submit it', async () => {
+  it('holds a form when given onSubmit, so Enter and the footer buttons submit it', async () => {
     const onSubmit = vi.fn((event: { preventDefault: () => void }) => event.preventDefault())
     render(
       <FormOverlay
@@ -48,6 +48,7 @@ describe('FormOverlay', () => {
     await userEvent.keyboard('{Enter}')
     await page.getByRole('button', { name: 'Salvar lançamento' }).click()
     expect(onSubmit).toHaveBeenCalledTimes(2)
+    await expectNoAccessibilityViolations(document.body)
   })
 
   it('asks the screen before closing, from the button or Escape', async () => {

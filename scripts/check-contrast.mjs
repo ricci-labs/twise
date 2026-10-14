@@ -28,6 +28,7 @@ const TEXT_PAIRS = [
   ['mint-ink', 'bg-surface'],
   ['on-action-primary', 'action-primary'],
   ['on-action-primary', 'action-primary-hover'],
+  ['accent-on-primary', 'action-primary'],
   ['ink', 'action-secondary'],
   ['ink', 'action-secondary-hover'],
   ['transfer', 'bg-surface'],

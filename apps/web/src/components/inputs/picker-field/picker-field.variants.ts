@@ -5,6 +5,7 @@ export const pickerFieldVariants = cva([
   'focus-visible:border-ink focus-visible:ring-1 focus-visible:ring-ink',
   'aria-invalid:border-danger aria-invalid:ring-1 aria-invalid:ring-danger',
   'disabled:cursor-not-allowed disabled:border-border disabled:bg-sunken',
+  '[&>[data-slot=category-art]]:-my-1 [&>[data-slot=category-art]]:-mr-0.5',
   '[&>[data-slot=picker-chevron]]:size-4 [&>[data-slot=picker-chevron]]:shrink-0 [&>[data-slot=picker-chevron]]:text-ink-muted',
 ])
 
@@ -14,7 +15,7 @@ export const pickerValueVariants = cva('truncate', {
   variants: {
     isEmpty: {
       true: 'text-body-sm font-medium text-ink-muted',
-      false: 'text-title-sm',
+      false: 'text-choice font-semibold',
     },
   },
   defaultVariants: { isEmpty: false },

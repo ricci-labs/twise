@@ -1,0 +1,24 @@
+[data-sonner-toaster] {
+  /* biome-ignore lint/complexity/noImportantStyles: Sonner writes its offsets inline, and the toast must clear the tab bar and the form buttons */
+  --offset-bottom: var(--toast-lift, 1rem) !important;
+  /* biome-ignore lint/complexity/noImportantStyles: Sonner writes its offsets inline, and the toast must clear the tab bar and the form buttons */
+  --mobile-offset-bottom: var(--toast-lift, 1rem) !important;
+  --mobile-offset-left: 1rem;
+  --mobile-offset-right: 1rem;
+}
+
+body:has([data-slot="bottom-tab-bar"]) {
+  --toast-lift: 5.75rem;
+}
+
+body:has([data-slot="form-overlay"]) {
+  --toast-lift: 7.875rem;
+}
+
+[data-slot="floating-action"] {
+  transition: bottom var(--duration-normal) ease-out;
+}
+
+body:has([data-sonner-toast]) [data-slot="floating-action"] {
+  bottom: 9.75rem;
+}

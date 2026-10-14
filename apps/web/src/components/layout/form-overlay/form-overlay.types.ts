@@ -1,4 +1,4 @@
-import type { FormEventHandler, ReactNode } from 'react'
+import type { FormEventHandler, ReactNode, RefObject } from 'react'
 
 export type FormOverlayProps = {
   title: string
@@ -9,4 +9,10 @@ export type FormOverlayProps = {
   footer: ReactNode
   children: ReactNode
   onSubmit?: FormEventHandler<HTMLFormElement>
+  initialFocus?: RefObject<HTMLElement | null>
+}
+
+export type FormOverlayContentProps = {
+  onSubmit?: FormEventHandler<HTMLFormElement>
+  children: ReactNode
 }

@@ -13,7 +13,11 @@ export function AppShell({ sidebar, bottomBar, banner, floatingAction, children 
         {banner}
         <main className="flex flex-1 flex-col">{children}</main>
       </div>
-      {floatingAction && <div className={appShellFloatingVariants()}>{floatingAction}</div>}
+      {floatingAction && (
+        <div data-slot="floating-action" className={appShellFloatingVariants()}>
+          {floatingAction}
+        </div>
+      )}
       {bottomBar}
     </div>
   )

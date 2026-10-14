@@ -20,6 +20,15 @@ describe('Toast', () => {
     await expectNoAccessibilityViolations(document.body)
   })
 
+  it('marks a confirmation with the check', async () => {
+    await render(<Toaster />)
+    showToast('Lançamento registrado.', { tone: 'success' })
+    const toast = page.getByText('Lançamento registrado.')
+
+    await expect.element(toast).toBeVisible()
+    expect(toast.element().parentElement?.querySelector('[data-icon=ok]')).not.toBeNull()
+  })
+
   it('runs its action once and closes', async () => {
     const onPress = vi.fn()
     await render(<Toaster />)

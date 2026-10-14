@@ -212,12 +212,14 @@ updated: 2026-10-14
   8. [x] Web components: `SharesList` (with its collapsed pill)
   9. [x] Web components: `RecentEntries`, `AutoFillTip`
   9b. [x] Web components the screen also needs: `Select`, `TextArea`, `ConfirmDialog`, `FormOverlay`
-  10. [ ] Web: `ENT-02` expense on mobile, end to end (fields, pickers, errors, save, toast, discard,
-      offline)
+  10. [x] Web: `ENT-02` expense on mobile and in the desktop dialog, end to end (fields, pickers,
+      errors, save, toast, discard, offline), opened by `?entry=new`; compared side by side with
+      every PNG of the package. Waiting on other screens: "Cadastrar conta/cartão" in the empty
+      sheet (`ACC-03`, `CARD-04`) and "Ver" in the toast (`ENT-03`)
   11. [ ] Web: card purchase with the invoice preview, the closed invoice and a purchase in progress
   12. [ ] Web: shares with contacts
   13. [ ] Web: income, transfer (and from `HOME-03`), invoice payment, settlement, opening balance
-  14. [ ] Web: the desktop dialog
+  14. [ ] Web: the desktop dialog for the other types (the type pills in one row)
   15. [ ] Web: "Repetir um recente" and the suggestion that fills the rest
   16. [ ] Web: the Home follows the app-wide rules (loose illustrations, no circles; the budgets
       already do, through `CategoryArt`)

@@ -74,6 +74,17 @@
   --text-screen-title-lg--line-height: 2.625rem;
   --text-screen-title-lg--font-weight: 750;
   --text-screen-title-lg--letter-spacing: -0.02em;
+  --text-form-title: 1.5rem;
+  --text-form-title--line-height: 1.875rem;
+  --text-form-title--font-weight: 750;
+  --text-form-title--letter-spacing: -0.02em;
+  --text-form-title-lg: 1.625rem;
+  --text-form-title-lg--line-height: 2rem;
+  --text-form-title-lg--font-weight: 750;
+  --text-form-title-lg--letter-spacing: -0.02em;
+  --text-choice: 0.9375rem;
+  --text-choice--line-height: 1.25rem;
+  --text-choice--font-weight: 500;
   --text-claim: var(--text-amount-hero);
   --text-claim--line-height: var(--text-amount-hero--line-height);
   --text-claim--font-weight: var(--text-amount-hero--font-weight);
@@ -156,6 +167,7 @@
   --color-mint-ink: var(--mint-ink);
   --color-action-primary-hover: var(--action-primary-hover);
   --color-on-action-primary: var(--on-action-primary);
+  --color-accent-on-primary: var(--accent-on-primary);
   --color-action-secondary-hover: var(--action-secondary-hover);
   --color-income: var(--income);
   --color-income-soft: var(--income-soft);

@@ -21,10 +21,13 @@ import type {
 } from '@web/features/home/home.types'
 import { cn } from '@web/lib/cn'
 import { ChevronRight, Lock } from 'lucide-react'
+import { cloneElement } from 'react'
 
 const messages = homeMessages.firstRun
 const FULL = 100
 const START_PERCENT = 4
+const NEW_ENTRY_AREA = 'new-entry'
+const NEW_ENTRY = 'new'
 const OWL =
   'pointer-events-none absolute -top-2.5 -right-6.5 size-35 lg:static lg:order-last lg:-my-10 lg:-mr-5 lg:size-85 lg:shrink-0'
 const ILLUSTRATIONS: Readonly<Record<SetupStepKey, string>> = {
@@ -49,7 +52,7 @@ export function FirstRun({
 }: FirstRunProps) {
   const done = steps.filter((step) => step.isDone).length
   const next = steps.find((step) => !step.isDone)
-  const link = (area: string) => <Link to="/w/$workspaceId/$area" params={{ workspaceId, area }} />
+  const link = (area: string) => stepLink(workspaceId, area)
   return (
     <div
       data-slot="first-run"
@@ -193,7 +196,6 @@ export function FirstRun({
 }
 
 function StepRow({ step, position, isNext, hasDivider, workspaceId }: StepRowProps) {
-  const params = { workspaceId, area: step.area }
   const copy = messages.steps[step.key]
   const body = (
     <>
@@ -227,11 +229,7 @@ function StepRow({ step, position, isNext, hasDivider, workspaceId }: StepRowPro
         </span>
         {!step.isDone && <ResponsiveText short={copy.textShort} long={copy.text} />}
         {isNext && (
-          <Button
-            size="sm"
-            className="mt-2.5"
-            render={<Link to="/w/$workspaceId/$area" params={params} />}
-          >
+          <Button size="sm" className="mt-2.5" render={stepLink(workspaceId, step.area)}>
             {copy.action}
             <ChevronRight aria-hidden="true" />
           </Button>
@@ -256,17 +254,17 @@ function StepRow({ step, position, isNext, hasDivider, workspaceId }: StepRowPro
   }
   return (
     <li data-first-run="step" className="flex flex-col">
-      <Link
-        to="/w/$workspaceId/$area"
-        params={params}
-        className={cn(
-          row,
-          'items-center rounded-md hover:bg-page focus-visible:ring-2 focus-visible:ring-focus-ring',
-        )}
-      >
-        {body}
-        <ChevronRight className="size-5 shrink-0 text-ink-subtle" aria-hidden="true" />
-      </Link>
+      {cloneElement(
+        stepLink(workspaceId, step.area),
+        {
+          className: cn(
+            row,
+            'items-center rounded-md hover:bg-page focus-visible:ring-2 focus-visible:ring-focus-ring',
+          ),
+        },
+        body,
+        <ChevronRight className="size-5 shrink-0 text-ink-subtle" aria-hidden="true" />,
+      )}
     </li>
   )
 }
@@ -290,4 +288,11 @@ function Unlocks({ children }: UnlocksProps) {
       {children}
     </small>
   )
+}
+
+function stepLink(workspaceId: string, area: string) {
+  if (area === NEW_ENTRY_AREA) {
+    return <Link to="." search={(previous) => ({ ...previous, entry: NEW_ENTRY })} />
+  }
+  return <Link to="/w/$workspaceId/$area" params={{ workspaceId, area }} />
 }

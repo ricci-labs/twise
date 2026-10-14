@@ -1,7 +1,7 @@
 ---
 summary: The web's application layer — routes and guards (TanStack Router), server data (TanStack Query over the hc client), errors, permissions, dates and money, PWA, how the API serves the SPA, and the bundle budget.
 read_when: Adding a route or page, fetching or changing server data, handling an API error, touching the PWA, the SPA serving or the build.
-updated: 2026-10-09
+updated: 2026-10-14
 ---
 
 # Web application layer
@@ -33,9 +33,9 @@ tests build their own with a memory history.
 | `_app/index.tsx` | Picks the workspace (`chooseWorkspace`): the last one used on this device if it is still theirs, else the only one, else `/workspaces`; none → `/workspaces/new` |
 | `_app/workspaces/index.tsx` | "Seus espaços": every workspace with the role, and "Criar espaço"; `?lost=true` adds "Você não tem mais acesso a este espaço." |
 | `_app/workspaces/new.tsx` | `WS-01`: create a workspace, remember it and open it ("Espaço criado.") |
-| `_app/w/$workspaceId/route.tsx` | `openWorkspace`: loads the workspace, the member's permissions and `memberNames`, and remembers it on the device; `WORKSPACE_NOT_FOUND` → `/workspaces?lost=true`. Renders `WorkspaceShell` (sidebar, bottom bar, "Mais" sheet, top bar, switcher, account menu from `features/auth`) around the page |
+| `_app/w/$workspaceId/route.tsx` | `openWorkspace`: loads the workspace, the member's permissions and `memberNames`, and remembers it on the device; `WORKSPACE_NOT_FOUND` → `/workspaces?lost=true`. Renders `WorkspaceShell` (sidebar, bottom bar, "Mais" sheet, top bar, switcher, account menu from `features/auth`) around the page. `?entry=new` (`newEntrySearchSchema`) opens `ENT-02` (`features/entries`, `NewEntry`) over whichever page is open, for a member with `entries:create`; closing it drops the param. "Novo lançamento" (sidebar, floating "+") and the Home's first step link there |
 | `_app/w/$workspaceId/index.tsx` | `HOME-01` (`features/home`): `?period=YYYY-MM` (omitted = the current period) picks the overview; the page gets the member's permissions from the route context `openWorkspace` returned |
-| `_app/w/$workspaceId/$area.tsx` | Areas not built yet (`entries`, `cards`, `planning`, `contacts`, `accounts`, `members`, `settings`, `history`, `trash`, `account`, `new-entry`): a calm "Em breve" page inside the shell; each real area's route replaces it |
+| `_app/w/$workspaceId/$area.tsx` | Areas not built yet (`entries`, `cards`, `planning`, `contacts`, `accounts`, `members`, `settings`, `history`, `trash`, `account`): a calm "Em breve" page inside the shell; each real area's route replaces it |
 | `_app/w/$workspaceId/entries/index.tsx`... | One folder per area: `entries`, `cards`, `planning`, `contacts`, `accounts`, `members`, `settings`, `history`, `trash` |
 | `_app/account.tsx` | My account and preferences (`ME-01`) |
 | `dev/components.tsx` | Workbench, development only (`web-components.md`) |
