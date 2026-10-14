@@ -3,6 +3,7 @@ import type { MoneyInputProps } from '@web/components/inputs/money-input/money-i
 import {
   moneyAffixVariants,
   moneyBoxVariants,
+  moneySignVariants,
   moneyValueVariants,
 } from '@web/components/inputs/money-input/money-input.variants'
 import { cn } from '@web/lib/cn'
@@ -21,11 +22,7 @@ export function MoneyInput({
   return (
     <div data-slot="money-input" className={cn(moneyBoxVariants({ size }), className)}>
       {isNegative && (
-        <span
-          aria-hidden="true"
-          data-slot="sign"
-          className={moneyAffixVariants({ size, isNegative })}
-        >
+        <span aria-hidden="true" data-slot="sign" className={moneySignVariants({ size })}>
           {moneyInputMessages.minus}
         </span>
       )}

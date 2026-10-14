@@ -33,6 +33,9 @@ export function MoneyFields({
       </>
     )
   }
+  if (entryType === 'opening_balance') {
+    return null
+  }
   if (entryType === 'transfer') {
     return (
       <>

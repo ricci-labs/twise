@@ -1,4 +1,4 @@
-import { formatBrl, MONEY_ACCOUNT_KINDS } from '@financas/shared'
+import { formatBrl, MONEY_ACCOUNT_KINDS, type MoneyAccountKind } from '@financas/shared'
 import { useQuery } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
 import { FormField } from '@web/components/forms/form-field'
@@ -28,6 +28,7 @@ export function AccountField({
   canCreateAccounts,
   name = 'accountId',
   label,
+  detail = 'balance',
 }: AccountFieldProps) {
   const navigate = useNavigate()
   const accounts = useQuery(accountsQueryOptions(workspaceId)).data ?? []
@@ -36,7 +37,7 @@ export function AccountField({
     value: account.id,
     label: account.name,
     icon: account.icon,
-    detail: balanceText(account.id, balances),
+    detail: detail === 'kind' ? kindText(account.kind) : balanceText(account.id, balances),
   }))
   usePreferredAccount(
     name === 'accountId' ? items.map((item) => item.value) : [],
@@ -89,4 +90,12 @@ function isUsableMoneyAccount(account: LedgerAccount): boolean {
 function balanceText(accountId: string, balances: readonly AccountBalance[]): string | undefined {
   const balance = balances.find((item) => item.accountId === accountId)
   return balance ? messages.balance(formatBrl(balance.naturalBalanceCents)) : undefined
+}
+
+function kindText(kind: string): string | undefined {
+  return isMoneyKind(kind) ? messages.kinds[kind] : undefined
+}
+
+function isMoneyKind(kind: string): kind is MoneyAccountKind {
+  return MONEY_KINDS.includes(kind)
 }

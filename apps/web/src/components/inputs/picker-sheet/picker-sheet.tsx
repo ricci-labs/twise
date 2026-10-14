@@ -36,7 +36,7 @@ import { TextInput } from '@web/components/inputs/text-input'
 import { Sheet } from '@web/components/layout/sheet'
 import { useMediaQuery } from '@web/hooks/use-media-query'
 import { DESKTOP_QUERY } from '@web/lib/breakpoints'
-import { Check, Plus, Search } from 'lucide-react'
+import { Check, ChevronRight, Plus, Search } from 'lucide-react'
 import { useState } from 'react'
 
 const DIACRITICS = /\p{Diacritic}/gu
@@ -176,7 +176,8 @@ function PickerChoice({ item, layout, isCurrent, onPress }: PickerChoiceProps) {
         {item.label}
         {detail && <span className={pickerRowDetailVariants()}>{detail}</span>}
       </span>
-      {isCurrent && <Check data-slot="picker-check" aria-hidden="true" />}
+      {item.hasChevron && <ChevronRight data-slot="picker-chevron" aria-hidden="true" />}
+      {isCurrent && !item.hasChevron && <Check data-slot="picker-check" aria-hidden="true" />}
     </button>
   )
 }

@@ -35,6 +35,17 @@ export const moneyAffixVariants = cva('shrink-0 font-semibold', {
   defaultVariants: { size: 'md', isNegative: false },
 })
 
+export const moneySignVariants = cva('shrink-0 text-danger', {
+  variants: {
+    size: {
+      sm: 'text-amount',
+      md: 'text-amount-lg',
+      lg: 'mr-0.5 font-display text-display',
+    },
+  },
+  defaultVariants: { size: 'md' },
+})
+
 export const moneyValueVariants = cva(
   [
     'w-full min-w-0 flex-1 bg-transparent tabular-nums outline-none placeholder:text-ink-subtle',

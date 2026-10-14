@@ -366,8 +366,9 @@ component here, so the form, and later the account, card and planning forms, sha
 - `MoneyInput` (`components/inputs/money-input`, the design's `MoneyField`): "R$" before the
   amount, `inputmode="decimal"`, the typed text kept as typed and tidied on blur ("1234,5" →
   "1.234,50", `lib/format/money.ts`); text that isn't an amount stays as typed so the form can say
-  what's wrong. Sizes `sm` (a share row), `md` and `lg` (the entry's amount, 64 px, display font);
-  `isNegative` puts "−" and the danger colour on it (opening balance). It speaks the `FormField`
+  what's wrong. Sizes `sm` (a share row, 44 px, the value right-aligned in 600), `md` and `lg` (the entry's amount, 64 px, display font);
+  `isNegative` puts "−" and the danger colour on it (opening balance); the sign is set like the
+  amount (32 px display at `lg`). It speaks the `FormField`
   control contract (`value` text, `onChange({ target: { value } })`, `onBlur`).
 - `ChoiceChips` (`components/inputs/choice-chips`, Base UI `RadioGroup`): one choice among a few,
   all visible, as radios (arrow keys move the choice). `variant` `pill` (the entry types, chosen in
@@ -389,7 +390,8 @@ component here, so the form, and later the account, card and planning forms, sha
   dialog. `layout` `list` (rows with the drawing and the detail, 8 px from the sheet's sides, the
   current one on `mint-soft` with a check) or `grid` (the category tiles on paper; the current one keeps its paper and gets a 2 px
   sketch-ink outline and a bold label, no mint and no check). An item with `isPerson` shows the
-  `lg` `Avatar` of its label instead of a drawing (the contact picker). An item with `children` shows "N sub";
+  `lg` `Avatar` of its label instead of a drawing (the contact picker); one with `hasChevron` ends
+  in a 16 px muted chevron instead of the check (a choice that leads on, as "Outros tipos"). An item with `children` shows "N sub";
   pressing it opens the row "Em {mãe}" below the grid with "Só {mãe}" and the children as chips.
   `searchLabel` adds a 44 px search (with its icon) that ignores case and accents and also finds children,
   shown "em {mãe}" with the parent's drawing; `empty` replaces the list with the drawing, a sentence
