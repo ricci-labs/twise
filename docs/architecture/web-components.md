@@ -401,7 +401,7 @@ component here, so the form, and later the account, card and planning forms, sha
 - `PickerSheet` (`components/inputs/picker-sheet`): what a `PickerField` opens. A bottom `Sheet`
   with "Fechar" on the phone; from 1024 px a popover anchored to the field (`anchor`), above a
   dialog, as wide as the field, at least 288 and at most 480 px (`popupWidth="wide"`: 384 px, for
-  a popover opened from a small button, as "Outros tipos" under the "Mais" pill, which `ChoiceChips` anchors through the option's `buttonRef`). `layout` `list` (rows with the drawing and the detail, 8 px from the sheet's sides, the
+  a popover opened from a small button, as "Outros tipos" under the "Mais" pill, which `ChoiceChips` anchors through the option's `buttonRef`). `layout` `options` (plain rows, for a `Select`), `list` (rows with the drawing and the detail, 8 px from the sheet's sides, the
   current one on `mint-soft` with a check) or `grid` (the category tiles on paper; the current one keeps its paper and gets a 2 px
   sketch-ink outline and a bold label, no mint and no check). An item with `isPerson` shows the
   `lg` `Avatar` of its label instead of a drawing (the contact picker); one with `hasChevron` ends
@@ -459,8 +459,12 @@ component here, so the form, and later the account, card and planning forms, sha
   second action under the main one ("Salvar e registrar outro", with size `touch`: 44 px, the
   smallest touch target, where the design draws it lower) and the desktop's "Cancelar" at the left
   of a form footer.
-- `Select` (`components/inputs/select`): a native `select` drawn like the fields (the phone's own
-  picker opens), with an optional empty first choice; `TextArea` (`components/inputs/text-area`):
+- `Select` (`components/inputs/select`): a field drawn like the others (the chosen label, or the
+  `placeholder` in `ink-subtle`, and a chevron) that opens the app's `PickerSheet` in its
+  `options` layout (a 44 px row per option, the current one on `mint-soft`, semibold, with a
+  check): a bottom sheet titled `title` on the phone, a menu as wide as the field under it on the
+  desktop. Never the browser's `select` (`../product/requirements/ui-standards.md` → Lists,
+  pickers and long content). Choosing closes it; `TextArea` (`components/inputs/text-area`):
   the notes field, two lines to start. Both take the `FormField` control.
 - `FormField` `warning`: an amber line under the control, with the `warn` triangle, for something
   allowed but worth a second look ("O valor é maior que o saldo da fatura."); an error replaces it.

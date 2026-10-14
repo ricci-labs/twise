@@ -256,6 +256,7 @@ export function EntryForm({
             <FormField<EntryFormInput> name="paymentMethod" label={fields.paymentMethod}>
               {(control) => (
                 <Select
+                  title={fields.paymentMethod}
                   options={PAYMENT_OPTIONS}
                   placeholder={fields.paymentMethodPlaceholder}
                   {...control}

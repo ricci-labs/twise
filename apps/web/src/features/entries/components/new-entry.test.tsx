@@ -837,7 +837,7 @@ describe('ENT-02 shortcuts', () => {
     await expect.element(page.getByLabelText(/^Valor/)).toHaveValue('86,40')
     await expect.element(page.getByLabelText(/^Descrição/)).toHaveValue('Mercado da semana')
     await expectText(page.getByRole('button', { name: /^Categoria/ }), /Mercado›Feira/)
-    await expect.element(page.getByLabelText('Forma de pagamento')).toHaveValue('pix')
+    await expect.element(page.getByLabelText('Forma de pagamento')).toHaveTextContent('Pix')
     await expect
       .element(page.getByRole('button', { name: /Mercado da semana/ }))
       .toHaveAttribute('aria-pressed', 'true')
