@@ -235,6 +235,8 @@ A malformed or unknown id, or one from another workspace, is `404 ACCOUNT_NOT_FO
 | `GET /entries/trash?limit&cursor` | `entries:delete` | `listTrashedEntries`: one page `{ items, nextCursor }` of deleted entries with their postings and who, when and why, latest deletion first. An old version of an edited entry is history, not trash: it never shows here (its replacement does, once deleted). The cursor is `<deletedAt ISO>_<id>`, compared to the millisecond |
 | `GET /balances` | `accounts:view` | `listAccountBalances`: every account that isn't deleted, with `balanceCents` (signed) and `naturalBalanceCents` (as the UI shows it), from active entries |
 
+Every card invoice in these responses (`currentInvoice`, `nextInvoice`, the upcoming and the stored ones) carries `referenceMonth` as `YYYY-MM` (`../../architecture/conventions.md` → month fields); the table keeps it as the first day of the month (`date`), and the services turn it into the label.
+
 A card is a ledger account, so renaming, archiving, deleting and restoring it go through
 `/accounts` with `accounts` permissions. `/cards/:cardId` only reaches `card_details`, so an id
 that isn't a card is `404 CARD_NOT_FOUND`: the `cards` permission can't touch other accounts.

@@ -124,7 +124,7 @@ async function openCentsOf(accountId: string): Promise<number> {
 }
 
 function monthOf(cycle: CardCycle, from = TODAY): string {
-  return `${invoiceForPurchase(from, cycle).referenceMonth}-01`
+  return invoiceForPurchase(from, cycle).referenceMonth
 }
 
 function nextAfter(cycle: CardCycle) {

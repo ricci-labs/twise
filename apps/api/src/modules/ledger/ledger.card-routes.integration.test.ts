@@ -175,6 +175,11 @@ describe('GET /cards/:cardId/invoices/:invoiceId/lines', () => {
     const invoices = (await (
       await owner.get(`${workspacePath}/cards/${lineCardId}/invoices`)
     ).json()) as InvoiceTotal[]
+    expect(invoices.map((invoice) => invoice.referenceMonth)).toEqual([
+      '2026-11',
+      '2026-12',
+      '2027-01',
+    ])
     const first = invoices[0]
     await entry({
       entryType: 'invoice_payment',

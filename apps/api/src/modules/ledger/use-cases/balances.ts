@@ -16,6 +16,7 @@ import type {
   InvoiceTotal,
   WorkspaceCard,
 } from '@api/modules/ledger/ledger.types'
+import { parseIsoDate, toYearMonthLabel } from '@financas/shared'
 
 export function listAccountBalances(db: Database, workspaceId: string): Promise<AccountBalance[]> {
   return withWorkspace(db, workspaceId, (tx) => selectAccountBalances(tx))
@@ -41,7 +42,12 @@ export function listInvoiceTotals(
     )
     return (await selectInvoiceTotals(tx, cardAccountId)).map((invoice) => {
       const frontedCents = fronted.get(invoice.invoiceId) ?? 0
-      return { ...invoice, frontedCents, ownCents: invoice.totalCents - frontedCents }
+      return {
+        ...invoice,
+        referenceMonth: toYearMonthLabel(parseIsoDate(invoice.referenceMonth)),
+        frontedCents,
+        ownCents: invoice.totalCents - frontedCents,
+      }
     })
   })
 }
