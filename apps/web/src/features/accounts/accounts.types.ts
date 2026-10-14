@@ -15,6 +15,7 @@ import type {
   fetchInvoices,
   fetchMembers,
   fetchTrashedAccounts,
+  fetchUpcomingInvoices,
 } from '@web/features/accounts/api/accounts.queries'
 import type { ReactElement, ReactNode } from 'react'
 import type { z } from 'zod'
@@ -27,6 +28,7 @@ export type AccountsSummary = Awaited<ReturnType<typeof fetchAccountsSummary>>
 
 export type CardSummary = Awaited<ReturnType<typeof fetchCards>>[number]
 
+export type UpcomingInvoice = Awaited<ReturnType<typeof fetchUpcomingInvoices>>[number]
 export type StoredInvoice = Awaited<ReturnType<typeof fetchInvoices>>[number]
 
 export type InvoiceLineItem = Awaited<ReturnType<typeof fetchInvoiceLines>>[number]
@@ -342,9 +344,19 @@ export type CardsPageProps = {
   permissions: readonly Permission[]
 }
 
+export type CardsBodyProps = CardsPageProps & {
+  isDesktop: boolean
+}
+
 export type CardListProps = CardsPageProps & {
   cards: readonly CardSummary[]
   members: readonly WorkspaceMember[] | null
+  afterCards?: ReactNode
+}
+
+export type UpcomingInvoicesProps = {
+  workspaceId: string
+  cards: readonly CardSummary[]
 }
 
 export type CardItemProps = CardsPageProps & {

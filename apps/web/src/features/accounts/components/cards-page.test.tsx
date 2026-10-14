@@ -88,3 +88,37 @@ describe('CARD-01 cards', () => {
     await expect.element(page.getByText('Nenhum cartão cadastrado.')).toBeVisible()
   })
 })
+
+describe('CARD-01 cards on the desktop', () => {
+  beforeEach(async () => {
+    vi.useFakeTimers({ toFake: ['Date'] })
+    vi.setSystemTime(new Date('2026-10-14T15:00:00.000Z'))
+    await page.viewport(1440, 900)
+  })
+
+  afterEach(async () => {
+    vi.useRealTimers()
+    vi.restoreAllMocks()
+    await page.viewport(414, 896)
+  })
+
+  it('closes the row with the "Novo cartão" tile and lists the upcoming invoices of every card', async () => {
+    await openCards()
+
+    await expect
+      .element(page.getByText('Faturas, limites e o melhor dia de comprar em cada cartão.'))
+      .toBeVisible()
+    await expect
+      .element(page.getByRole('link', { name: /^Novo cartão Cadastre com os dias/ }))
+      .toHaveAttribute('href', expect.stringContaining('card=new'))
+    const upcoming = page.getByRole('table', { name: 'Próximas faturas' })
+    await expect.element(upcoming.getByRole('columnheader', { name: 'Situação' })).toBeVisible()
+    for (const text of ['Novembro', '25/10', '04/11', 'Aberta', 'R$ 1.950,00', 'Futura']) {
+      await expect.element(upcoming.getByRole('cell', { name: text, exact: true })).toBeVisible()
+    }
+    await expect
+      .element(upcoming.getByRole('link', { name: 'Cartão X' }).first())
+      .toHaveAttribute('href', expect.stringContaining('month=2026-11'))
+    await expectNoAccessibilityViolations(page.getByRole('main').element())
+  })
+})

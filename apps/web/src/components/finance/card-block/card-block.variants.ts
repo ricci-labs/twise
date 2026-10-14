@@ -1,7 +1,7 @@
 import { cva } from 'class-variance-authority'
 
 export const cardBlockVariants = cva(
-  'flex flex-col gap-3 rounded-xl border border-border bg-surface p-4',
+  'flex flex-col gap-3 rounded-xl border border-border bg-surface p-4 [&>:last-child]:mt-auto',
 )
 
 export const cardBlockHeadVariants = cva('flex items-center gap-1.5')

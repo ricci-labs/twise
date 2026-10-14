@@ -127,6 +127,9 @@
   --text-amount-card: 1.25rem;
   --text-amount-card--line-height: 1.5rem;
   --text-amount-card--font-weight: 750;
+  --text-tile-title: 1rem;
+  --text-tile-title--line-height: 1.375rem;
+  --text-tile-title--font-weight: 700;
   --text-lead: 1.0625rem;
   --text-lead--line-height: 1.4375rem;
   --text-lead--font-weight: 650;

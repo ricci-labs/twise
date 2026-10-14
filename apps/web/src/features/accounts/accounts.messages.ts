@@ -264,6 +264,22 @@ export const accountsMessages = {
     editCycle: 'Editar ciclo',
     rename: 'Renomear e cor',
     newCard: 'Novo cartão',
+    description: 'Faturas, limites e o melhor dia de comprar em cada cartão.',
+    newCardText: 'Cadastre com os dias de fechamento e vencimento.',
+    upcoming: {
+      title: 'Próximas faturas',
+      description: 'De todos os cartões, das que vencem primeiro.',
+      failed: 'Não foi possível carregar as próximas faturas.',
+      columns: {
+        card: 'Cartão',
+        invoice: 'Fatura',
+        closing: 'Fecha',
+        due: 'Vence',
+        status: 'Situação',
+        total: 'Total',
+        actions: 'Ações',
+      },
+    },
   },
   cardForm: {
     newTitle: 'Novo cartão',
