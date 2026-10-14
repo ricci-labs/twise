@@ -231,7 +231,9 @@ export type CategoriesPageProps = {
   createdId?: string
 }
 
-export type CategoriesBodyProps = CategoriesPageProps
+export type CategoriesBodyProps = CategoriesPageProps & {
+  isDesktop: boolean
+}
 
 export type CategoryListProps = {
   workspaceId: string
@@ -239,6 +241,27 @@ export type CategoryListProps = {
   tree: CategoryTree
   kind: CategoryKind
   createdId?: string
+}
+
+export type CategoryTablesProps = {
+  workspaceId: string
+  permissions: readonly Permission[]
+  accounts: readonly LedgerAccount[]
+  createdId?: string
+}
+
+export type CategoryTableProps = {
+  workspaceId: string
+  permissions: readonly Permission[]
+  tree: CategoryTree
+  kind: CategoryKind
+  createdId?: string
+}
+
+export type CategoryChipsCellProps = CategoryNodeProps & {
+  isExpanded: boolean
+  onExpandedChange: (isExpanded: boolean) => void
+  onHiddenCountChange: (count: number) => void
 }
 
 export type NatureBadgeProps = {

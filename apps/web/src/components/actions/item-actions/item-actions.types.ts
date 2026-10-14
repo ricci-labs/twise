@@ -21,10 +21,11 @@ export type ItemActionsProps = {
   triggerLabel: string
   actions: readonly ItemAction[]
   trigger?: ReactElement
+  align?: 'start' | 'end'
   onOpenChange?: (isOpen: boolean) => void
 }
 
-export type ActionSheetProps = Omit<ItemActionsProps, 'triggerLabel' | 'trigger'> & {
+export type ActionSheetProps = Omit<ItemActionsProps, 'triggerLabel' | 'trigger' | 'align'> & {
   trigger: ReactElement
 }
 

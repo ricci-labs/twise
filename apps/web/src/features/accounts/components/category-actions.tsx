@@ -129,6 +129,7 @@ export function CategoryActions({
         triggerLabel={accountsMessages.actions.trigger(node.name)}
         actions={actions}
         trigger={trigger}
+        align={trigger ? 'start' : 'end'}
       />
       {refusal && (
         <ConfirmDialog

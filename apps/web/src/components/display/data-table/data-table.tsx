@@ -9,6 +9,8 @@ import {
   dataTableAmountVariants,
   dataTableCellVariants,
   dataTableHeadCellVariants,
+  dataTableNameDetailVariants,
+  dataTableNameLabelVariants,
   dataTableNameTextVariants,
   dataTableNameVariants,
   dataTableRowVariants,
@@ -26,7 +28,7 @@ export function DataTable({ label, layout, columns, rows }: DataTableProps) {
             <th
               key={column.key}
               scope="col"
-              className={dataTableHeadCellVariants({ align: column.align })}
+              className={dataTableHeadCellVariants({ layout, align: column.align })}
             >
               {column.isLabelHidden ? (
                 <span className="sr-only">{column.label}</span>
@@ -39,11 +41,14 @@ export function DataTable({ label, layout, columns, rows }: DataTableProps) {
       </thead>
       <tbody>
         {rows.map((row) => (
-          <tr key={row.key} className={dataTableRowVariants({ layout })}>
+          <tr key={row.key} className={dataTableRowVariants({ layout, isOpen: row.isOpen })}>
             {row.cells.map((cell, position) => (
               <td
                 key={columns[position]?.key ?? position}
-                className={dataTableCellVariants({ align: columns[position]?.align })}
+                className={dataTableCellVariants({
+                  align: columns[position]?.align,
+                  isActions: columns[position]?.isActions,
+                })}
               >
                 {cell}
               </td>
@@ -55,18 +60,29 @@ export function DataTable({ label, layout, columns, rows }: DataTableProps) {
   )
 }
 
-export function DataTableName({ name, icon, color = null, link }: DataTableNameProps) {
+export function DataTableName({ name, icon, color = null, detail, link }: DataTableNameProps) {
   const content = (
     <>
       <CategoryArt name={name} icon={icon} size="row" />
-      <span className={dataTableNameTextVariants()}>{name}</span>
+      <span className={dataTableNameTextVariants()}>
+        <span className={dataTableNameLabelVariants()}>{name}</span>
+        {detail && <span className={dataTableNameDetailVariants()}>{detail}</span>}
+      </span>
       <ColorSwatch color={color} />
     </>
   )
   if (!link) {
-    return <span className={dataTableNameVariants()}>{content}</span>
+    return (
+      <span data-slot="data-table-name" className={dataTableNameVariants()}>
+        {content}
+      </span>
+    )
   }
-  return cloneElement(link, { className: dataTableNameVariants() }, content)
+  return cloneElement(
+    link,
+    { 'data-slot': 'data-table-name', className: dataTableNameVariants() },
+    content,
+  )
 }
 
 export function DataTableAmount({ cents }: DataTableAmountProps) {
