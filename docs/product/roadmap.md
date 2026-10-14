@@ -245,8 +245,8 @@ updated: 2026-10-14
   15. [x] Web: "Repetir um recente" and the suggestion that fills the rest (the row of the current
       person's frequent entries of the type, only on a new form; up to 3 description suggestions
       while typing; both fill what was used last time and say so with "Desfazer")
-  16. [ ] Web: the Home follows the app-wide rules (loose illustrations, no circles; the budgets
-      already do, through `CategoryArt`)
+  16. [x] Web: the Home follows the app-wide rules (loose illustrations, no circles; the budgets
+      already do, through `CategoryArt`); its top, cards and first run measured again on the PNGs
 - [ ] **Accounts round: ACC-01..04 and CARD-01..04** (design `../design/accounts/`, exported
   2026-10-14; the user asked for the same flow as the new entry round: one PR per step, merged by
   Claude when CI is green, every screen checked side by side with its PNG):

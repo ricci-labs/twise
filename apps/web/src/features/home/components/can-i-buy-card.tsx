@@ -11,16 +11,16 @@ export function CanIBuyCard({ workspaceId, className }: CanIBuyCardProps) {
       to="/w/$workspaceId/$area"
       params={{ workspaceId, area: 'can-i-buy' }}
       className={cn(
-        'flex min-h-16 items-center gap-3 rounded-lg border border-border bg-surface px-3 py-2.5 hover:bg-sunken',
+        'flex min-h-16 items-center gap-3 rounded-lg border border-border bg-surface py-2.5 pr-3 pl-2.5 hover:bg-sunken',
         className,
       )}
     >
       <span className="grid size-11 shrink-0 place-items-center rounded-full bg-mint-soft">
-        <TwiseIcon name="bag" tone="accent" size="md" />
+        <TwiseIcon name="bag" tone="accent" size="side" />
       </span>
       <span className="flex flex-1 flex-col">
-        <span className="text-body font-semibold">{homeMessages.canIBuy.title}</span>
-        <span className="text-body-sm text-ink-muted">{homeMessages.canIBuy.text}</span>
+        <span className="text-title-sm">{homeMessages.canIBuy.title}</span>
+        <span className="text-note text-ink-muted">{homeMessages.canIBuy.text}</span>
       </span>
       <ChevronRight className="size-5 text-ink-muted" aria-hidden="true" />
     </Link>

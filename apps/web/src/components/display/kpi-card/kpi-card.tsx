@@ -33,12 +33,7 @@ export function KpiCard({
           {art}
         </div>
       )}
-      <div
-        className={cn(
-          'relative flex items-center gap-1.5',
-          help && artAt === 'bottom' && 'min-h-6.5',
-        )}
-      >
+      <div className="relative flex h-5 items-center gap-1.5">
         <h3 data-slot="kpi-label" className="text-label">
           {label}
         </h3>

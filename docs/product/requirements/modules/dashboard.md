@@ -1,7 +1,7 @@
 ---
 summary: Functional requirements for the home screens — the period overview (four indicators, insights, bills due, balance forecast, pace, budgets, coming months, where income goes, invoices, reserve and goals, commissions, receivables, achievements of a closed period, first run), "posso comprar?" and the commission split suggestion (HOME-01..03).
 read_when: Designing or building HOME-01, HOME-02 or HOME-03, or writing the pt-BR text of an insight.
-updated: 2026-10-09
+updated: 2026-10-14
 ---
 
 # Dashboard
@@ -153,8 +153,8 @@ each) · commissions and receivables (6 each).
 **States.** Skeletons per section in the shape of the cards (header, period and menu appear at
 once); changing the period keeps the old numbers until the new ones arrive (200 ms fade); each
 section fails alone with its `ref` and "Tentar de novo" (`../ui-standards.md` → Partial);
-`OVERVIEW_QUERY_INVALID` resets to the current period. Empty states sit on the card (icon in a
-soft circle + one line). Offline: a dark band on top, the last numbers kept and "Atualizado às
+`OVERVIEW_QUERY_INVALID` resets to the current period. Empty states sit on the card (loose
+illustration, no circle, + one line). Offline: a dark band on top, the last numbers kept and "Atualizado às
 HH:MM"; write actions say it can't be done now. Viewer: banner "Você está vendo este espaço sem
 poder alterar nada.", no "Novo lançamento", no "Registrar", "Dividir", "Cobrar"; the "Ver…" links
 and "Posso comprar?" stay.

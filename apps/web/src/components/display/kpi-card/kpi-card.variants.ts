@@ -7,7 +7,7 @@ export const kpiCardVariants = cva(
       tone: {
         plain: 'border-border bg-surface text-ink [&_[data-slot=kpi-label]]:text-ink-muted',
         mint: 'border-mint bg-mint text-on-mint',
-        danger: 'border-danger-soft bg-danger-soft text-ink [&_[data-slot=kpi-value]]:text-danger',
+        danger: 'border-danger/25 bg-danger-soft text-ink [&_[data-slot=kpi-value]]:text-danger',
       },
     },
     defaultVariants: { tone: 'plain' },

@@ -1,6 +1,5 @@
 import { formatBrl } from '@financas/shared'
 import { Link } from '@tanstack/react-router'
-import piggyBank from '@web/assets/illustrations/piggy-bank.svg'
 import { TextLink } from '@web/components/actions/text-link'
 import { ProgressBar } from '@web/components/charts/progress-bar'
 import { Card } from '@web/components/display/card'
@@ -37,7 +36,7 @@ export function BudgetsCard({
     return (
       <Card className={className} title={messages.title} layout="centered">
         <EmptyState
-          illustration={piggyBank}
+          art="piggy-bank"
           action={canPlan && <TextLink render={planning}>{messages.define}</TextLink>}
         >
           {messages.empty}
