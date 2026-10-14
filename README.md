@@ -12,7 +12,7 @@
 
 Household finance for couples, with a web dashboard and (soon) a WhatsApp assistant.
 
-[![Status](https://img.shields.io/badge/status-API%20%2B%20account%20and%20Home%20live-80dca5?style=flat-square)](docs/product/roadmap.md)
+[![Status](https://img.shields.io/badge/status-API%20%2B%20web%20app%20taking%20shape-80dca5?style=flat-square)](docs/product/roadmap.md)
 [![Node](https://img.shields.io/badge/node-24%20LTS-339933?style=flat-square&logo=nodedotjs&logoColor=white)](https://nodejs.org)
 [![TypeScript](https://img.shields.io/badge/typescript-strict-3178C6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org)
 [![pnpm](https://img.shields.io/badge/pnpm-workspaces-F69220?style=flat-square&logo=pnpm&logoColor=white)](https://pnpm.io)
@@ -27,10 +27,31 @@ Household finance for couples, with a web dashboard and (soon) a WhatsApp assist
 
 > [!NOTE]
 > **The backend is done and running in production** on a home server: ledger, cards and invoices, shared purchases and charges, planning, dashboard metrics and alerts, reminders, attachments and an audit log, all behind a typed HTTP API ([Postman collection](docs/api/postman.md)).
-> **The web app is taking shape:** its foundation (design tokens, components, checks), every account screen (log in, sign up, email confirmation, password reset, invitations, the app opening) and the **Home** (the app shell, the period overview with its indicators, alerts, forecasts and budgets, the first run and a public demo page) are live, as an installable PWA.
-> **Next:** the **new entry form** (designed, being built), then the other screens, whose [requirements](docs/product/requirements/README.md) are written screen by screen, and then the WhatsApp channel with the Claude agent. Follow along in the [roadmap](docs/product/roadmap.md).
+> **The web app is taking shape** as an installable PWA. Already live:
+> - its foundation (design tokens, components, checks);
+> - every account screen (log in, sign up, email confirmation, password reset, invitations, the app opening);
+> - the **Home**: the period overview with its indicators, alerts, forecasts and budgets, the first run and a public demo page;
+> - the **new entry form** for every kind of entry: expense, card purchase in installments, split with contacts, income, transfer, invoice payment, a contact paying back and opening balance, plus "repeat a recent one" and suggestions;
+> - **accounts, categories and subcategories, cards, invoices and the trash**.
+>
+> **Next:** the entries list, planning and contacts, whose [requirements](docs/product/requirements/README.md) are written screen by screen, and then the WhatsApp channel with the Claude agent. Follow along in the [roadmap](docs/product/roadmap.md).
 
 ## A first look
+
+<table>
+  <tr>
+    <td align="center"><img src="docs/assets/readme/home.png" alt="Home on the phone: free to spend this period, per day, and the alerts" width="200"><br><sub>Home</sub></td>
+    <td align="center"><img src="docs/assets/readme/new-entry.png" alt="New entry: a card purchase in 3 installments" width="200"><br><sub>New entry</sub></td>
+    <td align="center"><img src="docs/assets/readme/cards.png" alt="Cards with the open invoice and the best day to buy" width="200"><br><sub>Cards</sub></td>
+    <td align="center"><img src="docs/assets/readme/accounts.png" alt="Accounts and categories: money total, accounts and cards" width="200"><br><sub>Accounts</sub></td>
+  </tr>
+</table>
+
+<img src="docs/assets/readme/home-desktop.png" alt="Home on desktop: indicators, balance forecast and alerts" width="100%">
+
+<img src="docs/assets/readme/new-entry-desktop.png" alt="New entry on desktop: a card purchase showing the invoice each installment lands on" width="100%">
+
+The card purchase above shows, before saving, which invoice each installment lands on. Every kind of entry uses the same form, on the phone as a full screen and on the desktop as a dialog.
 
 <table>
   <tr>
@@ -41,9 +62,7 @@ Household finance for couples, with a web dashboard and (soon) a WhatsApp assist
   </tr>
 </table>
 
-<img src="docs/assets/readme/login-desktop.png" alt="Log in on desktop: mint panel with the owl and the slogan, form on the right" width="100%">
-
-The owl is the mascot: each screen has its own scene, and the moments animate once (the hourglass turns while the email is confirmed, the check draws itself, the second owl arrives when an invitation is accepted). The motion is generated from the [design's demos](docs/design/account/motion.md), and with reduced motion everything jumps to its final state. *(Sample data only: Member A, Member B, Casa.)*
+The owl is the mascot: each screen has its own scene, and the moments animate once (the hourglass turns while the email is confirmed, the check draws itself, the second owl arrives when an invitation is accepted). The motion is generated from the [design's demos](docs/design/account/motion.md), and with reduced motion everything jumps to its final state. *(Sample data only: Member A, Member B, Casa, Conta X, Cartão X.)*
 
 ## Why it exists
 
@@ -84,18 +103,18 @@ The web dashboard shows the **period overview** (fixed income, spent, committed,
 
 | | Feature | Details | Status |
 |---|---|---|---|
-| 📊 | **Period overview** | Free to spend = fixed income − spent − committed, per day, over a configurable financial month (1st, day N, or N-th business day) | ✅ API |
-| 🚨 | **Alerts** | Budget over or ahead of pace, balance going negative, bills overdue, commission not yet split, contacts overdue | ✅ API |
+| 📊 | **Period overview** | Free to spend = fixed income − spent − committed, per day, over a configurable financial month (1st, day N, or N-th business day) | ✅ API · web |
+| 🚨 | **Alerts** | Budget over or ahead of pace, balance going negative, bills overdue, commission not yet split, contacts overdue | ✅ API · web |
 | 🛒 | **"Can I afford it?"** | Simulates a purchase (in installments too) and shows its effect month by month | ✅ API |
-| 💳 | **Cards and invoices** | Closing and due days per card, installments spread across future invoices, invoice payments never counted as spending twice | ✅ API |
-| 🤝 | **Third parties** | Several people per purchase, installments included; charges with the pt-BR message and a Pix copy-and-paste code; partial payments | ✅ API · sending by WhatsApp next |
+| 💳 | **Cards and invoices** | Closing and due days per card, installments spread across future invoices, invoice payments never counted as spending twice | ✅ API · web |
+| 🤝 | **Third parties** | Several people per purchase, installments included; charges with the pt-BR message and a Pix copy-and-paste code; partial payments | ✅ API · split and paybacks on the web · contacts screens and sending by WhatsApp next |
 | 🔁 | **Planned vs actual** | Fixed bills, salaries and subscriptions create expected occurrences, matched by real entries; budgets and goals | ✅ API |
 | 💰 | **Commission split** | Configurable steps (reserve, goals, spending) that suggest where a variable income goes | ✅ API |
 | ⏰ | **Reminders** | Bills and invoices, by each member's lead time and quiet hours | ✅ email · WhatsApp next |
 | 📎 | **Receipts** | Attach receipts to entries and charges | ✅ API · WhatsApp photos next |
 | 👥 | **Workspaces** | Isolated spaces ("Home", "Personal") with members, invitations and module-level permissions | ✅ API |
 | 🕵️ | **History** | Append-only audit log of every change, with who, when and from where | ✅ API |
-| 🖥️ | **Web app** | Mobile-first PWA for the couple: installable, works with a weak signal, light and dark themes | ✅ account screens and Home · 🔜 new entry |
+| 🖥️ | **Web app** | Mobile-first PWA for the couple: installable, works with a weak signal, light and dark themes | ✅ account screens, Home, new entry, accounts and cards · 🔜 entries list, planning, contacts |
 | 💬 | **WhatsApp agent** | Records expenses, income, transfers and paybacks in natural language. Always asks before saving | 🔜 after the web |
 
 ## How it works
@@ -137,7 +156,7 @@ flowchart LR
 | Database | PostgreSQL · [Drizzle ORM](https://orm.drizzle.team) · Row Level Security |
 | WhatsApp | [Baileys](https://github.com/WhiskeySockets/Baileys) |
 | AI | [Claude](https://www.anthropic.com/claude) via `@anthropic-ai/sdk` (Tool Runner) |
-| Web | Vite · React 19 · Tailwind CSS v4 · shadcn/ui · TanStack Router/Query · PWA |
+| Web | Vite · React 19 · Tailwind CSS v4 · shadcn/ui on Base UI · TanStack Router/Query · PWA |
 | Quality | Vitest · Biome · dependency-cruiser · lefthook + commitlint |
 | Operations | Docker · GitHub Actions → GHCR → Dokploy · OpenTelemetry · Netdata · Uptime Kuma |
 
@@ -149,7 +168,7 @@ The code name is `financas`: it names the repository, the packages (`@financas/*
 financas/
 ├── apps/
 │   ├── api/        # Hono API + jobs (+ WhatsApp and agent later), one process; Drizzle migrations
-│   └── web/        # React SPA + PWA, served by the API (design tokens, components, account screens)
+│   └── web/        # React SPA + PWA, served by the API (design tokens, components, screens)
 ├── packages/
 │   └── shared/     # Zod schemas and pure domain rules, grouped by area (ledger, planning, reports…)
 ├── scripts/        # quality checks and ops:* helpers (health, logs, trace, errors, metrics, jobs)
@@ -185,7 +204,7 @@ The docs are written to be read by people **and by AI agents**: every file start
 | Area | Start with |
 |---|---|
 | Product | [Vision](docs/product/vision.md) · [Roadmap](docs/product/roadmap.md) · [Web requirements](docs/product/requirements/README.md) |
-| Design | [Design system](docs/design/design-system/README.md) · [Account screens](docs/design/account/screens.md) · [Web components](docs/architecture/web-components.md) · [Design tokens](docs/architecture/web-design-tokens.md) |
+| Design | [Design system](docs/design/design-system/README.md) · [Account screens](docs/design/account/screens.md) · [Home](docs/design/home/screens.md) · [New entry](docs/design/entries/screens.md) · [Accounts and cards](docs/design/accounts/screens.md) · [Web components](docs/architecture/web-components.md) · [Design tokens](docs/architecture/web-design-tokens.md) |
 | Domain | [Glossary](docs/domain/glossary.md) · [Data model](docs/domain/model/README.md) · [Diagrams](docs/domain/model/diagrams.md) · [Invoices and installments](docs/domain/billing-and-installments.md) |
 | Architecture | [Overview](docs/architecture/overview.md) · [Structure](docs/architecture/structure.md) · [Dependency rules](docs/architecture/dependency-rules.md) |
 | Engineering | [Git and PRs](docs/engineering/git-workflow.md) · [CI/CD](docs/engineering/ci-cd.md) · [Working with Claude](docs/engineering/claude-workflow.md) |
@@ -204,7 +223,9 @@ The docs are written to be read by people **and by AI agents**: every file start
 - [x] **Web foundation**: design tokens, components, checks, PWA and the bundle budget
 - [x] **Account screens**: log in, sign up, email confirmation, password reset, invitations, app opening, owl motion
 - [x] **Home**: app shell, period overview, alerts, forecasts, budgets, first run, demo page
-- [ ] **Web app**: the new entry form, then the other screens, one by one
+- [x] **New entry**: every kind of entry, card installments with their invoices, split with contacts, recents and suggestions
+- [x] **Accounts and cards**: accounts, categories and subcategories, cards, invoices, trash
+- [ ] **Web app**: the entries list, planning, contacts, then the other screens, one by one
 - [ ] **WhatsApp channel and Claude agent**
 - [ ] Voice notes and receipt photos on WhatsApp
 - [ ] Bank statement and invoice import
