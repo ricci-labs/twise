@@ -231,8 +231,8 @@ React Hook Form v7 + `zodResolver` with the **schemas from `@financas/shared`** 
   shown only while there is more on that side; a click scrolls 80% of the visible width. The strip
   passes its own element as `scrollerRef`. Used by `InvoiceMonthStrip` and `RecentEntries`.
 - `TrashTabs` (`components/navigation/trash-tabs`): the two tabs of the one "Lixeira"
-  ("Lançamentos" | "Contas e categorias"), a full-width `SegmentedControl`; the page navigates on
-  `onChange`.
+  ("Lançamentos" | "Contas e categorias"), a full-width `SegmentedControl` (360 px on the desktop,
+  given by the page); the page navigates on `onChange`.
 - `NavItem` (`components/navigation/nav-link`): `{ key, label, icon, render, isCurrent }`. `render`
   is the element that navigates (a router `Link`, or a `button` for "Mais"); `NavLink` draws it
   with the Twise icon (mint fill when current) and forwards any props, so it can be a tooltip

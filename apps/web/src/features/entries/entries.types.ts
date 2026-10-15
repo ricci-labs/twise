@@ -617,9 +617,32 @@ export type EntriesTrashPageProps = {
   memberDirectory: readonly { userId: string; displayName: string }[]
 }
 
+export type EntriesTrashBodyProps = EntriesTrashPageProps & {
+  isDesktop: boolean
+}
+
 export type EntriesTrashListProps = EntriesTrashPageProps & {
   entries: readonly TrashedEntry[]
   accounts: readonly LedgerAccount[]
+}
+
+export type DeletedWords = {
+  today: (time: string, name: string) => string
+  on: (date: string, name: string) => string
+  todayAnonymous: (time: string) => string
+  onAnonymous: (date: string) => string
+}
+
+export type EntriesTrashRowsProps = {
+  rows: readonly TrashedEntryView[]
+  busyId: string | null
+  onRestore: (entry: TrashedEntry) => void
+}
+
+export type TrashedEntryView = {
+  entry: TrashedEntry
+  row: EntryRowView
+  deletedBy: string | undefined
 }
 
 export type RestoreRefusal = {
