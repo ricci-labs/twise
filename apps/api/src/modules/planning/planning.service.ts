@@ -34,6 +34,7 @@ export {
 } from '@api/modules/planning/use-cases/occurrence-changes'
 export {
   findMatchedOccurrence,
+  getOccurrence,
   listOccurrences,
   listOccurrencesWithTotals,
   readOccurrenceFacts,

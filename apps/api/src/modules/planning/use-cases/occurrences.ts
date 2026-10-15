@@ -9,6 +9,7 @@ import {
   insertOccurrencesIfMissing,
   lockOccurrence,
   selectActiveRules,
+  selectOccurrence,
   selectOccurrenceMatchedTo,
   selectOccurrencesBetween,
   selectPlannedDueDates,
@@ -17,6 +18,7 @@ import type {
   LockedOccurrence,
   OccurrenceItem,
   OccurrenceList,
+  OccurrenceRef,
   OccurrenceRow,
   RecurrenceRuleRow,
 } from '@api/modules/planning/planning.types'
@@ -67,6 +69,25 @@ export async function listOccurrencesWithTotals(
 ): Promise<OccurrenceList> {
   const items = await listOccurrences(db, workspaceId, query, clock)
   return { items, totals: occurrenceTotals(items) }
+}
+
+export function getOccurrence(
+  db: Database,
+  { workspaceId, occurrenceId }: OccurrenceRef,
+  clock: Clock = systemClock,
+): Promise<OccurrenceItem> {
+  return withWorkspace(db, workspaceId, async (tx) => {
+    const occurrence = await selectOccurrence(tx, occurrenceId)
+    if (!occurrence) {
+      throw new NotFoundError('OCCURRENCE_NOT_FOUND', `Occurrence ${occurrenceId} not found`)
+    }
+    const payments = await readEntryPayments(tx, matchedEntryIdsOf([occurrence]))
+    return withOverdueFlag(
+      occurrence,
+      await workspaceToday(tx, clock),
+      paymentOf(occurrence, payments),
+    )
+  })
 }
 
 export function findMatchedOccurrence(

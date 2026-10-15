@@ -13,6 +13,7 @@ import {
   deleteHoliday,
   deleteRecurrenceRule,
   findMatchedOccurrence,
+  getOccurrence,
   listAllocationSteps,
   listBudgets,
   listGoals,
@@ -245,6 +246,10 @@ function occurrenceRoutes({ db }: PlanningRouteDeps) {
         return c.body(null, NO_CONTENT)
       },
     )
+    .get('/:occurrenceId', authorize('planning', 'view'), occurrence, async (c) => {
+      const { workspaceId } = currentWorkspace(c)
+      return c.json(await getOccurrence(db, { workspaceId, ...c.req.valid('param') }))
+    })
 }
 
 function budgetRoutes({ db }: PlanningRouteDeps) {
