@@ -12,6 +12,7 @@ import type {
   OccurrenceStatus,
   RecurrenceFrequency,
   RecurrenceSchedule,
+  RecurrenceSummary,
   RecurringEntryType,
 } from '@financas/shared'
 
@@ -75,6 +76,14 @@ export type RecurrenceRuleItem = {
   schedule: RecurrenceSchedule
   remindDaysBefore: number | null
   autoRecord: boolean
+  nextOn: IsoDate | null
+  nextIsOverdue: boolean
+  monthlyCents: number
+}
+
+export type RecurrenceRuleList = {
+  items: RecurrenceRuleItem[]
+  summary: RecurrenceSummary
 }
 
 export type CreatedRecurrenceRule = {

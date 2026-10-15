@@ -1,5 +1,5 @@
 import { createApp } from '@api/app'
-import type { OccurrenceItem, RecurrenceRuleItem } from '@api/modules/planning'
+import type { OccurrenceItem, RecurrenceRuleItem, RecurrenceRuleList } from '@api/modules/planning'
 import { testAppDeps } from '@api/testing/app'
 import { connectTestDatabases } from '@api/testing/database'
 import { createFixtures } from '@api/testing/fixtures'
@@ -91,7 +91,7 @@ async function codeOf(response: Response): Promise<string> {
 }
 
 async function rules(): Promise<RecurrenceRuleItem[]> {
-  return (await (await viewer.get(rulesPath)).json()) as RecurrenceRuleItem[]
+  return ((await (await viewer.get(rulesPath)).json()) as RecurrenceRuleList).items
 }
 
 function rent(overrides: Record<string, unknown> = {}) {
@@ -156,6 +156,9 @@ describe('POST /recurrences', () => {
       },
       remindDaysBefore: null,
       autoRecord: false,
+      nextOn: expect.any(String),
+      nextIsOverdue: false,
+      monthlyCents: 200_000,
     })
   })
 

@@ -33,3 +33,9 @@ export const APPROXIMATE_DAYS_PER_STEP: Record<RecurrenceFrequency, number> = {
 export const MATCH_TOLERANCE_PERCENT = { fixed: 5, estimate: 20 } as const
 
 export const MATCH_WINDOW_DAYS = 10
+
+export const STEPS_PER_YEAR: Record<RecurrenceFrequency, number> = {
+  weekly: 52,
+  monthly: 12,
+  yearly: 1,
+}

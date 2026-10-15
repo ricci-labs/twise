@@ -29,7 +29,7 @@ import type {
   WorkspaceHoliday,
 } from '@api/modules/planning/planning.types'
 import type { IsoDate } from '@financas/shared'
-import { and, asc, between, desc, eq, gte, isNull, lte } from 'drizzle-orm'
+import { and, asc, between, desc, eq, gte, isNull, lte, min } from 'drizzle-orm'
 
 export function selectHolidaysBetween(
   tx: WorkspaceTransaction,
@@ -125,6 +125,19 @@ export async function selectPlannedDueDates(
     .from(plannedOccurrences)
     .where(eq(plannedOccurrences.ruleId, ruleId))
   return planned.map((occurrence) => occurrence.dueOn)
+}
+
+export async function selectNextPendingDueDates(
+  tx: WorkspaceTransaction,
+): Promise<Map<string, IsoDate>> {
+  const nextDueDates = await tx
+    .select({ ruleId: plannedOccurrences.ruleId, nextOn: min(plannedOccurrences.dueOn) })
+    .from(plannedOccurrences)
+    .where(eq(plannedOccurrences.status, 'pending'))
+    .groupBy(plannedOccurrences.ruleId)
+  return new Map(
+    nextDueDates.flatMap(({ ruleId, nextOn }) => (nextOn ? [[ruleId, nextOn] as const] : [])),
+  )
 }
 
 export async function deletePendingOccurrences(
