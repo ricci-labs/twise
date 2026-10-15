@@ -57,6 +57,10 @@ export const OWNER_PERMISSIONS = [...MODULES, ...ADMIN_MODULES].flatMap((module)
   ACTIONS.map((action) => ({ module, action })),
 )
 
+export const MEMBER_A_ID = '00000000-0000-4000-8000-0000000000a1'
+
+export const MEMBER_B_ID = '00000000-0000-4000-8000-0000000000a2'
+
 export const VIEWER_PERMISSIONS = MODULES.map((module) => ({ module, action: 'view' }))
 
 export function workspaceAccess(): Response {
@@ -73,5 +77,9 @@ export function accessAs(
     role: { roleId: `role-${roleName}`, name: roleName, systemKey: null },
     permissions,
     memberNames: ['Member A', 'Member B'],
+    memberDirectory: [
+      { userId: MEMBER_A_ID, displayName: 'Member A' },
+      { userId: MEMBER_B_ID, displayName: 'Member B' },
+    ],
   })
 }
