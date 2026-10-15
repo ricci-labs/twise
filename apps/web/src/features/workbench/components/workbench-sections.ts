@@ -47,6 +47,8 @@ import { accountRowExamples } from '@web/components/finance/account-row'
 import { cardBlockExamples } from '@web/components/finance/card-block'
 import { categoryRowExamples } from '@web/components/finance/category-row'
 import { cyclePreviewExamples } from '@web/components/finance/cycle-preview'
+import { entryDayGroupExamples } from '@web/components/finance/entry-day-group'
+import { entryRowExamples } from '@web/components/finance/entry-row'
 import { invoiceFactsExamples } from '@web/components/finance/invoice-facts'
 import { invoiceLineExamples } from '@web/components/finance/invoice-line'
 import { invoiceMonthStripExamples } from '@web/components/finance/invoice-month-strip'
@@ -143,6 +145,8 @@ export const workbenchSections: readonly ComponentExamples[] = [
   pageFrameExamples,
   pageHeaderExamples,
   cyclePreviewExamples,
+  entryDayGroupExamples,
+  entryRowExamples,
   invoiceMonthStripExamples,
   invoiceSummaryExamples,
   invoiceLineExamples,
