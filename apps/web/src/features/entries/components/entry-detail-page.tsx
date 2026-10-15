@@ -15,6 +15,7 @@ import { InstallmentRows } from '@web/components/finance/installment-rows'
 import { LinkedItem } from '@web/components/finance/linked-item'
 import { ShareRows } from '@web/components/finance/share-rows'
 import { TransferFlow } from '@web/components/finance/transfer-flow'
+import { TwiseIcon } from '@web/components/icons/twise-icon'
 import { PageFrame } from '@web/components/layout/page-frame'
 import { SubPageHeader } from '@web/components/layout/sub-page-header'
 import {
@@ -27,6 +28,7 @@ import {
 } from '@web/features/entries/api/entries.queries'
 import { EntryDetailActions } from '@web/features/entries/components/entry-detail-actions'
 import { entryDetailOf } from '@web/features/entries/components/entry-detail-view'
+import { EntryEdit } from '@web/features/entries/components/entry-edit'
 import { entriesMessages } from '@web/features/entries/entries.messages'
 import type {
   DetailHeaderProps,
@@ -155,15 +157,38 @@ function EntryDetailBody(props: EntryDetailBodyProps) {
       <DetailHeader
         workspaceId={workspaceId}
         actions={
-          <EntryDetailActions
-            workspaceId={workspaceId}
-            permissions={permissions}
-            entry={entry}
-            isOnClosedInvoice={view.isOnClosedInvoice}
-          />
+          <>
+            {hasPermission(permissions, 'entries', 'update') && (
+              <Link
+                to="."
+                search={(previous) => ({ ...previous, edit: true })}
+                aria-label={entriesMessages.edit.open}
+                className="grid size-touch place-items-center rounded-full text-ink outline-none hover:bg-sunken focus-visible:ring-2 focus-visible:ring-focus-ring"
+              >
+                <TwiseIcon name="edit" size="md" />
+              </Link>
+            )}
+            <EntryDetailActions
+              workspaceId={workspaceId}
+              permissions={permissions}
+              entry={entry}
+              isOnClosedInvoice={view.isOnClosedInvoice}
+            />
+          </>
         }
       />
       <EntryDetailSections {...props} view={view} />
+      {props.isEditing && hasPermission(permissions, 'entries', 'update') && (
+        <EntryEdit
+          workspaceId={workspaceId}
+          entry={entry}
+          locked={view.locked}
+          currentUserName={props.currentUserName}
+          permissions={permissions}
+          onClose={props.onEditClose}
+          onSaved={props.onEdited}
+        />
+      )}
     </>
   )
 }

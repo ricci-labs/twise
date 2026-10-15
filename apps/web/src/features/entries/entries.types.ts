@@ -1,4 +1,5 @@
 import type {
+  EntryInput,
   EntryTypeWithCategory,
   IsoDate,
   Period,
@@ -28,6 +29,7 @@ import type {
 } from '@web/features/entries/api/entries.queries'
 import type {
   entriesListSearchSchema,
+  entryDetailsFormSchema,
   entryFormSchema,
   newEntrySearchSchema,
 } from '@web/features/entries/entries.schemas'
@@ -437,6 +439,13 @@ export type EntryDetailView = {
   ownCents: number
   transfer?: { from: TransferEnd; to: TransferEnd }
   note?: string
+  locked?: EntryLockedSummary
+}
+
+export type EntryLockedSummary = {
+  title: string
+  detail: string
+  reason: string
 }
 
 export type EntryDetailPageProps = {
@@ -444,7 +453,11 @@ export type EntryDetailPageProps = {
   entryId: string
   permissions: readonly Permission[]
   currentUserId: string
+  currentUserName: string
   memberDirectory: readonly { userId: string; displayName: string }[]
+  isEditing: boolean
+  onEditClose: () => void
+  onEdited: (entryId: string) => void
 }
 
 export type EntryDetailBodyProps = EntryDetailPageProps & {
@@ -486,4 +499,63 @@ export type DeleteReasonSheetProps = {
 export type DetailHeaderProps = {
   workspaceId: string
   actions?: ReactNode
+}
+
+export type EntryFormFieldsProps = {
+  workspaceId: string
+  entryType: FormEntryType
+  canSeeMembers: boolean
+  canSeeContacts: boolean
+  canCreateAccounts: boolean
+  canCreateCards: boolean
+  isNewForm: boolean
+  autoFill: AutoFillControls
+  amountInput: RefObject<HTMLInputElement | null>
+  amountWarning: string | undefined
+  plan: CardPlan | undefined
+  today: string
+  currentUserName: string
+  shareTotals: ShareTotals
+  onTypeChange: (next: FormEntryType) => void
+}
+
+export type EntryChange =
+  | { mode: 'details'; entryId: string; description: string; notes: string }
+  | { mode: 'replace'; entryId: string; input: EntryInput }
+
+export type EntryDetailsFormValues = z.infer<typeof entryDetailsFormSchema>
+
+export type EntryEditProps = {
+  workspaceId: string
+  entry: ListedEntry
+  locked: EntryLockedSummary | undefined
+  currentUserName: string
+  permissions: readonly Permission[]
+  onClose: () => void
+  onSaved: (entryId: string) => void
+}
+
+export type LockedEntryEditProps = EntryEditProps & {
+  locked: EntryLockedSummary
+}
+
+export type VersionNoteProps = {
+  changed: readonly string[]
+}
+
+export type EditFooterProps = {
+  isOnline: boolean
+  isBlocked: boolean
+  problem: string | null
+  onCancel: () => void
+}
+
+export type EntryConflictProps = {
+  workspaceId: string
+}
+
+export type DiscardDialogProps = {
+  isOpen: boolean
+  onOpenChange: (isOpen: boolean) => void
+  onDiscard: () => void
 }

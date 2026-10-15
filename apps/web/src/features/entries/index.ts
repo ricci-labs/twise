@@ -3,6 +3,7 @@ export { EntryDetailPage } from '@web/features/entries/components/entry-detail-p
 export { NewEntry } from '@web/features/entries/components/new-entry'
 export {
   entriesListSearchSchema,
+  entryDetailSearchSchema,
   newEntrySearchSchema,
 } from '@web/features/entries/entries.schemas'
 export type { EntriesListSearch, NewEntrySearch } from '@web/features/entries/entries.types'

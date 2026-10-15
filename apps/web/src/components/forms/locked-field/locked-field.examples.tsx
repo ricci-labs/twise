@@ -16,5 +16,18 @@ export const lockedFieldExamples: ComponentExamples = {
         </div>
       ),
     },
+    {
+      name: 'O que não muda, com a segunda linha',
+      render: () => (
+        <div className="w-full max-w-90">
+          <LockedField
+            label="O que não muda"
+            value="R$ 3.000,00 em 10× · Cartão X"
+            detail="Casa · seg, 12 out · Member A"
+            help="A 1ª parcela está na fatura de outubro, que já fechou."
+          />
+        </div>
+      ),
+    },
   ],
 }

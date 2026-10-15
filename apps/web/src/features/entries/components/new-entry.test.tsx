@@ -328,6 +328,10 @@ describe('ENT-02 new expense', () => {
         spentByUserId: CURRENT_USER,
       }),
     ])
+    await page.getByRole('button', { name: 'Ver' }).click()
+    await expect
+      .poll(() => app.router.state.location.pathname)
+      .toBe(`/w/${WORKSPACE_ID}/entries/entry-1`)
     expect(app.router.state.location.search).not.toHaveProperty('entry')
   })
 
