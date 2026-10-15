@@ -80,6 +80,17 @@ describe('ACC-02 categories', () => {
     ])
   })
 
+  it('offers a new subcategory on the line of a category that has none, keeping the row compact', async () => {
+    await openCategories()
+
+    await expect
+      .element(page.getByRole('link', { name: 'Nova subcategoria em Casa' }))
+      .toHaveTextContent('Subcategoria')
+    await expect
+      .element(page.getByRole('link', { name: 'Nova subcategoria em Mercado' }))
+      .not.toBeInTheDocument()
+  })
+
   it('shows the income categories with their nature in words', async () => {
     await openCategories({ search: '?kind=income' })
 

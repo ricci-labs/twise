@@ -260,6 +260,11 @@ export type CategoriesShownProps = CategoriesLoadedProps & {
   isSearching: boolean
 }
 
+export type AddSubcategoryProps = {
+  parent: CategoryNode
+  text?: string
+}
+
 export type CategoryListProps = {
   workspaceId: string
   permissions: readonly Permission[]

@@ -8,6 +8,7 @@ export type CategoryRowProps = {
   subcategoryCount?: number
   isOpen?: boolean
   onOpenChange?: (isOpen: boolean) => void
+  add?: ReactNode
   actions?: ReactNode
   children?: ReactNode
 }

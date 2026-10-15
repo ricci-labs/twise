@@ -23,6 +23,7 @@ export function CategoryRow({
   subcategoryCount = 0,
   isOpen = false,
   onOpenChange,
+  add,
   actions,
   children,
 }: CategoryRowProps) {
@@ -44,9 +45,10 @@ export function CategoryRow({
       <li data-slot="category-row" className={categoryRowVariants()}>
         <div className={categoryRowLineVariants()}>
           {main}
+          {add}
           {actionSlot}
         </div>
-        {Children.count(children) > 0 && (
+        {Children.toArray(children).length > 0 && (
           <div className={categoryRowChipsVariants()}>{children}</div>
         )}
       </li>

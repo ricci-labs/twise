@@ -107,7 +107,8 @@ Totals per category are not shown here (they belong to `HOME-01`). Tapping the n
 filtered by it.
 **RF-ACC-3b** Subcategories. Phone: collapsed by default under "{n} subcategorias ⌄" (the app
 remembers which are open on the device); open, they are chips that wrap plus a dashed "+" chip
-("Nova subcategoria em {mãe}"). Desktop: chips in the row's own column, on one line: the ones that
+("Nova subcategoria em {mãe}"). A category with none keeps its row as compact as the others: the
+dashed "+ Subcategoria" chip sits on the line, where the count would be. Desktop: chips in the row's own column, on one line: the ones that
 fit (most used first), then "+{n} mais" (opens that row only, which then ends with "Mostrar menos")
 and "{n} subcategorias" under the name; the "+" chip always last. Tapping a chip opens its actions
 (sheet / menu under the chip); the chip keeps the ink outline while they are open. A viewer's chip

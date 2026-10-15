@@ -7,6 +7,7 @@ import { SubcategoryAddChip } from '@web/components/finance/subcategory-add-chip
 import { SubcategoryChip } from '@web/components/finance/subcategory-chip'
 import { accountsMessages } from '@web/features/accounts/accounts.messages'
 import type {
+  AddSubcategoryProps,
   CategoryListProps,
   CategoryNodeProps,
   NatureBadgeProps,
@@ -59,22 +60,17 @@ export function CategoryList({
             subcategoryCount={node.children.length}
             isOpen={open.ids.has(node.id) || (isSearching && node.children.length > 0)}
             onOpenChange={(isOpen) => open.setRemembered(node.id, isOpen)}
+            add={
+              canCreate && node.children.length === 0 ? (
+                <AddSubcategory parent={node} text={messages.table.addSubcategory} />
+              ) : undefined
+            }
             actions={<CategoryActions {...shared} node={node} />}
           >
             {node.children.map((child) => (
               <Subcategory key={child.id} {...shared} node={child} />
             ))}
-            {canCreate && (
-              <SubcategoryAddChip
-                label={accountsMessages.categoryForm.addSubcategory(node.name)}
-                link={
-                  <Link
-                    to="."
-                    search={(previous) => ({ ...previous, category: 'new', parent: node.id })}
-                  />
-                }
-              />
-            )}
+            {canCreate && node.children.length > 0 && <AddSubcategory parent={node} />}
           </CategoryRow>
         ))}
       </AccountGroup>
@@ -97,6 +93,18 @@ export function CategoryList({
         </AccountGroup>
       </ArchivedToggle>
     </>
+  )
+}
+
+function AddSubcategory({ parent, text }: AddSubcategoryProps) {
+  return (
+    <SubcategoryAddChip
+      label={accountsMessages.categoryForm.addSubcategory(parent.name)}
+      text={text}
+      link={
+        <Link to="." search={(previous) => ({ ...previous, category: 'new', parent: parent.id })} />
+      }
+    />
   )
 }
 
