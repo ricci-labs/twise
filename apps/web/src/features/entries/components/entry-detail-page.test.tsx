@@ -189,3 +189,92 @@ describe('ENT-03 entry detail', () => {
     expect(MEMBER_A_ID).toBe(MEMBER_A)
   })
 })
+
+describe('ENT-03 actions', () => {
+  beforeEach(async () => {
+    vi.useFakeTimers({ toFake: ['Date'] })
+    vi.setSystemTime(new Date('2026-10-20T15:00:00.000Z'))
+    await page.viewport(390, 844)
+  })
+
+  afterEach(() => {
+    vi.useRealTimers()
+  })
+
+  function recorder(calls: string[]): FakeAnswer {
+    return async (request) => {
+      const body = request.method === 'DELETE' ? await request.text() : ''
+      calls.push(
+        `${request.method} ${new URL(request.url).pathname.replace(`${BASE}/entries/`, '')} ${body}`.trim(),
+      )
+      return new Response(null, { status: 204 })
+    }
+  }
+
+  it('deletes with no question, back on the list, and undoes it from the toast', async () => {
+    const calls: string[] = []
+    const app = await openDetail(TRANSFER, {
+      answers: {
+        [`DELETE ${BASE}/entries/${ENTRY_ID}`]: recorder(calls),
+        [`POST ${BASE}/entries/${ENTRY_ID}/restore`]: recorder(calls),
+      },
+    })
+
+    await page.getByRole('button', { name: 'Ações deste lançamento' }).click()
+    await page
+      .getByRole('menuitem', { name: 'Excluir', exact: true })
+      .or(page.getByRole('button', { name: 'Excluir', exact: true }))
+      .click()
+
+    await expect.poll(() => app.router.state.location.pathname).toBe(`/w/${WORKSPACE_ID}/entries`)
+    await expect.element(page.getByText('Lançamento movido para a lixeira.')).toBeVisible()
+    await page.getByRole('button', { name: 'Desfazer' }).click()
+    await expect.poll(() => calls).toEqual([`DELETE ${ENTRY_ID} {}`, `POST ${ENTRY_ID}/restore`])
+  })
+
+  it('deletes with a reason that goes to the trash', async () => {
+    const calls: string[] = []
+    await openDetail(TRANSFER, {
+      answers: { [`DELETE ${BASE}/entries/${ENTRY_ID}`]: recorder(calls) },
+    })
+
+    await page.getByRole('button', { name: 'Ações deste lançamento' }).click()
+    await page.getByText('Excluir com motivo').click()
+    const sheet = page.getByRole('dialog', { name: 'Excluir Reserva de emergência' })
+    await sheet.getByLabelText('Motivo').fill('lançado em dobro')
+    await expectNoAccessibilityViolations(sheet.element())
+    await sheet.getByRole('button', { name: 'Excluir lançamento' }).click()
+
+    await expect.poll(() => calls).toEqual([`DELETE ${ENTRY_ID} {"reason":"lançado em dobro"}`])
+  })
+
+  it('keeps only repeating and attaching for an entry on a closed invoice', async () => {
+    await openDetail(INSTALLMENTS)
+
+    await page.getByRole('button', { name: 'Ações deste lançamento' }).click()
+    await expect.element(page.getByText('Repetir')).toBeVisible()
+    await expect.element(page.getByText('Anexar comprovante').last()).toBeVisible()
+    await expect.element(page.getByText('Excluir com motivo')).not.toBeInTheDocument()
+  })
+
+  it('repeats an entry: the new entry filled the same, dated today', async () => {
+    await openDetail(DINNER)
+
+    await page.getByRole('button', { name: 'Ações deste lançamento' }).click()
+    await page.getByText('Repetir').click()
+
+    const form = page.getByRole('dialog', { name: 'Novo lançamento' })
+    await expect.element(form.getByLabelText(/^Descrição/)).toHaveValue('Jantar de aniversário')
+    await expect.element(form.getByLabelText(/^Valor/)).toHaveValue('240,00')
+    await expect.element(form.getByRole('radio', { name: /^Hoje/ })).toBeChecked()
+  })
+
+  it('gives a viewer no actions', async () => {
+    await openDetail(TRANSFER, { access: () => accessAs('Leitor', VIEWER_PERMISSIONS) })
+
+    await expect.element(page.getByRole('heading', { name: 'Reserva de emergência' })).toBeVisible()
+    await expect
+      .element(page.getByRole('button', { name: 'Ações deste lançamento' }))
+      .not.toBeInTheDocument()
+  })
+})

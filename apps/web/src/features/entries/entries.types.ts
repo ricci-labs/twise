@@ -31,7 +31,7 @@ import type {
   entryFormSchema,
   newEntrySearchSchema,
 } from '@web/features/entries/entries.schemas'
-import type { RefObject } from 'react'
+import type { ReactNode, RefObject } from 'react'
 import type { UseFormReturn } from 'react-hook-form'
 import type { z } from 'zod'
 
@@ -128,10 +128,12 @@ export type NewEntryProps = {
   permissions: readonly Permission[]
   isOpen: boolean
   prefill?: EntryPrefill
+  repeatEntryId?: string
   onClose: () => void
 }
 
 export type EntryPrefill = {
+  values?: EntryFormInput
   entryType?: FormEntryType
   accountId?: string
   cardAccountId?: string
@@ -456,4 +458,32 @@ export type EntryDetailSectionsProps = EntryDetailBodyProps & {
 export type DetailValueViewProps = {
   workspaceId: string
   value: DetailValue
+}
+
+export type RepeatedEntryProps = NewEntryProps & {
+  repeatEntryId: string
+}
+
+export type EntryActionRequest = {
+  action: 'delete' | 'restore'
+  entryId: string
+  reason?: string
+}
+
+export type EntryDetailActionsProps = Pick<EntryDetailPageProps, 'workspaceId' | 'permissions'> & {
+  entry: ListedEntry
+  isOnClosedInvoice: boolean
+}
+
+export type DeleteReasonSheetProps = {
+  description: string
+  isOpen: boolean
+  isDeleting: boolean
+  onOpenChange: (isOpen: boolean) => void
+  onDelete: (reason: string | undefined) => void
+}
+
+export type DetailHeaderProps = {
+  workspaceId: string
+  actions?: ReactNode
 }

@@ -25,9 +25,11 @@ import {
   entryQueryOptions,
   matchedOccurrenceQueryOptions,
 } from '@web/features/entries/api/entries.queries'
+import { EntryDetailActions } from '@web/features/entries/components/entry-detail-actions'
 import { entryDetailOf } from '@web/features/entries/components/entry-detail-view'
 import { entriesMessages } from '@web/features/entries/entries.messages'
 import type {
+  DetailHeaderProps,
   DetailValueViewProps,
   EntryDetailBodyProps,
   EntryDetailPageProps,
@@ -62,11 +64,6 @@ export function EntryDetailPage(props: EntryDetailPageProps) {
   })
   return (
     <PageFrame className="gap-3 lg:gap-4">
-      <SubPageHeader
-        title={messages.title}
-        backLabel={messages.back}
-        back={<Link to="/w/$workspaceId/entries" params={{ workspaceId }} />}
-      />
       <EntryDetailState {...props} entry={entry} />
     </PageFrame>
   )
@@ -78,35 +75,46 @@ function EntryDetailState({
 }: EntryDetailPageProps & { entry: ReturnType<typeof useQuery<ListedEntry>> }) {
   if (entry.error instanceof ApiError && entry.error.code === NOT_FOUND) {
     return (
-      <EmptyBlock
-        icon="receipt"
-        title={messages.notFound}
-        text={messages.notFoundText}
-        action={
-          <Button
-            variant="secondary"
-            render={
-              <Link to="/w/$workspaceId/entries" params={{ workspaceId: props.workspaceId }} />
-            }
-          >
-            {messages.back}
-          </Button>
-        }
-      />
+      <>
+        <DetailHeader workspaceId={props.workspaceId} />
+        <EmptyBlock
+          icon="receipt"
+          title={messages.notFound}
+          text={messages.notFoundText}
+          action={
+            <Button
+              variant="secondary"
+              render={
+                <Link to="/w/$workspaceId/entries" params={{ workspaceId: props.workspaceId }} />
+              }
+            >
+              {messages.back}
+            </Button>
+          }
+        />
+      </>
     )
   }
   if (entry.isError && !entry.data) {
     return (
-      <SectionError
-        message={messages.failed}
-        errorRef={entry.error instanceof ApiError ? entry.error.ref : null}
-        isRetrying={entry.isFetching}
-        onRetry={() => void entry.refetch()}
-      />
+      <>
+        <DetailHeader workspaceId={props.workspaceId} />
+        <SectionError
+          message={messages.failed}
+          errorRef={entry.error instanceof ApiError ? entry.error.ref : null}
+          isRetrying={entry.isFetching}
+          onRetry={() => void entry.refetch()}
+        />
+      </>
     )
   }
   if (!entry.data) {
-    return <ListSkeleton rows={4} />
+    return (
+      <>
+        <DetailHeader workspaceId={props.workspaceId} />
+        <ListSkeleton rows={4} />
+      </>
+    )
   }
   return <EntryDetailBody {...props} entry={entry.data} />
 }
@@ -135,9 +143,29 @@ function EntryDetailBody(props: EntryDetailBodyProps) {
     [entry, accounts.data, memberDirectory, contacts.data, invoices.data, cards.data, cardId],
   )
   if (!view) {
-    return <ListSkeleton rows={4} />
+    return (
+      <>
+        <DetailHeader workspaceId={workspaceId} />
+        <ListSkeleton rows={4} />
+      </>
+    )
   }
-  return <EntryDetailSections {...props} view={view} />
+  return (
+    <>
+      <DetailHeader
+        workspaceId={workspaceId}
+        actions={
+          <EntryDetailActions
+            workspaceId={workspaceId}
+            permissions={permissions}
+            entry={entry}
+            isOnClosedInvoice={view.isOnClosedInvoice}
+          />
+        }
+      />
+      <EntryDetailSections {...props} view={view} />
+    </>
+  )
 }
 
 function EntryDetailSections({ workspaceId, permissions, entry, view }: EntryDetailSectionsProps) {
@@ -235,6 +263,17 @@ function EntryDetailSections({ workspaceId, permissions, entry, view }: EntryDet
         <LinkedItem icon="history" label={messages.history} link={area('history')} />
       )}
     </div>
+  )
+}
+
+function DetailHeader({ workspaceId, actions }: DetailHeaderProps) {
+  return (
+    <SubPageHeader
+      title={messages.title}
+      backLabel={messages.back}
+      back={<Link to="/w/$workspaceId/entries" params={{ workspaceId }} />}
+      actions={actions}
+    />
   )
 }
 

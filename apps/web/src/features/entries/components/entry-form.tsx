@@ -36,6 +36,7 @@ import type {
 import { useAmountWarning } from '@web/features/entries/hooks/use-amount-warning'
 import { useAutoFill } from '@web/features/entries/hooks/use-auto-fill'
 import { useCardPlan } from '@web/features/entries/hooks/use-card-plan'
+import { useSelectedAmount } from '@web/features/entries/hooks/use-selected-amount'
 import { useShareTotals } from '@web/features/entries/hooks/use-share-totals'
 import { useIsOnline } from '@web/hooks/use-is-online'
 import { ApiError } from '@web/lib/api/api-error'
@@ -96,7 +97,8 @@ export function EntryForm({
   const [isDiscarding, setIsDiscarding] = useState(false)
   const amountInput = useRef<HTMLInputElement>(null)
   const blank = prefilled(blankExpense(today, canSeeMembers ? currentUserId : ''), prefill)
-  const isNewForm = prefill.entryType === undefined
+  const isNewForm = isBlankForm(prefill)
+  useSelectedAmount(amountInput, prefill.values !== undefined)
   const form = useSchemaForm({
     schema: entryFormSchema,
     requiredMessages: entriesMessages.required,
@@ -299,7 +301,14 @@ function afterSaveOf(event: BaseSyntheticEvent | undefined): AfterSave {
   return submitter?.dataset.afterSave === 'another' ? 'another' : 'close'
 }
 
+function isBlankForm(prefill: EntryPrefill): boolean {
+  return prefill.entryType === undefined && prefill.values === undefined
+}
+
 function prefilled(blank: EntryFormInput, prefill: EntryPrefill): EntryFormInput {
+  if (prefill.values) {
+    return prefill.values
+  }
   const entryType = prefill.entryType ?? blank.entryType
   return {
     ...blank,
