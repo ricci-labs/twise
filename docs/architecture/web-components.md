@@ -872,9 +872,10 @@ online with `asChild` are translated to `render`.
   read as "Valor aproximado". The `link` element wraps the row; `register` adds the compact dark
   "Registrar" under the amount, outside the link, without growing the row.
 - `OccurrenceGroup` (`components/finance/occurrence-group`): a region named by its heading and
-  count ("A vencer 4", the count read as "4 previstos") over the white card of its rows;
+  count ("A vencer 4") over the white card of its rows;
   `tone="danger"` draws the overdue group (red heading, the 1.5 px danger border, the larger inner
-  padding). `footer` holds its "Mostrar mais".
+  padding). `action` sits at the end of the heading (an add link); `footer` holds its "Mostrar
+  mais". The recurrences' groups use it too, so the count reads "4 itens".
 - `PlanSummaryTiles` (`components/finance/plan-summary-tiles`): two tiles ("Falta pagar" / "Falta
   receber", "Contas fixas por mês" / "Receitas fixas por mês") as a description list, each with its
   amount (income in `mint-ink`, "≈" for an estimate) and a muted note. Side by side while both
@@ -889,3 +890,8 @@ online with `asChild` are translated to `render`.
   Internet de 18/10?", with the `note` "Você acabou de registrar **Internet**…"); several are
   selectable rows with the one selection style, under the `lead` ("Você registrou… Ela parece
   com:"). Decline and confirm buttons, a `problem` alert. The entries feature words and drives it.
+- `RecurrenceRow` (`components/finance/recurrence-row`): one recurrence: the loose drawing of its
+  category, the description and "Todo dia 5 · Conta X · Casa › Aluguel" (2 lines each), the next
+  date line ("Próxima 05/11"; `today` in warning; `overdue` in danger with the alert icon), and the
+  amount on top at the right ("≈" for an estimate; income in `mint-ink`, a transfer muted). The
+  `link` element wraps the row.

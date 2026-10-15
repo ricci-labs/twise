@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 import { Link, useNavigate } from '@tanstack/react-router'
 import { Button } from '@web/components/actions/button'
 import { ShowMoreButton } from '@web/components/actions/show-more-button'
+import { FilterChips } from '@web/components/display/filter-chips'
 import { EmptyBlock } from '@web/components/feedback/empty-block'
 import { ListSkeleton } from '@web/components/feedback/list-skeleton'
 import { SectionError } from '@web/components/feedback/section-error'
@@ -27,6 +28,7 @@ import { planningMessages } from '@web/features/planning/planning.messages'
 import type {
   GroupProps,
   OccurrenceContext,
+  OccurrenceList,
   OccurrencesProps,
   OccurrencesTabProps,
   PlanningSearch,
@@ -72,6 +74,7 @@ function OccurrencesBody({
   workspaceId,
   permissions,
   memberDirectory,
+  search,
   today,
   from,
   to,
@@ -92,6 +95,26 @@ function OccurrencesBody({
   }
   if (!occurrences.data || !accounts.data) {
     return <ListSkeleton rows={SKELETON_ROWS} />
+  }
+  const ruleFilter = ruleFilterOf(occurrences.data, search.rule)
+  if (ruleFilter) {
+    return (
+      <>
+        <RuleChip label={ruleFilter.label} />
+        <Occurrences
+          workspaceId={workspaceId}
+          list={ruleFilter.list}
+          context={context}
+          accounts={new Map(accounts.data.map((account) => [account.id, account]))}
+          canUpdate={hasPermission(permissions, 'planning', 'update')}
+          canRecord={
+            hasPermission(permissions, 'planning', 'update') &&
+            hasPermission(permissions, 'entries', 'create')
+          }
+          isFiltered
+        />
+      </>
+    )
   }
   if (occurrences.data.items.length === 0) {
     return (
@@ -123,6 +146,7 @@ function Occurrences({
   accounts,
   canUpdate,
   canRecord,
+  isFiltered = false,
 }: OccurrencesProps) {
   const navigate = useNavigate()
   const byId = new Map(list.items.map((item) => [item.id, item]))
@@ -156,9 +180,16 @@ function Occurrences({
   }
   return (
     <>
-      <PlanSummaryTiles label={messages.summaryLabel} tiles={summaryTilesOf(list)} />
+      {!isFiltered && (
+        <PlanSummaryTiles label={messages.summaryLabel} tiles={summaryTilesOf(list)} />
+      )}
       {occurrenceGroupsOf(list, context).map((group) => (
-        <Group key={group.key} group={group} linkOf={linkOf} registerOf={registerOf} />
+        <Group
+          key={group.key}
+          group={isFiltered ? { ...group, count: group.rows.length } : group}
+          linkOf={linkOf}
+          registerOf={registerOf}
+        />
       ))}
     </>
   )
@@ -243,4 +274,20 @@ function useChosenPeriod(workspaceId: string, search: PlanningSearch) {
     currentLabel: current.data?.currentLabel,
     period: periods?.periods.find((period) => period.label === label),
   }
+}
+
+function ruleFilterOf(list: OccurrenceList, rule: string | undefined) {
+  if (!rule) {
+    return undefined
+  }
+  const items = list.items.filter((item) => item.ruleId === rule)
+  const [first] = items
+  return { label: first?.description ?? '', list: { ...list, items } }
+}
+
+function RuleChip({ label }: { label: string }) {
+  const navigate = useNavigate()
+  const clear = () =>
+    void navigate({ to: '.', search: (previous) => ({ ...previous, rule: undefined }) })
+  return <FilterChips chips={[{ value: 'rule', label }]} onRemove={clear} onClear={clear} />
 }

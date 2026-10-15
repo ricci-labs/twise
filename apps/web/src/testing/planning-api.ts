@@ -96,3 +96,68 @@ export function candidatesAnswer(
     [`GET ${BASE}/occurrences/${occurrenceId}/candidates`]: () => Response.json({ items }),
   }
 }
+
+export const RENT_RULE = '00000000-0000-4000-8000-0000000008a1'
+
+export function plannedRule(
+  id: string,
+  description: string,
+  overrides: Record<string, unknown> = {},
+) {
+  return {
+    id,
+    description,
+    entryType: 'expense',
+    amountCents: 210000,
+    amountIsEstimate: false,
+    sourceAccountId: CHECKING,
+    categoryAccountId: GROCERIES,
+    schedule: {
+      frequency: 'monthly',
+      interval: 1,
+      dayOfMonth: 5,
+      nthBusinessDay: null,
+      weekendRule: 'keep',
+      startsOn: '2026-10-05',
+      endsOn: null,
+    },
+    remindDaysBefore: null,
+    autoRecord: false,
+    nextOn: '2026-11-05',
+    nextIsOverdue: false,
+    monthlyCents: 210000,
+    ...overrides,
+  }
+}
+
+export const RULES = [
+  plannedRule(RENT_RULE, 'Aluguel'),
+  plannedRule('00000000-0000-4000-8000-0000000008a2', 'Internet', {
+    amountCents: 12000,
+    nextOn: '2026-10-18',
+    nextIsOverdue: true,
+  }),
+  plannedRule('00000000-0000-4000-8000-0000000008a3', 'Salário', {
+    entryType: 'income',
+    amountCents: 620000,
+    nextOn: '2026-11-05',
+  }),
+  plannedRule('00000000-0000-4000-8000-0000000008a4', 'Reserva', {
+    entryType: 'transfer',
+    categoryAccountId: SAVINGS,
+    amountCents: 60000,
+  }),
+]
+
+export const RULES_SUMMARY = {
+  bills: { monthlyCents: 222000, count: 2, includesEstimate: false, includesAveraged: false },
+  income: { monthlyCents: 620000, count: 1, leftOutEstimateCents: 0, leftOutEstimateCount: 0 },
+  transfers: { monthlyCents: 60000, count: 1 },
+}
+
+export function recurrencesAnswer(
+  items: readonly object[] = RULES,
+  summary: object = RULES_SUMMARY,
+): Record<string, FakeAnswer> {
+  return { [`GET ${BASE}/recurrences`]: () => Response.json({ items, summary }) }
+}

@@ -2,6 +2,8 @@ import { cva } from 'class-variance-authority'
 
 export const occurrenceGroupVariants = cva('flex flex-col gap-1.5')
 
+export const occurrenceGroupHeadVariants = cva('flex min-h-7 items-center justify-between gap-3')
+
 export const occurrenceGroupTitleVariants = cva(
   'flex min-h-7 items-center gap-2 font-display text-section-title',
   {

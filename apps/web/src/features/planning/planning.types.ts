@@ -6,10 +6,12 @@ import type {
   OccurrenceRowLinkProps,
 } from '@web/components/finance/occurrence-row'
 import type { PlanSummaryTile } from '@web/components/finance/plan-summary-tiles'
+import type { RecurrenceDirection, RecurrenceNext } from '@web/components/finance/recurrence-row'
 import type {
   fetchAccounts,
   fetchCandidates,
   fetchOccurrences,
+  fetchRecurrences,
 } from '@web/features/planning/api/planning.queries'
 import type {
   occurrenceAmountFormSchema,
@@ -111,6 +113,7 @@ export type OccurrencesProps = {
   accounts: PlanningAccounts
   canUpdate: boolean
   canRecord: boolean
+  isFiltered?: boolean
 }
 
 export type GroupProps = {
@@ -142,4 +145,42 @@ export type OccurrenceHandlers = {
   skip: () => void
   unskip: () => void
   unmatch: () => void
+}
+
+export type RecurrenceList = Awaited<ReturnType<typeof fetchRecurrences>>
+
+export type ListedRecurrence = RecurrenceList['items'][number]
+
+export type RecurrenceGroupKey = 'bills' | 'income' | 'transfers'
+
+export type RecurrenceContext = {
+  today: IsoDate
+  accounts: ReadonlyMap<string, Pick<PlanningAccount, 'name' | 'parentId' | 'icon'>>
+}
+
+export type RecurrenceRowView = {
+  id: string
+  description: string
+  detail: string
+  next?: RecurrenceNext
+  art: { name: string; icon: string | null }
+  amountCents: number
+  direction: RecurrenceDirection
+  isEstimate: boolean
+}
+
+export type RecurrenceGroupView = {
+  key: RecurrenceGroupKey
+  title: string
+  rows: RecurrenceRowView[]
+}
+
+export type RecurrencesTabProps = Omit<PlanningPageProps, 'tab' | 'search'>
+
+export type RecurrenceActionsProps = {
+  workspaceId: string
+  recurrence: ListedRecurrence
+  canDelete: boolean
+  className?: string
+  children?: ReactNode
 }
