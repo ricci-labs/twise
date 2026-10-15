@@ -803,3 +803,16 @@ online with `asChild` are translated to `render`.
   `RangeCalendar` with "Voltar" and "Ver de 5 a 20 out" ("Escolha o primeiro / último dia",
   disabled, until both are picked; `onRange`). The caller owns the year, the query and what the
   choice means.
+- `EntryHeader` (`components/finance/entry-header`): the top of an entry's detail (`Detalhe.png`,
+  option B): the drawing and the name on one line with the type small and muted above the name
+  (no badge: it would read as a status), the amount in display type with raised cents (`mint-ink`
+  with "+" for money in), and the detail line ("3× de R$ 333,34 · ter, 20 out 2026").
+- `DetailSection` + `DetailRows` + `DetailRow` (`components/display/detail-section`): a white card,
+  a region named by its title, with an optional `action` on the right ("Ver cobranças"), and
+  label/value pairs as a `dl` split by dividers (label muted, value semibold on the right, with a
+  26 px drawing or an avatar before it).
+- `LinkedItem` (`components/finance/linked-item`): a 52 px card that is one link, the icon, the
+  label and a chevron ("Histórico deste lançamento", "Pagou a conta prevista Aluguel de
+  outubro"); `tone="mint"` for a step done ("Divisão sugerida feita · 4 de 4 partes").
+- `AttachArea` (`components/finance/attach-area`): the dashed "Anexar comprovante · Foto ou PDF"
+  button, where `ATT-01` starts.

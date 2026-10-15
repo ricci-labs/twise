@@ -21,6 +21,7 @@ import { avatarExamples } from '@web/components/display/avatar'
 import { cardExamples } from '@web/components/display/card'
 import { categoryArtExamples } from '@web/components/display/category-art'
 import { dataTableExamples } from '@web/components/display/data-table'
+import { detailSectionExamples } from '@web/components/display/detail-section'
 import { dividerExamples } from '@web/components/display/divider'
 import { filterChipsExamples } from '@web/components/display/filter-chips'
 import { kpiCardExamples } from '@web/components/display/kpi-card'
@@ -47,10 +48,12 @@ import { tipExamples } from '@web/components/feedback/tip'
 import { toastExamples } from '@web/components/feedback/toast'
 import { accountGroupExamples } from '@web/components/finance/account-group'
 import { accountRowExamples } from '@web/components/finance/account-row'
+import { attachAreaExamples } from '@web/components/finance/attach-area'
 import { cardBlockExamples } from '@web/components/finance/card-block'
 import { categoryRowExamples } from '@web/components/finance/category-row'
 import { cyclePreviewExamples } from '@web/components/finance/cycle-preview'
 import { entryDayGroupExamples } from '@web/components/finance/entry-day-group'
+import { entryHeaderExamples } from '@web/components/finance/entry-header'
 import { entryRowExamples } from '@web/components/finance/entry-row'
 import { invoiceFactsExamples } from '@web/components/finance/invoice-facts'
 import { invoiceLineExamples } from '@web/components/finance/invoice-line'
@@ -58,6 +61,7 @@ import { invoiceMonthStripExamples } from '@web/components/finance/invoice-month
 import { invoicePreviewExamples } from '@web/components/finance/invoice-preview'
 import { invoiceSummaryExamples } from '@web/components/finance/invoice-summary'
 import { invoiceYearSheetExamples } from '@web/components/finance/invoice-year-sheet'
+import { linkedItemExamples } from '@web/components/finance/linked-item'
 import { recentEntriesExamples } from '@web/components/finance/recent-entries'
 import { sharesListExamples } from '@web/components/finance/shares-list'
 import { subcategoryAddChipExamples } from '@web/components/finance/subcategory-add-chip'
@@ -178,6 +182,10 @@ export const workbenchSections: readonly ComponentExamples[] = [
   scrollArrowsExamples,
   searchInputExamples,
   textInputExamples,
+  entryHeaderExamples,
+  detailSectionExamples,
+  linkedItemExamples,
+  attachAreaExamples,
   toggleChipsExamples,
   filterChipsExamples,
   listSummaryExamples,
