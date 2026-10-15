@@ -75,6 +75,7 @@ function AccountsTrashTabs({ workspaceId, permissions }: TrashPageProps) {
   return (
     <TrashTabs
       value="accounts"
+      className="lg:w-90 lg:self-start"
       onChange={(tab) =>
         tab === 'entries' && void navigate({ to: '/w/$workspaceId/trash', params: { workspaceId } })
       }

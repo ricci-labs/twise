@@ -214,6 +214,28 @@ describe('ENT-05 entries trash', () => {
       .not.toHaveAttribute('aria-current')
   })
 
+  it('shows the trash as a table on the desktop and restores from it', async () => {
+    const calls: string[] = []
+    await page.viewport(1440, 900)
+    await openTrash({
+      answers: { [`POST ${BASE}/entries/${TRASHED_ID}/restore`]: recorder(calls) },
+    })
+
+    await expect
+      .element(page.getByText('O que foi excluído pode voltar com o histórico.'))
+      .toBeVisible()
+    const table = page.getByRole('table', { name: 'Lançamentos excluídos' })
+    const row = table.getByRole('row', { name: /Mercado da semana/ })
+    await expect.element(row.getByText('Mercado · Conta X')).toBeVisible()
+    await expect.element(row.getByText('Hoje, 14:12, por Member A')).toBeVisible()
+    await expect.element(row.getByText('Lançado em dobro')).toBeVisible()
+    await expectNoAccessibilityViolations(page.getByRole('main').element())
+
+    await row.getByRole('button', { name: 'Restaurar Mercado da semana' }).click()
+    await expect.poll(() => calls).toEqual([`/entries/${TRASHED_ID}/restore`])
+    await expect.element(page.getByText('Lançamento restaurado.')).toBeVisible()
+  })
+
   it('tells a viewer the trash is not for them', async () => {
     await openTrash({ access: () => accessAs('Leitor', VIEWER_PERMISSIONS) })
 

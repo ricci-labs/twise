@@ -1,6 +1,6 @@
 import { type IsoDate, todayIn } from '@financas/shared'
 import { entriesMessages } from '@web/features/entries/entries.messages'
-import type { RestoreRefusal } from '@web/features/entries/entries.types'
+import type { DeletedWords, RestoreRefusal } from '@web/features/entries/entries.types'
 import { ApiError } from '@web/lib/api/api-error'
 import { formatShortDate } from '@web/lib/format/calendar'
 
@@ -12,15 +12,20 @@ const TIME = new Intl.DateTimeFormat('pt-BR', {
   minute: '2-digit',
 })
 
-export function deletedLineOf(deletedAt: string, name: string | undefined, today: IsoDate): string {
+export function deletedLineOf(
+  deletedAt: string,
+  name: string | undefined,
+  today: IsoDate,
+  words: DeletedWords = messages.deleted,
+): string {
   const moment = new Date(deletedAt)
   const day = todayIn(TIME_ZONE, moment) as IsoDate
   if (day === today) {
     const time = TIME.format(moment)
-    return name ? messages.deletedToday(time, name) : messages.deletedTodayAnonymous(time)
+    return name ? words.today(time, name) : words.todayAnonymous(time)
   }
   const date = formatShortDate(day)
-  return name ? messages.deletedOn(date, name) : messages.deletedOnAnonymous(date)
+  return name ? words.on(date, name) : words.onAnonymous(date)
 }
 
 const CANNOT_BE_RESTORED = 'ENTRY_CANNOT_BE_RESTORED'
