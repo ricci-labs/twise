@@ -33,19 +33,18 @@ import {
   pickerRowEndVariants,
   pickerRowTextVariants,
   pickerRowVariants,
-  pickerSearchInputVariants,
   pickerSearchVariants,
   pickerSubtitleVariants,
   pickerTileDetailVariants,
   pickerTileVariants,
 } from '@web/components/inputs/picker-sheet/picker-sheet.variants'
-import { TextInput } from '@web/components/inputs/text-input'
+import { SearchInput } from '@web/components/inputs/search-input'
 import { Sheet } from '@web/components/layout/sheet'
 import { useLongList } from '@web/hooks/use-long-list'
 import { useMediaQuery } from '@web/hooks/use-media-query'
 import { DESKTOP_QUERY } from '@web/lib/breakpoints'
 import { CATEGORIES_SEARCH_ABOVE, LIST_SEARCH_ABOVE, matchesSearch } from '@web/lib/long-lists'
-import { Check, ChevronRight, Plus, Search } from 'lucide-react'
+import { Check, ChevronRight, Plus } from 'lucide-react'
 import { useState } from 'react'
 
 export function PickerSheet({
@@ -127,7 +126,7 @@ function PickerContent({
 
   return (
     <>
-      {list.hasSearch && (
+      {list.hasSearch && searchLabel !== undefined && (
         <PickerSearch label={searchLabel} value={list.search} onChange={list.setSearch} />
       )}
       {subtitle && <p className={pickerSubtitleVariants()}>{subtitle}</p>}
@@ -160,15 +159,7 @@ function PickerContent({
 function PickerSearch({ label, value, onChange }: PickerSearchProps) {
   return (
     <div className={pickerSearchVariants()}>
-      <TextInput
-        type="search"
-        aria-label={label}
-        placeholder={label}
-        startAdornment={<Search aria-hidden="true" />}
-        className={pickerSearchInputVariants()}
-        value={value}
-        onChange={(event) => onChange(event.target.value)}
-      />
+      <SearchInput label={label} value={value} onValueChange={onChange} />
     </div>
   )
 }

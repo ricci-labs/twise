@@ -383,6 +383,11 @@ component here, so the form, and later the account, card and planning forms, sha
   `isNegative` puts "−" and the danger colour on it (opening balance); the sign is set like the
   amount (32 px display at `lg`). It speaks the `FormField`
   control contract (`value` text, `onChange({ target: { value } })`, `onBlur`).
+- `SearchInput` (`components/inputs/search-input`): every search field of the app (the pickers,
+  the invoices to pay, the categories, the entries): a 44 px `TextInput` named by its `label`, which
+  is also the placeholder, with the search icon before the text and, once something is typed, a "×"
+  ("Limpar busca") that clears it and keeps the focus. Escape clears it too without closing the
+  sheet or dialog around it; once empty, Escape reaches them. The caller filters (or asks the API).
 - `SuggestInput` (`components/inputs/suggest-input`, Base UI `Autocomplete`): a `TextInput` that
   offers the `suggestions` it is given (filtered by whoever gives them) in a list under it, as wide
   as the field (288–480 px, `../product/requirements/ui-standards.md`'s menu rule): 15 px muted rows with the typed part in ink 650, the highlighted one on `sunken`.

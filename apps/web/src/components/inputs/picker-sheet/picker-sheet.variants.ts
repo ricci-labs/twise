@@ -17,8 +17,6 @@ export const pickerPopupVariants = cva(
 
 export const pickerSearchVariants = cva('px-1 lg:px-0')
 
-export const pickerSearchInputVariants = cva('min-h-touch')
-
 export const pickerSubtitleVariants = cva('px-1 text-note font-medium text-ink-muted')
 
 export const pickerListVariants = cva('', {

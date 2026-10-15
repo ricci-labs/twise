@@ -17,11 +17,10 @@ import {
   radioCardVariants,
   radioDotVariants,
 } from '@web/components/inputs/radio-card-list/radio-card-list.variants'
-import { TextInput } from '@web/components/inputs/text-input'
+import { SearchInput } from '@web/components/inputs/search-input'
 import { useLongList } from '@web/hooks/use-long-list'
 import { cn } from '@web/lib/cn'
 import { LIST_SEARCH_ABOVE, matchesSearch } from '@web/lib/long-lists'
-import { Search } from 'lucide-react'
 
 export function RadioCardList({
   label,
@@ -43,15 +42,8 @@ export function RadioCardList({
 
   return (
     <div className={cn(radioCardListBoxVariants(), className)}>
-      {list.hasSearch && (
-        <TextInput
-          type="search"
-          aria-label={searchLabel}
-          placeholder={searchLabel}
-          startAdornment={<Search aria-hidden="true" />}
-          value={list.search}
-          onChange={(event) => list.setSearch(event.target.value)}
-        />
+      {list.hasSearch && searchLabel !== undefined && (
+        <SearchInput label={searchLabel} value={list.search} onValueChange={list.setSearch} />
       )}
       {list.shown.length === 0 && (
         <p className={radioCardListEmptyVariants()}>{messages.nothingFound}</p>

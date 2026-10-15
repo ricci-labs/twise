@@ -64,7 +64,7 @@ export type PickerContentProps = Omit<
 >
 
 export type PickerSearchProps = {
-  label?: string
+  label: string
   value: string
   onChange: (search: string) => void
 }
