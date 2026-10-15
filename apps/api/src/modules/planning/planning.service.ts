@@ -34,6 +34,7 @@ export {
 export {
   findMatchedOccurrence,
   listOccurrences,
+  listOccurrencesWithTotals,
   readOccurrenceFacts,
   readOccurrencesBetween,
   refreshWorkspaceOccurrences,

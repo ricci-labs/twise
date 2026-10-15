@@ -10,6 +10,7 @@ import type {
   IsoDate,
   NationalHoliday,
   OccurrenceStatus,
+  OccurrenceTotals,
   RecurrenceFrequency,
   RecurrenceSchedule,
   RecurrenceSummary,
@@ -122,6 +123,11 @@ export type OccurrenceRow = {
 
 export type OccurrenceItem = OccurrenceRow & {
   isOverdue: boolean
+}
+
+export type OccurrenceList = {
+  items: OccurrenceItem[]
+  totals: OccurrenceTotals
 }
 
 export type OccurrenceRef = {

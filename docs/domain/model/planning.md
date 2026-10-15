@@ -92,7 +92,7 @@ holidays passed must cover the range plus `DAYS_A_DUE_DATE_MAY_SHIFT` (10). The 
 
 | Route | Permission | Does |
 |---|---|---|
-| `GET /occurrences?from&to` | `planning:view` | `listOccurrences`: occurrences due in the range (at most a year), with the rule's description, type, accounts, frequency and `amountIsEstimate`, plus `isOverdue`; by date |
+| `GET /occurrences?from&to` | `planning:view` | `listOccurrencesWithTotals` → `{ items, totals }`: `items` are the occurrences due in the range (at most a year), with the rule's description, type, accounts, frequency and `amountIsEstimate`, plus `isOverdue`; by date. `totals` (`occurrenceTotals`, G53) has `toPay` (pending expenses and card purchases) and `toReceive` (pending incomes), each `{ amountCents, count, overdueCount }`, and the `groups` counts (`overdue`, `upcoming`, `matched`, `skipped`; transfers count in the groups only) |
 | `GET /occurrences/suggestions?entryId=` | `planning:view` | `suggestOccurrencesForEntry`: pending occurrences the entry probably pays, best first (`404 ENTRY_NOT_FOUND`) |
 | `POST /occurrences/:occurrenceId/match` | `planning:update` | `matchOccurrence` `{ entryId }` → `204`. Refused: not pending (`409 OCCURRENCE_NOT_PENDING`), entry gone (`400 ENTRY_NOT_AVAILABLE`), other accounts (`400 OCCURRENCE_ENTRY_MISMATCH`), entry already used (`409 ENTRY_ALREADY_MATCHED`) |
 | `POST /occurrences/:occurrenceId/unmatch` | `planning:update` | `unmatchOccurrence` → `204`; `409 OCCURRENCE_NOT_MATCHED` otherwise |
