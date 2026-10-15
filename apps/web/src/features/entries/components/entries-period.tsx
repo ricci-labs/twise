@@ -56,6 +56,7 @@ export function EntriesPeriod({
       ranges={{
         today: periods.today,
         value: { from: search.from ?? null, to: search.to ?? null },
+        preset: search.preset,
         onPreset: (preset) =>
           onSearchChange({ ...NO_RANGE, ...presetRangeOf(preset, periods.today), preset }),
         onRange: (range) => onSearchChange({ ...NO_RANGE, ...range }),

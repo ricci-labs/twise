@@ -20,4 +20,9 @@ export const periodPickerMessages = {
   pickLast: 'Escolha o último dia',
   seeRange: (range: string) => `Ver de ${range}`,
   rangeJoin: ' a ',
+  shortcuts: 'Atalhos',
+  thisPeriod: (label: string) => `Este período (${label})`,
+  previousPeriod: 'Período anterior',
+  apply: 'Aplicar',
+  dayCount: (count: number) => (count === 1 ? '1 dia' : `${count} dias`),
 } as const

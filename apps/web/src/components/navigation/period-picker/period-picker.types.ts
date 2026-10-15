@@ -19,6 +19,7 @@ export type PeriodSheetData = {
 export type PeriodRanges = {
   today: IsoDate
   value: DateRange
+  preset?: PeriodPreset
   onPreset: (preset: PeriodPreset) => void
   onRange: (range: { from: IsoDate; to: IsoDate }) => void
 }
@@ -50,4 +51,26 @@ export type PeriodStepProps = {
   link: ReactElement | undefined
   label: string
   direction: 'previous' | 'next'
+}
+
+export type PeriodShortcut = 'current' | 'previous' | PeriodPreset | 'dates'
+
+export type PeriodPopoverProps = {
+  sheet: PeriodSheetData
+  ranges: PeriodRanges
+  anchor: Element | null
+  isOpen: boolean
+  onOpenChange: (isOpen: boolean) => void
+}
+
+export type PeriodShortcutsProps = Omit<
+  PeriodPopoverProps,
+  'anchor' | 'isOpen' | 'onOpenChange'
+> & {
+  onDone: () => void
+}
+
+export type PeriodRangeFootProps = {
+  range: DateRange
+  onApply: (range: { from: IsoDate; to: IsoDate }) => void
 }

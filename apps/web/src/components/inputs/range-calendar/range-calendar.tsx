@@ -18,17 +18,21 @@ import { formatDayMonth } from '@web/lib/format/calendar'
 import { ArrowRight } from 'lucide-react'
 import { useState } from 'react'
 
-export function RangeCalendar({ value, today, onChange }: RangeCalendarProps) {
+export function RangeCalendar({ value, today, onChange, hasEnds = true }: RangeCalendarProps) {
   const [month, setMonth] = useState(() => monthOf(value.from ?? today))
   const isPickingLast = value.from !== null && value.to === null
   return (
     <div data-slot="range-calendar" className={rangeCalendarVariants()}>
-      <div role="status" className={rangeEndsVariants()}>
-        <RangeEnd label={messages.from} value={value.from} isNext={value.from === null} />
-        <ArrowRight aria-hidden="true" />
-        <RangeEnd label={messages.to} value={value.to} isNext={isPickingLast} />
-      </div>
-      <p className={rangeHintVariants()}>{messages.hint}</p>
+      {hasEnds && (
+        <>
+          <div role="status" className={rangeEndsVariants()}>
+            <RangeEnd label={messages.from} value={value.from} isNext={value.from === null} />
+            <ArrowRight aria-hidden="true" />
+            <RangeEnd label={messages.to} value={value.to} isNext={isPickingLast} />
+          </div>
+          <p className={rangeHintVariants()}>{messages.hint}</p>
+        </>
+      )}
       <CalendarMonth
         month={month}
         today={today}
