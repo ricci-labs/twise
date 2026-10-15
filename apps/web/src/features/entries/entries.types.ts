@@ -363,3 +363,35 @@ export type EntriesResultsProps = Pick<EntriesListProps, 'search' | 'onSearchCha
 export type EntriesHeadlineProps = EntriesListProps & {
   summary: { outCents: number; inCents: number; count: number }
 }
+
+export type EntryFilterNames = {
+  accounts: ReadonlyMap<string, LedgerAccount>
+  members: ReadonlyMap<string, string>
+}
+
+export type EntriesFiltersProps = Pick<
+  EntriesPageProps,
+  'workspaceId' | 'search' | 'onSearchChange' | 'memberDirectory'
+>
+
+export type EntriesFilterSheetProps = EntriesFiltersProps & {
+  accounts: readonly LedgerAccount[]
+  isOpen: boolean
+  onOpenChange: (isOpen: boolean) => void
+}
+
+export type EntryFilterDraft = Pick<
+  EntriesListSearch,
+  'types' | 'accountId' | 'categoryId' | 'spentBy' | 'shared'
+>
+
+export type FilterPickerProps = {
+  label: string
+  help?: string
+  title: string
+  placeholder: string
+  items: readonly PickerItem[]
+  value: string | undefined
+  searchLabel: string
+  onSelect: (value: string | undefined) => void
+}

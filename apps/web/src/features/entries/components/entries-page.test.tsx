@@ -2,7 +2,7 @@ import { createMemoryHistory } from '@tanstack/react-router'
 import { AppProviders } from '@web/app/providers'
 import { createApp } from '@web/app/router'
 import { expectNoAccessibilityViolations } from '@web/testing/accessibility'
-import { MEMBER_A } from '@web/testing/accounts-api'
+import { CARD, MEMBER_A } from '@web/testing/accounts-api'
 import { entriesListAnswers, listedEntry, OCTOBER_ENTRIES } from '@web/testing/entries-api'
 import {
   accessAs,
@@ -212,6 +212,49 @@ describe('ENT-01 entries list', () => {
     await page.getByRole('button', { name: 'Limpar busca' }).click()
     await expect.element(page.getByText('Saiu', { exact: false }).first()).toBeVisible()
     await expect.element(page.getByText('Isso é tudo de out/26.')).toBeVisible()
+  })
+
+  it('filters in the API from the sheet, shows the chips and takes them off one by one', async () => {
+    const requests: URL[] = []
+    await page.viewport(390, 844)
+    await openEntries({ answers: { [ENTRIES]: asked(requests) } })
+
+    await page.getByRole('button', { name: 'Filtros' }).click()
+    const sheet = page.getByRole('dialog', { name: 'Filtros' })
+    await sheet.getByRole('button', { name: 'Compra no cartão' }).click()
+    await sheet.getByRole('button', { name: 'Conta ou cartão' }).click()
+    await page
+      .getByRole('dialog', { name: 'Conta ou cartão' })
+      .getByRole('button', { name: /Cartão X/ })
+      .click()
+    await sheet.getByRole('switch', { name: 'Só os divididos com contatos' }).click()
+    await expect
+      .element(sheet.getByRole('switch', { name: 'Só os divididos com contatos' }))
+      .toBeChecked()
+    await expectNoAccessibilityViolations(sheet.element())
+    await sheet.getByRole('button', { name: 'Ver resultados' }).click()
+
+    await expect.poll(() => requests.at(-1)?.searchParams.get('types')).toBe('card_purchase')
+    expect(requests.at(-1)?.searchParams.get('accountId')).toBe(CARD)
+    expect(requests.at(-1)?.searchParams.get('shared')).toBe('true')
+    await expect.element(page.getByRole('button', { name: 'Filtros, 3 ativos' })).toBeVisible()
+    await page.getByRole('button', { name: 'Tirar o filtro Cartão X' }).click()
+    await expect.poll(() => requests.at(-1)?.searchParams.has('accountId')).toBe(false)
+    await page.getByRole('button', { name: 'Limpar', exact: true }).click()
+    await expect
+      .element(page.getByRole('group', { name: 'Filtros ativos' }))
+      .not.toBeInTheDocument()
+    await expect.element(page.getByRole('button', { name: 'Filtros', exact: true })).toBeVisible()
+  })
+
+  it('says nothing matched the filters and clears them', async () => {
+    await openEntries({
+      search: '?types=%5B%22income%22%5D',
+      answers: { [ENTRIES]: () => Response.json({ items: [], nextCursor: null }) },
+    })
+
+    await expect.element(page.getByText('Nada encontrado com esses filtros.')).toBeVisible()
+    await expect.element(page.getByRole('button', { name: 'Tirar o filtro Receita' })).toBeVisible()
   })
 
   it('hides the trash from a viewer', async () => {
