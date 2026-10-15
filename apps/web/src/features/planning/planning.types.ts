@@ -1,8 +1,17 @@
 import type { IsoDate, Permission } from '@financas/shared'
-import type { OccurrenceBadge, OccurrenceDirection } from '@web/components/finance/occurrence-row'
+import type {
+  OccurrenceBadge,
+  OccurrenceDirection,
+  OccurrenceRowLinkProps,
+} from '@web/components/finance/occurrence-row'
 import type { PlanSummaryTile } from '@web/components/finance/plan-summary-tiles'
 import type { fetchAccounts, fetchOccurrences } from '@web/features/planning/api/planning.queries'
-import type { PLANNING_TABS, planningSearchSchema } from '@web/features/planning/planning.schemas'
+import type {
+  occurrenceAmountFormSchema,
+  PLANNING_TABS,
+  planningSearchSchema,
+} from '@web/features/planning/planning.schemas'
+import type { ReactElement, ReactNode } from 'react'
 import type { z } from 'zod'
 
 export type PlanningTab = (typeof PLANNING_TABS)[number]
@@ -64,3 +73,37 @@ export type PlanningPeriodProps = {
 }
 
 export type OccurrencesTabProps = Omit<PlanningPageProps, 'tab'>
+
+export type OccurrenceActionRequest =
+  | { action: 'skip' | 'unskip' | 'unmatch'; occurrenceId: string }
+  | { action: 'match'; occurrenceId: string; entryId: string }
+  | { action: 'amount'; occurrenceId: string; amountCents: number }
+
+export type OccurrenceActionsProps = {
+  workspaceId: string
+  occurrence: ListedOccurrence
+  accountName: string
+  className?: string
+  children?: ReactNode
+}
+
+export type OccurrenceAmountSheetProps = {
+  workspaceId: string
+  occurrence: ListedOccurrence
+  isOpen: boolean
+  onOpenChange: (isOpen: boolean) => void
+}
+
+export type OccurrenceAmountFormInput = z.input<typeof occurrenceAmountFormSchema>
+
+export type OccurrencesProps = {
+  workspaceId: string
+  list: OccurrenceList
+  context: OccurrenceContext
+  canUpdate: boolean
+}
+
+export type GroupProps = {
+  group: OccurrenceGroupView
+  linkOf: (id: string) => ReactElement<OccurrenceRowLinkProps> | undefined
+}

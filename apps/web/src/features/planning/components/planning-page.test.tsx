@@ -14,7 +14,7 @@ import {
 } from '@web/testing/fake-api'
 import { occurrencesAnswer, plannedOccurrence } from '@web/testing/planning-api'
 import type { FakeAnswer } from '@web/testing/testing.types'
-import { describe, expect, it } from 'vitest'
+import { beforeEach, describe, expect, it } from 'vitest'
 import { page } from 'vitest/browser'
 import { render } from 'vitest-browser-react'
 
@@ -140,3 +140,85 @@ function emptyTotals() {
     groups: { overdue: 0, upcoming: 0, matched: 0, skipped: 0 },
   }
 }
+
+describe('PLAN-03 actions on a phone', () => {
+  beforeEach(async () => {
+    await page.viewport(360, 800)
+  })
+
+  function recorder(calls: string[]): FakeAnswer {
+    return async (request) => {
+      const body = request.method === 'PATCH' ? ` ${await request.text()}` : ''
+      calls.push(`${request.method} ${new URL(request.url).pathname.replace(BASE, '')}${body}`)
+      return new Response(null, { status: 204 })
+    }
+  }
+
+  function occurrenceCalls(calls: string[]): Record<string, FakeAnswer> {
+    const record = recorder(calls)
+    return Object.fromEntries(
+      ['o1', 'o5', 'o6'].flatMap((id) => [
+        [`POST ${BASE}/occurrences/${id}/skip`, record],
+        [`POST ${BASE}/occurrences/${id}/unskip`, record],
+        [`POST ${BASE}/occurrences/${id}/unmatch`, record],
+        [`POST ${BASE}/occurrences/${id}/match`, record],
+        [`PATCH ${BASE}/occurrences/${id}`, record],
+      ]),
+    )
+  }
+
+  it('skips this month without asking, and undoes it from the toast', async () => {
+    const calls: string[] = []
+    await openPlanning({ answers: occurrenceCalls(calls) })
+    await page.getByRole('button', { name: /^Internet/ }).click()
+    await expect.element(page.getByText('Prevista para 18/10 · R$ 120,00 · Conta X')).toBeVisible()
+    await page.getByRole('button', { name: 'Pular este mês' }).click()
+    await expect.element(page.getByText('Internet de 18/10 pulada.')).toBeVisible()
+    await page.getByRole('button', { name: 'Desfazer' }).click()
+    await expect
+      .poll(() => calls)
+      .toEqual(['POST /occurrences/o1/skip', 'POST /occurrences/o1/unskip'])
+  })
+
+  it('undoes a payment and links the entry back from the toast', async () => {
+    const calls: string[] = []
+    await openPlanning({ answers: occurrenceCalls(calls) })
+    await page.getByRole('button', { name: /^Diarista/ }).click()
+    await expect.element(page.getByText('Pago em 16/10 com a Conta X')).toBeVisible()
+    await expect.element(page.getByRole('link', { name: 'Ver lançamento' })).toBeVisible()
+    await page.getByRole('button', { name: 'Desfazer pagamento' }).click()
+    await page.getByRole('button', { name: 'Desfazer' }).click()
+    await expect
+      .poll(() => calls)
+      .toEqual(['POST /occurrences/o5/unmatch', 'POST /occurrences/o5/match'])
+  })
+
+  it("changes only this month's amount", async () => {
+    const calls: string[] = []
+    await openPlanning({ answers: occurrenceCalls(calls) })
+    await page.getByRole('button', { name: /^Internet/ }).click()
+    await page.getByRole('button', { name: 'Mudar o valor deste' }).click()
+    const amount = page.getByRole('textbox', { name: /Valor deste mês/ })
+    await expect
+      .element(page.getByText(/Não muda a conta fixa: os próximos meses continuam com/))
+      .toBeVisible()
+    await amount.fill('150,00')
+    await page.getByRole('button', { name: 'Salvar valor' }).click()
+    await expect.poll(() => calls).toEqual(['PATCH /occurrences/o1 {"amountCents":15000}'])
+    await expect.element(page.getByText('Valor deste mês salvo.')).toBeVisible()
+  })
+
+  it('brings a skipped one back', async () => {
+    const calls: string[] = []
+    await openPlanning({ answers: occurrenceCalls(calls) })
+    await page.getByRole('button', { name: /^Reserva/ }).click()
+    await page.getByRole('button', { name: 'Voltar a esperar' }).click()
+    await expect.poll(() => calls).toEqual(['POST /occurrences/o6/unskip'])
+  })
+
+  it('gives a viewer no actions on the rows', async () => {
+    await openPlanning({ access: () => accessAs('Leitor', VIEWER_PERMISSIONS) })
+    await expect.element(page.getByText('Internet')).toBeVisible()
+    await expect.element(page.getByRole('button', { name: /^Internet/ })).not.toBeInTheDocument()
+  })
+})
