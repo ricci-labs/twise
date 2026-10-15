@@ -176,6 +176,7 @@ const OCCURRENCE_COLUMNS = {
   amountIsEstimate: recurrenceRules.amountIsEstimate,
   status: plannedOccurrences.status,
   matchedEntryId: plannedOccurrences.matchedEntryId,
+  skippedByUserId: plannedOccurrences.skippedByUserId,
   frequency: recurrenceRules.frequency,
   interval: recurrenceRules.interval,
 }
@@ -226,7 +227,7 @@ export async function setOccurrenceMatch(
 ): Promise<void> {
   await tx
     .update(plannedOccurrences)
-    .set({ status: matchedEntryId ? 'matched' : 'pending', matchedEntryId })
+    .set({ status: matchedEntryId ? 'matched' : 'pending', matchedEntryId, skippedByUserId: null })
     .where(eq(plannedOccurrences.id, occurrenceId))
 }
 

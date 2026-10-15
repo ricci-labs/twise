@@ -74,6 +74,7 @@ holidays passed must cover the range plus `DAYS_A_DUE_DATE_MAY_SHIFT` (10). The 
 | `amount_cents` | bigint > 0 | Copied from the rule; editable for this occurrence only |
 | `status` | enum `occurrence_status`: `pending`, `matched`, `skipped` | "Overdue" is derived: pending and `due_on` < today |
 | `matched_entry_id` | composite FK journal_entries null | Set exactly when `matched` (CHECK); one occurrence per entry |
+| `skipped_by_user_id` | uuid FK users null | Who skipped it; only while `skipped` (CHECK), cleared on unskip (older skipped rows have none) |
 | timestamps | | No soft delete: occurrences are derived from the rule, and pending ones are rebuilt |
 
 **Planning** (`use-cases/occurrences.ts`), with "today" in the workspace time zone:
@@ -92,12 +93,12 @@ holidays passed must cover the range plus `DAYS_A_DUE_DATE_MAY_SHIFT` (10). The 
 
 | Route | Permission | Does |
 |---|---|---|
-| `GET /occurrences?from&to` | `planning:view` | `listOccurrencesWithTotals` → `{ items, totals }`: `items` are the occurrences due in the range (at most a year), with the rule's description, type, accounts, frequency and `amountIsEstimate`, plus `isOverdue`; by date. `totals` (`occurrenceTotals`, G53) has `toPay` (pending expenses and card purchases) and `toReceive` (pending incomes), each `{ amountCents, count, overdueCount }`, and the `groups` counts (`overdue`, `upcoming`, `matched`, `skipped`; transfers count in the groups only) |
+| `GET /occurrences?from&to` | `planning:view` | `listOccurrencesWithTotals` → `{ items, totals }`: `items` are the occurrences due in the range (at most a year), with the rule's description, type, accounts, frequency and `amountIsEstimate`, plus `isOverdue`, `skippedByUserId` and, when matched, the entry's date and amount (`paidOn`, `paidCents`, G55); by date. `totals` (`occurrenceTotals`, G53) has `toPay` (pending expenses and card purchases) and `toReceive` (pending incomes), each `{ amountCents, count, overdueCount }`, and the `groups` counts (`overdue`, `upcoming`, `matched`, `skipped`; transfers count in the groups only) |
 | `GET /occurrences/suggestions?entryId=` | `planning:view` | `suggestOccurrencesForEntry`: pending occurrences the entry probably pays, best first (`404 ENTRY_NOT_FOUND`) |
 | `POST /occurrences/:occurrenceId/match` | `planning:update` | `matchOccurrence` `{ entryId }` → `204`. Refused: not pending (`409 OCCURRENCE_NOT_PENDING`), entry gone (`400 ENTRY_NOT_AVAILABLE`), other accounts (`400 OCCURRENCE_ENTRY_MISMATCH`), entry already used (`409 ENTRY_ALREADY_MATCHED`) |
 | `POST /occurrences/:occurrenceId/unmatch` | `planning:update` | `unmatchOccurrence` → `204`; `409 OCCURRENCE_NOT_MATCHED` otherwise |
-| `POST /occurrences/:occurrenceId/skip` | `planning:update` | `skipOccurrence`: this month doesn't happen (a pending one only, else `409 OCCURRENCE_NOT_PENDING`) → `204` |
-| `POST /occurrences/:occurrenceId/unskip` | `planning:update` | `unskipOccurrence`: back to pending (`409 OCCURRENCE_NOT_SKIPPED` otherwise) → `204` |
+| `POST /occurrences/:occurrenceId/skip` | `planning:update` | `skipOccurrence`: this month doesn't happen (a pending one only, else `409 OCCURRENCE_NOT_PENDING`); remembers who skipped it (`skippedByUserId`, G55) → `204` |
+| `POST /occurrences/:occurrenceId/unskip` | `planning:update` | `unskipOccurrence`: back to pending, forgetting who skipped it (`409 OCCURRENCE_NOT_SKIPPED` otherwise) → `204` |
 | `PATCH /occurrences/:occurrenceId` | `planning:update` | `changeOccurrenceAmount` `{ amountCents }` for a pending one (this month's energy bill, a one-off raise). A later change to the rule plans future pending ones again, with the rule's amount |
 
 ## Financial period

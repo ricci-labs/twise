@@ -105,18 +105,29 @@ describe('suggestOccurrencesForEntry', () => {
 describe('matchOccurrence and unmatchOccurrence', () => {
   it('link a confirmed payment to the occurrence and undo it', async () => {
     const { workspaceId, pay, october } = await household('Match')
-    const entryId = await pay(200_000)
+    const entryId = await pay(205_000)
     const occurrenceId = (await october())?.id ?? ''
+    expect(await october()).toMatchObject({ paidOn: null, paidCents: null })
 
     await matchOccurrence(databases.app, { workspaceId, occurrenceId }, entryId)
-    expect(await october()).toMatchObject({ status: 'matched', matchedEntryId: entryId })
+    expect(await october()).toMatchObject({
+      status: 'matched',
+      matchedEntryId: entryId,
+      amountCents: 200_000,
+      paidOn: '2026-10-12',
+      paidCents: 205_000,
+    })
     expect(await findMatchedOccurrence(databases.app, workspaceId, entryId)).toMatchObject({
       id: occurrenceId,
       dueOn: expect.any(String),
     })
 
     await unmatchOccurrence(databases.app, { workspaceId, occurrenceId })
-    expect(await october()).toMatchObject({ status: 'pending', matchedEntryId: null })
+    expect(await october()).toMatchObject({
+      status: 'pending',
+      matchedEntryId: null,
+      paidOn: null,
+    })
     expect(await findMatchedOccurrence(databases.app, workspaceId, entryId)).toBeNull()
   })
 
@@ -194,6 +205,10 @@ describe('a match follows its entry', () => {
 
     await deleteEntry(databases.app, { workspaceId, entryId, userId, reason: 'Duplicado' })
 
-    expect(await october()).toMatchObject({ status: 'pending', matchedEntryId: null })
+    expect(await october()).toMatchObject({
+      status: 'pending',
+      matchedEntryId: null,
+      paidOn: null,
+    })
   })
 })

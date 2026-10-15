@@ -3,7 +3,7 @@ import type { Clock } from '@api/core/clock.types'
 import type { Database, WorkspaceTransaction } from '@api/core/db/db.types'
 import { withWorkspace } from '@api/core/db/tx'
 import { NotFoundError } from '@api/core/http/errors'
-import { readEntryDates } from '@api/modules/ledger'
+import { type EntryPayment, readEntryDates, readEntryPayments } from '@api/modules/ledger'
 import {
   deletePendingOccurrences,
   insertOccurrencesIfMissing,
@@ -52,7 +52,10 @@ export async function listOccurrences(
     const today = await workspaceToday(tx, clock)
     await refreshOccurrences(tx, today)
     const occurrences = await selectOccurrencesBetween(tx, from, to)
-    return occurrences.map((occurrence) => withOverdueFlag(occurrence, today))
+    const payments = await readEntryPayments(tx, matchedEntryIdsOf(occurrences))
+    return occurrences.map((occurrence) =>
+      withOverdueFlag(occurrence, today, paymentOf(occurrence, payments)),
+    )
   })
 }
 
@@ -113,8 +116,30 @@ export async function readOccurrencesBetween(
   return selectOccurrencesBetween(tx, from, to)
 }
 
-export function withOverdueFlag(occurrence: OccurrenceRow, today: IsoDate): OccurrenceItem {
-  return { ...occurrence, isOverdue: occurrence.status === 'pending' && occurrence.dueOn < today }
+export function withOverdueFlag(
+  occurrence: OccurrenceRow,
+  today: IsoDate,
+  payment: EntryPayment | null = null,
+): OccurrenceItem {
+  return {
+    ...occurrence,
+    isOverdue: occurrence.status === 'pending' && occurrence.dueOn < today,
+    paidOn: payment?.occurredOn ?? null,
+    paidCents: payment?.amountCents ?? null,
+  }
+}
+
+function matchedEntryIdsOf(occurrences: readonly OccurrenceRow[]): string[] {
+  return occurrences.flatMap((occurrence) =>
+    occurrence.matchedEntryId ? [occurrence.matchedEntryId] : [],
+  )
+}
+
+function paymentOf(
+  occurrence: OccurrenceRow,
+  payments: ReadonlyMap<string, EntryPayment>,
+): EntryPayment | null {
+  return occurrence.matchedEntryId ? (payments.get(occurrence.matchedEntryId) ?? null) : null
 }
 
 export function refreshWorkspaceOccurrences(

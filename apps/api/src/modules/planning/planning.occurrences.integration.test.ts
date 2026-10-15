@@ -236,20 +236,39 @@ describe('one occurrence at a time', () => {
     return { ref: { workspaceId, occurrenceId: found?.id ?? '' }, occurrence: found }
   }
 
-  it('can be skipped, which leaves it out of what is still due, and brought back', async () => {
+  it('can be skipped, remembering who skipped it, and brought back', async () => {
     const { workspaceId } = await workspaceWithRent('Skip one')
     const { ref } = await occurrenceOn(workspaceId, '2026-11-10')
 
-    await skipOccurrence(databases.app, ref)
-    expect((await occurrenceOn(workspaceId, '2026-11-10')).occurrence?.status).toBe('skipped')
-    await expect(skipOccurrence(databases.app, ref)).rejects.toMatchObject({
+    await skipOccurrence(databases.app, { ...ref, userId })
+    expect((await occurrenceOn(workspaceId, '2026-11-10')).occurrence).toMatchObject({
+      status: 'skipped',
+      skippedByUserId: userId,
+    })
+    await expect(skipOccurrence(databases.app, { ...ref, userId })).rejects.toMatchObject({
       code: 'OCCURRENCE_NOT_PENDING',
     })
 
     await unskipOccurrence(databases.app, ref)
-    expect((await occurrenceOn(workspaceId, '2026-11-10')).occurrence?.status).toBe('pending')
+    expect((await occurrenceOn(workspaceId, '2026-11-10')).occurrence).toMatchObject({
+      status: 'pending',
+      skippedByUserId: null,
+    })
     await expect(unskipOccurrence(databases.app, ref)).rejects.toMatchObject({
       code: 'OCCURRENCE_NOT_SKIPPED',
+    })
+  })
+
+  it('keeps who skipped only on a skipped occurrence', async () => {
+    const { workspaceId } = await workspaceWithRent('Skipper check')
+    const { occurrence } = await occurrenceOn(workspaceId, '2026-11-10')
+    await expect(
+      databases.owner
+        .update(plannedOccurrences)
+        .set({ skippedByUserId: userId })
+        .where(eq(plannedOccurrences.id, occurrence?.id ?? '')),
+    ).rejects.toMatchObject({
+      cause: { constraint: 'planned_occurrences_skipper_only_when_skipped' },
     })
   })
 
@@ -274,7 +293,7 @@ describe('one occurrence at a time', () => {
     expect((await occurrenceOn(workspaceId, '2026-12-10')).occurrence?.amountCents).toBe(200_000)
 
     const skipped = await occurrenceOn(workspaceId, '2027-01-11')
-    await skipOccurrence(databases.app, skipped.ref)
+    await skipOccurrence(databases.app, { ...skipped.ref, userId })
     await expect(
       changeOccurrenceAmount(databases.app, skipped.ref, { amountCents: 1 }),
     ).rejects.toMatchObject({ code: 'OCCURRENCE_NOT_PENDING' })

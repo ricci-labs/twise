@@ -12,8 +12,14 @@ import {
   selectInvoicesDueBetween,
   selectPostingDetails,
   selectPostingFacts,
+  selectPostingsOfEntries,
 } from '@api/modules/ledger/ledger.repository'
-import type { ContactItems, InvoiceDue, PostingDetails } from '@api/modules/ledger/ledger.types'
+import type {
+  ContactItems,
+  EntryPayment,
+  InvoiceDue,
+  PostingDetails,
+} from '@api/modules/ledger/ledger.types'
 import type {
   ChargeableItem,
   ContactPosting,
@@ -24,6 +30,7 @@ import type {
   FactPosting,
   IsoDate,
 } from '@financas/shared'
+import { entryAmountCents } from '@financas/shared'
 
 export async function readAccountFacts(tx: WorkspaceTransaction): Promise<FactAccount[]> {
   return (await selectActiveAccounts(tx)).map((account) => ({
@@ -109,6 +116,26 @@ export async function readEntryDates(
   }
   const rows = await selectEntryDates(tx, entryIds)
   return new Map(rows.map((row) => [row.id, row.occurredOn]))
+}
+
+export async function readEntryPayments(
+  tx: WorkspaceTransaction,
+  entryIds: string[],
+): Promise<ReadonlyMap<string, EntryPayment>> {
+  if (entryIds.length === 0) {
+    return new Map()
+  }
+  const dates = await selectEntryDates(tx, entryIds)
+  const postings = await selectPostingsOfEntries(tx, entryIds)
+  return new Map(
+    dates.map(({ id, occurredOn }) => [
+      id,
+      {
+        occurredOn,
+        amountCents: entryAmountCents(postings.filter((posting) => posting.entryId === id)),
+      },
+    ]),
+  )
 }
 
 export async function activeEntryIdsOf(

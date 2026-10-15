@@ -3,16 +3,23 @@ import { withWorkspace } from '@api/core/db/tx'
 import { ConflictError, parseOrThrow } from '@api/core/http/errors'
 import { audited } from '@api/modules/audit'
 import { occurrenceAuditTarget, updateOccurrence } from '@api/modules/planning/planning.repository'
-import type { OccurrenceRef } from '@api/modules/planning/planning.types'
+import type {
+  OccurrenceChangeRef,
+  OccurrenceRef,
+  OccurrenceUpdate,
+} from '@api/modules/planning/planning.types'
 import { lockExistingOccurrence } from '@api/modules/planning/use-cases/occurrences'
 import { type OccurrenceStatus, occurrenceChangeSchema } from '@financas/shared'
 
-export async function skipOccurrence(db: Database, ref: OccurrenceRef): Promise<void> {
-  await moveStatus(db, ref, 'pending', 'skipped')
+export async function skipOccurrence(
+  db: Database,
+  { userId, ...ref }: OccurrenceChangeRef,
+): Promise<void> {
+  await moveStatus(db, ref, 'pending', { status: 'skipped', skippedByUserId: userId })
 }
 
 export async function unskipOccurrence(db: Database, ref: OccurrenceRef): Promise<void> {
-  await moveStatus(db, ref, 'skipped', 'pending')
+  await moveStatus(db, ref, 'skipped', { status: 'pending', skippedByUserId: null })
 }
 
 export async function changeOccurrenceAmount(
@@ -33,12 +40,12 @@ async function moveStatus(
   db: Database,
   { workspaceId, occurrenceId }: OccurrenceRef,
   from: OccurrenceStatus,
-  to: OccurrenceStatus,
+  change: OccurrenceUpdate,
 ): Promise<void> {
   await withWorkspace(db, workspaceId, async (tx) => {
     await lockInStatus(tx, occurrenceId, from)
     await audited(tx, occurrenceAuditTarget(workspaceId, occurrenceId), 'update', () =>
-      updateOccurrence(tx, occurrenceId, { status: to }),
+      updateOccurrence(tx, occurrenceId, change),
     )
   })
 }

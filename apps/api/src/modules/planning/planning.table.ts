@@ -158,6 +158,7 @@ export const plannedOccurrences = pgTable(
     amountCents: bigint({ mode: 'number' }).notNull(),
     status: occurrenceStatus().notNull().default('pending'),
     matchedEntryId: uuid(),
+    skippedByUserId: uuid().references(() => users.id),
     ...timestamps(),
   },
   (table) => [
@@ -180,6 +181,10 @@ export const plannedOccurrences = pgTable(
     check(
       'planned_occurrences_matched_has_entry',
       sql`(${table.status} = 'matched') = (${table.matchedEntryId} is not null)`,
+    ),
+    check(
+      'planned_occurrences_skipper_only_when_skipped',
+      sql`${table.skippedByUserId} is null or ${table.status} = 'skipped'`,
     ),
     tenantIsolation('planned_occurrences', table.workspaceId),
   ],
