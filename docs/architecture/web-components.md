@@ -101,6 +101,12 @@ from outside.
   and a colour; the stock `cn` would drop one of them as a conflict.
 - Compound states use `compoundVariants` (`{ variant: 'danger', size: 'sm', class: … }`).
 - Every class in a recipe is a token utility (`web-design-tokens.md` → The rule).
+- **Long text** (`../product/requirements/ui-standards.md` → Long text): a list item's name and
+  its second line get `line-clamp-2 break-words` in a `min-w-0` column; the amount beside them is
+  `shrink-0` (and `Amount` never wraps), so the text shrinks instead. A component with a list
+  row has a "Texto longo" example and a test with the long placeholders and 7-digit amount of
+  `testing/long-text.ts` (`expectClampedToTwoLines`, `expectWholeAmount`). The Home's budget
+  rows become the desktop table only from 1280 px (`xl`), where "R$ X de R$ Y" fits on one line.
 
 ## Forms
 React Hook Form v7 + `zodResolver` with the **schemas from `@financas/shared`** (ADR 0005,
@@ -340,7 +346,9 @@ passes the overview's numbers.
   lower, as measured on its PNG); the category ones (`ctb`) 64 px rows,
   a 16 px gap and the 12.5 px semibold header. A column can hide its label from view
   (`isLabelHidden`); the actions column (`isActions`) puts the "⋯" at the end, 8 px past the column
-  like the design. The `entries` and `trash` cells stay on one line and end in "…" when narrow. A row `{ key, band }` is a band across the columns (the entries table's days:
+  like the design. In every layout but the category ones (whose chips wrap), a text cell stays on
+  one line and ends in "…" when narrow, the name takes up to 2 lines, and the amount column keeps
+  at least 8.75 rem (`--grid-template-columns-table-*`), so a 7-digit amount is never cut. A row `{ key, band }` is a band across the columns (the entries table's days:
   13 px bold ink, 14 px above). `DataTableName` takes `badges` after the name (`EntryMarks`) and
   `artName` when the drawing comes from something else (an entry's category). A row whose menu is open (`data-popup-open` in its last cell) gets the `page`
   highlight; an `isOpen` row (a category showing all its chips) gets it too, top-aligned.
@@ -635,8 +643,8 @@ component here, so the form, and later the account, card and planning forms, sha
   badge, the dates, the total (`Amount` size `total`), the "Pago" / "Falta pagar" tiles, the
   "Seu" / "De terceiros" bar (an SVG with a surface gap) with its legend, an optional `note` (the
   future or paid sentence) and the `action` slot ("Pagar fatura").
-- `InvoiceFacts` (`components/finance/invoice-facts`): a `dl` in three columns, the invoice
-  detail header (total, pago, falta pagar, seu, de terceiros, situação).
+- `InvoiceFacts` (`components/finance/invoice-facts`): a `dl` in two columns on the phone and
+  three from 768 px (so 7-digit amounts fit), the invoice detail header (total, pago, falta pagar, seu, de terceiros, situação).
 - `InvoiceLine` (`components/finance/invoice-line`): one line of an invoice: the date, the
   category drawing, the description with the installment `Badge` ("1/3"), the grey detail ("R$
   160,00 de terceiros") and the amount; `isPayment` uses the `invoice-paid` drawing and the
@@ -797,8 +805,8 @@ online with `asChild` are translated to `render`.
   read as "em 3 parcelas"; the contacts icon, "Dividido com contatos"; the clip, "Tem
   comprovante"), the grey second line (`detail`, "Mercado › Feira · Conta X · por Member B"), and
   the amount by `direction`: `out` in ink with "−", `in` in `mint-ink` with "+", `neutral` (a
-  transfer, an invoice payment) muted with no sign. Nothing is cut: the description and the second
-  line wrap. With `search`, the part of the description that matched (ignoring case and accents,
+  transfer, an invoice payment) muted with no sign. The description and the second line take at most
+  2 lines each, then "…"; the amount never wraps or shrinks. With `search`, the part of the description that matched (ignoring case and accents,
   `partsMatching` in `lib/long-lists.ts`) is marked on `mint-soft`. The `link` element wraps the
   whole row. 64 px with a divider, as the design's `er`. `EntryMarks` (the marks) and
   `EntryAmount` (the amount by `direction`) are exported for the desktop table.
@@ -844,8 +852,8 @@ online with `asChild` are translated to `render`.
 - `AttachArea` (`components/finance/attach-area`): the dashed "Anexar comprovante · Foto ou PDF"
   button, where `ATT-01` starts.
 - `InstallmentRows` (`components/finance/installment-rows`): the "Parcelas" of an entry: one 52 px
-  row per installment ("1/3", the month and "vence 04/11", the invoice's status badge with its
-  dot, the amount, a chevron when it links to the invoice). More than three show three from
+  row per installment ("1/3", the month, then a second line that starts with the invoice's status
+  badge with its dot before "vence 04/11", the amount, a chevron when it links to the invoice). More than three show three from
   `start` (the screen picks the closed, the open and the next) and "Mostrar mais {n} parcelas".
 - `ShareRows` (`components/finance/share-rows`): "Dividido com contatos" in a detail: each contact
   (avatar, name) with the dotted leader to what they owe, a solid line, then "Sua parte" with its

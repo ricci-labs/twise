@@ -85,5 +85,20 @@ export const entryRowExamples: ComponentExamples = {
         </Card>
       ),
     },
+    {
+      name: 'Texto longo no celular',
+      render: () => (
+        <ul className="w-80 rounded-xl border border-border bg-surface px-3">
+          <EntryRow
+            description="Internet fibra 1 giga com TV e telefone"
+            detail="Casa › Internet · Conta Conjunta do Banco Exemplo · por Fulana de Tal dos Santos Silva"
+            art={{ name: 'Casa', icon: 'house' }}
+            amountCents={123456789}
+            direction="out"
+            installmentCount={12}
+          />
+        </ul>
+      ),
+    },
   ],
 }

@@ -1,5 +1,6 @@
 import { AccountRow } from '@web/components/finance/account-row/account-row'
 import { expectNoAccessibilityViolations } from '@web/testing/accessibility'
+import { expectClampedToTwoLines, expectWholeAmount, LONG_TEXT } from '@web/testing/long-text'
 import { describe, expect, it } from 'vitest'
 import { render } from 'vitest-browser-react'
 
@@ -46,5 +47,24 @@ describe('AccountRow', () => {
 
     expect(getComputedStyle(main).opacity).toBe('0.7')
     expect(main.textContent).toBe('FFeiraSubcategoria')
+  })
+
+  it('cuts a long name and detail at two lines and keeps the balance whole', async () => {
+    const screen = await render(
+      <ul className="w-80">
+        <AccountRow
+          name={`${LONG_TEXT.account} ${LONG_TEXT.description}`}
+          icon="wallet"
+          color={null}
+          detail={`Conta corrente · ${LONG_TEXT.person} · ${LONG_TEXT.account} · ${LONG_TEXT.person}`}
+          amountCents={LONG_TEXT.amountCents}
+        />
+      </ul>,
+    )
+    const row = screen.container.querySelector('[data-slot=account-row]') as HTMLElement
+
+    expectClampedToTwoLines(screen.getByText(LONG_TEXT.description, { exact: false }).element())
+    expectClampedToTwoLines(screen.getByText(LONG_TEXT.person, { exact: false }).element())
+    expectWholeAmount(row.querySelector('[data-slot=amount]') as HTMLElement, row)
   })
 })

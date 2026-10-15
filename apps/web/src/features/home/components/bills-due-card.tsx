@@ -80,9 +80,11 @@ function BillRow({ workspaceId, bill, canWrite, hasDivider }: BillRowProps) {
         {block.month}
       </span>
       <span className="flex min-w-0 flex-1 flex-col gap-0.5">
-        <span className="flex items-center justify-between gap-2">
-          <span className="truncate text-body font-semibold">{bill.description}</span>
-          <Amount cents={bill.amountCents} />
+        <span className="flex items-start justify-between gap-2">
+          <span className="line-clamp-2 min-w-0 text-body font-semibold break-words">
+            {bill.description}
+          </span>
+          <Amount cents={bill.amountCents} className="shrink-0" />
         </span>
         <span className="flex min-h-7.5 items-center justify-between gap-2">
           <span

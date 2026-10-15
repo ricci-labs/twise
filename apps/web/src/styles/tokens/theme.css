@@ -219,12 +219,13 @@
   --font-weight-heavy: 750;
 
   --grid-template-columns-table-accounts: minmax(0, 2.2fr) minmax(0, 1.3fr) minmax(0, 1fr)
-    minmax(0, 1fr) 2.75rem;
-  --grid-template-columns-table-cards: minmax(0, 2.2fr) minmax(0, 2.3fr) minmax(0, 1fr) 2.75rem;
+    minmax(8.75rem, 1fr) 2.75rem;
+  --grid-template-columns-table-cards: minmax(0, 2.2fr) minmax(0, 2.3fr) minmax(8.75rem, 1fr)
+    2.75rem;
   --grid-template-columns-table-invoices: minmax(0, 1.6fr) minmax(0, 1fr) minmax(0, 0.8fr)
-    minmax(0, 0.8fr) minmax(0, 1fr) minmax(0, 1fr) 5.625rem;
+    minmax(0, 0.8fr) minmax(0, 1fr) minmax(8.75rem, 1fr) 5.625rem;
   --grid-template-columns-table-lines: 5rem minmax(0, 2.6fr) minmax(0, 0.8fr) minmax(0, 1fr)
-    minmax(0, 1fr);
+    minmax(8.75rem, 1fr);
   --grid-template-columns-table-categories: minmax(0, 1.2fr) minmax(0, 3fr) 2.75rem;
   --grid-template-columns-table-incomes: minmax(0, 1.2fr) 7.5rem minmax(0, 2.8fr) 2.75rem;
   --grid-template-columns-table-entries: minmax(0, 2.4fr) minmax(0, 1.3fr) minmax(0, 1.1fr)

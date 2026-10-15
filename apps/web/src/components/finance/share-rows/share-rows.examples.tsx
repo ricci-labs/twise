@@ -19,5 +19,22 @@ export const shareRowsExamples: ComponentExamples = {
         </div>
       ),
     },
+    {
+      name: 'Texto longo no celular',
+      render: () => (
+        <div className="w-80">
+          <ShareRows
+            shares={[
+              {
+                key: 'c',
+                name: 'Fulana de Tal dos Santos Silva Internet fibra 1 giga',
+                amountCents: 123456789,
+              },
+            ]}
+            ownCents={123456789}
+          />
+        </div>
+      ),
+    },
   ],
 }

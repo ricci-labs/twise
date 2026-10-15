@@ -4,6 +4,7 @@ import type {
   EntryRowProps,
 } from '@web/components/finance/entry-row/entry-row.types'
 import { expectNoAccessibilityViolations } from '@web/testing/accessibility'
+import { expectClampedToTwoLines, expectWholeAmount, LONG_TEXT } from '@web/testing/long-text'
 import { describe, expect, it } from 'vitest'
 import { render } from 'vitest-browser-react'
 
@@ -74,5 +75,23 @@ describe('EntryRow', () => {
     await expect.element(link).toHaveAttribute('href', '#detalhe')
     await expect.poll(() => link.element().textContent).toMatch(/−R\$\s86,40/)
     await expectNoAccessibilityViolations(screen.container)
+  })
+
+  it('cuts a long description and detail at two lines and keeps the amount whole', async () => {
+    const screen = await render(
+      <ul className="w-80">
+        <EntryRow
+          {...MARKET}
+          description={LONG_TEXT.description}
+          detail={`${LONG_TEXT.account} · por ${LONG_TEXT.person}`}
+          amountCents={LONG_TEXT.amountCents}
+        />
+      </ul>,
+    )
+    const row = screen.container.querySelector('[data-slot=entry-row]') as HTMLElement
+
+    expectClampedToTwoLines(screen.getByText(LONG_TEXT.description).element())
+    expectClampedToTwoLines(screen.getByText(LONG_TEXT.account, { exact: false }).element())
+    expectWholeAmount(row.querySelector('[data-slot=amount]') as HTMLElement, row)
   })
 })

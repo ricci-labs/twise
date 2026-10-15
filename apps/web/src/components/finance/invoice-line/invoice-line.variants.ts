@@ -11,14 +11,14 @@ export const invoiceLineDateVariants = cva(
 export const invoiceLineTextVariants = cva('flex min-w-0 flex-1 flex-col')
 
 export const invoiceLineNameVariants = cva(
-  'flex min-w-0 items-center gap-1.5 text-choice font-semibold [&>span:first-child]:min-w-0',
+  'flex min-w-0 items-center gap-1.5 text-choice font-semibold [&>span:first-child]:line-clamp-2 [&>span:first-child]:min-w-0 [&>span:first-child]:break-words',
 )
 
 export const invoiceLineInstallmentVariants = cva(
   'inline-flex h-5 shrink-0 items-center rounded-full bg-sunken px-1.75 text-tab font-semibold text-ink-muted tabular-nums',
 )
 
-export const invoiceLineDetailVariants = cva('text-fine text-ink-muted')
+export const invoiceLineDetailVariants = cva('line-clamp-2 text-fine break-words text-ink-muted')
 
 export const invoiceLineValueVariants = cva(
   'shrink-0 text-choice font-bold whitespace-nowrap tabular-nums',

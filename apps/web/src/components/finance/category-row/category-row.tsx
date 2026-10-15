@@ -8,6 +8,7 @@ import {
   categoryRowDetailVariants,
   categoryRowLineVariants,
   categoryRowMainVariants,
+  categoryRowNameTextVariants,
   categoryRowNameVariants,
   categoryRowToggleVariants,
   categoryRowVariants,
@@ -32,7 +33,7 @@ export function CategoryRow({
       <CategoryArt name={name} icon={icon} size="list" />
       <div className="min-w-0">
         <p className={categoryRowNameVariants()}>
-          <span className="truncate">{name}</span>
+          <span className={categoryRowNameTextVariants()}>{name}</span>
           {badge}
         </p>
         {detail && <p className={categoryRowDetailVariants()}>{detail}</p>}

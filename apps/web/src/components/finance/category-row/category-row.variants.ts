@@ -10,7 +10,9 @@ export const categoryRowMainVariants = cva(
 
 export const categoryRowNameVariants = cva('flex min-w-0 items-center gap-2 text-row')
 
-export const categoryRowDetailVariants = cva('text-note text-ink-muted')
+export const categoryRowNameTextVariants = cva('line-clamp-2 min-w-0 break-words')
+
+export const categoryRowDetailVariants = cva('line-clamp-2 text-note break-words text-ink-muted')
 
 export const categoryRowToggleVariants = cva([
   'inline-flex min-h-9 shrink-0 cursor-pointer items-center gap-1 rounded-full bg-sunken px-2.5 text-toggle text-ink-muted outline-none',

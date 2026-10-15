@@ -64,17 +64,17 @@ export function BudgetsCard({
     >
       <div
         aria-hidden="true"
-        className="hidden grid-cols-12 items-center gap-4 pb-2 text-caption text-ink-muted lg:grid"
+        className="hidden grid-cols-12 items-center gap-4 pb-2 text-caption text-ink-muted xl:grid"
       >
         <span className="col-span-3">{messages.columns.category}</span>
-        <span className="col-span-4 inline-flex items-center gap-1.5">
+        <span className="col-span-3 inline-flex items-center gap-1.5">
           <span className="h-3 w-0.5 rounded-full bg-ink" />
           {messages.paceLegend}
         </span>
-        <span className="col-span-3 text-right">{messages.columns.amount}</span>
+        <span className="col-span-4 text-right">{messages.columns.amount}</span>
         <span className="col-span-2">{messages.columns.status}</span>
       </div>
-      <ul data-slot="budget-rows" className="flex flex-col gap-4 lg:gap-0">
+      <ul data-slot="budget-rows" className="flex flex-col gap-4 xl:gap-0">
         {lines.map((line) => (
           <BudgetRow
             key={line.categoryAccountId}
@@ -92,29 +92,29 @@ export function BudgetsCard({
 function BudgetRow({ line, name, icon, elapsedPercent }: BudgetRowProps) {
   const status = STATUS[line.status]
   return (
-    <li className="flex items-start gap-3 lg:grid lg:min-h-12 lg:grid-cols-12 lg:items-center lg:gap-4 lg:border-t lg:border-border lg:first:border-t-0">
-      <CategoryArt name={name} icon={icon} className="lg:size-8" />
-      <div className="flex min-w-0 flex-1 flex-col gap-1.5 lg:contents">
-        <div className="flex items-baseline justify-between gap-2 lg:contents">
+    <li className="flex items-start gap-3 xl:grid xl:min-h-12 xl:grid-cols-12 xl:items-center xl:gap-4 xl:border-t xl:border-border xl:first:border-t-0">
+      <CategoryArt name={name} icon={icon} className="xl:size-8" />
+      <div className="flex min-w-0 flex-1 flex-col gap-1.5 xl:contents">
+        <div className="flex flex-wrap items-baseline justify-between gap-x-2 xl:contents">
           <span
             data-slot="budget-name"
-            className="text-body font-semibold lg:order-1 lg:col-span-2"
+            className="line-clamp-2 min-w-0 text-body font-semibold break-words xl:order-1 xl:col-span-2"
           >
             {name}
           </span>
-          <span className="text-body-sm font-medium tabular-nums lg:order-3 lg:col-span-3 lg:text-right">
+          <span className="text-body-sm font-medium whitespace-nowrap tabular-nums xl:order-3 xl:col-span-4 xl:text-right">
             {messages.of(formatWholeReais(line.spentCents), formatWholeReais(line.limitCents))}
           </span>
         </div>
         <ProgressBar
-          className="lg:order-2 lg:col-span-4"
+          className="xl:order-2 xl:col-span-3"
           percent={line.limitCents > 0 ? (line.spentCents / line.limitCents) * FULL : 0}
           markPercent={elapsedPercent}
           tone={line.status}
         />
         <span
           className={cn(
-            'inline-flex items-center gap-1.5 text-body-sm font-semibold lg:order-4 lg:col-span-2',
+            'inline-flex items-center gap-1.5 text-body-sm font-semibold xl:order-4 xl:col-span-2',
             status.text,
           )}
         >

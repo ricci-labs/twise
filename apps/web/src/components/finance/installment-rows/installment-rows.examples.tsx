@@ -51,5 +51,13 @@ export const installmentRowsExamples: ComponentExamples = {
         </div>
       ),
     },
+    {
+      name: 'Valor de 7 dígitos no celular',
+      render: () => (
+        <div className="w-80">
+          <InstallmentRows rows={rows(3).map((row) => ({ ...row, amountCents: 123456789 }))} />
+        </div>
+      ),
+    },
   ],
 }

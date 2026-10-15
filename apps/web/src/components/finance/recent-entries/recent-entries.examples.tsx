@@ -7,6 +7,12 @@ const ENTRIES = [
   { key: 'uber', description: 'Uber', icon: 'transport', amountCents: 2390 },
   { key: 'rent', description: 'Aluguel', icon: 'house', amountCents: 180_000 },
   { key: 'bakery', description: 'Padaria', icon: 'groceries', amountCents: 1850 },
+  {
+    key: 'internet',
+    description: 'Internet fibra 1 giga com TV e telefone',
+    icon: 'house',
+    amountCents: 123_456_789,
+  },
 ]
 
 function Example() {

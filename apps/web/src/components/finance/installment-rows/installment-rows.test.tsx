@@ -33,4 +33,13 @@ describe('InstallmentRows', () => {
     await expect.element(screen.getByText('3/3')).toBeVisible()
     await expect.element(screen.getByRole('button')).not.toBeInTheDocument()
   })
+
+  it('starts the second line with the status, under the month', async () => {
+    const screen = await render(<InstallmentRows rows={rows(1)} />)
+    const month = screen.getByText('Mês 1').element().getBoundingClientRect()
+    const status = screen.getByText('Futura').element().getBoundingClientRect()
+
+    expect(status.top).toBeGreaterThanOrEqual(month.bottom)
+    expect(status.left).toBe(month.left)
+  })
 })

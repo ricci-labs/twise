@@ -12,10 +12,12 @@ export const shareRowVariants = cva('flex items-center gap-2 text-body-sm font-m
   defaultVariants: { isOwn: false },
 })
 
-export const shareNameVariants = cva('inline-flex items-center gap-1.5')
+export const shareNameVariants = cva('inline-flex min-w-0 items-center gap-1.5')
+
+export const shareNameTextVariants = cva('line-clamp-2 min-w-0 break-words')
 
 export const shareLeaderVariants = cva('mt-1 min-w-4 flex-1 self-center dotted-leader')
 
-export const shareAmountVariants = cva('font-emphasis tabular-nums')
+export const shareAmountVariants = cva('shrink-0 font-emphasis tabular-nums')
 
 export const shareNoteVariants = cva('mt-2.5 text-note text-ink-muted')

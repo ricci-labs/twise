@@ -8,6 +8,7 @@ import type {
 } from '@web/components/finance/installment-rows/installment-rows.types'
 import {
   installmentAmountVariants,
+  installmentDetailVariants,
   installmentDueVariants,
   installmentMonthVariants,
   installmentNumberVariants,
@@ -60,11 +61,13 @@ function InstallmentRowView({ row }: InstallmentRowViewProps) {
       <span className={installmentNumberVariants()}>{row.number}</span>
       <span className={installmentTextVariants()}>
         <span className={installmentMonthVariants()}>{row.month}</span>
-        <span className={installmentDueVariants()}>{row.due}</span>
+        <span className={installmentDetailVariants()}>
+          <Badge tone={row.status.tone} size="status" hasDot>
+            {row.status.label}
+          </Badge>
+          <span className={installmentDueVariants()}>{row.due}</span>
+        </span>
       </span>
-      <Badge tone={row.status.tone} size="status" hasDot>
-        {row.status.label}
-      </Badge>
       <Amount cents={row.amountCents} size="inherit" className={installmentAmountVariants()} />
       {row.link && <ChevronRight aria-hidden="true" />}
     </>
