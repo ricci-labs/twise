@@ -624,6 +624,18 @@ component here, so the form, and later the account, card and planning forms, sha
   in a radio group (arrow keys move), the first on its weekday's column; today in `mint-ink` with a
   dot, the chosen day with the selection outline. It opens on the chosen day's month; a pick
   closes it. "Outra data" of the new entry opens it under the chip.
+- `CalendarMonth` (`components/inputs/calendar-month`): the month that `CalendarSheet` and
+  `RangeCalendar` share: the ‹ › arrows and the title, the weekdays from Sunday and the grid.
+  `selection` `single` is the radio group of 42 px circles above; `range` shows whole weeks (the
+  days of the months around included, so a range can cross months), each day a button with
+  `aria-pressed` on the first and last (rounded squares with the selection outline), the days
+  between on `sunken` from edge to edge, today in ink with the dot.
+- `RangeCalendar` (`components/inputs/range-calendar`): picks a range (the entries' "Escolher
+  datas"): "De" → "Até" on top (the one still to pick is white with the ink outline and
+  "Escolha", the others `sunken`; a `status`, so the choice is read), the hint "Toque no primeiro e
+  no último dia. Hoje tem o pontinho.", then the `CalendarMonth`. The first tap sets "De", the
+  second "Até"; a day before "De", or any tap once both are set, starts again from it. The caller
+  owns the footer ("Ver de 5 a 20 out").
 - `DayField` (`components/inputs/day-field`): a day of the month, the field the card form uses
   twice side by side: calendar icon, "Escolha" or "Dia 25", chevron. It opens a `Sheet` (a popover under
   the field on the desktop) with the 31 days as 42 px circles, seven per row (the chosen one with the ink outline and heavy weight;

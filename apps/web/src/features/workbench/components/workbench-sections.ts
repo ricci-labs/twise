@@ -68,6 +68,7 @@ import { fieldGroupExamples } from '@web/components/forms/field-group'
 import { formFieldExamples } from '@web/components/forms/form-field'
 import { lockedFieldExamples } from '@web/components/forms/locked-field'
 import { twiseIconExamples } from '@web/components/icons/twise-icon'
+import { calendarMonthExamples } from '@web/components/inputs/calendar-month'
 import { calendarSheetExamples } from '@web/components/inputs/calendar-sheet'
 import { choiceChipsExamples } from '@web/components/inputs/choice-chips'
 import { colorPickerExamples } from '@web/components/inputs/color-picker'
@@ -79,6 +80,7 @@ import { passwordInputExamples } from '@web/components/inputs/password-input'
 import { pickerFieldExamples } from '@web/components/inputs/picker-field'
 import { pickerSheetExamples } from '@web/components/inputs/picker-sheet'
 import { radioCardListExamples } from '@web/components/inputs/radio-card-list'
+import { rangeCalendarExamples } from '@web/components/inputs/range-calendar'
 import { searchInputExamples } from '@web/components/inputs/search-input'
 import { selectExamples } from '@web/components/inputs/select'
 import { stepperExamples } from '@web/components/inputs/stepper'
@@ -118,6 +120,8 @@ export const workbenchSections: readonly ComponentExamples[] = [
   archivedToggleExamples,
   autoFillTipExamples,
   calendarSheetExamples,
+  calendarMonthExamples,
+  rangeCalendarExamples,
   selectExamples,
   textAreaExamples,
   confirmDialogExamples,
