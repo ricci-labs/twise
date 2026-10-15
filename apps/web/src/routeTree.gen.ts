@@ -33,6 +33,8 @@ import { Route as AppWWorkspaceIdTrashRouteImport } from './routes/_app/w/$works
 import { Route as AppWWorkspaceIdAccountsTrashRouteImport } from './routes/_app/w/$workspaceId/accounts_.trash'
 import { Route as AppWWorkspaceIdCardsCardRouteImport } from './routes/_app/w/$workspaceId/cards_/$card'
 import { Route as AppWWorkspaceIdEntriesEntryRouteImport } from './routes/_app/w/$workspaceId/entries_/$entry'
+import { Route as AppWWorkspaceIdPlanningIndexRouteImport } from './routes/_app/w/$workspaceId/planning/index'
+import { Route as AppWWorkspaceIdPlanningTabRouteImport } from './routes/_app/w/$workspaceId/planning/$tab'
 import { Route as AppWWorkspaceIdCardsCardInvoicesInvoiceRouteImport } from './routes/_app/w/$workspaceId/cards_/$card_/invoices/$invoice'
 
 const AppRoute = AppRouteImport.update({
@@ -157,6 +159,18 @@ const AppWWorkspaceIdEntriesEntryRoute =
     path: '/entries/$entry',
     getParentRoute: () => AppWWorkspaceIdRouteRoute,
   } as any)
+const AppWWorkspaceIdPlanningIndexRoute =
+  AppWWorkspaceIdPlanningIndexRouteImport.update({
+    id: '/planning/',
+    path: '/planning/',
+    getParentRoute: () => AppWWorkspaceIdRouteRoute,
+  } as any)
+const AppWWorkspaceIdPlanningTabRoute =
+  AppWWorkspaceIdPlanningTabRouteImport.update({
+    id: '/planning/$tab',
+    path: '/planning/$tab',
+    getParentRoute: () => AppWWorkspaceIdRouteRoute,
+  } as any)
 const AppWWorkspaceIdCardsCardInvoicesInvoiceRoute =
   AppWWorkspaceIdCardsCardInvoicesInvoiceRouteImport.update({
     id: '/cards_/$card_/invoices/$invoice',
@@ -187,6 +201,8 @@ export interface FileRoutesByFullPath {
   '/w/$workspaceId/accounts/trash': typeof AppWWorkspaceIdAccountsTrashRoute
   '/w/$workspaceId/cards/$card': typeof AppWWorkspaceIdCardsCardRoute
   '/w/$workspaceId/entries/$entry': typeof AppWWorkspaceIdEntriesEntryRoute
+  '/w/$workspaceId/planning/$tab': typeof AppWWorkspaceIdPlanningTabRoute
+  '/w/$workspaceId/planning/': typeof AppWWorkspaceIdPlanningIndexRoute
   '/w/$workspaceId/cards/$card/invoices/$invoice': typeof AppWWorkspaceIdCardsCardInvoicesInvoiceRoute
 }
 export interface FileRoutesByTo {
@@ -211,6 +227,8 @@ export interface FileRoutesByTo {
   '/w/$workspaceId/accounts/trash': typeof AppWWorkspaceIdAccountsTrashRoute
   '/w/$workspaceId/cards/$card': typeof AppWWorkspaceIdCardsCardRoute
   '/w/$workspaceId/entries/$entry': typeof AppWWorkspaceIdEntriesEntryRoute
+  '/w/$workspaceId/planning/$tab': typeof AppWWorkspaceIdPlanningTabRoute
+  '/w/$workspaceId/planning': typeof AppWWorkspaceIdPlanningIndexRoute
   '/w/$workspaceId/cards/$card/invoices/$invoice': typeof AppWWorkspaceIdCardsCardInvoicesInvoiceRoute
 }
 export interface FileRoutesById {
@@ -239,6 +257,8 @@ export interface FileRoutesById {
   '/_app/w/$workspaceId/accounts_/trash': typeof AppWWorkspaceIdAccountsTrashRoute
   '/_app/w/$workspaceId/cards_/$card': typeof AppWWorkspaceIdCardsCardRoute
   '/_app/w/$workspaceId/entries_/$entry': typeof AppWWorkspaceIdEntriesEntryRoute
+  '/_app/w/$workspaceId/planning/$tab': typeof AppWWorkspaceIdPlanningTabRoute
+  '/_app/w/$workspaceId/planning/': typeof AppWWorkspaceIdPlanningIndexRoute
   '/_app/w/$workspaceId/cards_/$card_/invoices/$invoice': typeof AppWWorkspaceIdCardsCardInvoicesInvoiceRoute
 }
 export interface FileRouteTypes {
@@ -266,6 +286,8 @@ export interface FileRouteTypes {
     | '/w/$workspaceId/accounts/trash'
     | '/w/$workspaceId/cards/$card'
     | '/w/$workspaceId/entries/$entry'
+    | '/w/$workspaceId/planning/$tab'
+    | '/w/$workspaceId/planning/'
     | '/w/$workspaceId/cards/$card/invoices/$invoice'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -290,6 +312,8 @@ export interface FileRouteTypes {
     | '/w/$workspaceId/accounts/trash'
     | '/w/$workspaceId/cards/$card'
     | '/w/$workspaceId/entries/$entry'
+    | '/w/$workspaceId/planning/$tab'
+    | '/w/$workspaceId/planning'
     | '/w/$workspaceId/cards/$card/invoices/$invoice'
   id:
     | '__root__'
@@ -317,6 +341,8 @@ export interface FileRouteTypes {
     | '/_app/w/$workspaceId/accounts_/trash'
     | '/_app/w/$workspaceId/cards_/$card'
     | '/_app/w/$workspaceId/entries_/$entry'
+    | '/_app/w/$workspaceId/planning/$tab'
+    | '/_app/w/$workspaceId/planning/'
     | '/_app/w/$workspaceId/cards_/$card_/invoices/$invoice'
   fileRoutesById: FileRoutesById
 }
@@ -499,6 +525,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppWWorkspaceIdEntriesEntryRouteImport
       parentRoute: typeof AppWWorkspaceIdRouteRoute
     }
+    '/_app/w/$workspaceId/planning/': {
+      id: '/_app/w/$workspaceId/planning/'
+      path: '/planning'
+      fullPath: '/w/$workspaceId/planning/'
+      preLoaderRoute: typeof AppWWorkspaceIdPlanningIndexRouteImport
+      parentRoute: typeof AppWWorkspaceIdRouteRoute
+    }
+    '/_app/w/$workspaceId/planning/$tab': {
+      id: '/_app/w/$workspaceId/planning/$tab'
+      path: '/planning/$tab'
+      fullPath: '/w/$workspaceId/planning/$tab'
+      preLoaderRoute: typeof AppWWorkspaceIdPlanningTabRouteImport
+      parentRoute: typeof AppWWorkspaceIdRouteRoute
+    }
     '/_app/w/$workspaceId/cards_/$card_/invoices/$invoice': {
       id: '/_app/w/$workspaceId/cards_/$card_/invoices/$invoice'
       path: '/cards/$card/invoices/$invoice'
@@ -520,6 +560,8 @@ interface AppWWorkspaceIdRouteRouteChildren {
   AppWWorkspaceIdAccountsTrashRoute: typeof AppWWorkspaceIdAccountsTrashRoute
   AppWWorkspaceIdCardsCardRoute: typeof AppWWorkspaceIdCardsCardRoute
   AppWWorkspaceIdEntriesEntryRoute: typeof AppWWorkspaceIdEntriesEntryRoute
+  AppWWorkspaceIdPlanningTabRoute: typeof AppWWorkspaceIdPlanningTabRoute
+  AppWWorkspaceIdPlanningIndexRoute: typeof AppWWorkspaceIdPlanningIndexRoute
   AppWWorkspaceIdCardsCardInvoicesInvoiceRoute: typeof AppWWorkspaceIdCardsCardInvoicesInvoiceRoute
 }
 
@@ -534,6 +576,8 @@ const AppWWorkspaceIdRouteRouteChildren: AppWWorkspaceIdRouteRouteChildren = {
   AppWWorkspaceIdAccountsTrashRoute: AppWWorkspaceIdAccountsTrashRoute,
   AppWWorkspaceIdCardsCardRoute: AppWWorkspaceIdCardsCardRoute,
   AppWWorkspaceIdEntriesEntryRoute: AppWWorkspaceIdEntriesEntryRoute,
+  AppWWorkspaceIdPlanningTabRoute: AppWWorkspaceIdPlanningTabRoute,
+  AppWWorkspaceIdPlanningIndexRoute: AppWWorkspaceIdPlanningIndexRoute,
   AppWWorkspaceIdCardsCardInvoicesInvoiceRoute:
     AppWWorkspaceIdCardsCardInvoicesInvoiceRoute,
 }

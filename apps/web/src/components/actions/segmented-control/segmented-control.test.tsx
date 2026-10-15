@@ -25,4 +25,24 @@ describe('SegmentedControl', () => {
     expect(onValueChange).toHaveBeenCalledWith('y')
     await expectNoAccessibilityViolations(screen.container)
   })
+
+  it('marks the chosen tab with the 2 px ink outline and a bold label when asked', async () => {
+    const screen = await render(
+      <SegmentedControl
+        label="Partes"
+        selection="outline"
+        options={[
+          { value: 'a', label: 'Previstos' },
+          { value: 'b', label: 'Metas' },
+        ]}
+        value="a"
+        onValueChange={vi.fn()}
+      />,
+    )
+    const chosen = getComputedStyle(screen.getByRole('button', { name: 'Previstos' }).element())
+    const other = getComputedStyle(screen.getByRole('button', { name: 'Metas' }).element())
+    expect(Number(chosen.fontWeight)).toBeGreaterThan(Number(other.fontWeight))
+    expect(chosen.boxShadow).toContain('inset')
+    await expectNoAccessibilityViolations(screen.container)
+  })
 })
