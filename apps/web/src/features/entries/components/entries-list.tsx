@@ -185,6 +185,7 @@ function EntriesDays({
                   <Link
                     to="/w/$workspaceId/entries/$entry"
                     params={{ workspaceId, entry: row.id }}
+                    search={true}
                   />
                 }
               />

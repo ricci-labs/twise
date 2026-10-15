@@ -39,7 +39,7 @@ where it's used.
 | `display/` | `Amount`, `StatusBadge`, `Avatar`, `ListItem`, `Card`, `StatCard`, `ThresholdProgress`, `Tabs`, `Accordion`, `DataList` (table on desktop, list on mobile), `LoadMore`, `Tooltip`, `HelpPopover`, `FilterChips`, `CategoryIcon`, `ArchivedToggle` |
 | `charts/` | `BarChart`, `ForecastChart`, `DonutChart`, each with its text alternative |
 | `navigation/` | `BottomBar`, `Sidebar`, `TopBar`, `WorkspaceSwitcher`, `BackLink`, `Breadcrumb`, `ScrollArrows` |
-| `layout/` | `AppShell`, `FormOverlay`, `Page`, `PageHeader`, `Section`, `Stack`, `Grid` |
+| `layout/` | `AppShell`, `FormOverlay`, `SidePanel`, `Page`, `PageHeader`, `Section`, `Stack`, `Grid` |
 | `finance/` | `StatHero`, `InsightCard`, `InvoiceCard`, `InvoicePreview`, `SharesList`, `RecentEntries`, `AccountRow`, `AccountGroup`, `CardBlock`, `InvoiceSummary`, `InvoiceLine`, `EntryRow`, `OccurrenceRow`, `ContactRow`, `ChargePreview`, `AmountSplitEditor` |
 | `brand/` | `Logo`, `OwlScene` (the layered owl scenes and their motion), `AppSplash` |
 | `icons/` | `TwiseIcon` and the icon registries (see Icons) |
@@ -518,6 +518,10 @@ component here, so the form, and later the account, card and planning forms, sha
   centred, with the handle, the 104 px loose drawing, the 22 px display title, the muted text, the
   full-width primary action and a `tertiary` "Agora não" that closes it (16 px under it); from
   1024 px it is a `ConfirmDialog` with the same words (the desktop has no design of its own).
+- `SidePanel` (`components/layout/side-panel`, Base UI `Dialog`): a 480 px panel on the right over
+  the dimmed page (the entry's detail on the desktop): the title, the `actions` and the close "X" in
+  a white header with a bottom border, the body on the page colour, scrolling. Esc, the "X" and a
+  press outside call `onClose`; the screen owns the route.
 - `FormOverlay` (`components/layout/form-overlay`, Base UI `Dialog`): a form that opens over the
   screen: full screen on the phone (no tab bar), with "X" and the title on top; from 1024 px a
   dialog 880 px wide, 40 px from the top, over the dimmed page, the title on the left and "X" on the

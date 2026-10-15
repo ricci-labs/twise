@@ -300,6 +300,7 @@ export const entriesMessages = {
     detail: {
       title: 'Lançamento',
       back: 'Voltar para Lançamentos',
+      close: 'Fechar',
       notFound: 'Este lançamento foi excluído ou editado.',
       notFoundText: 'Ele pode ter ganhado uma nova versão. Volte para a lista para ver o atual.',
       failed: 'Não foi possível carregar o lançamento.',

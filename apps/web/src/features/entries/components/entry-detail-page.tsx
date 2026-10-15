@@ -17,6 +17,7 @@ import { ShareRows } from '@web/components/finance/share-rows'
 import { TransferFlow } from '@web/components/finance/transfer-flow'
 import { TwiseIcon } from '@web/components/icons/twise-icon'
 import { PageFrame } from '@web/components/layout/page-frame'
+import { SidePanel } from '@web/components/layout/side-panel'
 import { SubPageHeader } from '@web/components/layout/sub-page-header'
 import {
   accountsQueryOptions,
@@ -31,7 +32,8 @@ import { entryDetailOf } from '@web/features/entries/components/entry-detail-vie
 import { EntryEdit } from '@web/features/entries/components/entry-edit'
 import { entriesMessages } from '@web/features/entries/entries.messages'
 import type {
-  DetailHeaderProps,
+  DetailEditLinkProps,
+  DetailFrameProps,
   DetailValueViewProps,
   EntryDetailBodyProps,
   EntryDetailPageProps,
@@ -43,7 +45,7 @@ import { ApiError } from '@web/lib/api/api-error'
 import { formatMonthTitle } from '@web/lib/format/calendar'
 import { hasPermission } from '@web/lib/permissions'
 import { queryKeys } from '@web/lib/query-keys'
-import { useMemo } from 'react'
+import { cloneElement, useMemo } from 'react'
 
 const messages = entriesMessages.list.detail
 const NOT_FOUND = 'ENTRY_NOT_FOUND'
@@ -64,11 +66,7 @@ export function EntryDetailPage(props: EntryDetailPageProps) {
         entryId,
       ),
   })
-  return (
-    <PageFrame className="gap-3 lg:gap-4">
-      <EntryDetailState {...props} entry={entry} />
-    </PageFrame>
-  )
+  return <EntryDetailState {...props} entry={entry} />
 }
 
 function EntryDetailState({
@@ -77,8 +75,7 @@ function EntryDetailState({
 }: EntryDetailPageProps & { entry: ReturnType<typeof useQuery<ListedEntry>> }) {
   if (entry.error instanceof ApiError && entry.error.code === NOT_FOUND) {
     return (
-      <>
-        <DetailHeader workspaceId={props.workspaceId} />
+      <DetailFrame {...props}>
         <EmptyBlock
           icon="receipt"
           title={messages.notFound}
@@ -94,28 +91,26 @@ function EntryDetailState({
             </Button>
           }
         />
-      </>
+      </DetailFrame>
     )
   }
   if (entry.isError && !entry.data) {
     return (
-      <>
-        <DetailHeader workspaceId={props.workspaceId} />
+      <DetailFrame {...props}>
         <SectionError
           message={messages.failed}
           errorRef={entry.error instanceof ApiError ? entry.error.ref : null}
           isRetrying={entry.isFetching}
           onRetry={() => void entry.refetch()}
         />
-      </>
+      </DetailFrame>
     )
   }
   if (!entry.data) {
     return (
-      <>
-        <DetailHeader workspaceId={props.workspaceId} />
+      <DetailFrame {...props}>
         <ListSkeleton rows={4} />
-      </>
+      </DetailFrame>
     )
   }
   return <EntryDetailBody {...props} entry={entry.data} />
@@ -146,39 +141,35 @@ function EntryDetailBody(props: EntryDetailBodyProps) {
   )
   if (!view) {
     return (
-      <>
-        <DetailHeader workspaceId={workspaceId} />
+      <DetailFrame {...props}>
         <ListSkeleton rows={4} />
-      </>
+      </DetailFrame>
     )
   }
+  const isEditing = props.isEditing && hasPermission(permissions, 'entries', 'update')
   return (
     <>
-      <DetailHeader
-        workspaceId={workspaceId}
-        actions={
-          <>
-            {hasPermission(permissions, 'entries', 'update') && (
-              <Link
-                to="."
-                search={(previous) => ({ ...previous, edit: true })}
-                aria-label={entriesMessages.edit.open}
-                className="grid size-touch place-items-center rounded-full text-ink outline-none hover:bg-sunken focus-visible:ring-2 focus-visible:ring-focus-ring"
-              >
-                <TwiseIcon name="edit" size="md" />
-              </Link>
-            )}
-            <EntryDetailActions
-              workspaceId={workspaceId}
-              permissions={permissions}
-              entry={entry}
-              isOnClosedInvoice={view.isOnClosedInvoice}
-            />
-          </>
-        }
-      />
-      <EntryDetailSections {...props} view={view} />
-      {props.isEditing && hasPermission(permissions, 'entries', 'update') && (
+      {!(isEditing && props.frame === 'panel') && (
+        <DetailFrame
+          {...props}
+          actions={
+            <>
+              {hasPermission(permissions, 'entries', 'update') && (
+                <DetailEditLink frame={props.frame} />
+              )}
+              <EntryDetailActions
+                workspaceId={workspaceId}
+                permissions={permissions}
+                entry={entry}
+                isOnClosedInvoice={view.isOnClosedInvoice}
+              />
+            </>
+          }
+        >
+          <EntryDetailSections {...props} view={view} />
+        </DetailFrame>
+      )}
+      {isEditing && (
         <EntryEdit
           workspaceId={workspaceId}
           entry={entry}
@@ -291,14 +282,56 @@ function EntryDetailSections({ workspaceId, permissions, entry, view }: EntryDet
   )
 }
 
-function DetailHeader({ workspaceId, actions }: DetailHeaderProps) {
+function DetailFrame({
+  frame = 'page',
+  workspaceId,
+  onClose,
+  actions,
+  children,
+}: DetailFrameProps) {
+  if (frame === 'panel' && onClose) {
+    return (
+      <SidePanel
+        title={messages.title}
+        closeLabel={messages.close}
+        onClose={onClose}
+        actions={actions}
+      >
+        {children}
+      </SidePanel>
+    )
+  }
   return (
-    <SubPageHeader
-      title={messages.title}
-      backLabel={messages.back}
-      back={<Link to="/w/$workspaceId/entries" params={{ workspaceId }} />}
-      actions={actions}
-    />
+    <PageFrame className="gap-3 lg:gap-4">
+      <SubPageHeader
+        title={messages.title}
+        backLabel={messages.back}
+        back={<Link to="/w/$workspaceId/entries" params={{ workspaceId }} search={true} />}
+        actions={actions}
+      />
+      {children}
+    </PageFrame>
+  )
+}
+
+function DetailEditLink({ frame = 'page' }: DetailEditLinkProps) {
+  const link = <Link to="." search={(previous) => ({ ...previous, edit: true })} />
+  if (frame === 'panel') {
+    return (
+      <Button variant="secondary" size="sm" render={link}>
+        <TwiseIcon name="edit" />
+        {entriesMessages.edit.open}
+      </Button>
+    )
+  }
+  return cloneElement(
+    link,
+    {
+      'aria-label': entriesMessages.edit.open,
+      className:
+        'grid size-touch place-items-center rounded-full text-ink outline-none hover:bg-sunken focus-visible:ring-2 focus-visible:ring-focus-ring',
+    } as object,
+    <TwiseIcon name="edit" size="md" />,
   )
 }
 

@@ -42,7 +42,7 @@ export function EntryDetailActions({
       await action.mutateAsync({ action: 'delete', entryId: entry.id, reason })
       setIsAskingReason(false)
       if (!isInList) {
-        await navigate({ to: '/w/$workspaceId/entries', params: { workspaceId } })
+        await navigate({ to: '/w/$workspaceId/entries', params: { workspaceId }, search: true })
       }
       showToast(messages.deleted, {
         tone: 'success',

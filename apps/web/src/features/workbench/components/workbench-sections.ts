@@ -104,6 +104,7 @@ import { momentScreenExamples } from '@web/components/layout/moment-screen'
 import { pageFrameExamples } from '@web/components/layout/page-frame'
 import { pageHeaderExamples } from '@web/components/layout/page-header'
 import { sheetExamples } from '@web/components/layout/sheet'
+import { sidePanelExamples } from '@web/components/layout/side-panel'
 import { subPageHeaderExamples } from '@web/components/layout/sub-page-header'
 import { appSidebarExamples } from '@web/components/navigation/app-sidebar'
 import { bottomTabBarExamples } from '@web/components/navigation/bottom-tab-bar'
@@ -121,6 +122,7 @@ export const workbenchSections: readonly ComponentExamples[] = [
   pickerFieldExamples,
   dayFieldExamples,
   pickerSheetExamples,
+  sidePanelExamples,
   filterButtonExamples,
   checkboxMenuExamples,
   stepperExamples,

@@ -71,7 +71,7 @@ const TRANSFER = listedEntry(
 
 async function openDetail(
   entry: unknown,
-  { access = workspaceAccess, answers = {} as Record<string, FakeAnswer> } = {},
+  { access = workspaceAccess, answers = {} as Record<string, FakeAnswer>, search = '' } = {},
 ) {
   fakeApi({
     'GET /api/auth/me': () =>
@@ -97,7 +97,7 @@ async function openDetail(
     ...answers,
   })
   const app = createApp(
-    createMemoryHistory({ initialEntries: [`/w/${WORKSPACE_ID}/entries/${ENTRY_ID}`] }),
+    createMemoryHistory({ initialEntries: [`/w/${WORKSPACE_ID}/entries/${ENTRY_ID}${search}`] }),
   )
   await render(<AppProviders app={app} />)
   return app
@@ -163,6 +163,29 @@ describe('ENT-03 entry detail', () => {
       .element(page.getByRole('link', { name: 'Pagou a conta prevista Aluguel de outubro' }))
       .toBeVisible()
     await expect.element(page.getByText('Member A, pela web')).toBeVisible()
+  })
+
+  it('opens on the desktop as a panel over the list, which keeps its period', async () => {
+    await page.viewport(1440, 900)
+    const app = await openDetail(DINNER, {
+      search: '?period=2026-09',
+      answers: { [`GET ${BASE}/entries/suggestions`]: () => Response.json([]) },
+    })
+
+    const panel = page.getByRole('dialog', { name: 'Lançamento' })
+    await expect.element(panel.getByText('Jantar de aniversário')).toBeVisible()
+    await expect.element(panel.getByRole('region', { name: 'Dividido com contatos' })).toBeVisible()
+    await expectNoAccessibilityViolations(panel.element())
+
+    await panel.getByRole('link', { name: 'Editar' }).click()
+    await expect.element(page.getByRole('dialog', { name: 'Editar lançamento' })).toBeVisible()
+    await page.getByRole('button', { name: 'Fechar' }).first().click()
+    await expect.poll(() => app.router.state.location.search).toEqual({ period: '2026-09' })
+
+    await panel.getByRole('button', { name: 'Fechar' }).click()
+    await expect.poll(() => app.router.state.location.pathname).toBe(`/w/${WORKSPACE_ID}/entries`)
+    expect(app.router.state.location.search).toEqual({ period: '2026-09' })
+    await expect.element(page.getByRole('heading', { name: 'Setembro', level: 2 })).toBeVisible()
   })
 
   it('says the entry is gone and leads back to the list', async () => {
