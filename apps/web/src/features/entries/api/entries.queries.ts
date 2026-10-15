@@ -1,12 +1,21 @@
-import { type EntryTypeWithCategory, FREQUENT_ENTRIES_MAX_LIMIT } from '@financas/shared'
-import { queryOptions } from '@tanstack/react-query'
+import {
+  ENTRIES_PAGE_SIZE,
+  type EntryFilter,
+  type EntryTypeWithCategory,
+  FREQUENT_ENTRIES_MAX_LIMIT,
+} from '@financas/shared'
+import { infiniteQueryOptions, queryOptions } from '@tanstack/react-query'
 import { unwrap } from '@web/lib/api/unwrap'
 import { apiClient } from '@web/lib/api-client'
 import { queryKeys } from '@web/lib/query-keys'
 
 const workspaceApi = apiClient.api.workspaces[':workspaceId']
+type EntriesPageQuery = Parameters<typeof workspaceApi.entries.$get>[0]['query']
 const LATEST_ENTRIES_LIMIT = '50'
 const SUGGESTIONS_FRESH_MS = 60_000
+const PERIODS_FRESH_MS = 60 * 60 * 1000
+const LIST_PAGE_SIZE = String(ENTRIES_PAGE_SIZE)
+const NO_CURSOR: string | undefined = undefined
 
 export function accountsQueryOptions(workspaceId: string) {
   return queryOptions({
@@ -84,6 +93,32 @@ export function membersQueryOptions(workspaceId: string) {
   })
 }
 
+export function entriesListQueryOptions(workspaceId: string, filter: EntryFilter) {
+  return infiniteQueryOptions({
+    queryKey: [...queryKeys.workspace(workspaceId), 'entries', 'list', filter] as const,
+    queryFn: ({ pageParam }) => fetchEntriesPage(workspaceId, filter, pageParam),
+    initialPageParam: NO_CURSOR,
+    getNextPageParam: (page) => page.nextCursor ?? undefined,
+  })
+}
+
+export function entrySummaryQueryOptions(workspaceId: string, filter: EntryFilter) {
+  return queryOptions({
+    queryKey: [...queryKeys.workspace(workspaceId), 'entries', 'summary', filter] as const,
+    queryFn: () =>
+      unwrap(workspaceApi.entries.summary.$get({ param: { workspaceId }, query: queryOf(filter) })),
+  })
+}
+
+export function periodsQueryOptions(workspaceId: string, year: number | undefined) {
+  return queryOptions({
+    queryKey: [...queryKeys.workspace(workspaceId), 'periods', year ?? 'current'] as const,
+    queryFn: () =>
+      unwrap(workspaceApi.periods.$get({ param: { workspaceId }, query: year ? { year } : {} })),
+    staleTime: PERIODS_FRESH_MS,
+  })
+}
+
 export function latestEntriesQueryOptions(workspaceId: string) {
   return queryOptions({
     queryKey: [...queryKeys.workspace(workspaceId), 'entries', 'latest'] as const,
@@ -142,4 +177,32 @@ export function fetchLatestEntries(workspaceId: string) {
   return unwrap(
     workspaceApi.entries.$get({ param: { workspaceId }, query: { limit: LATEST_ENTRIES_LIMIT } }),
   )
+}
+
+export function fetchEntriesPage(
+  workspaceId: string,
+  filter: EntryFilter,
+  cursor: string | undefined,
+) {
+  return unwrap(
+    workspaceApi.entries.$get({
+      param: { workspaceId },
+      query: {
+        ...queryOf(filter),
+        limit: LIST_PAGE_SIZE,
+        ...(cursor ? { cursor } : {}),
+      } as EntriesPageQuery,
+    }),
+  )
+}
+
+function queryOf(filter: EntryFilter): Record<string, string> {
+  const query: Record<string, string> = {}
+  for (const [key, value] of Object.entries(filter)) {
+    if (value === undefined || value === false) {
+      continue
+    }
+    query[key] = Array.isArray(value) ? value.join(',') : String(value)
+  }
+  return query
 }
