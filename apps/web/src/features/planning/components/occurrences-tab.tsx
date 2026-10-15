@@ -14,6 +14,7 @@ import {
   occurrencesQueryOptions,
   periodsQueryOptions,
 } from '@web/features/planning/api/planning.queries'
+import { OccurrenceActions } from '@web/features/planning/components/occurrence-actions'
 import {
   occurrenceGroupsOf,
   summaryTilesOf,
@@ -21,9 +22,9 @@ import {
 import { PlanningPeriod, yearOf } from '@web/features/planning/components/planning-period'
 import { planningMessages } from '@web/features/planning/planning.messages'
 import type {
+  GroupProps,
   OccurrenceContext,
-  OccurrenceGroupView,
-  OccurrenceList,
+  OccurrencesProps,
   OccurrencesTabProps,
   PlanningSearch,
 } from '@web/features/planning/planning.types'
@@ -97,21 +98,42 @@ function OccurrencesBody({
       />
     )
   }
-  return <Occurrences list={occurrences.data} context={context} />
+  return (
+    <Occurrences
+      workspaceId={workspaceId}
+      list={occurrences.data}
+      context={context}
+      canUpdate={hasPermission(permissions, 'planning', 'update')}
+    />
+  )
 }
 
-function Occurrences({ list, context }: { list: OccurrenceList; context: OccurrenceContext }) {
+function Occurrences({ workspaceId, list, context, canUpdate }: OccurrencesProps) {
+  const byId = new Map(list.items.map((item) => [item.id, item]))
+  const linkOf = (id: string) => {
+    const occurrence = byId.get(id)
+    if (!canUpdate || !occurrence) {
+      return undefined
+    }
+    return (
+      <OccurrenceActions
+        workspaceId={workspaceId}
+        occurrence={occurrence}
+        accountName={context.accounts.get(occurrence.sourceAccountId)?.name ?? ''}
+      />
+    )
+  }
   return (
     <>
       <PlanSummaryTiles label={messages.summaryLabel} tiles={summaryTilesOf(list)} />
       {occurrenceGroupsOf(list, context).map((group) => (
-        <Group key={group.key} group={group} />
+        <Group key={group.key} group={group} linkOf={linkOf} />
       ))}
     </>
   )
 }
 
-function Group({ group }: { group: OccurrenceGroupView }) {
+function Group({ group, linkOf }: GroupProps) {
   const [isOpen, setIsOpen] = useState(false)
   const shown = isOpen ? group.rows : group.rows.slice(0, SHOWN_PER_GROUP)
   const hiddenCount = group.rows.length - shown.length
@@ -127,7 +149,7 @@ function Group({ group }: { group: OccurrenceGroupView }) {
       }
     >
       {shown.map(({ id, ...row }) => (
-        <OccurrenceRow key={id} {...row} />
+        <OccurrenceRow key={id} {...row} link={linkOf(id)} />
       ))}
     </OccurrenceGroup>
   )

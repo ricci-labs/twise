@@ -3,7 +3,7 @@ import { cva } from 'class-variance-authority'
 export const occurrenceRowVariants = cva('flex items-center gap-3 border-border not-first:border-t')
 
 export const occurrenceRowMainVariants = cva(
-  'flex min-h-16 min-w-0 flex-1 items-center gap-3 py-2.5 text-ink outline-none focus-visible:ring-2 focus-visible:ring-focus-ring',
+  'flex min-h-16 min-w-0 flex-1 items-center gap-3 py-2.5 text-start text-ink outline-none focus-visible:ring-2 focus-visible:ring-focus-ring',
 )
 
 export const occurrenceDateVariants = cva(

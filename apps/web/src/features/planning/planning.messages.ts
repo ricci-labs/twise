@@ -40,5 +40,33 @@ export const planningMessages = {
     emptyText: 'As contas fixas aparecem aqui todo mês. Cadastre a primeira.',
     newRecurrence: 'Nova conta fixa',
     failed: 'Não deu para carregar os previstos.',
+    actions: {
+      trigger: (description: string) => `Ações de ${description}`,
+      plannedFor: (date: string, amount: string, account: string) =>
+        `Prevista para ${date} · ${amount} · ${account}`,
+      paidWith: (date: string, account: string) => `Pago em ${date} com a ${account}`,
+      receivedIn: (date: string, account: string) => `Recebido em ${date} na ${account}`,
+      doneOn: (date: string) => `Feita em ${date}`,
+      amount: 'Mudar o valor deste',
+      skip: 'Pular este mês',
+      seeEntry: 'Ver lançamento',
+      unmatch: 'Desfazer pagamento',
+      unskip: 'Voltar a esperar',
+    },
+    skippedToast: (description: string, date: string) => `${description} de ${date} pulada.`,
+    unmatchedToast: (description: string, date: string) =>
+      `${description} de ${date} voltou a esperar o pagamento.`,
+    undo: 'Desfazer',
+    amount: {
+      title: 'Mudar o valor deste',
+      description: (description: string, date: string) => `${description} · previsto para ${date}`,
+      label: 'Valor deste mês',
+      help: (amount: string) => `Não muda a conta fixa: os próximos meses continuam com ${amount}.`,
+      required: 'Informe o valor deste mês.',
+      invalid: 'Informe um valor maior que zero, como 180,00.',
+      cancel: 'Cancelar',
+      save: 'Salvar valor',
+      saved: 'Valor deste mês salvo.',
+    },
   },
 } as const

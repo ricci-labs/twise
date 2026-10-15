@@ -41,6 +41,12 @@ describe('OccurrenceRow', () => {
     await expectNoAccessibilityViolations(screen.container)
   })
 
+  it('keeps its text at the start when the row is a button', async () => {
+    const screen = await inList({})
+    const button = screen.getByRole('button').element()
+    expect(getComputedStyle(button).textAlign).toBe('start')
+  })
+
   it('starts the second line with the status badge', async () => {
     const screen = await inList({ badge: 'overdue', isOverdue: true })
     const badge = screen.getByText('Atrasado').element()
