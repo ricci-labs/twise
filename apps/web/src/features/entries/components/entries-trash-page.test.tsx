@@ -193,6 +193,27 @@ describe('ENT-05 entries trash', () => {
       .toHaveAttribute('aria-pressed', 'true')
   })
 
+  it('marks Lançamentos on the phone tabs and Lixeira in the desktop menu', async () => {
+    await openTrash()
+
+    const tabs = page.getByRole('navigation', { name: 'Navegação' })
+    await expect
+      .element(tabs.getByRole('link', { name: 'Lançamentos' }))
+      .toHaveAttribute('aria-current', 'page')
+    await expect
+      .element(tabs.getByRole('button', { name: 'Mais' }))
+      .not.toHaveAttribute('aria-current')
+
+    await page.viewport(1440, 900)
+    const menu = page.getByRole('navigation', { name: 'Menu principal' })
+    await expect
+      .element(menu.getByRole('link', { name: 'Lixeira' }))
+      .toHaveAttribute('aria-current', 'page')
+    await expect
+      .element(menu.getByRole('link', { name: 'Lançamentos' }))
+      .not.toHaveAttribute('aria-current')
+  })
+
   it('tells a viewer the trash is not for them', async () => {
     await openTrash({ access: () => accessAs('Leitor', VIEWER_PERMISSIONS) })
 

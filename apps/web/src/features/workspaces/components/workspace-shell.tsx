@@ -15,6 +15,7 @@ import { MoreSheet } from '@web/features/workspaces/components/more-sheet'
 import {
   currentAreaOf,
   hasNewEntryButton,
+  tabAreaOf,
   workspaceNavigation,
 } from '@web/features/workspaces/components/workspace-navigation'
 import { WorkspaceSwitcher } from '@web/features/workspaces/components/workspace-switcher'
@@ -50,14 +51,16 @@ export function WorkspaceShell({
   const isDesktop = useMediaQuery(DESKTOP_QUERY)
   const [isMoreOpen, setIsMoreOpen] = useState(false)
   const canInstall = useCanInstall()
-  const navigation = workspaceNavigation(workspaceId, access.permissions, currentAreaOf(pathname))
+  const currentArea = currentAreaOf(pathname)
+  const navigation = workspaceNavigation(workspaceId, access.permissions, currentArea)
+  const tabs = workspaceNavigation(workspaceId, access.permissions, tabAreaOf(currentArea))
   const moreItems = canInstall ? [...navigation.more, INSTALL_ITEM] : navigation.more
   const moreTab: NavItem = {
     key: 'more',
     label: messages.nav.more,
     icon: 'menu',
     render: <button type="button" onClick={() => setIsMoreOpen(true)} />,
-    isCurrent: navigation.more.some((item) => item.isCurrent),
+    isCurrent: tabs.more.some((item) => item.isCurrent),
   }
 
   return (
@@ -91,7 +94,7 @@ export function WorkspaceShell({
         banner={<OfflineBanner message={messages.offline} aside={<LastUpdated />} />}
         bottomBar={
           <>
-            <BottomTabBar items={[...navigation.main.slice(0, MAIN_TABS), moreTab]} />
+            <BottomTabBar items={[...tabs.main.slice(0, MAIN_TABS), moreTab]} />
             <MoreSheet
               items={moreItems}
               accountActions={accountActions}
@@ -113,7 +116,7 @@ export function WorkspaceShell({
       >
         <MobileTopBar access={access} />
         {notice}
-        {isReadOnly(access.permissions) && (!isDesktop || currentAreaOf(pathname) !== null) && (
+        {isReadOnly(access.permissions) && (!isDesktop || currentArea !== null) && (
           <Tip tone="readOnly" className="mx-4 mt-2 lg:mx-8 lg:mt-7 lg:self-start">
             {messages.readOnly}
           </Tip>
