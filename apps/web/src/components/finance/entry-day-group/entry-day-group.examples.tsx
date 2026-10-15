@@ -1,5 +1,5 @@
 import { EntryDayGroup } from '@web/components/finance/entry-day-group/entry-day-group'
-import { EntryRow } from '@web/components/finance/entry-row/entry-row'
+import { EntryRow } from '@web/components/finance/entry-row'
 import type { ComponentExamples } from '@web/lib/examples.types'
 
 export const entryDayGroupExamples: ComponentExamples = {

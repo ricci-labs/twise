@@ -1,5 +1,5 @@
 import { EntryDayGroup } from '@web/components/finance/entry-day-group/entry-day-group'
-import { EntryRow } from '@web/components/finance/entry-row/entry-row'
+import { EntryRow } from '@web/components/finance/entry-row'
 import { expectNoAccessibilityViolations } from '@web/testing/accessibility'
 import { describe, expect, it } from 'vitest'
 import { render } from 'vitest-browser-react'
