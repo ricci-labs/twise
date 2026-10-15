@@ -899,3 +899,10 @@ online with `asChild` are translated to `render`.
   calendar drawing, one row per date (date, weekday, amount, "≈ " for an estimate); a date that moved
   says why on its own line under it ("dia 10 é domingo, foi para segunda"), never over the amount.
   The form words the notes from `plannedDatesBetween` (`@financas/shared`).
+- `BudgetRow` (`components/finance/budget-row`): one budget: the loose drawing, the name (one line
+  with "…"), "**R$ X** de R$ Y" (moves whole under the name when it does not fit), the Home's
+  `ProgressBar` with the pace mark, the status with its icon and words (the screen words it), and
+  the largest subcategory with "+N" (a button; `moreHint` names it for screen readers) that opens
+  the budget. `actions` takes the row's "⋯".
+- `BudgetSummary` (`components/finance/budget-summary`): "Gasto nas categorias com orçamento": the
+  spending in the display face, "de R$ 3.200,00", the thick bar with the pace mark and its legend.

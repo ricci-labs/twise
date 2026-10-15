@@ -49,6 +49,8 @@ import { toastExamples } from '@web/components/feedback/toast'
 import { accountGroupExamples } from '@web/components/finance/account-group'
 import { accountRowExamples } from '@web/components/finance/account-row'
 import { attachAreaExamples } from '@web/components/finance/attach-area'
+import { budgetRowExamples } from '@web/components/finance/budget-row'
+import { budgetSummaryExamples } from '@web/components/finance/budget-summary'
 import { cardBlockExamples } from '@web/components/finance/card-block'
 import { categoryRowExamples } from '@web/components/finance/category-row'
 import { cyclePreviewExamples } from '@web/components/finance/cycle-preview'
@@ -182,6 +184,8 @@ export const workbenchSections: readonly ComponentExamples[] = [
   planSummaryTilesExamples,
   nextDatesPreviewExamples,
   matchQuestionExamples,
+  budgetRowExamples,
+  budgetSummaryExamples,
   recurrenceRowExamples,
   invoiceMonthStripExamples,
   invoiceSummaryExamples,
