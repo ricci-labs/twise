@@ -1,6 +1,6 @@
 export { EntriesPage } from '@web/features/entries/components/entries-page'
 export { EntriesTrashPage } from '@web/features/entries/components/entries-trash-page'
-export { EntryDetailPage } from '@web/features/entries/components/entry-detail-page'
+export { EntryDetailScreen } from '@web/features/entries/components/entry-detail-screen'
 export { NewEntry } from '@web/features/entries/components/new-entry'
 export {
   entriesListSearchSchema,

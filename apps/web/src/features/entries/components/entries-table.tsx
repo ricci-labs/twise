@@ -52,7 +52,11 @@ export function EntriesTable({
               )
             }
             link={
-              <Link to="/w/$workspaceId/entries/$entry" params={{ workspaceId, entry: row.id }} />
+              <Link
+                to="/w/$workspaceId/entries/$entry"
+                params={{ workspaceId, entry: row.id }}
+                search={true}
+              />
             }
           />,
           row.columns.category,

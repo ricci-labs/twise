@@ -506,6 +506,23 @@ export type EntryDetailPageProps = {
   isEditing: boolean
   onEditClose: () => void
   onEdited: (entryId: string) => void
+  frame?: DetailFrameKind
+  onClose?: () => void
+}
+
+export type DetailFrameKind = 'page' | 'panel'
+
+export type DetailFrameProps = Pick<EntryDetailPageProps, 'workspaceId' | 'frame' | 'onClose'> & {
+  actions?: ReactNode
+  children: ReactNode
+}
+
+export type DetailEditLinkProps = Pick<EntryDetailPageProps, 'frame'>
+
+export type EntryDetailScreenProps = Omit<EntryDetailPageProps, 'frame' | 'onClose'> & {
+  listSearch: EntriesListSearch
+  onListSearchChange: (change: Partial<EntriesListSearch>) => void
+  onClose: () => void
 }
 
 export type EntryDetailBodyProps = EntryDetailPageProps & {
@@ -542,11 +559,6 @@ export type DeleteReasonSheetProps = {
   isDeleting: boolean
   onOpenChange: (isOpen: boolean) => void
   onDelete: (reason: string | undefined) => void
-}
-
-export type DetailHeaderProps = {
-  workspaceId: string
-  actions?: ReactNode
 }
 
 export type EntryFormFieldsProps = {

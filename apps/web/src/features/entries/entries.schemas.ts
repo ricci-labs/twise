@@ -46,10 +46,6 @@ const TRANSFER = 'transfer'
 
 const installmentSchema = z.number().int().min(1).max(MAX_INSTALLMENTS)
 
-export const entryDetailSearchSchema = z.object({
-  edit: z.boolean().optional().catch(undefined),
-})
-
 export const entryDetailsFormSchema = z.object({
   description: z.string().trim().min(1).max(ENTRY_DESCRIPTION_MAX_LENGTH),
   notes: z.string().trim().max(ENTRY_NOTES_MAX_LENGTH),
@@ -179,4 +175,8 @@ export const entriesListSearchSchema = z.object({
   spentBy: z.uuid().optional().catch(undefined),
   shared: z.boolean().optional().catch(undefined),
   back: z.enum(['accounts', 'categories']).optional().catch(undefined),
+})
+
+export const entryDetailSearchSchema = entriesListSearchSchema.extend({
+  edit: z.boolean().optional().catch(undefined),
 })
