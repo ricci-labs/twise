@@ -23,18 +23,18 @@
   },
   "dependencies": {
     "@financas/shared": "workspace:*",
-    "@hono/node-server": "^2.1.1",
+    "@hono/node-server": "^2.1.4",
     "@opentelemetry/api": "^1.9.1",
-    "@opentelemetry/exporter-prometheus": "^0.222.0",
-    "@opentelemetry/resources": "^2.11.0",
+    "@opentelemetry/exporter-prometheus": "^0.223.0",
+    "@opentelemetry/resources": "^2.12.0",
     "@opentelemetry/sdk-metrics": "^2.11.0",
     "croner": "^10.0.1",
-    "drizzle-orm": "^0.45.3",
-    "hono": "^4.13.9",
-    "nodemailer": "^10.0.11",
-    "pg": "^8.23.0",
-    "pino": "^10.3.1",
-    "zod": "^4.6.5"
+    "drizzle-orm": "^0.45.4",
+    "hono": "^4.13.13",
+    "nodemailer": "^10.1.0",
+    "pg": "^8.23.1",
+    "pino": "^10.4.0",
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@types/node": "^24.19.0",
