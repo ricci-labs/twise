@@ -17,6 +17,7 @@ export function InvoiceLinesPreview({
   card,
   invoice,
   lines,
+  counts,
 }: InvoiceLinesPreviewProps) {
   return (
     <section aria-labelledby="invoice-lines-title" className="flex flex-col gap-1.5">
@@ -24,7 +25,7 @@ export function InvoiceLinesPreview({
         <h2 id="invoice-lines-title" className="font-display text-section-title">
           {messages.lines}
         </h2>
-        {invoice.invoiceId && lines && lines.length > 0 && (
+        {invoice.invoiceId && counts && counts.all > 0 && (
           <TextLink
             className="text-label"
             render={
@@ -34,7 +35,7 @@ export function InvoiceLinesPreview({
               />
             }
           >
-            {messages.seeAll(lines.length)}
+            {messages.seeAll(counts.all)}
           </TextLink>
         )}
       </div>

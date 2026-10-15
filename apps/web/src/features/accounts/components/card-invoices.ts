@@ -13,7 +13,6 @@ import { accountsMessages } from '@web/features/accounts/accounts.messages'
 import type {
   CardInvoice,
   CardSummary,
-  InvoiceFilter,
   InvoiceLineItem,
   InvoiceLineView,
   InvoiceState,
@@ -90,24 +89,10 @@ export function invoiceLinesOf(
   })
 }
 
-export function filteredLines(
-  lines: readonly InvoiceLineView[],
-  filter: InvoiceFilter,
-): readonly InvoiceLineView[] {
-  if (filter === 'own') {
-    return lines.filter((line) => !line.isPayment && !line.isFronted)
-  }
-  if (filter === 'fronted') {
-    return lines.filter((line) => line.isFronted)
-  }
-  return lines
-}
-
 export function paidNoteOf(
-  lines: readonly InvoiceLineItem[] | undefined,
+  payment: InvoiceLineItem | null,
   accounts: readonly LedgerAccount[] | undefined,
 ): string | undefined {
-  const payment = lines?.findLast((line) => line.entryType === INVOICE_PAYMENT)
   if (!payment) {
     return undefined
   }

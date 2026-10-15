@@ -16,7 +16,13 @@ import type {
   InvoiceTotal,
   WorkspaceCard,
 } from '@api/modules/ledger/ledger.types'
-import { parseIsoDate, toYearMonthLabel } from '@financas/shared'
+import {
+  type InvoiceLinePage,
+  type InvoiceLineQuery,
+  invoiceLinePageOf,
+  parseIsoDate,
+  toYearMonthLabel,
+} from '@financas/shared'
 
 export function listAccountBalances(db: Database, workspaceId: string): Promise<AccountBalance[]> {
   return withWorkspace(db, workspaceId, (tx) => selectAccountBalances(tx))
@@ -55,15 +61,17 @@ export function listInvoiceTotals(
 export function listInvoiceLines(
   db: Database,
   { workspaceId, cardAccountId, invoiceId }: CardInvoiceRef,
-): Promise<InvoiceLine[]> {
+  query: InvoiceLineQuery,
+): Promise<InvoiceLinePage<InvoiceLine>> {
   return withWorkspace(db, workspaceId, async (tx) => {
     if (!(await findInvoiceOfCard(tx, invoiceId, cardAccountId))) {
       throw new NotFoundError('INVOICE_NOT_FOUND', `Invoice ${invoiceId} not found`)
     }
     const lines = await selectInvoiceLines(tx, cardAccountId, invoiceId)
-    return lines.map(({ cardAmountCents, ...line }) => ({
+    const signed = lines.map(({ cardAmountCents, ...line }) => ({
       ...line,
       amountCents: -cardAmountCents,
     }))
+    return invoiceLinePageOf(signed, query)
   })
 }

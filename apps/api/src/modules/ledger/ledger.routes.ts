@@ -43,6 +43,7 @@ import {
   entryParamsSchema,
   entrySuggestionQuerySchema,
   frequentEntryQuerySchema,
+  invoiceLineQuerySchema,
   invoiceParamsSchema,
   newAccountSchema,
   newCardSchema,
@@ -177,10 +178,12 @@ function cardRoutes({ db }: LedgerRouteDeps) {
       '/:cardId/invoices/:invoiceId/lines',
       authorize('cards', 'view'),
       pathParams(invoiceParamsSchema, 'INVOICE_NOT_FOUND'),
+      queryParams(invoiceLineQuerySchema, 'INVOICE_LINE_QUERY_INVALID'),
       async (c) => {
         const { workspaceId } = currentWorkspace(c)
         const { cardId, invoiceId } = c.req.valid('param')
-        return c.json(await listInvoiceLines(db, { workspaceId, cardAccountId: cardId, invoiceId }))
+        const invoice = { workspaceId, cardAccountId: cardId, invoiceId }
+        return c.json(await listInvoiceLines(db, invoice, c.req.valid('query')))
       },
     )
 }

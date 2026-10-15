@@ -5,6 +5,7 @@ import { connectTestDatabases } from '@api/testing/database'
 import { createFixtures } from '@api/testing/fixtures'
 import { addMemberWithSystemRole, loggedInUser, requestsAs } from '@api/testing/http'
 import type { SessionRequests } from '@api/testing/testing.types'
+import type { InvoiceLinePage } from '@financas/shared'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
 const databases = connectTestDatabases()
@@ -195,7 +196,11 @@ describe('GET /cards/:cardId/invoices/:invoiceId/lines', () => {
       `${workspacePath}/cards/${lineCardId}/invoices/${first?.invoiceId}/lines`,
     )
     expect(response.status).toBe(200)
-    const lines = (await response.json()) as InvoiceLine[]
+    const page = (await response.json()) as InvoiceLinePage<InvoiceLine>
+    const lines = page.items
+    expect(page.counts).toEqual({ all: 3, own: 2, fronted: 0 })
+    expect(page.lastPayment?.description).toBe('Pagamento parcial')
+    expect(page.nextCursor).toBeNull()
     expect(
       lines.map((line) => [
         line.description,
@@ -205,10 +210,33 @@ describe('GET /cards/:cardId/invoices/:invoiceId/lines', () => {
         line.counterpartAccountId,
       ]),
     ).toEqual([
-      ['Geladeira', 1, 3, 100_000, categoryId],
-      ['Farmácia', 1, 1, 5_000, categoryId],
       ['Pagamento parcial', null, 1, -50_000, checkingAccountId],
+      ['Farmácia', 1, 1, 5_000, categoryId],
+      ['Geladeira', 1, 3, 100_000, categoryId],
     ])
+
+    const linesPath = `${workspacePath}/cards/${lineCardId}/invoices/${first?.invoiceId}/lines`
+    const firstPage = (await (
+      await viewer.get(`${linesPath}?limit=2`)
+    ).json()) as InvoiceLinePage<InvoiceLine>
+    expect(firstPage.items.map((line) => line.description)).toEqual([
+      'Pagamento parcial',
+      'Farmácia',
+    ])
+    const rest = (await (
+      await viewer.get(`${linesPath}?limit=2&cursor=${firstPage.nextCursor}`)
+    ).json()) as InvoiceLinePage<InvoiceLine>
+    expect([rest.items.map((line) => line.description), rest.nextCursor]).toEqual([
+      ['Geladeira'],
+      null,
+    ])
+    const own = (await (
+      await viewer.get(`${linesPath}?filter=own`)
+    ).json()) as InvoiceLinePage<InvoiceLine>
+    expect(own.items.map((line) => line.description)).toEqual(['Farmácia', 'Geladeira'])
+
+    const refused = await viewer.get(`${linesPath}?filter=mine`)
+    expect([refused.status, await codeOf(refused)]).toEqual([400, 'INVOICE_LINE_QUERY_INVALID'])
   })
 
   it('answers 404 for an invoice of another card and for malformed ids', async () => {
@@ -284,9 +312,9 @@ describe('own vs fronted on card invoices', () => {
       [30_000, 10_000, 20_000],
     ])
 
-    const lines = (await (
+    const { items: lines } = (await (
       await owner.get(`${workspacePath}/cards/${cardId}/invoices/${invoices[0]?.invoiceId}/lines`)
-    ).json()) as { description: string; amountCents: number; frontedCents: number }[]
+    ).json()) as InvoiceLinePage<InvoiceLine>
     expect(
       lines.map(({ description, amountCents, frontedCents }) => [
         description,
@@ -294,8 +322,8 @@ describe('own vs fronted on card invoices', () => {
         frontedCents,
       ]),
     ).toEqual([
-      ['TV', 30_000, 10_000],
       ['Farmácia', 5_000, 0],
+      ['TV', 30_000, 10_000],
     ])
   })
 })

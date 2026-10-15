@@ -1,4 +1,11 @@
-import type { CardChange, NewAccountInput, NewCardInput, Permission } from '@financas/shared'
+import type {
+  CardChange,
+  InvoiceLineCounts,
+  InvoiceLineFilter,
+  NewAccountInput,
+  NewCardInput,
+  Permission,
+} from '@financas/shared'
 import type { ItemAction } from '@web/components/actions/item-actions'
 import type { InvoiceMonth } from '@web/components/finance/invoice-month-strip'
 import type { BackLinkProps } from '@web/components/layout/sub-page-header'
@@ -32,7 +39,9 @@ export type CardSummary = Awaited<ReturnType<typeof fetchCards>>[number]
 export type UpcomingInvoice = Awaited<ReturnType<typeof fetchUpcomingInvoices>>[number]
 export type StoredInvoice = Awaited<ReturnType<typeof fetchInvoices>>[number]
 
-export type InvoiceLineItem = Awaited<ReturnType<typeof fetchInvoiceLines>>[number]
+export type InvoiceLinesPage = Awaited<ReturnType<typeof fetchInvoiceLines>>
+
+export type InvoiceLineItem = InvoiceLinesPage['items'][number]
 
 export type WorkspaceMember = Awaited<ReturnType<typeof fetchMembers>>[number]
 
@@ -424,7 +433,7 @@ export type InvoiceLineView = {
   isFronted: boolean
 }
 
-export type InvoiceFilter = 'all' | 'own' | 'fronted'
+export type InvoiceFilter = InvoiceLineFilter
 
 export type CardInvoicesPageProps = CardsPageProps & {
   cardId: string
@@ -443,14 +452,15 @@ export type CardInvoicesLoadedProps = CardsPageProps & {
 }
 
 export type InvoiceLinesTableProps = {
-  lines: readonly InvoiceLineView[] | undefined
+  workspaceId: string
+  card: CardSummary
+  invoice: CardInvoice
 }
 
 export type CardInvoicesDesktopProps = CardsPageProps & {
   card: CardSummary
   invoice: CardInvoice
   months: readonly InvoiceMonth[]
-  lines: readonly InvoiceLineView[] | undefined
   onAll: (event: MouseEvent<HTMLButtonElement>) => void
 }
 
@@ -477,6 +487,7 @@ export type InvoiceLinesPreviewProps = {
   card: CardSummary
   invoice: CardInvoice
   lines: readonly InvoiceLineView[] | undefined
+  counts: InvoiceLineCounts | undefined
 }
 
 export type InvoiceYearPickerProps = {
@@ -492,7 +503,23 @@ export type InvoiceYearPickerProps = {
 export type InvoiceDetailProps = CardsPageProps & {
   card: CardSummary
   invoice: CardInvoice
-  lines: readonly InvoiceLineView[]
+}
+
+export type InvoiceLinesState = {
+  lines: readonly InvoiceLineView[] | undefined
+  counts: InvoiceLineCounts | undefined
+  lastPayment: InvoiceLineItem | null
+  hasMore: boolean
+  isLoadingMore: boolean
+  loadMore: () => void
+  error: Error | null
+  isRetrying: boolean
+  retry: () => void
+}
+
+export type InvoiceLinesBodyProps = {
+  filter: InvoiceFilter
+  lines: InvoiceLinesState
 }
 
 export type InvoiceLineListProps = {

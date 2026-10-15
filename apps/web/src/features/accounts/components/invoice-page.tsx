@@ -1,8 +1,10 @@
 import { formatBrl } from '@financas/shared'
 import { useQuery } from '@tanstack/react-query'
 import { Link } from '@tanstack/react-router'
+import { ShowMoreButton } from '@web/components/actions/show-more-button'
 import { Badge } from '@web/components/display/badge'
 import { Alert } from '@web/components/feedback/alert'
+import { ListSkeleton } from '@web/components/feedback/list-skeleton'
 import { SectionError } from '@web/components/feedback/section-error'
 import { SectionSkeleton } from '@web/components/feedback/section-skeleton'
 import { InvoiceFacts } from '@web/components/finance/invoice-facts'
@@ -14,19 +16,16 @@ import type {
   CardSummary,
   InvoiceDetailProps,
   InvoiceFilter,
+  InvoiceLinesBodyProps,
   InvoicePageProps,
   StoredInvoice,
 } from '@web/features/accounts/accounts.types'
 import {
-  accountsQueryOptions,
   cardsQueryOptions,
-  invoiceLinesQueryOptions,
   invoicesQueryOptions,
 } from '@web/features/accounts/api/accounts.queries'
 import {
   cardInvoicesOf,
-  filteredLines,
-  invoiceLinesOf,
   isClosedState,
   stateLabelOf,
   stateToneOf,
@@ -37,6 +36,7 @@ import { CardPageFrame } from '@web/features/accounts/components/card-page-frame
 import { CardPageHeader } from '@web/features/accounts/components/card-page-header'
 import { InvoiceLineList } from '@web/features/accounts/components/invoice-line-list'
 import { PayInvoiceButton } from '@web/features/accounts/components/pay-invoice-button'
+import { useInvoiceLines } from '@web/features/accounts/hooks/use-invoice-lines'
 import { usePageTitle } from '@web/hooks/use-page-title'
 import { ApiError } from '@web/lib/api/api-error'
 import { formatMonthName, formatShortDate } from '@web/lib/format/calendar'
@@ -51,12 +51,10 @@ const NOT_FOUND_CODES = new Set(['CARD_NOT_FOUND', 'INVOICE_NOT_FOUND'])
 export function InvoicePage({ workspaceId, permissions, cardId, invoiceId }: InvoicePageProps) {
   const cards = useQuery(cardsQueryOptions(workspaceId))
   const stored = useQuery(invoicesQueryOptions(workspaceId, cardId))
-  const lines = useQuery(invoiceLinesQueryOptions(workspaceId, cardId, invoiceId))
-  const accounts = useQuery(accountsQueryOptions(workspaceId))
   const card = cards.data?.find((candidate) => candidate.accountId === cardId)
   const invoice = invoiceOf(card, stored.data, invoiceId)
   usePageTitle(titleOf(invoice))
-  const queries = [cards, stored, lines, accounts]
+  const queries = [cards, stored]
   const failed = queries.find((query) => query.isError)
   const isMissing =
     (cards.data !== undefined && !card) ||
@@ -86,7 +84,7 @@ export function InvoicePage({ workspaceId, permissions, cardId, invoiceId }: Inv
       </CardPageFrame>
     )
   }
-  if (!card || !invoice || !lines.data || !accounts.data) {
+  if (!card || !invoice) {
     return (
       <CardPageFrame>
         <SectionSkeleton lines={4} />
@@ -99,14 +97,13 @@ export function InvoicePage({ workspaceId, permissions, cardId, invoiceId }: Inv
       permissions={permissions}
       card={card}
       invoice={invoice}
-      lines={invoiceLinesOf(lines.data, accounts.data)}
     />
   )
 }
 
-function InvoiceDetail({ workspaceId, permissions, card, invoice, lines }: InvoiceDetailProps) {
+function InvoiceDetail({ workspaceId, permissions, card, invoice }: InvoiceDetailProps) {
   const [filter, setFilter] = useState<InvoiceFilter>('all')
-  const shown = filteredLines(lines, filter)
+  const lines = useInvoiceLines(workspaceId, card.accountId, invoice.invoiceId, filter)
   return (
     <PageFrame edge="bleed" className="gap-4">
       <CardPageHeader
@@ -147,15 +144,38 @@ function InvoiceDetail({ workspaceId, permissions, card, invoice, lines }: Invoi
             { value: 'fronted', label: messages.filters.fronted },
           ]}
         />
-        {shown.length > 0 ? (
-          <InvoiceLineList lines={shown} />
-        ) : (
-          <p className="rounded-lg border border-border bg-surface px-4 py-5 text-note text-ink-muted">
-            {emptyTextOf(filter)}
-          </p>
-        )}
+        <InvoiceLinesBody filter={filter} lines={lines} />
       </div>
     </PageFrame>
+  )
+}
+
+function InvoiceLinesBody({ filter, lines }: InvoiceLinesBodyProps) {
+  if (lines.error) {
+    return (
+      <SectionError
+        message={messages.linesFailed}
+        errorRef={lines.error instanceof ApiError ? lines.error.ref : null}
+        isRetrying={lines.isRetrying}
+        onRetry={lines.retry}
+      />
+    )
+  }
+  if (!lines.lines) {
+    return <ListSkeleton rows={4} />
+  }
+  if (lines.lines.length === 0) {
+    return (
+      <p className="rounded-lg border border-border bg-surface px-4 py-5 text-note text-ink-muted">
+        {emptyTextOf(filter)}
+      </p>
+    )
+  }
+  return (
+    <>
+      <InvoiceLineList lines={lines.lines} />
+      {lines.hasMore && <ShowMoreButton isLoading={lines.isLoadingMore} onClick={lines.loadMore} />}
+    </>
   )
 }
 
