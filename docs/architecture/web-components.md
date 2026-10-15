@@ -751,3 +751,18 @@ the same.
 shadcn is initialised with **Base UI** (decided 2026-10-01, ADR 0027), shadcn's default since July
 2026. Composition uses its `render` prop. Radix components are never mixed in; examples found
 online with `asChild` are translated to `render`.
+
+## Entries list building blocks
+`../design/entries-list/components.md`; the entries list, its detail and the trash share them.
+- `EntryRow` (`components/finance/entry-row`): one entry in a list: the loose drawing (42 px) of its
+  category or of the system kind (`art`), the description with its marks ("3×" for installments,
+  read as "em 3 parcelas"; the contacts icon, "Dividido com contatos"; the clip, "Tem
+  comprovante"), the grey second line (`detail`, "Mercado › Feira · Conta X · por Member B"), and
+  the amount by `direction`: `out` in ink with "−", `in` in `mint-ink` with "+", `neutral` (a
+  transfer, an invoice payment) muted with no sign. Nothing is cut: the description and the second
+  line wrap. With `search`, the part of the description that matched (ignoring case and accents,
+  `partsMatching` in `lib/long-lists.ts`) is marked on `mint-soft`. The `link` element wraps the
+  whole row. 64 px with a divider, as the design's `er`.
+- `EntryDayGroup` (`components/finance/entry-day-group`): a day of entries, a region named by its
+  heading ("Hoje · ter, 20 out", the detail muted; a past day only "sáb, 17 out") over the white
+  card that holds its `EntryRow`s. The screen words the day.
