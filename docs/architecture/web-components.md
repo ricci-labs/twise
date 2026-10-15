@@ -895,3 +895,7 @@ online with `asChild` are translated to `render`.
   date line ("Próxima 05/11"; `today` in warning; `overdue` in danger with the alert icon), and the
   amount on top at the right ("≈" for an estimate; income in `mint-ink`, a transfer muted). The
   `link` element wraps the row.
+- `NextDatesPreview` (`components/finance/next-dates-preview`): "Próximas datas" on `sunken` with the
+  calendar drawing, one row per date (date, weekday, amount, "≈ " for an estimate); a date that moved
+  says why on its own line under it ("dia 10 é domingo, foi para segunda"), never over the amount.
+  The form words the notes from `plannedDatesBetween` (`@financas/shared`).

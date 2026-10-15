@@ -3,6 +3,7 @@ import {
   addDays,
   addMonths,
   clampedDate,
+  dayOfWeek,
   daysBetween,
   nthBusinessDay,
   parseIsoDate,
@@ -12,26 +13,40 @@ import {
   APPROXIMATE_DAYS_PER_STEP,
   DAYS_A_DUE_DATE_MAY_SHIFT,
 } from '@shared/planning/recurrence/recurrence.constants'
-import type { DateRange, RecurrenceSchedule } from '@shared/planning/recurrence/recurrence.types'
+import type {
+  DateRange,
+  PlannedDate,
+  RecurrenceSchedule,
+} from '@shared/planning/recurrence/recurrence.types'
 
 const DAYS_PER_WEEK = 7
 const MONTHS_PER_YEAR = 12
+const SUNDAY = 0
+const SATURDAY = 6
 
 export function dueDatesBetween(
   schedule: RecurrenceSchedule,
-  { from, to }: DateRange,
+  range: DateRange,
   holidays: ReadonlySet<IsoDate>,
 ): IsoDate[] {
+  return plannedDatesBetween(schedule, range, holidays).map((planned) => planned.dueOn)
+}
+
+export function plannedDatesBetween(
+  schedule: RecurrenceSchedule,
+  { from, to }: DateRange,
+  holidays: ReadonlySet<IsoDate>,
+): PlannedDate[] {
   const lastNominal = lastNominalDate(schedule, to)
-  const dueDates: IsoDate[] = []
+  const planned: PlannedDate[] = []
   for (let step = 0; ; step += 1) {
     const nominal = nominalDate(schedule, step, holidays)
     if (nominal > lastNominal) {
-      return dueDates
+      return planned
     }
     const due = shiftToBusinessDay(nominal, schedule.weekendRule, holidays)
     if (nominal >= schedule.startsOn && due >= from && due <= to) {
-      dueDates.push(due)
+      planned.push(plannedDateOf(schedule, nominal, due, holidays))
     }
   }
 }
@@ -67,4 +82,45 @@ function nominalDate(
     return nthBusinessDay(month, schedule.nthBusinessDay, holidays)
   }
   return clampedDate(month, schedule.dayOfMonth ?? start.day)
+}
+
+function plannedDateOf(
+  schedule: RecurrenceSchedule,
+  nominalOn: IsoDate,
+  dueOn: IsoDate,
+  holidays: ReadonlySet<IsoDate>,
+): PlannedDate {
+  return {
+    dueOn,
+    nominalOn,
+    movedBy: movedByOf(nominalOn, dueOn, holidays),
+    isAfterHoliday: schedule.nthBusinessDay !== null && hasWeekdayHolidayBefore(dueOn, holidays),
+  }
+}
+
+function movedByOf(
+  nominalOn: IsoDate,
+  dueOn: IsoDate,
+  holidays: ReadonlySet<IsoDate>,
+): PlannedDate['movedBy'] {
+  if (nominalOn === dueOn) {
+    return null
+  }
+  return holidays.has(nominalOn) && !isWeekend(nominalOn) ? 'holiday' : 'weekend'
+}
+
+function hasWeekdayHolidayBefore(dueOn: IsoDate, holidays: ReadonlySet<IsoDate>): boolean {
+  const { year, month } = parseIsoDate(dueOn)
+  const firstOfMonth = clampedDate({ year, month }, 1)
+  for (let date = firstOfMonth; date < dueOn; date = addDays(date, 1)) {
+    if (holidays.has(date) && !isWeekend(date)) {
+      return true
+    }
+  }
+  return false
+}
+
+function isWeekend(date: IsoDate): boolean {
+  const weekday = dayOfWeek(date)
+  return weekday === SUNDAY || weekday === SATURDAY
 }
