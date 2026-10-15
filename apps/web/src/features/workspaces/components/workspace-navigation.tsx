@@ -16,6 +16,8 @@ const TRASH_PAGE = 'trash'
 
 const AREA_OF_PAGE: Readonly<Record<string, string>> = { categories: 'accounts' }
 
+const TAB_OF_AREA: Readonly<Record<string, string>> = { [TRASH_PAGE]: ENTRIES_AREA }
+
 const MAIN_AREAS: readonly WorkspaceArea[] = [
   { key: 'entries', icon: 'list', module: 'entries' },
   { key: 'cards', icon: 'card', module: 'cards' },
@@ -73,4 +75,8 @@ export function hasNewEntryButton(pathname: string): boolean {
 export function currentAreaOf(pathname: string): string | null {
   const [, , , area] = pathname.split('/')
   return area ? (AREA_OF_PAGE[area] ?? area) : null
+}
+
+export function tabAreaOf(area: string | null): string | null {
+  return area ? (TAB_OF_AREA[area] ?? area) : null
 }
