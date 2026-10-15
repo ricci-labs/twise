@@ -55,6 +55,7 @@ import { cyclePreviewExamples } from '@web/components/finance/cycle-preview'
 import { entryDayGroupExamples } from '@web/components/finance/entry-day-group'
 import { entryHeaderExamples } from '@web/components/finance/entry-header'
 import { entryRowExamples } from '@web/components/finance/entry-row'
+import { installmentRowsExamples } from '@web/components/finance/installment-rows'
 import { invoiceFactsExamples } from '@web/components/finance/invoice-facts'
 import { invoiceLineExamples } from '@web/components/finance/invoice-line'
 import { invoiceMonthStripExamples } from '@web/components/finance/invoice-month-strip'
@@ -63,10 +64,12 @@ import { invoiceSummaryExamples } from '@web/components/finance/invoice-summary'
 import { invoiceYearSheetExamples } from '@web/components/finance/invoice-year-sheet'
 import { linkedItemExamples } from '@web/components/finance/linked-item'
 import { recentEntriesExamples } from '@web/components/finance/recent-entries'
+import { shareRowsExamples } from '@web/components/finance/share-rows'
 import { sharesListExamples } from '@web/components/finance/shares-list'
 import { subcategoryAddChipExamples } from '@web/components/finance/subcategory-add-chip'
 import { subcategoryChipExamples } from '@web/components/finance/subcategory-chip'
 import { subcategoryChipsExamples } from '@web/components/finance/subcategory-chips'
+import { transferFlowExamples } from '@web/components/finance/transfer-flow'
 import { trashRowExamples } from '@web/components/finance/trash-row'
 import { fieldGroupExamples } from '@web/components/forms/field-group'
 import { formFieldExamples } from '@web/components/forms/form-field'
@@ -186,6 +189,9 @@ export const workbenchSections: readonly ComponentExamples[] = [
   detailSectionExamples,
   linkedItemExamples,
   attachAreaExamples,
+  installmentRowsExamples,
+  shareRowsExamples,
+  transferFlowExamples,
   toggleChipsExamples,
   filterChipsExamples,
   listSummaryExamples,

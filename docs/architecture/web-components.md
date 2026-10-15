@@ -816,3 +816,12 @@ online with `asChild` are translated to `render`.
   outubro"); `tone="mint"` for a step done ("Divisão sugerida feita · 4 de 4 partes").
 - `AttachArea` (`components/finance/attach-area`): the dashed "Anexar comprovante · Foto ou PDF"
   button, where `ATT-01` starts.
+- `InstallmentRows` (`components/finance/installment-rows`): the "Parcelas" of an entry: one 52 px
+  row per installment ("1/3", the month and "vence 04/11", the invoice's status badge with its
+  dot, the amount, a chevron when it links to the invoice). More than three show three from
+  `start` (the screen picks the closed, the open and the next) and "Mostrar mais {n} parcelas".
+- `ShareRows` (`components/finance/share-rows`): "Dividido com contatos" in a detail: each contact
+  (avatar, name) with the dotted leader to what they owe, a solid line, then "Sua parte" with its
+  leader and amount, and an optional note. The amounts come from the API (`shares`, `ownCents`).
+- `TransferFlow` (`components/finance/transfer-flow`): "Saiu de Conta X" → "Entrou em Poupança"
+  as two boxes on the page colour with their drawings and an arrow, and an optional note.
