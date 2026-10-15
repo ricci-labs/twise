@@ -12,7 +12,12 @@ import {
   workspaceAccess,
   workspaceList,
 } from '@web/testing/fake-api'
-import { occurrencesAnswer, plannedOccurrence } from '@web/testing/planning-api'
+import {
+  candidatesAnswer,
+  INTERNET_CANDIDATES,
+  occurrencesAnswer,
+  plannedOccurrence,
+} from '@web/testing/planning-api'
 import type { FakeAnswer } from '@web/testing/testing.types'
 import { beforeEach, describe, expect, it } from 'vitest'
 import { page } from 'vitest/browser'
@@ -206,6 +211,56 @@ describe('PLAN-03 actions on a phone', () => {
     await page.getByRole('button', { name: 'Salvar valor' }).click()
     await expect.poll(() => calls).toEqual(['PATCH /occurrences/o1 {"amountCents":15000}'])
     await expect.element(page.getByText('Valor deste mês salvo.')).toBeVisible()
+  })
+
+  it('marks an entry already recorded as the payment, the likely one chosen first', async () => {
+    const calls: string[] = []
+    const record = recorder(calls)
+    await openPlanning({
+      answers: {
+        ...candidatesAnswer('o1'),
+        [`POST ${BASE}/occurrences/o1/match`]: async (request) => {
+          calls.push(`match ${await request.text()}`)
+          return new Response(null, { status: 204 })
+        },
+        [`POST ${BASE}/occurrences/o1/unmatch`]: record,
+      },
+    })
+    await page.getByRole('button', { name: /^Internet/ }).click()
+    await page.getByRole('button', { name: 'Já registrei' }).click()
+    const sheet = page.getByRole('dialog', { name: 'Já registrei' })
+    await expect.element(sheet.getByText(/Lançamentos de despesa da Conta X/)).toBeVisible()
+    await expect.element(sheet.getByRole('radio', { name: /Internet Fibra/ })).toBeChecked()
+    await expect.element(sheet.getByText('Mais provável')).toBeVisible()
+    await expectNoAccessibilityViolations(sheet.element())
+    await sheet.getByRole('radio', { name: /Mercado da semana/ }).click()
+    await sheet.getByRole('button', { name: 'Marcar como pago' }).click()
+    await expect.element(page.getByText('Internet de 18/10 marcada como paga.')).toBeVisible()
+    await page.getByRole('button', { name: 'Desfazer' }).click()
+    await expect
+      .poll(() => calls)
+      .toEqual([
+        `match {"entryId":"${INTERNET_CANDIDATES[1]?.entryId}"}`,
+        'POST /occurrences/o1/unmatch',
+      ])
+  })
+
+  it('shows a refused match in the sheet', async () => {
+    await openPlanning({
+      answers: {
+        ...candidatesAnswer('o1'),
+        [`POST ${BASE}/occurrences/o1/match`]: () =>
+          Response.json(
+            { error: { code: 'ENTRY_ALREADY_MATCHED', message: 'x', ref: 'r1' } },
+            { status: 409 },
+          ),
+      },
+    })
+    await page.getByRole('button', { name: /^Internet/ }).click()
+    await page.getByRole('button', { name: 'Já registrei' }).click()
+    const sheet = page.getByRole('dialog', { name: 'Já registrei' })
+    await sheet.getByRole('button', { name: 'Marcar como pago' }).click()
+    await expect.element(sheet.getByText('Esse lançamento já paga outro previsto.')).toBeVisible()
   })
 
   it('brings a skipped one back', async () => {

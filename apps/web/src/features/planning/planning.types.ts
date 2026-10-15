@@ -5,7 +5,11 @@ import type {
   OccurrenceRowLinkProps,
 } from '@web/components/finance/occurrence-row'
 import type { PlanSummaryTile } from '@web/components/finance/plan-summary-tiles'
-import type { fetchAccounts, fetchOccurrences } from '@web/features/planning/api/planning.queries'
+import type {
+  fetchAccounts,
+  fetchCandidates,
+  fetchOccurrences,
+} from '@web/features/planning/api/planning.queries'
 import type {
   occurrenceAmountFormSchema,
   PLANNING_TABS,
@@ -79,10 +83,12 @@ export type OccurrenceActionRequest =
   | { action: 'match'; occurrenceId: string; entryId: string }
   | { action: 'amount'; occurrenceId: string; amountCents: number }
 
+export type PlanningAccounts = ReadonlyMap<string, Pick<PlanningAccount, 'name' | 'icon'>>
+
 export type OccurrenceActionsProps = {
   workspaceId: string
   occurrence: ListedOccurrence
-  accountName: string
+  accounts: PlanningAccounts
   className?: string
   children?: ReactNode
 }
@@ -100,10 +106,36 @@ export type OccurrencesProps = {
   workspaceId: string
   list: OccurrenceList
   context: OccurrenceContext
+  accounts: PlanningAccounts
   canUpdate: boolean
 }
 
 export type GroupProps = {
   group: OccurrenceGroupView
   linkOf: (id: string) => ReactElement<OccurrenceRowLinkProps> | undefined
+}
+
+export type MatchCandidate = Awaited<ReturnType<typeof fetchCandidates>>['items'][number]
+
+export type EntryPickerSheetProps = {
+  workspaceId: string
+  occurrence: ListedOccurrence
+  accounts: PlanningAccounts
+  isOpen: boolean
+  onOpenChange: (isOpen: boolean) => void
+}
+
+export type CandidateRowProps = {
+  item: MatchCandidate
+  account: string
+  art: Pick<PlanningAccount, 'name' | 'icon'> | undefined
+  rowRef: ((element: HTMLElement | null) => void) | undefined
+}
+
+export type OccurrenceHandlers = {
+  changeAmount: () => void
+  pickEntry: () => void
+  skip: () => void
+  unskip: () => void
+  unmatch: () => void
 }

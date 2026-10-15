@@ -103,12 +103,13 @@ function OccurrencesBody({
       workspaceId={workspaceId}
       list={occurrences.data}
       context={context}
+      accounts={new Map(accounts.data.map((account) => [account.id, account]))}
       canUpdate={hasPermission(permissions, 'planning', 'update')}
     />
   )
 }
 
-function Occurrences({ workspaceId, list, context, canUpdate }: OccurrencesProps) {
+function Occurrences({ workspaceId, list, context, accounts, canUpdate }: OccurrencesProps) {
   const byId = new Map(list.items.map((item) => [item.id, item]))
   const linkOf = (id: string) => {
     const occurrence = byId.get(id)
@@ -116,11 +117,7 @@ function Occurrences({ workspaceId, list, context, canUpdate }: OccurrencesProps
       return undefined
     }
     return (
-      <OccurrenceActions
-        workspaceId={workspaceId}
-        occurrence={occurrence}
-        accountName={context.accounts.get(occurrence.sourceAccountId)?.name ?? ''}
-      />
+      <OccurrenceActions workspaceId={workspaceId} occurrence={occurrence} accounts={accounts} />
     )
   }
   return (
