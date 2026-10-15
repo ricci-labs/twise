@@ -22,8 +22,10 @@ import { cardExamples } from '@web/components/display/card'
 import { categoryArtExamples } from '@web/components/display/category-art'
 import { dataTableExamples } from '@web/components/display/data-table'
 import { dividerExamples } from '@web/components/display/divider'
+import { filterChipsExamples } from '@web/components/display/filter-chips'
 import { kpiCardExamples } from '@web/components/display/kpi-card'
 import { kpiCarouselExamples } from '@web/components/display/kpi-carousel'
+import { listSummaryExamples } from '@web/components/display/list-summary'
 import { nextStepCardExamples } from '@web/components/display/next-step-card'
 import { responsiveTextExamples } from '@web/components/display/responsive-text'
 import { richTextExamples } from '@web/components/display/rich-text'
@@ -35,6 +37,7 @@ import { confirmDialogExamples } from '@web/components/feedback/confirm-dialog'
 import { emptyBlockExamples } from '@web/components/feedback/empty-block'
 import { emptyStateExamples } from '@web/components/feedback/empty-state'
 import { kpiSkeletonExamples } from '@web/components/feedback/kpi-skeleton'
+import { listEndExamples } from '@web/components/feedback/list-end'
 import { listSkeletonExamples } from '@web/components/feedback/list-skeleton'
 import { momentSheetExamples } from '@web/components/feedback/moment-sheet'
 import { sectionErrorExamples } from '@web/components/feedback/section-error'
@@ -168,6 +171,9 @@ export const workbenchSections: readonly ComponentExamples[] = [
   scrollArrowsExamples,
   searchInputExamples,
   textInputExamples,
+  filterChipsExamples,
+  listSummaryExamples,
+  listEndExamples,
   suggestInputExamples,
   passwordInputExamples,
   formFieldExamples,

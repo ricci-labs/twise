@@ -766,3 +766,12 @@ online with `asChild` are translated to `render`.
 - `EntryDayGroup` (`components/finance/entry-day-group`): a day of entries, a region named by its
   heading ("Hoje · ter, 20 out", the detail muted; a past day only "sáb, 17 out") over the white
   card that holds its `EntryRow`s. The screen words the day.
+- `FilterChips` (`components/display/filter-chips`): the active filters of a list as 32 px chips
+  with the 1.5 px ink outline and "×" ("Tirar o filtro {nome}"), then the tertiary "Limpar"; a
+  `fieldset` named "Filtros ativos" that wraps; nothing without a filter. The screen words each
+  chip ("Mercado e subcategorias").
+- `ListSummary` (`components/display/list-summary`): the muted line with bold amounts the API gives
+  for a list ("Saiu R$ 6.505,20 · Entrou R$ 9.120,00 · 11 lançamentos"); a side with nothing is
+  left out, the count always shows (singular for one). A `status`, so a new filter is announced.
+- `ListEnd` (`components/feedback/list-end`): the sentence under the last page ("Isso é tudo de
+  out/26.") and, when given, the small secondary "‹ Ver set/26" link to the previous period.
