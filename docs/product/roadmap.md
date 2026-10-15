@@ -323,13 +323,17 @@ updated: 2026-10-15
   7. [x] Web components: the range calendar and the period sheet's other ranges (`CalendarMonth`,
      `RangeCalendar`, `PeriodPicker`, also on the Home, whose label now opens the months as RF-HOME-1
      asks), with the periods of a year from the API (G48)
-  8. [ ] Web: `ENT-01` on the phone (days, paging, search, summary, every state). Done: days,
-     paging, summary, the period and its ranges, every state; each row's amount (G49) and who spent
-     it (G50) come from the API. Left: the search
-  9. [ ] Web: `ENT-01` filters, and the list opened ready-filtered by "Ver lançamentos" of
-     `ACC-01`, `ACC-02` and `CARD-01`
-  10. [ ] Web components: the detail sections (`EntryHeader`, `DetailSection`, `InstallmentRows`,
-      `ShareRows`, `TransferFlow`, `LinkedItem`, `AttachArea`)
+  8. [x] Web: `ENT-01` on the phone (days, paging, search, summary, every state); each row's amount
+     (G49) and who spent it (G50) come from the API
+  9. [x] Web: `ENT-01` filters (`ToggleChips`; `Switch` fixed inside bottom sheets), and the list
+     opened ready-filtered by "Ver lançamentos" of `ACC-01` and `ACC-02` (rows, actions, a viewer's
+     chip), with "‹" back there
+  10. [x] Web components: the detail sections (`EntryHeader`, `DetailSection`, `InstallmentRows`,
+      `ShareRows`, `TransferFlow`, `LinkedItem`, `AttachArea`), with the API they read: each entry's
+      `shares` and `ownCents` and the bill it paid (G51)
+  **Paused here on 2026-10-15 at the user's request; resume with step 11.** Not yet backed by
+  data: the commission split link of a transfer or income ("Parte 1 da divisão…", "Divisão
+  sugerida feita · 4 de 4 partes"), which needs the split to remember its transfers
   11. [ ] Web: `ENT-03` for each kind of entry, "Repetir", delete with and without a reason, undo
   12. [ ] Web: `ENT-04` (in place or a new version, closed invoice, conflict); "Ver" in the new
       entry's toast
