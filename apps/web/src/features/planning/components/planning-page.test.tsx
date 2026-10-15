@@ -263,6 +263,25 @@ describe('PLAN-03 actions on a phone', () => {
     await expect.element(sheet.getByText('Esse lançamento já paga outro previsto.')).toBeVisible()
   })
 
+  it('opens the new entry for an overdue bill from its compact button', async () => {
+    const overdueId = '00000000-0000-4000-8000-0000000007a1'
+    const app = await openPlanning({
+      answers: occurrencesAnswer([
+        plannedOccurrence(overdueId, '2026-10-18', 'Internet', { isOverdue: true }),
+      ]),
+    })
+    await page.getByRole('button', { name: 'Registrar pagamento de Internet' }).click()
+    await expect
+      .poll(() => app.router.state.location.search)
+      .toMatchObject({ entry: 'new', entryOccurrence: overdueId })
+  })
+
+  it('offers "Registrar recebimento" for an income', async () => {
+    await openPlanning()
+    await page.getByRole('button', { name: /^Vale-alimentação/ }).click()
+    await expect.element(page.getByRole('link', { name: 'Registrar recebimento' })).toBeVisible()
+  })
+
   it('brings a skipped one back', async () => {
     const calls: string[] = []
     await openPlanning({ answers: occurrenceCalls(calls) })

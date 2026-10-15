@@ -2,6 +2,7 @@ import type { IsoDate, Permission } from '@financas/shared'
 import type {
   OccurrenceBadge,
   OccurrenceDirection,
+  OccurrenceRegister,
   OccurrenceRowLinkProps,
 } from '@web/components/finance/occurrence-row'
 import type { PlanSummaryTile } from '@web/components/finance/plan-summary-tiles'
@@ -89,6 +90,7 @@ export type OccurrenceActionsProps = {
   workspaceId: string
   occurrence: ListedOccurrence
   accounts: PlanningAccounts
+  canRecord: boolean
   className?: string
   children?: ReactNode
 }
@@ -108,11 +110,13 @@ export type OccurrencesProps = {
   context: OccurrenceContext
   accounts: PlanningAccounts
   canUpdate: boolean
+  canRecord: boolean
 }
 
 export type GroupProps = {
   group: OccurrenceGroupView
   linkOf: (id: string) => ReactElement<OccurrenceRowLinkProps> | undefined
+  registerOf: (id: string) => OccurrenceRegister | undefined
 }
 
 export type MatchCandidate = Awaited<ReturnType<typeof fetchCandidates>>['items'][number]

@@ -38,6 +38,7 @@ export const newEntrySearchSchema = z.object({
   entryCard: z.uuid().optional().catch(undefined),
   entryInvoice: z.uuid().optional().catch(undefined),
   entryRepeat: z.uuid().optional().catch(undefined),
+  entryOccurrence: z.uuid().optional().catch(undefined),
 })
 
 const CARD_PURCHASE = 'card_purchase'
