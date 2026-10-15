@@ -1,7 +1,7 @@
 ---
 summary: Functional requirements for planning — recurring bills and incomes, planned occurrences and matching them to payments, budgets, goals and the emergency reserve, the commission split steps, and holidays (screens PLAN-01..07).
 read_when: Designing or building any planning screen, or a shortcut that pays a planned bill.
-updated: 2026-09-29
+updated: 2026-10-15
 ---
 
 # Planning
@@ -9,6 +9,16 @@ updated: 2026-09-29
 Standards: `../ui-standards.md`. Messages per code: `../error-messages.md`. Domain:
 `../../../domain/model/planning.md`, `../../household-finances.md`. API:
 `/api/workspaces/:id/{recurrences,occurrences,budgets,goals,allocation-steps,holidays}`.
+Designed in `../../../design/planning/` (round A: PLAN-01..04; read `../../../design/planning/decisions.md`). Round B
+(PLAN-05..07) is not designed yet.
+
+## Navigation
+The "Planejamento" tab opens on **Previstos** (`PLAN-03`): it is what is used every day. Under the
+title, a segmented control "Previstos | Contas fixas | Orçamentos | Metas" switches between
+`PLAN-03`, `PLAN-01`, `PLAN-04` and `PLAN-05` (Metas comes with round B). On the desktop the same
+tabs sit under the title. Viewers and members without the permission see no "+", no "Registrar",
+no "⋯" and no "Definir". Skipping and unmatching never ask: a toast with "Desfazer" for 8 s.
+Deleting a recurrence asks (there is no trash for recurrences).
 
 ## Rules that shape these screens
 - **A recurrence** ("conta fixa", "salário", "assinatura") plans occurrences ("previstos") from
@@ -42,22 +52,30 @@ Standards: `../ui-standards.md`. Messages per code: `../error-messages.md`. Doma
   anniversary). They change business days, and so the planned dates computed from now on.
 
 ## PLAN-01 Recurring bills and incomes (MVP)
-Route `/planejamento`. Permission `planning:view`. `GET /recurrences`.
+Route `/planejamento/contas-fixas`, the "Contas fixas" tab. Permission `planning:view`.
+`GET /recurrences`.
 
 **RF-PLAN-1** Two sections, "Contas e assinaturas" (expense, card) and "Receitas" (income), plus
 "Transferências programadas". Row: description, amount ("≈" when estimate), how it repeats in
 words ("Todo dia 10", "No 5º dia útil", "Toda segunda", "A cada 3 meses no dia 15"), account or card,
-category, next due date (from the occurrences).
+category, next due date (from the API, G52): "Próxima 05/11"; "Vence hoje" in warning;
+"Atrasada desde 18/10" in danger. Income in green; a variable income (the commission) with "≈" and
+"variável"; transfers muted, with "Conta X → Poupança". Each group has its add link in the header.
 **RF-PLAN-2** A summary on top: "Contas fixas por mês" and "Receitas fixas por mês" (monthly
-equivalents of the active rules).
+equivalents of the active rules: a weekly or yearly rule counts by its monthly average), from the
+API (G52); the commission stays out of fixed income and says so. The desktop adds a third
+indicator, the scheduled transfers per month.
 Actions: "Nova conta fixa" / "Nova receita" (`planning:create`) → `PLAN-02`; tap → `PLAN-02` edit
-(`planning:update`); "Excluir" (`planning:delete`) with the dialog "Excluir {descrição}? Os
-previstos pendentes dela somem; os já pagos continuam no histórico."
+(`planning:update`); the row's "⋯" has "Ver previstos" (`PLAN-03` filtered by that recurrence),
+"Editar" and "Excluir" (`planning:delete`) with the dialog "Excluir {descrição}? Os
+previstos pendentes dela somem; os já pagos continuam no histórico." and then the toast
+"{descrição} excluída.".
 Empty: "Nenhuma conta fixa cadastrada. Cadastre aluguel, internet e salário para ver o que está
 comprometido." + actions.
 
 ## PLAN-02 New or edit recurrence (MVP)
-Create `POST /recurrences` (`planning:create`); edit `PATCH /recurrences/:id` (`planning:update`,
+Full screen on the phone, like the other forms; the large dialog (880 px) in two columns on the
+desktop. Create `POST /recurrences` (`planning:create`); edit `PATCH /recurrences/:id` (`planning:update`,
 always sending the whole schedule).
 
 | Field | Label | Input | Required | Rules |
@@ -70,64 +88,93 @@ always sending the whole schedule).
 | categoryAccountId | "Categoria" / "Para" (transfer) | picker | yes | expense and card: expense category; income: income category; transfer: another money account, different from "De" |
 | frequency | "Repete" | "Semanal", "Mensal", "Anual" | yes | |
 | interval | "A cada" | number + unit ("semanas", "meses", "anos") | yes, default 1 | 1–52 |
-| day rule | "Quando" | radio (monthly/yearly): "No dia {n} do mês", "No {n}º dia útil", "No mesmo dia da primeira data" | yes | day 1–31 ("Se o mês tiver menos dias, vale o último.") or business day 1–10; hidden for weekly |
+| day rule | "Quando" | radio cards (monthly/yearly) with the number picker inside the sentence: "No dia [10] do mês", "No [5º] dia útil", "No mesmo dia da primeira data" | yes | day 1–31 ("Se o mês tiver menos dias, vale o último.") or business day 1–10 (the help says what a business day is); hidden for weekly, whose sentence becomes "Toda sexta" / "A cada 2 semanas, na sexta" |
 | weekendRule | "Se cair em fim de semana ou feriado" | select: "Manter a data", "Antecipar para o dia útil anterior", "Adiar para o próximo dia útil" | yes, default keep | hidden when "N-th business day" is chosen |
 | startsOn | "Primeira data" | date | yes | valid date; help "Só planejamos a partir de hoje." |
 | endsOn | "Termina em" | date, with "Sem data para terminar" (default) | no | not before the first date: "A data final não pode ser antes da primeira." |
 
-**RF-PLAN-3** A live preview: "Próximas: 10/10, 10/11, 10/12" (computed with the shared rules and
-holidays).
-**RF-PLAN-4** Editing a rule with pending future occurrences whose amount was changed shows: "Ao
-salvar, os próximos previstos voltam para o valor desta conta fixa."
-Actions "Criar" / "Salvar". Errors: `RECURRENCE_INVALID` (fields), `RECURRENCE_ACCOUNTS_INVALID`
-("Confira as contas: elas precisam estar ativas e combinar com o tipo."), `RECURRENCE_NOT_FOUND`.
+The labels of the account and category pickers follow the type ("Pago com", "Cartão", "Recebido
+em", "De"/"Para"); the type is locked on edit.
+**RF-PLAN-3** A live preview of the next three dates, one row each with the date, the weekday and
+the amount, computed with the shared rules and holidays (the web never computes dates by itself).
+A date moved by a weekend or a holiday says why on its own line under it ("dia 10 é domingo, foi
+para segunda"), never over the amount.
+**RF-PLAN-4** Editing a rule with pending future occurrences whose amount was changed shows a
+warning alert on top that names the occurrence with its own amount: "Ao salvar, os próximos
+previstos voltam para o valor desta conta fixa." Saving re-plans the pending occurrences.
+Actions "Criar" / "Salvar". Errors: `RECURRENCE_INVALID` (under each field),
+`RECURRENCE_ACCOUNTS_INVALID` (a form alert: "Confira as contas: elas precisam estar ativas e
+combinar com o tipo."), `RECURRENCE_NOT_FOUND`.
 
 Not in the form: "Lembrar X dias antes" (stored per rule but unused: reminders follow each member's
 lead time, `ME-01`) and "Registrar sozinho" (phase 2). See `../api-gaps.md`.
 
 ## PLAN-03 Planned occurrences (MVP)
-Route `/planejamento/previstos`. Permission `planning:view`. `GET /occurrences?from&to` (up to 366
-days; default the current financial period, with "Próximo período" and a month picker).
+Route `/planejamento/previstos`, where `/planejamento` lands. Permission `planning:view`.
+`GET /occurrences?from&to` (up to 366 days; default the current financial period, chosen with the
+Home's period picker).
 
-**RF-PLAN-5** Grouped: "Atrasados" (pending, past due; danger style), "A vencer", "Pagos/Recebidos",
-"Pulados". Row: due date, description, amount ("≈" for estimates), type icon, account or card,
-status badge.
+**RF-PLAN-5** Two tiles on top, "Falta pagar" and "Falta receber", from the API (G53). Grouped,
+each heading with its count: "Atrasados" (pending, past due: a card with a danger border, and a
+compact "Registrar" under the amount that keeps the row's height), "A vencer", "Pagos e recebidos"
+(muted, with when and with which account they were paid), "Pulados" (muted). Row: a date block (day
+and month), the description, a second line with the status badge first ("Atrasado", "Hoje",
+"Pago", "Recebido", "Pulado") and then account or card and category, the amount on the right ("≈"
+for estimates; a matched estimate shows the real amount and "≈" the planned one). More than 5 in a
+group: "Mostrar mais". Tap → the actions, titled with the description and "Prevista para 18/10 ·
+R$ 120,00 · Conta X". Loading: skeletons shaped like the rows. The desktop shows one table with the
+groups as bands (due date, recurrence, account or card, status, amount), the main action in the
+row ("Registrar pagamento" when pending, "Ver lançamento" when paid) and "⋯" with the rest.
 **RF-PLAN-6** Row actions (`planning:update` unless said):
 | Action | Shown when | Does |
 |---|---|---|
-| "Registrar pagamento" / "Registrar recebimento" | pending | opens `ENT-02` prefilled (type, accounts, amount, description, date = today); after saving, asks "Este lançamento paga {descrição} de {data}?" → match (`entries:create` + `planning:update`) |
-| "Já registrei" | pending | picks an existing entry: suggestions first (`GET /occurrences/suggestions?entryId=` is by entry; here the web lists recent entries of the same type and accounts), then match |
-| "Pular este mês" | pending | skip; toast with "Desfazer" (unskip) |
-| "Mudar o valor deste" | pending | amount only for this occurrence; help "Não muda a conta fixa." |
-| "Desfazer pagamento" | matched | unmatch; the entry stays |
+| "Registrar pagamento" / "Registrar recebimento" | pending | opens `ENT-02` prefilled (type, accounts, amount, description, date = today); after saving, a sheet with the occurrence card asks "Este lançamento paga {descrição} de {data}?" with "Sim, paga" as the primary action and "Não" (leaves the entry unmatched) → match (`entries:create` + `planning:update`) |
+| "Já registrei" | pending | a sheet with entries of the same type and accounts, the most similar first (the first one badged "Mais provável"), a search, 5 + "Mostrar mais"; pick one and "Marcar como pago" → match. `ENTRY_ALREADY_MATCHED` and `OCCURRENCE_ENTRY_MISMATCH` show as the sheet's alert |
+| "Mudar o valor deste" | pending | a sheet with "Valor deste mês", help "Não muda a conta fixa.", "Salvar valor"; editing the recurrence later brings the amount back (G17: the form warns) |
+| "Pular este mês" | pending | skip without asking; the row moves to "Pulados" and a toast offers "Desfazer" (unskip) for 8 s |
+| "Desfazer pagamento" | matched | unmatch; the entry stays; toast with "Desfazer" |
 | "Ver lançamento" | matched | `ENT-03` |
 | "Voltar a esperar" | skipped | unskip |
 
 **RF-PLAN-7** Suggesting matches from the other side: after any expense, income, card purchase or
 transfer is saved in `ENT-02`, the web calls `GET /occurrences/suggestions?entryId=` and, when there
-are suggestions, shows "Isto paga alguma conta prevista?" with the list and "Não" as the default.
+are suggestions, shows the sheet "Isto paga alguma conta prevista?" with the candidates as
+selectable rows (the most likely one pre-selected), "Não, nenhuma" (closes without matching) and
+"Paga {descrição}". No suggestions: nothing shows.
 Errors: `OCCURRENCE_NOT_PENDING` ("Este previsto já foi pago ou pulado. Atualize a lista."),
 `OCCURRENCE_ENTRY_MISMATCH` ("Esse lançamento não usa as mesmas contas desta conta fixa."),
 `ENTRY_ALREADY_MATCHED` ("Esse lançamento já paga outro previsto."), `ENTRY_NOT_AVAILABLE`,
 `OCCURRENCE_NOT_MATCHED`, `OCCURRENCE_NOT_SKIPPED`, `OCCURRENCE_INVALID`, `OCCURRENCE_QUERY_INVALID`.
-Empty: "Nada previsto neste período."
+Empty: "Nada previsto neste período." with the shortcut to the first recurrence.
 
 ## PLAN-04 Budgets (MVP)
 Route `/planejamento/orcamentos`. Read `budgets:view`; change `budgets:update` (owners and admins
 by default). `GET /budgets?period=` for limits, `GET /overview?period=` → `budgetPace` for spent
-and pace.
+and pace, `budgetTotals`, each budget's subcategories and the categories without a budget (G54).
 
-**RF-PLAN-8** For the chosen period: each expense category with a budget shows limit, spent, a
-progress bar with the expected-pace mark, and the status: "Dentro do ritmo", "Acima do ritmo",
-"Estourado". Categories without a budget are listed below with "Definir orçamento". Subcategories
-show under their parent (a parent's budget covers them). A total on top: sum of limits vs. spent.
+**RF-PLAN-8** The period picker on top, then a summary card: "Gasto nas categorias com orçamento",
+spent of the sum of limits, a bar with the pace mark and the legend "onde o gasto deveria estar
+hoje (dia 16 de 31)" (from the API, G54). "Com orçamento": each expense category with a budget
+shows its drawing, "R$ X de R$ Y" (moves whole to the next line when it does not fit), a progress
+bar with the expected-pace mark, and the status with an icon and text: "No ritmo", "Acima do
+ritmo", "Estourado"; under it, on one line, the spending of its subcategories, the largest first,
+what fits + "+N" (opens the budget sheet with all of them). A parent's budget covers its
+subcategories. "Sem orçamento": the other expense categories with the period's spending and
+"Definir". Empty: "Nenhum orçamento ainda." with what a budget does and "Definir orçamento". The
+desktop shows three indicators (the sum of limits, spent, how many are off pace) and two tables.
 
-| Field (dialog "Orçamento de {categoria}") | Label | Required | Rules |
+The budget opens in a sheet on the phone and a medium dialog on the desktop, "Orçamento de
+{categoria}": the category card, "Gasto em {mês}" by subcategory (dotted leaders, a solid line
+before the total), the average of the last 3 months as a reference (G54), then the fields. "Definir"
+opens the same sheet empty, with the average.
+
+| Field | Label | Required | Rules |
 |---|---|---|---|
 | limitCents | "Limite por mês" | yes (or the "Sem orçamento" switch) | money > 0 |
 | fromPeriod | "Vale a partir de" | yes, default the viewed period | month picker; help "Continua valendo nos meses seguintes até você mudar." |
-Actions "Salvar orçamento", "Remover orçamento" (sends no limit from the period on; dialog
-"Remover o orçamento de {categoria} a partir de {mês}?"). Errors `BUDGET_INVALID`,
+Actions "Salvar orçamento", "Remover orçamento" (a danger text button; sends no limit from the
+period on; dialog "Remover o orçamento de {categoria} a partir de {mês}?" with "Os meses anteriores continuam com o
+limite que tinham."). Errors `BUDGET_INVALID`,
 `BUDGET_CATEGORY_INVALID` ("Orçamentos só valem para categorias de despesa ativas."),
 `BUDGET_QUERY_INVALID`.
 

@@ -214,6 +214,24 @@ Decided by the user on 2026-10-14, for every screen, built or to be built.
   items, the most relevant first (the oldest invoice with something due), then "Mostrar mais
   ({n})"; more than 10 items add a search on top.
 
+## Long text
+Decided with the planning design (2026-10-15), for every screen, built or to be built. Tested with
+long names ("Internet fibra 1 giga com TV e telefone", "Conta Conjunta do Banco Exemplo") and
+7-digit amounts.
+
+- **A list item's name** takes at most 2 lines, then "…"; its **second line** at most 2 lines,
+  then "…". **The amount never wraps and is never cut**: the text on the left shrinks instead.
+- **Status badges** ("Atrasado", "Pago", "Hoje"…) start the second line; they never sit beside the
+  name.
+- **"R$ X de R$ Y"** beside a name moves whole to the next line when it does not fit; it never
+  breaks in the middle.
+- **A second line listing several items with values** shows what fits on one line + "+N", which
+  opens the full list.
+- **A note that explains a value** (an adjusted date) goes on its own line, never over the value.
+- **Desktop table cells** are one line with "…"; the name column may take 2 lines. The full text
+  is in the detail.
+- **Cards with a coloured border** (overdue) get a larger inner padding than plain lists.
+
 ## Permissions in the UI
 - The member's permissions come from `GET /api/workspaces/:workspaceId`. Each action in a screen
   spec names its permission (`module:action`, e.g. `entries:create`).
