@@ -1,6 +1,7 @@
 import {
   ACCOUNT_CLASS_BY_KIND,
   accountClassOf,
+  entryAmountCents,
   isSystemAccountKind,
 } from '@shared/ledger/ledger/ledger'
 import { ACCOUNT_KINDS } from '@shared/ledger/ledger/ledger.constants'
@@ -28,5 +29,18 @@ describe('system accounts', () => {
   it('are the receivable, the payable and the opening balance', () => {
     const systemKinds = ACCOUNT_KINDS.filter(isSystemAccountKind)
     expect(systemKinds).toEqual(['receivable', 'payable', 'opening_balance'])
+  })
+})
+
+describe('entryAmountCents', () => {
+  it('is the money the entry moved: its positive lines added', () => {
+    const splitDinner = [
+      { amountCents: 10_000 },
+      { amountCents: 10_000 },
+      { amountCents: 10_000 },
+      { amountCents: -30_000 },
+    ]
+    expect(entryAmountCents(splitDinner)).toBe(30_000)
+    expect(entryAmountCents([])).toBe(0)
   })
 })

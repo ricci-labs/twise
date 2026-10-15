@@ -121,6 +121,7 @@ describe('POST /entries', () => {
     const entry = (await listed()).find((item) => item.id === entryId)
     expect(entry).toMatchObject({ entryType: 'expense', description: 'Feira', source: 'web' })
     expect(entry?.postings.map((posting) => posting.amountCents).sort()).toEqual([-8750, 8750])
+    expect(entry?.amountCents).toBe(8750)
   })
 
   it('splits a card purchase into installments on the right invoices', async () => {
@@ -139,6 +140,7 @@ describe('POST /entries', () => {
     const onTheCard = entry?.postings.filter((posting) => posting.accountId === cardId) ?? []
     expect(onTheCard.map((posting) => posting.installmentNo)).toEqual([1, 2, 3])
     expect(new Set(onTheCard.map((posting) => posting.invoiceId)).size).toBe(3)
+    expect(entry?.amountCents).toBe(300_000)
     const invoices = (await (
       await viewer.get(`${workspacePath}/cards/${cardId}/invoices`)
     ).json()) as InvoiceTotal[]

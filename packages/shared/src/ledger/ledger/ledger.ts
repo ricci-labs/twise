@@ -32,3 +32,7 @@ export function accountClassOf(kind: AccountKind): AccountClass {
 export function isSystemAccountKind(kind: AccountKind): kind is SystemAccountKind {
   return (SYSTEM_ACCOUNT_KINDS as readonly AccountKind[]).includes(kind)
 }
+
+export function entryAmountCents(postings: readonly { amountCents: number }[]): number {
+  return postings.reduce((total, posting) => total + Math.max(posting.amountCents, 0), 0)
+}
