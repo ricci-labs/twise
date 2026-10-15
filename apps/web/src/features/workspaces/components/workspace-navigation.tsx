@@ -12,6 +12,8 @@ const labels = workspacesMessages.shell.nav
 
 const NEW_ENTRY = 'new'
 
+const TRASH_PAGE = 'trash'
+
 const AREA_OF_PAGE: Readonly<Record<string, string>> = { categories: 'accounts' }
 
 const MAIN_AREAS: readonly WorkspaceArea[] = [
@@ -62,6 +64,9 @@ export function workspaceNavigation(
 
 export function hasNewEntryButton(pathname: string): boolean {
   const [, , , area, item] = pathname.split('/')
+  if (area === TRASH_PAGE || item === TRASH_PAGE) {
+    return false
+  }
   return !(area === ENTRIES_AREA && item !== undefined && item !== '')
 }
 

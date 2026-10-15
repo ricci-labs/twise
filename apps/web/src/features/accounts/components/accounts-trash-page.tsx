@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { Link } from '@tanstack/react-router'
+import { Link, useNavigate } from '@tanstack/react-router'
 import { EmptyBlock } from '@web/components/feedback/empty-block'
 import { ListSkeleton } from '@web/components/feedback/list-skeleton'
 import { SectionError } from '@web/components/feedback/section-error'
@@ -7,6 +7,7 @@ import { PageFrame } from '@web/components/layout/page-frame'
 import { PageHeader } from '@web/components/layout/page-header'
 import { SubPageHeader } from '@web/components/layout/sub-page-header'
 import { Breadcrumb } from '@web/components/navigation/breadcrumb'
+import { TrashTabs } from '@web/components/navigation/trash-tabs'
 import { accountsMessages } from '@web/features/accounts/accounts.messages'
 import type { TrashPageProps } from '@web/features/accounts/accounts.types'
 import {
@@ -43,7 +44,8 @@ export function AccountsTrashPage({ workspaceId, permissions }: TrashPageProps) 
           />
         </div>
         <PageHeader title={messages.title} description={messages.description} />
-        <div className="rounded-lg border border-border bg-surface px-6 pt-9 pb-5">
+        <AccountsTrashTabs workspaceId={workspaceId} permissions={permissions} />
+        <div className="mt-4 rounded-lg border border-border bg-surface px-6 pt-9 pb-5">
           <TrashBody workspaceId={workspaceId} permissions={permissions} />
         </div>
       </PageFrame>
@@ -57,10 +59,26 @@ export function AccountsTrashPage({ workspaceId, permissions }: TrashPageProps) 
         title={messages.title}
         description={messages.description}
       />
-      <div className="px-4">
+      <div className="flex flex-col gap-4 px-4">
+        <AccountsTrashTabs workspaceId={workspaceId} permissions={permissions} />
         <TrashBody workspaceId={workspaceId} permissions={permissions} />
       </div>
     </PageFrame>
+  )
+}
+
+function AccountsTrashTabs({ workspaceId, permissions }: TrashPageProps) {
+  const navigate = useNavigate()
+  if (!hasPermission(permissions, 'entries', 'delete')) {
+    return null
+  }
+  return (
+    <TrashTabs
+      value="accounts"
+      onChange={(tab) =>
+        tab === 'entries' && void navigate({ to: '/w/$workspaceId/trash', params: { workspaceId } })
+      }
+    />
   )
 }
 

@@ -6,12 +6,15 @@ import {
   trashRowNameVariants,
   trashRowNoteVariants,
   trashRowTextVariants,
+  trashRowTitleVariants,
   trashRowVariants,
 } from '@web/components/finance/trash-row/trash-row.variants'
 import { TwiseIcon } from '@web/components/icons/twise-icon'
 
 export function TrashRow({
   name,
+  amount,
+  isStacked = false,
   icon,
   details,
   note,
@@ -21,11 +24,14 @@ export function TrashRow({
   onAction,
 }: TrashRowProps) {
   return (
-    <li data-slot="trash-row" className={trashRowVariants()}>
+    <li data-slot="trash-row" className={trashRowVariants({ isStacked })}>
       <div className={trashRowMainVariants()}>
         <CategoryArt name={name} icon={icon} size="list" />
         <div className={trashRowTextVariants()}>
-          <p className={trashRowNameVariants()}>{name}</p>
+          <p className={trashRowNameVariants()}>
+            <span className={trashRowTitleVariants()}>{name}</span>
+            {amount}
+          </p>
           {details.map((detail) => (
             <p key={detail}>{detail}</p>
           ))}

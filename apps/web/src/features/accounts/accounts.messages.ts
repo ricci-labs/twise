@@ -419,8 +419,8 @@ export const accountsMessages = {
     noneFronted: 'Nenhum lançamento com parte de terceiros nesta fatura.',
   },
   trashPage: {
-    pageTitle: 'Lixeira de contas',
-    title: 'Lixeira de contas',
+    pageTitle: 'Lixeira',
+    title: 'Lixeira',
     description: 'Contas, cartões e categorias excluídos. Restaurar traz de volta com o histórico.',
     crumb: 'Caminho',
     crumbHere: 'Lixeira',

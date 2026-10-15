@@ -362,6 +362,33 @@ export const entriesMessages = {
         confirm: 'Excluir lançamento',
       },
     },
+    trashPage: {
+      pageTitle: 'Lixeira',
+      title: 'Lixeira',
+      back: 'Voltar para Lançamentos',
+      description:
+        'Do mais recente para o mais antigo. Restaurar traz o lançamento de volta como era. Versões antigas de lançamentos editados não aparecem aqui: ficam no histórico.',
+      empty: 'A lixeira está vazia.',
+      emptyText: 'Lançamentos excluídos ficam aqui e podem voltar.',
+      failed: 'Não foi possível carregar a lixeira.',
+      noAccess: 'Você não tem acesso a esta área. Peça a um administrador do espaço.',
+      deletedToday: (time: string, name: string) => `Excluído hoje, ${time}, por ${name}`,
+      deletedOn: (date: string, name: string) => `Excluído em ${date} por ${name}`,
+      deletedTodayAnonymous: (time: string) => `Excluído hoje, ${time}`,
+      deletedOnAnonymous: (date: string) => `Excluído em ${date}`,
+      reason: (reason: string) => `Motivo: ${reason}`,
+      restore: 'Restaurar',
+      restoreLabel: (description: string) => `Restaurar ${description}`,
+      restored: 'Lançamento restaurado.',
+      see: 'Ver',
+      refused: {
+        deleted_account: (account: string) =>
+          `Não dá para restaurar: ele usa a ${account}, que está na lixeira.`,
+        closed_invoice: 'Não dá para restaurar: parte dele está numa fatura fechada.',
+        replaced: 'Não dá para restaurar: ele já tem outra versão.',
+      },
+      restoreAccount: (account: string) => `Restaurar ${account}`,
+    },
     filters: {
       button: 'Filtros',
       buttonWithCount: (count: number) => `Filtros, ${count} ${count === 1 ? 'ativo' : 'ativos'}`,

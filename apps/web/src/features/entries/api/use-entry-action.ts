@@ -4,16 +4,28 @@ import { unwrapEmpty } from '@web/lib/api/unwrap'
 import { apiClient } from '@web/lib/api-client'
 import { queryKeys } from '@web/lib/query-keys'
 
-const entryApi = apiClient.api.workspaces[':workspaceId'].entries[':entryId']
+const workspaceApi = apiClient.api.workspaces[':workspaceId']
 
 export function useEntryAction(workspaceId: string) {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: ({ action, entryId, reason }: EntryActionRequest) => {
-      const param = { param: { workspaceId, entryId } }
-      return action === 'delete'
-        ? unwrapEmpty(entryApi.$delete({ ...param, json: reason ? { reason } : {} }))
-        : unwrapEmpty(entryApi.restore.$post(param))
+    mutationFn: (request: EntryActionRequest) => {
+      if (request.action === 'restoreAccount') {
+        return unwrapEmpty(
+          workspaceApi.accounts[':accountId'].restore.$post({
+            param: { workspaceId, accountId: request.accountId },
+          }),
+        )
+      }
+      const param = { param: { workspaceId, entryId: request.entryId } }
+      return request.action === 'delete'
+        ? unwrapEmpty(
+            workspaceApi.entries[':entryId'].$delete({
+              ...param,
+              json: request.reason ? { reason: request.reason } : {},
+            }),
+          )
+        : unwrapEmpty(workspaceApi.entries[':entryId'].restore.$post(param))
     },
     onSuccess: () => queryClient.invalidateQueries({ queryKey: queryKeys.workspace(workspaceId) }),
   })

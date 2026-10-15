@@ -11,6 +11,7 @@ import { queryKeys } from '@web/lib/query-keys'
 
 const workspaceApi = apiClient.api.workspaces[':workspaceId']
 type EntriesPageQuery = Parameters<typeof workspaceApi.entries.$get>[0]['query']
+type TrashPageQuery = Parameters<typeof workspaceApi.entries.trash.$get>[0]['query']
 const LATEST_ENTRIES_LIMIT = '50'
 const SUGGESTIONS_FRESH_MS = 60_000
 const PERIODS_FRESH_MS = 60 * 60 * 1000
@@ -119,6 +120,15 @@ export function periodsQueryOptions(workspaceId: string, year: number | undefine
   })
 }
 
+export function trashedEntriesQueryOptions(workspaceId: string) {
+  return infiniteQueryOptions({
+    queryKey: [...queryKeys.workspace(workspaceId), 'entries', 'trash'] as const,
+    queryFn: ({ pageParam }) => fetchTrashPage(workspaceId, pageParam),
+    initialPageParam: NO_CURSOR,
+    getNextPageParam: (page) => page.nextCursor ?? undefined,
+  })
+}
+
 export function entryQueryOptions(workspaceId: string, entryId: string) {
   return queryOptions({
     queryKey: [...queryKeys.workspace(workspaceId), 'entries', 'one', entryId] as const,
@@ -221,4 +231,13 @@ function queryOf(filter: EntryFilter): Record<string, string> {
     query[key] = Array.isArray(value) ? value.join(',') : String(value)
   }
   return query
+}
+
+export function fetchTrashPage(workspaceId: string, cursor: string | undefined) {
+  return unwrap(
+    workspaceApi.entries.trash.$get({
+      param: { workspaceId },
+      query: { limit: LIST_PAGE_SIZE, ...(cursor ? { cursor } : {}) } as TrashPageQuery,
+    }),
+  )
 }

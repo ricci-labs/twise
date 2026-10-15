@@ -31,5 +31,23 @@ export const trashRowExamples: ComponentExamples = {
         </ul>
       ),
     },
+    {
+      name: 'Lançamento com valor, o botão embaixo',
+      render: () => (
+        <ul className="w-full max-w-90 rounded-lg border border-border bg-surface px-3 py-1">
+          <TrashRow
+            name="Mercado da semana"
+            amount={<span className="font-emphasis">−R$ 86,40</span>}
+            isStacked
+            icon="groceries"
+            details={['Mercado · Conta X', 'Excluído hoje, 14:12, por Member A']}
+            note="Motivo: lançado em dobro"
+            actionLabel="Restaurar"
+            actionAccessibleLabel="Restaurar Mercado da semana"
+            onAction={() => undefined}
+          />
+        </ul>
+      ),
+    },
   ],
 }

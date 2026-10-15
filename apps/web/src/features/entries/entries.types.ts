@@ -26,6 +26,7 @@ import type {
   fetchEntrySuggestions,
   fetchLatestEntries,
   fetchMembers,
+  fetchTrashPage,
 } from '@web/features/entries/api/entries.queries'
 import type {
   entriesListSearchSchema,
@@ -477,11 +478,10 @@ export type RepeatedEntryProps = NewEntryProps & {
   repeatEntryId: string
 }
 
-export type EntryActionRequest = {
-  action: 'delete' | 'restore'
-  entryId: string
-  reason?: string
-}
+export type EntryActionRequest =
+  | { action: 'delete'; entryId: string; reason?: string }
+  | { action: 'restore'; entryId: string }
+  | { action: 'restoreAccount'; accountId: string }
 
 export type EntryDetailActionsProps = Pick<EntryDetailPageProps, 'workspaceId' | 'permissions'> & {
   entry: ListedEntry
@@ -558,4 +558,23 @@ export type DiscardDialogProps = {
   isOpen: boolean
   onOpenChange: (isOpen: boolean) => void
   onDiscard: () => void
+}
+
+export type TrashedEntry = Awaited<ReturnType<typeof fetchTrashPage>>['items'][number]
+
+export type EntriesTrashPageProps = {
+  workspaceId: string
+  permissions: readonly Permission[]
+  currentUserId: string
+  memberDirectory: readonly { userId: string; displayName: string }[]
+}
+
+export type EntriesTrashListProps = EntriesTrashPageProps & {
+  entries: readonly TrashedEntry[]
+  accounts: readonly LedgerAccount[]
+}
+
+export type RestoreRefusal = {
+  message: string
+  account?: { id: string; name: string }
 }
