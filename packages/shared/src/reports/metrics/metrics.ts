@@ -3,6 +3,8 @@ import { balanceForecastAll } from '@shared/reports/metrics/balance-forecast-all
 import { billsDue } from '@shared/reports/metrics/bills-due'
 import { budgetIncome } from '@shared/reports/metrics/budget-income'
 import { budgetPace } from '@shared/reports/metrics/budget-pace'
+import { budgetTotals } from '@shared/reports/metrics/budget-totals'
+import { categoryAverages } from '@shared/reports/metrics/category-averages'
 import { committed } from '@shared/reports/metrics/committed'
 import { committedAhead } from '@shared/reports/metrics/committed-ahead'
 import { dailyAllowance } from '@shared/reports/metrics/daily-allowance'
@@ -19,6 +21,7 @@ import { receivables } from '@shared/reports/metrics/receivables'
 import { reserveCoverage } from '@shared/reports/metrics/reserve-coverage'
 import { spendingAverage } from '@shared/reports/metrics/spending-average'
 import { spent } from '@shared/reports/metrics/spent'
+import { unbudgetedSpending } from '@shared/reports/metrics/unbudgeted-spending'
 import { variableAverage } from '@shared/reports/metrics/variable-average'
 import { variableIncome } from '@shared/reports/metrics/variable-income'
 import { variableVsAverage } from '@shared/reports/metrics/variable-vs-average'
@@ -36,6 +39,9 @@ export const METRICS = {
   incomeShare,
   periodPace,
   budgetPace,
+  budgetTotals,
+  unbudgetedSpending,
+  categoryAverages,
   variableAverage,
   variableVsAverage,
   reserveCoverage,

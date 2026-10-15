@@ -149,8 +149,12 @@ Empty: "Nada previsto neste período." with the shortcut to the first recurrence
 
 ## PLAN-04 Budgets (MVP)
 Route `/planejamento/orcamentos`. Read `budgets:view`; change `budgets:update` (owners and admins
-by default). `GET /budgets?period=` for limits, `GET /overview?period=` → `budgetPace` for spent
-and pace, `budgetTotals`, each budget's subcategories and the categories without a budget (G54).
+by default). `GET /budgets?period=` for limits; `GET /overview?period=` (G54) → `budgetPace` for
+spent and pace, each budget's `directCents` and `children` (subcategories that spent, largest
+first), `budgetTotals` (`count`, `limitCents`, `spentCents`, `expectedCents`, `usedPercent`,
+`offPaceCount`), `unbudgetedSpending` (top categories without a budget that spent, largest first;
+the other active ones show R$ 0,00), `categoryAverages` (each expense category's average over the
+last `periods` periods with activity, at most 3) and `periodProgress` for "dia 16 de 31".
 
 **RF-PLAN-8** The period picker on top, then a summary card: "Gasto nas categorias com orçamento",
 spent of the sum of limits, a bar with the pace mark and the legend "onde o gasto deveria estar

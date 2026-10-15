@@ -1,9 +1,5 @@
-import {
-  accountWithDescendants,
-  periodDays,
-  postingsCounted,
-  sumCents,
-} from '@shared/reports/metrics/facts'
+import { childrenSpending, spentUnder } from '@shared/reports/metrics/category-spending'
+import { periodDays, postingsCounted, sumCents } from '@shared/reports/metrics/facts'
 import type { BudgetPace, PeriodFacts } from '@shared/reports/metrics/metrics.types'
 
 const PERCENT = 100
@@ -12,12 +8,8 @@ export function budgetPace(facts: PeriodFacts): BudgetPace[] {
   const expenses = postingsCounted(facts, 'expense')
   const { total, elapsed } = periodDays(facts)
   return facts.budgets.map(({ categoryAccountId, limitCents }) => {
-    const covered = accountWithDescendants(facts, categoryAccountId)
-    const spentCents = sumCents(
-      expenses
-        .filter((posting) => covered.has(posting.accountId))
-        .map((posting) => posting.amountCents),
-    )
+    const spentCents = spentUnder(facts, categoryAccountId, expenses)
+    const children = childrenSpending(facts, categoryAccountId, expenses)
     const expectedCents = Math.round((limitCents * elapsed) / total)
     return {
       categoryAccountId,
@@ -27,6 +19,8 @@ export function budgetPace(facts: PeriodFacts): BudgetPace[] {
       overCents: Math.max(spentCents - limitCents, 0),
       aheadPoints: aheadPointsOf(spentCents, limitCents, elapsed / total),
       status: statusOf(spentCents, limitCents, elapsed > 0 ? expectedCents : limitCents),
+      directCents: spentCents - sumCents(children.map((child) => child.spentCents)),
+      children,
     }
   })
 }
