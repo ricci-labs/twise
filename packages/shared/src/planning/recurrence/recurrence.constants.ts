@@ -39,3 +39,7 @@ export const STEPS_PER_YEAR: Record<RecurrenceFrequency, number> = {
   monthly: 12,
   yearly: 1,
 }
+
+export const MATCH_CANDIDATE_WINDOW_DAYS = 45
+
+export const MATCH_CANDIDATE_LIMIT = 100

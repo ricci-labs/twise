@@ -5,13 +5,19 @@ import { POSTGRES_UNIQUE_VIOLATION, postgresErrorCode } from '@api/core/db/error
 import { withWorkspace } from '@api/core/db/tx'
 import { ConflictError, NotFoundError, ValidationError } from '@api/core/http/errors'
 import { audited } from '@api/modules/audit'
-import { findActiveEntry } from '@api/modules/ledger'
+import { findActiveEntry, readMatchCandidates } from '@api/modules/ledger'
 import {
   occurrenceAuditTarget,
+  selectMatchedEntryIds,
+  selectOccurrence,
   selectOccurrencesBetween,
   setOccurrenceMatch,
 } from '@api/modules/planning/planning.repository'
-import type { OccurrenceItem, OccurrenceRef } from '@api/modules/planning/planning.types'
+import type {
+  OccurrenceCandidates,
+  OccurrenceItem,
+  OccurrenceRef,
+} from '@api/modules/planning/planning.types'
 import {
   lockExistingOccurrence,
   refreshOccurrences,
@@ -21,7 +27,11 @@ import {
 import {
   addDays,
   entryFitsOccurrence,
+  MATCH_CANDIDATE_LIMIT,
+  MATCH_CANDIDATE_WINDOW_DAYS,
   MATCH_WINDOW_DAYS,
+  type OccurrenceCandidateQuery,
+  rankedCandidates,
   suggestedOccurrences,
 } from '@financas/shared'
 
@@ -47,6 +57,38 @@ export function suggestOccurrencesForEntry(
     return suggestedOccurrences(entry, pending).map((occurrence) =>
       withOverdueFlag(occurrence, today),
     )
+  })
+}
+
+export function listOccurrenceCandidates(
+  db: Database,
+  { workspaceId, occurrenceId }: OccurrenceRef,
+  { q }: OccurrenceCandidateQuery,
+): Promise<OccurrenceCandidates> {
+  return withWorkspace(db, workspaceId, async (tx) => {
+    const occurrence = await selectOccurrence(tx, occurrenceId)
+    if (!occurrence) {
+      throw new NotFoundError('OCCURRENCE_NOT_FOUND', `Occurrence ${occurrenceId} not found`)
+    }
+    const matched = await selectMatchedEntryIds(tx)
+    const entries = await readMatchCandidates(tx, {
+      accountId: occurrence.sourceAccountId,
+      entryType: occurrence.entryType,
+      from: addDays(occurrence.dueOn, -MATCH_CANDIDATE_WINDOW_DAYS),
+      to: addDays(occurrence.dueOn, MATCH_CANDIDATE_WINDOW_DAYS),
+      q,
+      limit: MATCH_CANDIDATE_LIMIT,
+    })
+    const unmatched = entries.filter((entry) => !matched.has(entry.id))
+    return {
+      items: rankedCandidates(occurrence, unmatched).map((entry) => ({
+        entryId: entry.id,
+        description: entry.description,
+        occurredOn: entry.occurredOn,
+        amountCents: entry.amountCents,
+        isLikely: entry.isLikely,
+      })),
+    }
   })
 }
 

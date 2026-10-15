@@ -206,3 +206,15 @@ export type StepsDeletion = {
   deletedAt: Date
   deletedByUserId: string
 }
+
+export type OccurrenceCandidate = {
+  entryId: string
+  description: string
+  occurredOn: IsoDate
+  amountCents: number
+  isLikely: boolean
+}
+
+export type OccurrenceCandidates = {
+  items: OccurrenceCandidate[]
+}

@@ -4,6 +4,7 @@ import { ledgerAccounts } from '@api/modules/ledger/ledger.table'
 import {
   createRecurrenceRule,
   findMatchedOccurrence,
+  listOccurrenceCandidates,
   listOccurrences,
   matchOccurrence,
   suggestOccurrencesForEntry,
@@ -210,5 +211,56 @@ describe('a match follows its entry', () => {
       matchedEntryId: null,
       paidOn: null,
     })
+  })
+})
+
+describe('listOccurrenceCandidates', () => {
+  it('lists the entries of the same type and account, the likely payment first and marked', async () => {
+    const { workspaceId, groceries, pay, october } = await household('Candidates')
+    const market = await pay(8_640, groceries, '2026-10-14')
+    const late = await pay(200_000, undefined, '2026-11-20')
+    const likely = await pay(200_000, undefined, '2026-10-12')
+    const occurrenceId = (await october())?.id ?? ''
+
+    const { items } = await listOccurrenceCandidates(
+      databases.app,
+      { workspaceId, occurrenceId },
+      {},
+    )
+
+    expect(items.map((item) => [item.entryId, item.isLikely])).toEqual([
+      [likely, true],
+      [late, false],
+      [market, false],
+    ])
+    expect(items[0]).toMatchObject({ description: 'Pagamento', amountCents: 200_000 })
+  })
+
+  it('leaves out entries that already pay an occurrence, and searches the description', async () => {
+    const { workspaceId, pay, october } = await household('Candidates taken')
+    const taken = await pay(200_000)
+    const other = await pay(150_000, undefined, '2026-10-20')
+    const occurrenceId = (await october())?.id ?? ''
+    await matchOccurrence(databases.app, { workspaceId, occurrenceId }, taken)
+
+    const all = await listOccurrenceCandidates(databases.app, { workspaceId, occurrenceId }, {})
+    expect(all.items.map((item) => item.entryId)).toEqual([other])
+    const none = await listOccurrenceCandidates(
+      databases.app,
+      { workspaceId, occurrenceId },
+      { q: 'mercado' },
+    )
+    expect(none.items).toEqual([])
+  })
+
+  it('answers 404 for an unknown occurrence', async () => {
+    const { workspaceId } = await household('Candidates missing')
+    await expect(
+      listOccurrenceCandidates(
+        databases.app,
+        { workspaceId, occurrenceId: crypto.randomUUID() },
+        {},
+      ),
+    ).rejects.toMatchObject({ code: 'OCCURRENCE_NOT_FOUND' })
   })
 })

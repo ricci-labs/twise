@@ -22,6 +22,7 @@ export {
   listHolidays,
 } from '@api/modules/planning/use-cases/holidays'
 export {
+  listOccurrenceCandidates,
   matchOccurrence,
   suggestOccurrencesForEntry,
   unmatchOccurrence,

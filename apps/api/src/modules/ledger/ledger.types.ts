@@ -349,3 +349,21 @@ export type EntryPayment = {
   occurredOn: IsoDate
   amountCents: number
 }
+
+export type EntryCandidateFilter = {
+  accountId: string
+  entryType: EntryType
+  from: IsoDate
+  to: IsoDate
+  q?: string
+  limit: number
+}
+
+export type MatchCandidateEntry = {
+  id: string
+  description: string
+  entryType: EntryType
+  occurredOn: IsoDate
+  amountCents: number
+  postings: { accountId: string; amountCents: number }[]
+}

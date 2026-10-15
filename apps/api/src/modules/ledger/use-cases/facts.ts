@@ -6,6 +6,7 @@ import {
   selectActiveEntryIds,
   selectContactItems,
   selectContactPostings,
+  selectEntries,
   selectEntryDates,
   selectFrontedByInvoice,
   selectInvoiceFacts,
@@ -16,8 +17,10 @@ import {
 } from '@api/modules/ledger/ledger.repository'
 import type {
   ContactItems,
+  EntryCandidateFilter,
   EntryPayment,
   InvoiceDue,
+  MatchCandidateEntry,
   PostingDetails,
 } from '@api/modules/ledger/ledger.types'
 import type {
@@ -151,4 +154,29 @@ export function readInvoicesDueBetween(
   to: IsoDate,
 ): Promise<InvoiceDue[]> {
   return selectInvoicesDueBetween(tx, from, to)
+}
+
+export async function readMatchCandidates(
+  tx: WorkspaceTransaction,
+  filter: EntryCandidateFilter,
+): Promise<MatchCandidateEntry[]> {
+  const entries = await selectEntries(tx, { ...filter, types: [filter.entryType] })
+  if (entries.length === 0) {
+    return []
+  }
+  const postings = await selectPostingsOfEntries(
+    tx,
+    entries.map((entry) => entry.id),
+  )
+  return entries.map((entry) => {
+    const own = postings.filter((posting) => posting.entryId === entry.id)
+    return {
+      id: entry.id,
+      description: entry.description,
+      entryType: entry.entryType,
+      occurredOn: entry.occurredOn,
+      amountCents: entryAmountCents(own),
+      postings: own.map(({ accountId, amountCents }) => ({ accountId, amountCents })),
+    }
+  })
 }

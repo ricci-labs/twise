@@ -1,4 +1,8 @@
-import { entryFitsOccurrence, suggestedOccurrences } from '@shared/planning/recurrence/matching'
+import {
+  entryFitsOccurrence,
+  rankedCandidates,
+  suggestedOccurrences,
+} from '@shared/planning/recurrence/matching'
 import type {
   MatchableEntry,
   MatchableOccurrence,
@@ -91,5 +95,28 @@ describe('suggestedOccurrences', () => {
       ],
     }
     expect(suggestedOccurrences(received, [salary])).toEqual([salary])
+  })
+})
+
+describe('rankedCandidates', () => {
+  const internet = occurrence({ dueOn: '2026-10-18', amountCents: 12_000 })
+
+  it('puts the likely payments first, then the ones on the same accounts, each nearest the due date', () => {
+    const ranked = rankedCandidates(internet, [
+      { ...paid(8_640, '2026-10-20', 'groceries'), id: 'market' },
+      { ...paid(12_000, '2026-09-18'), id: 'september' },
+      { ...paid(12_000, '2026-10-19'), id: 'likely' },
+      { ...paid(30_000, '2026-10-18'), id: 'too-much' },
+    ])
+    expect(ranked.map((entry) => [entry.id, entry.isLikely])).toEqual([
+      ['likely', true],
+      ['too-much', false],
+      ['september', false],
+      ['market', false],
+    ])
+  })
+
+  it('marks nothing likely when no payment is close enough', () => {
+    expect(rankedCandidates(internet, [paid(12_000, '2026-12-01')])[0]?.isLikely).toBe(false)
   })
 })

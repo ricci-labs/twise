@@ -328,6 +328,16 @@ describe('matching occurrences over HTTP', () => {
     ])
     const matchPath = `${occurrencesPath}/${suggested[0]?.id}/match`
 
+    const candidatesPath = `${occurrencesPath}/${suggested[0]?.id}/candidates`
+    expect((await viewer.get(candidatesPath)).status).toBe(403)
+    const candidates = await member.get(`${candidatesPath}?q=Faxina`)
+    expect(candidates.status).toBe(200)
+    expect(((await candidates.json()) as { items: { entryId: string }[] }).items).toContainEqual(
+      expect.objectContaining({ entryId, isLikely: true }),
+    )
+    const tooShort = await member.get(`${candidatesPath}?q=F`)
+    expect([tooShort.status, await codeOf(tooShort)]).toEqual([400, 'OCCURRENCE_QUERY_INVALID'])
+
     expect((await viewer.post(matchPath, { entryId })).status).toBe(403)
     expect((await member.post(matchPath, { entryId })).status).toBe(204)
     expect((await member.post(`${occurrencesPath}/${suggested[0]?.id}/unmatch`)).status).toBe(204)

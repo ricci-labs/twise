@@ -29,7 +29,7 @@ import type {
   WorkspaceHoliday,
 } from '@api/modules/planning/planning.types'
 import type { IsoDate } from '@financas/shared'
-import { and, asc, between, desc, eq, gte, isNull, lte, min } from 'drizzle-orm'
+import { and, asc, between, desc, eq, gte, isNotNull, isNull, lte, min } from 'drizzle-orm'
 
 export function selectHolidaysBetween(
   tx: WorkspaceTransaction,
@@ -205,6 +205,26 @@ export async function selectOccurrenceMatchedTo(
     .where(eq(plannedOccurrences.matchedEntryId, entryId))
     .limit(1)
   return occurrence
+}
+
+export async function selectOccurrence(
+  tx: WorkspaceTransaction,
+  occurrenceId: string,
+): Promise<OccurrenceRow | undefined> {
+  const [occurrence] = await tx
+    .select(OCCURRENCE_COLUMNS)
+    .from(plannedOccurrences)
+    .innerJoin(recurrenceRules, eq(recurrenceRules.id, plannedOccurrences.ruleId))
+    .where(eq(plannedOccurrences.id, occurrenceId))
+  return occurrence
+}
+
+export async function selectMatchedEntryIds(tx: WorkspaceTransaction): Promise<Set<string>> {
+  const matched = await tx
+    .select({ entryId: plannedOccurrences.matchedEntryId })
+    .from(plannedOccurrences)
+    .where(isNotNull(plannedOccurrences.matchedEntryId))
+  return new Set(matched.flatMap(({ entryId }) => (entryId ? [entryId] : [])))
 }
 
 export async function lockOccurrence(

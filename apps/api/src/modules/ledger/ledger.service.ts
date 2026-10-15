@@ -45,6 +45,7 @@ export {
   readEntryPayments,
   readInvoiceFacts,
   readInvoicesDueBetween,
+  readMatchCandidates,
   readPostingDetails,
   readPostingFacts,
 } from '@api/modules/ledger/use-cases/facts'
