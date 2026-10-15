@@ -14,14 +14,18 @@ export const segmentedControlVariants = cva(
 )
 
 export const segmentedOptionVariants = cva(
-  'shrink-0 cursor-pointer rounded-full px-3.5 text-label whitespace-nowrap text-ink-muted outline-none focus-visible:ring-2 focus-visible:ring-focus-ring data-pressed:bg-surface data-pressed:text-ink data-pressed:shadow-raised',
+  'cursor-pointer rounded-full text-label whitespace-nowrap text-ink-muted outline-none focus-visible:ring-2 focus-visible:ring-focus-ring data-pressed:bg-surface data-pressed:text-ink',
   {
     variants: {
       width: {
-        auto: 'min-h-9',
-        full: 'min-h-9.5 flex-1 px-2',
+        auto: 'min-h-9 shrink-0 px-3.5',
+        full: 'min-h-9.5 flex-auto px-1.5',
+      },
+      selection: {
+        raised: 'data-pressed:shadow-raised',
+        outline: 'data-pressed:font-bold data-pressed:inset-ring-2 data-pressed:inset-ring-ink',
       },
     },
-    defaultVariants: { width: 'auto' },
+    defaultVariants: { width: 'auto', selection: 'raised' },
   },
 )

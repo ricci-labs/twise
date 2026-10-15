@@ -880,3 +880,7 @@ online with `asChild` are translated to `render`.
   amount (income in `mint-ink`, "≈" for an estimate) and a muted note. Side by side while both
   amounts fit; when they don't (7-digit amounts on a narrow phone) each takes the whole row, so an
   amount is never cut.
+- `SegmentedControl` `selection="outline"`: the app's one selection style (2 px `ink` outline, bold
+  label) for tabs that switch a page's parts, as Planning's "Previstos | Contas fixas | Orçamentos |
+  Metas"; the default `raised` keeps the white pill with a shadow. With `width="full"` the options
+  size to their labels and share what is left, so the four tabs fit a 360 px phone.

@@ -17,7 +17,29 @@ function AccountsExample() {
   )
 }
 
+function PlanningTabsExample() {
+  const [value, setValue] = useState('occurrences')
+  return (
+    <SegmentedControl
+      label="Partes do planejamento"
+      width="full"
+      selection="outline"
+      options={[
+        { value: 'occurrences', label: 'Previstos' },
+        { value: 'recurrences', label: 'Contas fixas' },
+        { value: 'budgets', label: 'Orçamentos' },
+        { value: 'goals', label: 'Metas' },
+      ]}
+      value={value}
+      onValueChange={setValue}
+    />
+  )
+}
+
 export const segmentedControlExamples: ComponentExamples = {
   component: 'SegmentedControl',
-  examples: [{ name: 'Contas', render: () => <AccountsExample /> }],
+  examples: [
+    { name: 'Contas', render: () => <AccountsExample /> },
+    { name: 'Abas com a seleção única (contorno)', render: () => <PlanningTabsExample /> },
+  ],
 }
