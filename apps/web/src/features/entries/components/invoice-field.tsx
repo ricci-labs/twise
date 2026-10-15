@@ -14,13 +14,14 @@ import type {
   InvoiceFieldProps,
   PaymentAccountFieldProps,
 } from '@web/features/entries/entries.types'
-import { formatShortDate } from '@web/lib/format/calendar'
+import { formatShortDate, formatShortDateWithYear } from '@web/lib/format/calendar'
 import { formatTypedAmount } from '@web/lib/format/money'
 import { useEffect, useRef } from 'react'
 import { useController, useFormContext, useWatch } from 'react-hook-form'
 
 const messages = entriesMessages.invoices
 const TONES = { future: 'neutral', open: 'warning', closed: 'info' } as const
+const YEAR_LENGTH = 4
 
 export function InvoiceField({ workspaceId }: InvoiceFieldProps) {
   const cardAccountId = useWatch<EntryFormInput, 'cardAccountId'>({ name: 'cardAccountId' })
@@ -30,6 +31,7 @@ export function InvoiceField({ workspaceId }: InvoiceFieldProps) {
   const invoices = (useQuery(cardInvoicesQueryOptions(workspaceId, cardAccountId)).data ?? [])
     .filter((invoice) => invoice.dueCents > 0)
     .sort((first, second) => first.dueOn.localeCompare(second.dueOn))
+  const paidOn = useWatch<EntryFormInput, 'occurredOn'>({ name: 'occurredOn' })
   const { field, fieldState } = useController<EntryFormInput, 'invoiceId'>({ name: 'invoiceId' })
   const chosen = invoices.find((invoice) => invoice.invoiceId === field.value)
   useInvoiceDefaults(invoices[0], chosen, card?.name)
@@ -48,7 +50,7 @@ export function InvoiceField({ workspaceId }: InvoiceFieldProps) {
           searchLabel={messages.search}
           options={invoices.map((invoice) => ({
             value: invoice.invoiceId,
-            label: messages.due(formatShortDate(invoice.dueOn)),
+            label: messages.due(dueDateLabel(invoice.dueOn, paidOn)),
             detail: messages.left(formatBrl(invoice.dueCents)),
             badge: { label: messages.states[invoice.status], tone: TONES[invoice.status] },
           }))}
@@ -56,6 +58,14 @@ export function InvoiceField({ workspaceId }: InvoiceFieldProps) {
       )}
     </FieldGroup>
   )
+}
+
+function dueDateLabel(dueOn: string, paidOn: string): string {
+  return yearOf(dueOn) === yearOf(paidOn) ? formatShortDate(dueOn) : formatShortDateWithYear(dueOn)
+}
+
+function yearOf(date: string): string {
+  return date.slice(0, YEAR_LENGTH)
 }
 
 function useInvoiceDefaults(

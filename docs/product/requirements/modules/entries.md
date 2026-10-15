@@ -1,7 +1,7 @@
 ---
 summary: Functional requirements for entries — list and filters, the new-entry form for every type (expense, card purchase, income, transfer, invoice payment, settlement, opening balance), detail, edit (details or replace), delete, restore and trash.
 read_when: Designing or building ENT-01..05, or any shortcut that opens the new-entry form.
-updated: 2026-10-14
+updated: 2026-10-15
 ---
 
 # Entries
@@ -186,7 +186,7 @@ with that part "Feito".
 | cardAccountId | "Cartão" | yes | active card |
 | invoiceId | "Fatura" | yes | an invoice of that card (list with status and "falta pagar"); default the oldest with something due |
 | paidFromAccountId | "Pago com" | yes when the card has no default payment account | active money account; default the card's |
-The invoices show as a radio list: "Vence {dd/mm}", "Falta pagar R$ X" and a status badge.
+The invoices show as a radio list: "Vence {dd/mm}" ("{dd/mm/aa}" when due in another year than the payment date), "Falta pagar R$ X" and a status badge.
 Amount defaults to the invoice's "falta pagar"; partial payment allowed; paying more than due warns
 in amber under the amount "O valor é maior que o saldo da fatura." (not blocked).
 
