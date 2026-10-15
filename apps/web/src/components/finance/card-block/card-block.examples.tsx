@@ -50,5 +50,28 @@ export const cardBlockExamples: ComponentExamples = {
         </div>
       ),
     },
+    {
+      name: 'Texto longo no celular',
+      render: () => (
+        <div className="w-80">
+          <CardBlock
+            name="Cartão Conjunto do Banco Exemplo Platinum"
+            icon="card"
+            color={ACCOUNT_COLORS[7].value}
+            cycle="Fecha dia 25 · vence dia 4 · Fulana de Tal dos Santos Silva"
+            link={<a href="#cartao" />}
+            invoice={{
+              label: 'Fatura aberta',
+              amountCents: 123456789,
+              due: 'vence 04/11',
+              link: <a href="#fatura">fatura</a>,
+            }}
+            limit={{ label: 'Limite de R$ 2.000.000,00', used: '62% usado', percent: 62 }}
+            open="Em aberto no cartão: R$ 1.234.567,89, com as parcelas futuras"
+            bestDay={{ label: 'Melhor dia de compra:', value: 'dia 25' }}
+          />
+        </div>
+      ),
+    },
   ],
 }

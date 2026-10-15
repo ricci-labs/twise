@@ -55,5 +55,41 @@ export const dataTableExamples: ComponentExamples = {
         </div>
       ),
     },
+    {
+      name: 'Texto longo em uma tabela estreita',
+      render: () => (
+        <div className="w-160">
+          <DataTable
+            label="Dinheiro"
+            layout="accounts"
+            columns={[
+              { key: 'name', label: 'Conta' },
+              { key: 'kind', label: 'Tipo' },
+              { key: 'owner', label: 'De quem' },
+              { key: 'balance', label: 'Saldo hoje', align: 'end' },
+              { key: 'actions', label: 'Ações', isLabelHidden: true },
+            ]}
+            rows={[
+              {
+                key: 'joint',
+                cells: [
+                  <DataTableName
+                    key="name"
+                    name="Conta Conjunta do Banco Exemplo Internet fibra 1 giga com TV e telefone"
+                    icon="wallet"
+                    color={ACCOUNT_COLORS[0].value}
+                    detail="Conta corrente · Fulana de Tal dos Santos Silva"
+                  />,
+                  'Conta corrente conjunta',
+                  'Fulana de Tal dos Santos Silva',
+                  <DataTableAmount key="balance" cents={123456789} />,
+                  null,
+                ],
+              },
+            ]}
+          />
+        </div>
+      ),
+    },
   ],
 }

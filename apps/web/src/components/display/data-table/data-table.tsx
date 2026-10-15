@@ -68,6 +68,7 @@ function DataTableBodyRow({ row, layout, columns }: DataTableBodyRowProps) {
         <td
           key={columns[position]?.key ?? position}
           className={dataTableCellVariants({
+            layout,
             align: columns[position]?.align,
             isActions: columns[position]?.isActions,
           })}

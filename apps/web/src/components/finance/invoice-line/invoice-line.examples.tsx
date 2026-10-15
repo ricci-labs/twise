@@ -39,5 +39,20 @@ export const invoiceLineExamples: ComponentExamples = {
         </ul>
       ),
     },
+    {
+      name: 'Texto longo no celular',
+      render: () => (
+        <ul className="w-80 rounded-lg border border-border bg-surface px-3">
+          <InvoiceLine
+            date="20/10"
+            description="Internet fibra 1 giga com TV e telefone"
+            icon="house"
+            installment="10/12"
+            detail="R$ 1.000.000,00 de terceiros · Fulana de Tal dos Santos Silva"
+            amountCents={123456789}
+          />
+        </ul>
+      ),
+    },
   ],
 }

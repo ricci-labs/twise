@@ -67,5 +67,20 @@ export const accountRowExamples: ComponentExamples = {
         </ul>
       ),
     },
+    {
+      name: 'Texto longo no celular',
+      render: () => (
+        <ul className="w-80 rounded-lg border border-border bg-surface px-3 py-1">
+          <AccountRow
+            name="Conta Conjunta do Banco Exemplo"
+            icon="wallet"
+            color={ACCOUNT_COLORS[0].value}
+            detail="Conta corrente · Fulana de Tal dos Santos Silva"
+            amountCents={123456789}
+            actions={actionsOf('Conta Conjunta do Banco Exemplo')}
+          />
+        </ul>
+      ),
+    },
   ],
 }

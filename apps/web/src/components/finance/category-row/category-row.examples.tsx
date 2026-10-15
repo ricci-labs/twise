@@ -48,5 +48,17 @@ export const categoryRowExamples: ComponentExamples = {
         </ul>
       ),
     },
+    {
+      name: 'Texto longo no celular',
+      render: () => (
+        <ul className="w-80 rounded-lg border border-border bg-surface px-3 py-1">
+          <CategoryRow
+            name="Internet fibra 1 giga com TV e telefone"
+            icon="house"
+            detail="Subcategoria de Casa Conjunta do Banco Exemplo, arquivada desde outubro"
+          />
+        </ul>
+      ),
+    },
   ],
 }

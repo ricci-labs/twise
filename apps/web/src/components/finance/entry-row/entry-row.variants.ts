@@ -8,9 +8,9 @@ export const entryRowMainVariants = cva(
 
 export const entryRowTextVariants = cva('flex min-w-0 flex-1 flex-col gap-0.5')
 
-export const entryRowTitleVariants = cva('flex min-w-0 flex-wrap items-center gap-x-1.5 text-row')
+export const entryRowTitleVariants = cva('flex min-w-0 items-center gap-x-1.5 text-row')
 
-export const entryRowTitleTextVariants = cva('min-w-0 break-words')
+export const entryRowTitleTextVariants = cva('line-clamp-2 min-w-0 break-words')
 
 export const entryRowMatchVariants = cva('rounded-swatch bg-mint-soft px-px text-inherit')
 
@@ -22,7 +22,7 @@ export const entryRowMarkVariants = cva(
   'inline-grid size-5 shrink-0 place-items-center text-ink-muted [&>svg]:size-3.75',
 )
 
-export const entryRowDetailVariants = cva('text-row-detail text-ink-muted')
+export const entryRowDetailVariants = cva('line-clamp-2 text-row-detail break-words text-ink-muted')
 
 export const entryRowAmountVariants = cva('shrink-0 text-row font-emphasis', {
   variants: {

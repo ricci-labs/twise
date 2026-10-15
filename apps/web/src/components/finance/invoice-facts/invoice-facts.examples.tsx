@@ -30,5 +30,21 @@ export const invoiceFactsExamples: ComponentExamples = {
         </div>
       ),
     },
+    {
+      name: 'Valores de 7 dígitos no celular',
+      render: () => (
+        <div className="w-80">
+          <InvoiceFacts
+            label="Resumo da fatura"
+            facts={[
+              { label: 'Total', value: 'R$ 1.234.567,89' },
+              { label: 'Pago', value: 'R$ 0,00' },
+              { label: 'Falta pagar', value: 'R$ 1.234.567,89' },
+              { label: 'Seu', value: 'R$ 1.000.000,00' },
+            ]}
+          />
+        </div>
+      ),
+    },
   ],
 }

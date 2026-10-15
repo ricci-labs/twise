@@ -5,6 +5,7 @@ import type { ShareRowsProps } from '@web/components/finance/share-rows/share-ro
 import {
   shareAmountVariants,
   shareLeaderVariants,
+  shareNameTextVariants,
   shareNameVariants,
   shareNoteVariants,
   shareRowsVariants,
@@ -19,7 +20,7 @@ export function ShareRows({ shares, ownCents, ownLabel = messages.own, note }: S
           <li key={share.key} className={shareRowVariants()}>
             <span className={shareNameVariants()}>
               <Avatar name={share.name} tone="paper" size="xs" />
-              {share.name}
+              <span className={shareNameTextVariants()}>{share.name}</span>
             </span>
             <span aria-hidden="true" className={shareLeaderVariants()} />
             <Amount cents={share.amountCents} size="inherit" className={shareAmountVariants()} />

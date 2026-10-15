@@ -7,6 +7,7 @@ import {
   recentEntriesTitleVariants,
   recentEntriesVariants,
   recentEntryAmountVariants,
+  recentEntryNameVariants,
   recentEntryTextVariants,
   recentEntryVariants,
 } from '@web/components/finance/recent-entries/recent-entries.variants'
@@ -40,7 +41,7 @@ export function RecentEntries({ entries, pickedKey, onPick }: RecentEntriesProps
               >
                 <CategoryArt name={entry.description} icon={entry.icon} size="lg" />
                 <span className={recentEntryTextVariants()}>
-                  {entry.description}
+                  <span className={recentEntryNameVariants()}>{entry.description}</span>
                   <span className={recentEntryAmountVariants()}>
                     <Amount cents={entry.amountCents} size="inherit" />
                   </span>

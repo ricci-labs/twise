@@ -40,7 +40,9 @@ export function InvoicesCard({ workspaceId, overview, nameOf, className }: Invoi
           >
             <CategoryArt name="" icon="card" size="md" />
             <div className="flex min-w-0 flex-1 flex-col">
-              <span className="truncate text-title-sm">{nameOf(invoice.cardAccountId)}</span>
+              <span className="line-clamp-2 text-title-sm break-words">
+                {nameOf(invoice.cardAccountId)}
+              </span>
               <span className="text-caption font-normal text-ink-muted">
                 {messages.dates(formatShortDate(invoice.closingOn), formatShortDate(invoice.dueOn))}
               </span>

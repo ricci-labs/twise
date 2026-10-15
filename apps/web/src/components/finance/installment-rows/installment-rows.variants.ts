@@ -18,6 +18,8 @@ export const installmentMonthVariants = cva('text-body-sm font-semibold')
 
 export const installmentDueVariants = cva('text-caption text-ink-muted')
 
+export const installmentDetailVariants = cva('flex flex-wrap items-center gap-x-1.5 gap-y-0.5')
+
 export const installmentAmountVariants = cva(
-  'text-body-sm font-emphasis whitespace-nowrap tabular-nums',
+  'shrink-0 text-body-sm font-emphasis whitespace-nowrap tabular-nums',
 )

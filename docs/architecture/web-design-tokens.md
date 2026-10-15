@@ -1,7 +1,7 @@
 ---
 summary: The web's single source of visual values — token tiers and files, naming, colour roles, type, spacing, radius, elevation, motion, layers, breakpoints, dark mode, tokens in JS, and the checks that keep raw values out.
 read_when: Adding or changing a colour, font, size, shadow, animation or theme; styling anything in apps/web; reviewing a web PR.
-updated: 2026-10-14
+updated: 2026-10-15
 ---
 
 # Web design tokens
@@ -110,7 +110,8 @@ When to use each one: the design system guide → Colour, and each token's notes
 - **Table columns:** the desktop tables' column templates are theme values
   (`--grid-template-columns-table-accounts`, `-cards`, `-invoices`, `-lines`, `-categories`,
   `-incomes`), copied from the design CSS, so a table row uses `grid-cols-table-accounts` instead
-  of an arbitrary value.
+  of an arbitrary value. Their amount column keeps at least 8.75 rem, so a 7-digit amount is never
+  cut (`../product/requirements/ui-standards.md` → Long text).
 - **Amounts** always use `tabular-nums`. It lives inside the `Amount` component, so no screen has
   to remember it (`web-components.md`). Inputs use 16 px (`body`) so iPhones don't zoom.
 
