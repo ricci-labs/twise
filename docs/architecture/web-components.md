@@ -340,7 +340,7 @@ passes the overview's numbers.
   lower, as measured on its PNG); the category ones (`ctb`) 64 px rows,
   a 16 px gap and the 12.5 px semibold header. A column can hide its label from view
   (`isLabelHidden`); the actions column (`isActions`) puts the "⋯" at the end, 8 px past the column
-  like the design. A row `{ key, band }` is a band across the columns (the entries table's days:
+  like the design. The `entries` and `trash` cells stay on one line and end in "…" when narrow. A row `{ key, band }` is a band across the columns (the entries table's days:
   13 px bold ink, 14 px above). `DataTableName` takes `badges` after the name (`EntryMarks`) and
   `artName` when the drawing comes from something else (an entry's category). A row whose menu is open (`data-popup-open` in its last cell) gets the `page`
   highlight; an `isOpen` row (a category showing all its chips) gets it too, top-aligned.
@@ -607,7 +607,8 @@ component here, so the form, and later the account, card and planning forms, sha
   "{n} subcategorias" under the name.
 - `SubPageHeader` (`components/layout/sub-page-header`): a page one level down on the phone: the
   40 px "‹" back link (named "Voltar para {page}"), the title in `form-title-lg`, a grey
-  `sub-page` description under it, and an optional `actions` slot on the right (a card's "⋯").
+  `sub-page` description under it, and an optional `actions` slot on the right (a card's "⋯";
+  several actions sit side by side, as the entry detail's pencil and "⋯").
 - The refused action is a `ConfirmDialog` with `confirmVariant="primary"` and `confirmIcon`: the
   title names the item ("Não dá para excluir a Conta Y"), the text says why, "Cancelar" and the way
   out ("Arquivar"). The undo is a toast with "Desfazer"; a refusal that needs an answer, a `danger`

@@ -92,12 +92,14 @@ function EntriesBody(props: EntriesPageProps) {
     <>
       <div className="flex flex-wrap items-center gap-x-2 gap-y-3 lg:gap-2.5">
         <EntriesPeriod {...props} shown={shown} periods={periods} className="w-full lg:w-82.5" />
-        <EntriesSearch
-          search={props.search}
-          onSearchChange={props.onSearchChange}
-          className="lg:min-w-64"
-        />
-        <EntriesFilterButton {...props} className="lg:hidden" />
+        <div className="flex w-full gap-2 lg:contents">
+          <EntriesSearch
+            search={props.search}
+            onSearchChange={props.onSearchChange}
+            className="min-w-0 lg:min-w-64"
+          />
+          <EntriesFilterButton {...props} className="lg:hidden" />
+        </div>
         <EntriesFilterBar {...props} className="hidden lg:flex" />
       </div>
       <EntriesFilterChips {...props} className="lg:hidden" />

@@ -307,7 +307,7 @@ updated: 2026-10-15
   5. [x] ‹ › arrows on sideways strips on the desktop
   6. [x] At most 5 items in a dialog or sheet list, with "Mostrar mais" and search over 10
   7. [x] "Mostrar mais" and paging for the lines of an invoice
-- [ ] **Entries list round: ENT-01, ENT-03, ENT-04, ENT-05** (design `../design/entries-list/`,
+- [x] **Entries list round: ENT-01, ENT-03, ENT-04, ENT-05** (design `../design/entries-list/`,
   exported 2026-10-14; the user asked on 2026-10-15 for the same flow: one PR per step, merged by
   Claude when CI is green, every screen checked side by side with its PNG; the shared "Lixeira"
   page approved the same day):
@@ -339,8 +339,10 @@ updated: 2026-10-15
       entry's toast
   13. [x] API: the reason a restore is refused (G47)
   14. [x] Web: the shared "Lixeira" page with `ENT-05` and `ACC-04` as its tabs
-  15. [ ] Web: the desktop versions (filter menus, period popover, side panel, row menu, trash table)
-  16. [ ] Review of the round against every PNG
+  15. [x] Web: the desktop versions (filter menus, period popover, side panel, row menu, trash table)
+     (#315–#319)
+  16. [x] Review of the round against every PNG: the phone's search row and the detail's header
+     actions fixed, the desktop tables cut long cells with "…" as the design does
 - [ ] Remaining project skills (`new-module`, `db-migration`, `domain-rule`, `pr`) and Claude Code hooks
 
 ## Phase 1: MVP

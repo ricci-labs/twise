@@ -44,6 +44,11 @@ async function openEntries({
   return app
 }
 
+function middleOf(element: Element): number {
+  const { top, height } = element.getBoundingClientRect()
+  return top + height / 2
+}
+
 function asked(requests: URL[]): FakeAnswer {
   return (request) => {
     requests.push(new URL(request.url))
@@ -242,6 +247,10 @@ describe('ENT-01 entries list', () => {
     expect(requests.at(-1)?.searchParams.get('accountId')).toBe(CARD)
     expect(requests.at(-1)?.searchParams.get('shared')).toBe('true')
     await expect.element(page.getByRole('button', { name: 'Filtros, 3 ativos' })).toBeVisible()
+    expect(
+      middleOf(page.getByRole('button', { name: 'Filtros, 3 ativos' }).element()) -
+        middleOf(page.getByRole('searchbox').element()),
+    ).toBeCloseTo(0, 0)
     await page.getByRole('button', { name: 'Tirar o filtro Cartão X' }).click()
     await expect.poll(() => requests.at(-1)?.searchParams.has('accountId')).toBe(false)
     await page.getByRole('button', { name: 'Limpar', exact: true }).click()
