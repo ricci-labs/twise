@@ -7,6 +7,7 @@ export const PLANNING_TABS = ['occurrences', 'recurrences', 'budgets', 'goals'] 
 export const planningTabSchema = z.enum(PLANNING_TABS)
 
 export const planningSearchSchema = z.object({
+  rule: z.uuid().optional().catch(undefined),
   period: z
     .string()
     .regex(/^\d{4}-(0[1-9]|1[0-2])$/)

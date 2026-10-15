@@ -17,6 +17,8 @@ import {
   INTERNET_CANDIDATES,
   occurrencesAnswer,
   plannedOccurrence,
+  RENT_RULE,
+  recurrencesAnswer,
 } from '@web/testing/planning-api'
 import type { FakeAnswer } from '@web/testing/testing.types'
 import { beforeEach, describe, expect, it } from 'vitest'
@@ -294,5 +296,87 @@ describe('PLAN-03 actions on a phone', () => {
     await openPlanning({ access: () => accessAs('Leitor', VIEWER_PERMISSIONS) })
     await expect.element(page.getByText('Internet')).toBeVisible()
     await expect.element(page.getByRole('button', { name: /^Internet/ })).not.toBeInTheDocument()
+  })
+})
+
+describe('PLAN-01 recurring bills and incomes', () => {
+  beforeEach(async () => {
+    await page.viewport(360, 800)
+  })
+
+  it('shows the monthly totals and each group, rows worded with their next date', async () => {
+    await openPlanning({ path: 'planning/recurrences', answers: recurrencesAnswer() })
+    await expect.element(page.getByText('Contas fixas por mês')).toBeVisible()
+    await expect.element(page.getByText('R$ 2.220,00')).toBeVisible()
+    await expect.element(page.getByText('2 contas')).toBeVisible()
+    await expect.element(page.getByRole('region', { name: /Contas e assinaturas/ })).toBeVisible()
+    await expect.element(page.getByRole('region', { name: /Receitas/ })).toBeVisible()
+    await expect.element(page.getByText('Todo dia 5 · Conta X → Poupança')).toBeVisible()
+    await expect.element(page.getByText('Atrasada desde 18/10')).toBeVisible()
+    await expectNoAccessibilityViolations(page.getByRole('main').element())
+  })
+
+  it('deletes a recurrence after asking, and says so', async () => {
+    const calls: string[] = []
+    await openPlanning({
+      path: 'planning/recurrences',
+      answers: {
+        ...recurrencesAnswer(),
+        [`DELETE ${BASE}/recurrences/${RENT_RULE}`]: (request) => {
+          calls.push(new URL(request.url).pathname.replace(BASE, ''))
+          return new Response(null, { status: 204 })
+        },
+      },
+    })
+    await page.getByRole('button', { name: /^Aluguel/ }).click()
+    await page.getByRole('button', { name: 'Excluir' }).click()
+    const dialog = page.getByRole('alertdialog', { name: 'Excluir Aluguel?' })
+    await expect.element(dialog.getByText(/Os previstos pendentes dela somem/)).toBeVisible()
+    await dialog.getByRole('button', { name: 'Excluir' }).click()
+    await expect.element(page.getByText('Aluguel excluída.')).toBeVisible()
+    expect(calls).toEqual([`/recurrences/${RENT_RULE}`])
+  })
+
+  it('opens Previstos showing only the occurrences of a recurrence, with a chip to undo it', async () => {
+    const app = await openPlanning({
+      path: 'planning/recurrences',
+      answers: {
+        ...recurrencesAnswer(),
+        ...occurrencesAnswer([
+          plannedOccurrence('r1', '2026-10-25', 'Aluguel', { ruleId: RENT_RULE }),
+          plannedOccurrence('r2', '2026-10-18', 'Internet', { isOverdue: true }),
+        ]),
+      },
+    })
+    await page.getByRole('button', { name: /^Aluguel/ }).click()
+    await page.getByRole('link', { name: 'Ver previstos' }).click()
+    await expect.element(page.getByRole('button', { name: /Tirar o filtro Aluguel/ })).toBeVisible()
+    await expect.element(page.getByText('Internet')).not.toBeInTheDocument()
+    await expect.element(page.getByText('Falta pagar')).not.toBeInTheDocument()
+    await page.getByRole('button', { name: /Tirar o filtro Aluguel/ }).click()
+    await expect.element(page.getByText('Internet')).toBeVisible()
+    expect(app.router.state.location.search).not.toHaveProperty('rule')
+  })
+
+  it('says when nothing is set up yet', async () => {
+    await openPlanning({
+      path: 'planning/recurrences',
+      answers: recurrencesAnswer([], {
+        bills: { monthlyCents: 0, count: 0, includesEstimate: false, includesAveraged: false },
+        income: { monthlyCents: 0, count: 0, leftOutEstimateCents: 0, leftOutEstimateCount: 0 },
+        transfers: { monthlyCents: 0, count: 0 },
+      }),
+    })
+    await expect.element(page.getByText('Nenhuma conta fixa cadastrada.')).toBeVisible()
+  })
+
+  it('gives a viewer no actions on the rows', async () => {
+    await openPlanning({
+      path: 'planning/recurrences',
+      answers: recurrencesAnswer(),
+      access: () => accessAs('Leitor', VIEWER_PERMISSIONS),
+    })
+    await expect.element(page.getByText('Aluguel')).toBeVisible()
+    await expect.element(page.getByRole('button', { name: /^Aluguel/ })).not.toBeInTheDocument()
   })
 })

@@ -68,6 +68,7 @@ import { occurrenceGroupExamples } from '@web/components/finance/occurrence-grou
 import { occurrenceRowExamples } from '@web/components/finance/occurrence-row'
 import { planSummaryTilesExamples } from '@web/components/finance/plan-summary-tiles'
 import { recentEntriesExamples } from '@web/components/finance/recent-entries'
+import { recurrenceRowExamples } from '@web/components/finance/recurrence-row'
 import { shareRowsExamples } from '@web/components/finance/share-rows'
 import { sharesListExamples } from '@web/components/finance/shares-list'
 import { subcategoryAddChipExamples } from '@web/components/finance/subcategory-add-chip'
@@ -179,6 +180,7 @@ export const workbenchSections: readonly ComponentExamples[] = [
   occurrenceGroupExamples,
   planSummaryTilesExamples,
   matchQuestionExamples,
+  recurrenceRowExamples,
   invoiceMonthStripExamples,
   invoiceSummaryExamples,
   invoiceLineExamples,

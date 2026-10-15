@@ -5,6 +5,7 @@ import type { ReactNode } from 'react'
 export type OccurrenceGroupProps = VariantProps<typeof occurrenceGroupListVariants> & {
   title: string
   count: number
+  action?: ReactNode
   footer?: ReactNode
   children: ReactNode
 }

@@ -23,7 +23,7 @@ describe('OccurrenceGroup', () => {
         {internet()}
       </OccurrenceGroup>,
     )
-    await expect.element(screen.getByRole('region', { name: 'A vencer 4 previstos' })).toBeVisible()
+    await expect.element(screen.getByRole('region', { name: 'A vencer 4 itens' })).toBeVisible()
     await expect.element(screen.getByRole('listitem')).toBeVisible()
     await expectNoAccessibilityViolations(screen.container)
   })

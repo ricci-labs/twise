@@ -4,6 +4,7 @@ import { EmptyBlock } from '@web/components/feedback/empty-block'
 import { PageFrame } from '@web/components/layout/page-frame'
 import { PageHeader } from '@web/components/layout/page-header'
 import { OccurrencesTab } from '@web/features/planning/components/occurrences-tab'
+import { RecurrencesTab } from '@web/features/planning/components/recurrences-tab'
 import { planningMessages as messages } from '@web/features/planning/planning.messages'
 import { PLANNING_TABS, planningTabSchema } from '@web/features/planning/planning.schemas'
 import type { PlanningPageProps } from '@web/features/planning/planning.types'
@@ -30,11 +31,17 @@ export function PlanningPage({ tab, ...props }: PlanningPageProps) {
         }
         className="lg:max-w-120"
       />
-      {tab === 'occurrences' ? (
-        <OccurrencesTab {...props} />
-      ) : (
-        <EmptyBlock icon="calendar" title={messages.soon.title} text={messages.soon.text} />
-      )}
+      <TabBody tab={tab} {...props} />
     </PageFrame>
   )
+}
+
+function TabBody({ tab, ...props }: PlanningPageProps) {
+  if (tab === 'occurrences') {
+    return <OccurrencesTab {...props} />
+  }
+  if (tab === 'recurrences') {
+    return <RecurrencesTab {...props} />
+  }
+  return <EmptyBlock icon="calendar" title={messages.soon.title} text={messages.soon.text} />
 }
