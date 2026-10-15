@@ -69,6 +69,7 @@ const CARD_SUMMARY = {
 
 const OPEN_INVOICE = '00000000-0000-4000-8000-0000000000b1'
 const NEXT_INVOICE = '00000000-0000-4000-8000-0000000000b2'
+const LATER_INVOICE = '00000000-0000-4000-8000-0000000000b3'
 
 function invoiceTotal(invoiceId: string, month: string, status: string, dueCents: number) {
   return {
@@ -95,6 +96,7 @@ const MARKET_RUN = {
 }
 
 const CARD_X_INVOICES = [
+  invoiceTotal(LATER_INVOICE, '2027-01', 'future', 30_000),
   invoiceTotal(NEXT_INVOICE, '2026-12', 'future', 64_000),
   invoiceTotal(OPEN_INVOICE, '2026-11', 'open', 195_000),
   invoiceTotal('00000000-0000-4000-8000-0000000000b0', '2026-10', 'closed', 0),
@@ -727,7 +729,13 @@ describe('ENT-02 opening balance', () => {
 })
 
 describe('ENT-02 invoice payment', () => {
+  beforeEach(() => {
+    vi.useFakeTimers({ toFake: ['Date'] })
+    vi.setSystemTime(new Date('2026-10-20T15:00:00.000Z'))
+  })
+
   afterEach(async () => {
+    vi.useRealTimers()
     vi.restoreAllMocks()
     await page.viewport(414, 896)
   })
@@ -739,6 +747,7 @@ describe('ENT-02 invoice payment', () => {
 
     await expect.element(page.getByRole('radio', { name: /^Vence 04\/11/ })).toBeChecked()
     await expect.element(page.getByRole('radio', { name: /^Vence 04\/12/ })).not.toBeChecked()
+    await expect.element(page.getByRole('radio', { name: /^Vence 04\/01\/27/ })).not.toBeChecked()
     await expect.element(page.getByLabelText(/^Valor/)).toHaveValue('1.950,00')
     await expect
       .element(page.getByLabelText(/^Descrição/))
