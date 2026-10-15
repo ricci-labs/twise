@@ -27,9 +27,11 @@ import { entriesMessages } from '@web/features/entries/entries.messages'
 import type {
   EntriesDaysProps,
   EntriesEmptyProps,
+  EntriesHeadlineProps,
   EntriesListEndProps,
   EntriesListProps,
   EntriesMoreProps,
+  EntriesResultsProps,
 } from '@web/features/entries/entries.types'
 import { ApiError } from '@web/lib/api/api-error'
 import { formatMonthLabel } from '@web/lib/format/calendar'
@@ -83,7 +85,7 @@ export function EntriesList(props: EntriesListProps) {
   }
   return (
     <>
-      {summary.data && <ListSummary {...summary.data} />}
+      {summary.data && <EntriesHeadline {...props} summary={summary.data} />}
       <EntriesDays {...props} entries={entries} accounts={accounts.data} />
       <EntriesMore {...props} list={list} hasFilters={hasFilters} />
     </>
@@ -182,7 +184,44 @@ function EntriesMore(props: EntriesMoreProps) {
   )
 }
 
-function EntriesListEnd({ shown, hasFilters }: EntriesListEndProps) {
+function EntriesHeadline({ summary, ...props }: EntriesHeadlineProps) {
+  if (searchTextOf(props.search)) {
+    return <EntriesResults {...props} count={summary.count} />
+  }
+  return <ListSummary {...summary} />
+}
+
+function EntriesResults({ search, onSearchChange, shown, count }: EntriesResultsProps) {
+  const isEverywhere = search.everywhere === true
+  const where = isEverywhere ? messages.everywhere : placeOf(shown)
+  return (
+    <p
+      role="status"
+      className="flex flex-wrap items-center gap-x-1 text-row-detail font-medium text-ink-muted"
+    >
+      {messages.results(count, where)}
+      {!isEverywhere && (
+        <Button
+          variant="tertiary"
+          size="xs"
+          className="px-0"
+          onClick={() => onSearchChange({ everywhere: true })}
+        >
+          {messages.searchEverywhere}
+        </Button>
+      )}
+    </p>
+  )
+}
+
+function placeOf(shown: EntriesResultsProps['shown']): string {
+  return shown.kind === 'range' && shown.detail ? shown.detail : shown.title
+}
+
+function EntriesListEnd({ shown, search, hasFilters }: EntriesListEndProps) {
+  if (search.everywhere && searchTextOf(search)) {
+    return <ListEnd message={messages.endOfSearch} />
+  }
   if (shown.kind === 'range') {
     return <ListEnd message={messages.endOfRange} />
   }

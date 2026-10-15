@@ -236,5 +236,11 @@ export const entriesMessages = {
     endOfFiltered: (period: string) => `Isso é tudo com esses filtros em ${period}.`,
     endOfRange: 'Isso é tudo nesse intervalo.',
     see: (period: string) => `Ver ${period}`,
+    search: 'Buscar pela descrição',
+    results: (count: number, where: string) =>
+      `${count} ${count === 1 ? 'resultado' : 'resultados'} em ${where}.`,
+    everywhere: 'todos os períodos',
+    searchEverywhere: 'Buscar em todos os períodos',
+    endOfSearch: 'Isso é tudo com essa busca.',
   },
 } as const
