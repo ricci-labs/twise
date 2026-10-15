@@ -23,6 +23,7 @@ import {
 } from '@api/modules/ledger/ledger.repository'
 import type {
   DeleteEntryInput,
+  EntryAmounts,
   EntryChangeRef,
   EntryContext,
   EntryItem,
@@ -47,6 +48,7 @@ import {
   entryAmountCents,
   entryDetailsChangeSchema,
   entryInputSchema,
+  entrySharesOf,
   type IsoDate,
   type Page,
   type PaymentMethod,
@@ -192,7 +194,7 @@ export async function listTrashedEntries(
 async function withPostings<T extends { id: string }>(
   tx: WorkspaceTransaction,
   entries: T[],
-): Promise<(T & { amountCents: number; postings: PostingItem[] })[]> {
+): Promise<(T & EntryAmounts & { postings: PostingItem[] })[]> {
   if (entries.length === 0) {
     return []
   }
@@ -204,7 +206,10 @@ async function withPostings<T extends { id: string }>(
     const postings = postingRows
       .filter((posting) => posting.entryId === entry.id)
       .map(({ entryId: _entryId, ...posting }) => posting)
-    return { ...entry, amountCents: entryAmountCents(postings), postings }
+    const amountCents = entryAmountCents(postings)
+    const shares = entrySharesOf(postings)
+    const sharedCents = shares.reduce((total, share) => total + share.amountCents, 0)
+    return { ...entry, amountCents, shares, ownCents: amountCents - sharedCents, postings }
   })
 }
 

@@ -13,6 +13,7 @@ import type {
   CardCycle,
   ChargeableItem,
   EntryInput,
+  EntryShare,
   EntrySource,
   EntryType,
   EntryTypeWithCategory,
@@ -240,6 +241,8 @@ export type EntryItem = {
   source: EntrySource
   replacesEntryId: string | null
   amountCents: number
+  shares: EntryShare[]
+  ownCents: number
   postings: PostingItem[]
 }
 
@@ -268,6 +271,8 @@ export type Deletion = {
 export type TrashedAccount = LedgerAccountItem & Deletion
 
 export type TrashedEntry = EntryItem & Deletion
+
+export type EntryAmounts = Pick<EntryItem, 'amountCents' | 'shares' | 'ownCents'>
 
 export type EntrySummary = {
   outCents: number

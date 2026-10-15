@@ -94,6 +94,8 @@ export const occurrenceParamsSchema = z.object({ occurrenceId: z.uuid() })
 
 export const occurrenceSuggestionQuerySchema = z.object({ entryId: z.uuid() })
 
+export const matchedOccurrenceQuerySchema = z.object({ entryId: z.uuid() })
+
 export const occurrenceMatchSchema = z.strictObject({ entryId: z.uuid() })
 
 export const occurrenceChangeSchema = z.strictObject({

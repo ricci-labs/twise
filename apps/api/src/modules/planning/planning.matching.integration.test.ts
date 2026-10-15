@@ -3,6 +3,7 @@ import { deleteEntry, recordEntry, replaceEntry } from '@api/modules/ledger'
 import { ledgerAccounts } from '@api/modules/ledger/ledger.table'
 import {
   createRecurrenceRule,
+  findMatchedOccurrence,
   listOccurrences,
   matchOccurrence,
   suggestOccurrencesForEntry,
@@ -109,9 +110,14 @@ describe('matchOccurrence and unmatchOccurrence', () => {
 
     await matchOccurrence(databases.app, { workspaceId, occurrenceId }, entryId)
     expect(await october()).toMatchObject({ status: 'matched', matchedEntryId: entryId })
+    expect(await findMatchedOccurrence(databases.app, workspaceId, entryId)).toMatchObject({
+      id: occurrenceId,
+      dueOn: expect.any(String),
+    })
 
     await unmatchOccurrence(databases.app, { workspaceId, occurrenceId })
     expect(await october()).toMatchObject({ status: 'pending', matchedEntryId: null })
+    expect(await findMatchedOccurrence(databases.app, workspaceId, entryId)).toBeNull()
   })
 
   it('refuse an entry of other accounts, a missing entry, a second match and a double use', async () => {

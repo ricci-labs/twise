@@ -180,6 +180,19 @@ export function selectOccurrencesBetween(
     .orderBy(asc(plannedOccurrences.dueOn), asc(recurrenceRules.description))
 }
 
+export async function selectOccurrenceMatchedTo(
+  tx: WorkspaceTransaction,
+  entryId: string,
+): Promise<OccurrenceRow | undefined> {
+  const [occurrence] = await tx
+    .select(OCCURRENCE_COLUMNS)
+    .from(plannedOccurrences)
+    .innerJoin(recurrenceRules, eq(recurrenceRules.id, plannedOccurrences.ruleId))
+    .where(eq(plannedOccurrences.matchedEntryId, entryId))
+    .limit(1)
+  return occurrence
+}
+
 export async function lockOccurrence(
   tx: WorkspaceTransaction,
   occurrenceId: string,

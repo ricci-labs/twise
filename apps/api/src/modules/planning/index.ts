@@ -8,6 +8,7 @@ export {
   deleteGoal,
   deleteHoliday,
   deleteRecurrenceRule,
+  findMatchedOccurrence,
   holidayDatesOf,
   listAllocationSteps,
   listBudgets,
