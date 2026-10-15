@@ -172,6 +172,48 @@ describe('ENT-01 entries list', () => {
     await expect.element(page.getByText('Isso é tudo nesse intervalo.')).toBeVisible()
   })
 
+  it('searches in the API from the second letter, marks the match and widens to every period', async () => {
+    const requests: URL[] = []
+    await page.viewport(390, 844)
+    await openEntries({
+      answers: {
+        [ENTRIES]: (request) => {
+          const url = new URL(request.url)
+          requests.push(url)
+          return Response.json({
+            items: url.searchParams.get('q') ? OCTOBER_ENTRIES.slice(0, 1) : OCTOBER_ENTRIES,
+            nextCursor: null,
+          })
+        },
+        [`GET ${BASE}/entries/summary`]: (request) =>
+          Response.json({
+            outCents: 8640,
+            inCents: 0,
+            count: new URL(request.url).searchParams.get('q') ? 1 : 5,
+          }),
+      },
+    })
+    const search = page.getByRole('searchbox', { name: 'Buscar pela descrição' })
+
+    await search.fill('m')
+    await new Promise((resolve) => setTimeout(resolve, 500))
+    expect(requests.every((url) => !url.searchParams.has('q'))).toBe(true)
+    await search.fill('MERC')
+    await expect.element(page.getByText(/1 resultado em out\/26\./)).toBeVisible()
+    expect(requests.at(-1)?.searchParams.get('q')).toBe('MERC')
+    expect(requests.at(-1)?.searchParams.get('from')).toBe('2026-10-05')
+    await expect.poll(() => document.querySelector('mark')?.textContent).toBe('Merc')
+
+    await page.getByRole('button', { name: 'Buscar em todos os períodos' }).click()
+    await expect.element(page.getByText(/1 resultado em todos os períodos\./)).toBeVisible()
+    expect(requests.at(-1)?.searchParams.has('from')).toBe(false)
+    await expect.element(page.getByText('Isso é tudo com essa busca.')).toBeVisible()
+
+    await page.getByRole('button', { name: 'Limpar busca' }).click()
+    await expect.element(page.getByText('Saiu', { exact: false }).first()).toBeVisible()
+    await expect.element(page.getByText('Isso é tudo de out/26.')).toBeVisible()
+  })
+
   it('hides the trash from a viewer', async () => {
     await openEntries({ access: () => accessAs('Leitor', VIEWER_PERMISSIONS) })
 

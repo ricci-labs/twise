@@ -9,6 +9,7 @@ import { PageHeader } from '@web/components/layout/page-header'
 import { periodsQueryOptions } from '@web/features/entries/api/entries.queries'
 import { EntriesList } from '@web/features/entries/components/entries-list'
 import { EntriesPeriod } from '@web/features/entries/components/entries-period'
+import { EntriesSearch } from '@web/features/entries/components/entries-search'
 import { shownLabelOf, shownRangeOf } from '@web/features/entries/components/shown-range'
 import { entriesMessages } from '@web/features/entries/entries.messages'
 import type { EntriesListSearch, EntriesPageProps } from '@web/features/entries/entries.types'
@@ -61,6 +62,9 @@ function EntriesBody(props: EntriesPageProps) {
   return (
     <>
       <EntriesPeriod {...props} shown={shown} periods={periods} />
+      <div className="flex gap-2">
+        <EntriesSearch search={props.search} onSearchChange={props.onSearchChange} />
+      </div>
       <EntriesList {...props} shown={shown} today={today} />
     </>
   )

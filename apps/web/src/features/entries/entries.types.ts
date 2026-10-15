@@ -333,7 +333,7 @@ export type EntriesListProps = EntriesPageProps & {
   today: IsoDate
 }
 
-export type EntriesListEndProps = Pick<EntriesListProps, 'shown'> & {
+export type EntriesListEndProps = Pick<EntriesListProps, 'shown' | 'search'> & {
   hasFilters: boolean
 }
 
@@ -352,4 +352,14 @@ export type EntriesMoreProps = EntriesListProps & {
     'hasNextPage' | 'isFetchNextPageError' | 'isFetchingNextPage' | 'fetchNextPage'
   >
   hasFilters: boolean
+}
+
+export type EntriesSearchProps = Pick<EntriesPageProps, 'search' | 'onSearchChange'>
+
+export type EntriesResultsProps = Pick<EntriesListProps, 'search' | 'onSearchChange' | 'shown'> & {
+  count: number
+}
+
+export type EntriesHeadlineProps = EntriesListProps & {
+  summary: { outCents: number; inCents: number; count: number }
 }
