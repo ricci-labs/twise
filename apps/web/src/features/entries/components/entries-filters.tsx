@@ -1,4 +1,3 @@
-import { MONEY_ACCOUNT_KINDS } from '@financas/shared'
 import { useQuery } from '@tanstack/react-query'
 import { Button } from '@web/components/actions/button'
 import { CategoryArt } from '@web/components/display/category-art'
@@ -7,14 +6,17 @@ import { FieldGroup } from '@web/components/forms/field-group'
 import { TwiseIcon } from '@web/components/icons/twise-icon'
 import { ChoiceChips } from '@web/components/inputs/choice-chips'
 import { PickerField } from '@web/components/inputs/picker-field'
-import { type PickerItem, PickerSheet } from '@web/components/inputs/picker-sheet'
+import { PickerSheet } from '@web/components/inputs/picker-sheet'
 import { Switch } from '@web/components/inputs/switch'
 import { ToggleChips } from '@web/components/inputs/toggle-chips'
 import { Sheet } from '@web/components/layout/sheet'
 import { accountsQueryOptions } from '@web/features/entries/api/entries.queries'
 import {
+  accountItemsOf,
+  categoryItemsOf,
   filterChipsOf,
   NO_FILTERS,
+  namesOf,
   withoutChip,
 } from '@web/features/entries/components/entries-filters-view'
 import { entriesMessages } from '@web/features/entries/entries.messages'
@@ -23,21 +25,22 @@ import type {
   EntriesFiltersProps,
   EntryFilterDraft,
   FilterPickerProps,
-  LedgerAccount,
 } from '@web/features/entries/entries.types'
+import { cn } from '@web/lib/cn'
 import { useMemo, useRef, useState } from 'react'
 
 const messages = entriesMessages.list.filters
 const typeLabels: Readonly<Record<string, string>> = entriesMessages.newEntry.types
 const TYPE_OPTIONS = Object.entries(typeLabels).map(([value, label]) => ({ value, label }))
-const LISTED_KINDS: ReadonlySet<string> = new Set([...MONEY_ACCOUNT_KINDS, 'credit_card'])
-const CATEGORY_KINDS: ReadonlySet<string> = new Set(['expense_category', 'income_category'])
 const EVERYONE = ''
 
 export function EntriesFilterButton(props: EntriesFiltersProps) {
   const [isOpen, setIsOpen] = useState(false)
   const accounts = useQuery(accountsQueryOptions(props.workspaceId))
-  const count = filterChipsOf(props.search, namesOf(accounts.data ?? [], props)).length
+  const count = filterChipsOf(
+    props.search,
+    namesOf(accounts.data ?? [], props.memberDirectory),
+  ).length
   return (
     <>
       <button
@@ -45,7 +48,10 @@ export function EntriesFilterButton(props: EntriesFiltersProps) {
         aria-haspopup="dialog"
         aria-label={count > 0 ? messages.buttonWithCount(count) : messages.button}
         data-active={count > 0 ? '' : undefined}
-        className="inline-flex min-h-touch shrink-0 cursor-pointer items-center gap-1.5 rounded-md border border-border-control bg-surface px-3.5 text-label text-ink outline-none hover:bg-sunken focus-visible:ring-2 focus-visible:ring-focus-ring data-active:border-ink data-active:ring-1 data-active:ring-ink data-active:ring-inset"
+        className={cn(
+          'inline-flex min-h-touch shrink-0 cursor-pointer items-center gap-1.5 rounded-md border border-border-control bg-surface px-3.5 text-label text-ink outline-none hover:bg-sunken focus-visible:ring-2 focus-visible:ring-focus-ring data-active:border-ink data-active:ring-1 data-active:ring-ink data-active:ring-inset',
+          props.className,
+        )}
         onClick={() => setIsOpen(true)}
       >
         <TwiseIcon name="sliders" size="sm" />
@@ -76,9 +82,10 @@ export function EntriesFilterChips(props: EntriesFiltersProps) {
   const { search, onSearchChange } = props
   return (
     <FilterChips
-      chips={filterChipsOf(search, namesOf(accounts.data ?? [], props))}
+      chips={filterChipsOf(search, namesOf(accounts.data ?? [], props.memberDirectory))}
       onRemove={(chip) => onSearchChange(withoutChip(search, chip))}
       onClear={() => onSearchChange(NO_FILTERS)}
+      className={props.className}
     />
   )
 }
@@ -219,36 +226,4 @@ function FilterPicker({
       />
     </FieldGroup>
   )
-}
-
-function namesOf(accounts: readonly LedgerAccount[], { memberDirectory }: EntriesFiltersProps) {
-  return {
-    accounts: new Map(accounts.map((account) => [account.id, account])),
-    members: new Map(memberDirectory.map((member) => [member.userId, member.displayName])),
-  }
-}
-
-function accountItemsOf(accounts: readonly LedgerAccount[]): PickerItem[] {
-  return accounts
-    .filter((account) => LISTED_KINDS.has(account.kind) && account.archivedAt === null)
-    .map((account) => ({ value: account.id, label: account.name, icon: account.icon }))
-}
-
-function categoryItemsOf(accounts: readonly LedgerAccount[]): PickerItem[] {
-  const categories = accounts.filter(
-    (account) => CATEGORY_KINDS.has(account.kind) && account.archivedAt === null,
-  )
-  return categories
-    .filter((category) => category.parentId === null)
-    .flatMap((parent) => [
-      { value: parent.id, label: parent.name, icon: parent.icon },
-      ...categories
-        .filter((child) => child.parentId === parent.id)
-        .map((child) => ({
-          value: child.id,
-          label: child.name,
-          detail: messages.subcategoryOf(parent.name),
-          icon: child.icon ?? parent.icon,
-        })),
-    ])
 }

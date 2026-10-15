@@ -33,7 +33,7 @@ where it's used.
 | Family | Components (from the brief) |
 |---|---|
 | `actions/` | `Button`, `IconButton`, `SubmitButton`, `FloatingActionButton`, `ActionMenu`, `ItemActions`, `SegmentedControl`, `AddTile`, `ShowMoreButton` |
-| `inputs/` | `TextInput`, `PasswordInput`, `EmailInput`, `PhoneInput`, `SearchInput`, `TextArea`, `MoneyInput`, `ChoiceChips`, `PickerField`, `PickerSheet`, `Stepper`, `RadioCardList`, `DateInput`, `PeriodPicker`, `Select`, `Combobox`, `Checkbox`, `RadioGroup`, `Switch`, `DayOfMonthPicker`, `FileUpload`, `ColorSwatch` |
+| `inputs/` | `TextInput`, `PasswordInput`, `EmailInput`, `PhoneInput`, `SearchInput`, `TextArea`, `MoneyInput`, `ChoiceChips`, `PickerField`, `PickerSheet`, `Stepper`, `RadioCardList`, `DateInput`, `PeriodPicker`, `Select`, `FilterButton`, `CheckboxMenu`, `Combobox`, `Checkbox`, `RadioGroup`, `Switch`, `DayOfMonthPicker`, `FileUpload`, `ColorSwatch` |
 | `forms/` | `Form`, `FormField`, `FieldGroup`, `LockedField`, `FormErrorSummary`, `FormFooter`, `RequiredLegend` |
 | `feedback/` | `Toast`, `InlineAlert`, `AutoFillTip`, `Banner`, `ConfirmDialog`, `EmptyState`, `EmptyBlock`, `Skeleton`, `ListSkeleton`, `KpiSkeleton`, `ErrorState` |
 | `display/` | `Amount`, `StatusBadge`, `Avatar`, `ListItem`, `Card`, `StatCard`, `ThresholdProgress`, `Tabs`, `Accordion`, `DataList` (table on desktop, list on mobile), `LoadMore`, `Tooltip`, `HelpPopover`, `FilterChips`, `CategoryIcon`, `ArchivedToggle` |
@@ -408,6 +408,14 @@ component here, so the form, and later the account, card and planning forms, sha
   more choices among a few, all visible, as pressed buttons in a group named by its label: 40 px
   pills that wrap, the pressed ones with the 2 px ink outline and a bold label (the entries' "Tipo"
   filter, `Lista-filtros.png`).
+- `FilterButton` (`components/inputs/filter-button`): one filter of a desktop filter bar
+  (`Lista-desktop.png`): a 44 px outlined button with the label and a chevron; with a `value` it
+  reads "Tipo: **Compra no cartão**" and gets the 2 px ink outline (`data-active`), as it does while
+  its menu is open. `hasMenu={false}` drops the chevron; `isActive` overrides the outline.
+- `CheckboxMenu` (`components/inputs/checkbox-menu`, Base UI `Menu` with checkbox items): one or
+  more options under a `trigger` (a `FilterButton`), 288 px, 40 px rows with an 18 px box (ink
+  when marked). Marking applies at once and keeps it open; the value stays in the options' order;
+  "Limpar" at the foot unmarks them all (`Lista-desktop-filtro.png`).
 - `PickerField` (`components/inputs/picker-field`): the field of an account, card, category or
   contact: a button named by its `FormField` label that opens a dialog, with the drawing, the name
   and a grey second line ("Saldo de hoje: R$ 4.200,00"); a subcategory reads with its parent

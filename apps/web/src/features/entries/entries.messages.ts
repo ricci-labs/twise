@@ -249,6 +249,8 @@ export const entriesMessages = {
     pageTitle: 'Lançamentos',
     title: 'Lançamentos',
     trash: 'Lixeira de lançamentos',
+    trashLink: 'Lixeira',
+    description: 'Tudo o que entrou e saiu, do mais novo para o mais antigo.',
     backTo: {
       accounts: 'Voltar para Contas',
       categories: 'Voltar para Categorias',
@@ -411,6 +413,10 @@ export const entriesMessages = {
       apply: 'Ver resultados',
       searchAccount: 'Buscar conta ou cartão',
       searchCategory: 'Buscar categoria',
+      barLabel: 'Filtros',
+      typesCount: (count: number) => `${count} tipos`,
+      clearFilters: 'Limpar filtros',
+      onlyShared: 'Só os divididos com contatos',
     },
   },
 } as const

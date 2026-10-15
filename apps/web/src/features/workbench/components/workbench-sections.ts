@@ -77,10 +77,12 @@ import { lockedFieldExamples } from '@web/components/forms/locked-field'
 import { twiseIconExamples } from '@web/components/icons/twise-icon'
 import { calendarMonthExamples } from '@web/components/inputs/calendar-month'
 import { calendarSheetExamples } from '@web/components/inputs/calendar-sheet'
+import { checkboxMenuExamples } from '@web/components/inputs/checkbox-menu'
 import { choiceChipsExamples } from '@web/components/inputs/choice-chips'
 import { colorPickerExamples } from '@web/components/inputs/color-picker'
 import { colorSwatchExamples } from '@web/components/inputs/color-swatch'
 import { dayFieldExamples } from '@web/components/inputs/day-field'
+import { filterButtonExamples } from '@web/components/inputs/filter-button'
 import { illustrationPickerExamples } from '@web/components/inputs/illustration-picker'
 import { moneyInputExamples } from '@web/components/inputs/money-input'
 import { passwordInputExamples } from '@web/components/inputs/password-input'
@@ -119,6 +121,8 @@ export const workbenchSections: readonly ComponentExamples[] = [
   pickerFieldExamples,
   dayFieldExamples,
   pickerSheetExamples,
+  filterButtonExamples,
+  checkboxMenuExamples,
   stepperExamples,
   switchExamples,
   radioCardListExamples,

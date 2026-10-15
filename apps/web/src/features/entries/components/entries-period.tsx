@@ -15,6 +15,7 @@ export function EntriesPeriod({
   onSearchChange,
   shown,
   periods,
+  className,
 }: EntriesPeriodProps) {
   const shownYear =
     shown.kind === 'period' ? yearOf(shown.period.label) : parseIsoDate(periods.today).year
@@ -37,6 +38,7 @@ export function EntriesPeriod({
   }
   return (
     <PeriodPicker
+      className={className}
       title={shown.title}
       detail={shown.detail}
       previous={stepLink(-1) || undefined}
