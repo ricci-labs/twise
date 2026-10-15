@@ -1,8 +1,9 @@
 import type { AppEnv } from '@api/core/http/http.types'
 import { queryParams } from '@api/core/http/validation'
-import { authorize, currentWorkspace } from '@api/modules/access'
+import { authorize, authorizeAnyMember, currentWorkspace } from '@api/modules/access'
 import {
   getPeriodOverview,
+  listPeriodsOfYear,
   simulatePurchaseImpact,
   suggestAllocation,
 } from '@api/modules/reports/reports.service'
@@ -10,6 +11,7 @@ import type { ReportRouteDeps } from '@api/modules/reports/reports.types'
 import {
   allocationSuggestionQuerySchema,
   overviewQuerySchema,
+  periodsQuerySchema,
   purchaseSimulationQuerySchema,
 } from '@financas/shared'
 import { Hono } from 'hono'
@@ -23,6 +25,15 @@ export function reportRoutes({ db }: ReportRouteDeps) {
       async (c) => {
         const { workspaceId } = currentWorkspace(c)
         return c.json(await getPeriodOverview(db, workspaceId, c.req.valid('query')))
+      },
+    )
+    .get(
+      '/periods',
+      authorizeAnyMember(),
+      queryParams(periodsQuerySchema, 'PERIODS_QUERY_INVALID'),
+      async (c) => {
+        const { workspaceId } = currentWorkspace(c)
+        return c.json(await listPeriodsOfYear(db, workspaceId, c.req.valid('query')))
       },
     )
     .get(

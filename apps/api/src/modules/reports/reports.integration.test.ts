@@ -9,7 +9,7 @@ import {
   replaceAllocationSteps,
   setBudget,
 } from '@api/modules/planning'
-import { getPeriodOverview, simulatePurchaseImpact } from '@api/modules/reports'
+import { getPeriodOverview, listPeriodsOfYear, simulatePurchaseImpact } from '@api/modules/reports'
 import { changeWorkspaceSettings } from '@api/modules/workspaces'
 import { testAppDeps } from '@api/testing/app'
 import { connectTestDatabases } from '@api/testing/database'
@@ -576,5 +576,88 @@ describe('GET /overview', () => {
     expect(await moreInstallmentsThanCents.json()).toMatchObject({
       error: { code: 'SIMULATION_QUERY_INVALID' },
     })
+  })
+})
+
+describe('listPeriodsOfYear', () => {
+  it('lists the twelve periods of a year by the workspace settings, and the current one', async () => {
+    const ownerId = await fixtures.createUser('periods-owner')
+    const { workspaceId } = await fixtures.createWorkspaceOwnedBy(ownerId, 'Periods')
+    await changeWorkspaceSettings(databases.app, workspaceId, {
+      periodAnchor: 'day_of_month',
+      periodAnchorValue: 5,
+    })
+
+    const thisYear = await listPeriodsOfYear(databases.app, workspaceId, {}, MID_OCTOBER)
+    expect(thisYear.today).toBe('2026-10-15')
+    expect(thisYear.currentLabel).toBe('2026-10')
+    expect(thisYear.periods).toHaveLength(12)
+    expect(thisYear.periods[9]).toEqual({
+      label: '2026-10',
+      start: '2026-10-05',
+      end: '2026-11-04',
+    })
+    expect(thisYear.periods[11]).toEqual({
+      label: '2026-12',
+      start: '2026-12-05',
+      end: '2027-01-04',
+    })
+
+    const nextYear = await listPeriodsOfYear(
+      databases.app,
+      workspaceId,
+      { year: 2027 },
+      MID_OCTOBER,
+    )
+    expect(nextYear.currentLabel).toBe('2026-10')
+    expect(nextYear.periods[0]).toEqual({
+      label: '2027-01',
+      start: '2027-01-05',
+      end: '2027-02-04',
+    })
+  })
+
+  it('moves a business-day start past the national holidays', async () => {
+    const ownerId = await fixtures.createUser('periods-business')
+    const { workspaceId } = await fixtures.createWorkspaceOwnedBy(ownerId, 'Business days')
+    await changeWorkspaceSettings(databases.app, workspaceId, {
+      periodAnchor: 'nth_business_day',
+      periodAnchorValue: 1,
+    })
+
+    const { periods } = await listPeriodsOfYear(
+      databases.app,
+      workspaceId,
+      { year: 2026 },
+      MID_OCTOBER,
+    )
+    expect(periods[0]?.start).toBe('2026-01-02')
+  })
+})
+
+describe('GET /periods', () => {
+  it('answers any member, a viewer included, and refuses a bad year', async () => {
+    const app = createApp(testAppDeps({ db: databases.app }))
+    const ownerSession = await loggedInUser(app, databases.app, fixtures.runId, 'periods-http')
+    const viewerSession = await loggedInUser(app, databases.app, fixtures.runId, 'periods-viewer')
+    const { workspaceId } = await fixtures.createWorkspaceOwnedBy(
+      ownerSession.userId,
+      'Periods HTTP',
+    )
+    await addMemberWithSystemRole(
+      databases.app,
+      databases.owner,
+      workspaceId,
+      viewerSession.userId,
+      'viewer',
+    )
+    const viewer = requestsAs(app, viewerSession)
+
+    const response = await viewer.get(`/api/workspaces/${workspaceId}/periods?year=2026`)
+    expect(response.status).toBe(200)
+    expect(((await response.json()) as { periods: unknown[] }).periods).toHaveLength(12)
+    const invalid = await viewer.get(`/api/workspaces/${workspaceId}/periods?year=26`)
+    expect(invalid.status).toBe(400)
+    expect(await invalid.json()).toMatchObject({ error: { code: 'PERIODS_QUERY_INVALID' } })
   })
 })

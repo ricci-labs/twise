@@ -19,7 +19,7 @@ import {
   readOccurrenceFacts,
   workspaceToday,
 } from '@api/modules/planning'
-import type { PeriodTimeline } from '@api/modules/reports/reports.types'
+import type { PeriodsOfYear, PeriodTimeline } from '@api/modules/reports/reports.types'
 import { currentWorkspaceSettings } from '@api/modules/workspaces'
 import {
   type AccountKind,
@@ -37,6 +37,7 @@ import {
   type PeriodFacts,
   type PeriodOverview,
   type PeriodSettings,
+  type PeriodsQuery,
   type PurchaseImpact,
   type PurchaseSimulationQuery,
   parseIsoDate,
@@ -52,6 +53,9 @@ const MONEY_KINDS: ReadonlySet<AccountKind> = new Set(MONEY_ACCOUNT_KINDS)
 const RECENT_PERIODS = 6
 const UPCOMING_PERIODS = 6
 const DAYS_IN_A_CARD_CYCLE = 31
+const MONTHS_OF_A_YEAR = Array.from({ length: 12 }, (_, index) => index + 1)
+const DECEMBER = 12
+const JANUARY = 1
 
 export function getPeriodOverview(
   db: Database,
@@ -67,6 +71,33 @@ export function getPeriodOverview(
       period: facts.period,
       metrics,
       insights: computeInsights(facts, metrics),
+    }
+  })
+}
+
+export function listPeriodsOfYear(
+  db: Database,
+  workspaceId: string,
+  query: PeriodsQuery,
+  clock: Clock = systemClock,
+): Promise<PeriodsOfYear> {
+  return withWorkspace(db, workspaceId, async (tx) => {
+    const settings = await currentWorkspaceSettings(tx)
+    const periodSettings = periodSettingsOf(settings.periodAnchor, settings.periodAnchorValue)
+    const today = await workspaceToday(tx, clock)
+    const todayYear = parseIsoDate(today).year
+    const year = query.year ?? todayYear
+    const holidays = await holidayDatesOf(
+      tx,
+      clampedDate({ year: Math.min(year, todayYear) - 1, month: DECEMBER }, 1),
+      clampedDate({ year: Math.max(year, todayYear) + 1, month: JANUARY }, LAST_DAY),
+    )
+    return {
+      today,
+      currentLabel: periodOf(today, periodSettings, holidays).label,
+      periods: MONTHS_OF_A_YEAR.map((month) =>
+        periodStartingIn({ year, month }, periodSettings, holidays),
+      ),
     }
   })
 }

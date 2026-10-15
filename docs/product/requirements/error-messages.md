@@ -1,7 +1,7 @@
 ---
 summary: Catalog of every API error code — HTTP status, when it happens, the pt-BR message the user sees, and where it shows (field, form, page, toast).
 read_when: Showing any API error in the web, writing a screen spec, or adding an error code to the API (add it here in the same PR).
-updated: 2026-10-14
+updated: 2026-10-15
 ---
 
 # Error messages
@@ -185,6 +185,7 @@ message.
 | Code | HTTP | When | Message | Shown as |
 |---|---|---|---|---|
 | `OVERVIEW_QUERY_INVALID` | 400 | Invalid period (guard) | "Mostrando o período atual." | toast |
+| `PERIODS_QUERY_INVALID` | 400 | Invalid year for the period sheet (guard) | "Não foi possível carregar os períodos." | sheet |
 | `ALLOCATION_QUERY_INVALID` | 400 | Invalid amount | "Informe um valor maior que zero." | field amount |
 | `SIMULATION_QUERY_INVALID` | 400 | Simulation form invalid | per field; "Escolha um cartão ou uma conta." · "Só compras no cartão podem ser parceladas." · "Cada parcela precisa de pelo menos R$ 0,01: use menos parcelas." | fields |
 | `SIMULATION_CARD_INVALID` | 400 | Card deleted | "Escolha um cartão ativo." | field card |
