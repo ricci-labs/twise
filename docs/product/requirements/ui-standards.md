@@ -1,7 +1,7 @@
 ---
 summary: Rules every web screen follows — field and form validation, the button contract, feedback, loading/empty/error states, money and date inputs, permissions in the UI, destructive actions and how API errors become messages.
 read_when: Designing or building any form, button, list or screen, or reviewing one before merge.
-updated: 2026-10-14
+updated: 2026-10-15
 ---
 
 # UI standards
@@ -144,8 +144,9 @@ Decided with the new-entry design (2026-10-10, version 2 on 2026-10-14,
   its mint would vanish on the mint card.
 - **One selection style:** a 2 px `ink` outline and a bold label for every selected or pressed item
   (tiles, chips, month pills, days, member buttons, the tapped chip while its menu is open). No mint
-  fill and no check mark. The pills that pick a type or a list (the new entry's types, "Despesas |
-  Receitas") and the sidebar's current item keep their mint fill, as the designs draw them.
+  fill and no check mark. Since the entries list design (2026-10-14) this also holds for the new
+  entry's type pills and the chosen month of the period sheet. Only the pills that pick a list
+  ("Despesas | Receitas") and the sidebar's current item keep their mint fill.
 - **System illustrations:** entries and actions made by the system use drawings in the same hand
   drawn style, never line icons: `fatura-paga`, `transferencia`, `saldo-inicial`, `recebimento`
   (`../../design/assets/ilustracoes/`, paper and loose). Line icons stay for interface controls.
@@ -177,7 +178,8 @@ Decided with the new-entry design (2026-10-10, version 2 on 2026-10-14,
 - **Name-to-value lists** (the shares of an entry, who owes what): a dotted leader between the name
   and the value when rows are separated only by a gap; values in one column, the total aligned to
   them. Lists whose rows are split by dividers (the installments) have no leader. On desktop these
-  lists take the full width of their container.
+  lists take the full width of their container. When such a list closes with a total (the shares
+  in an entry's detail, ending in "Sua parte"), the line before the total is solid, not dashed.
 - **Forms over a screen** (full screen on the phone, a dialog on the desktop): the body sits on the
   page colour, so the white fields stand out, and the footer of buttons is white with a top border.
   Field labels are 14 px medium (500), as in the design system; the selected option of a choice is
@@ -198,8 +200,9 @@ Decided by the user on 2026-10-14, for every screen, built or to be built.
   lets the menu grow towards the side with room.
 - **No browser-made controls.** Every choice field uses the app's picker (a sheet on the phone, a
   menu under the field on the desktop), never the browser's `select`; every date uses the app's
-  calendar (month with arrows, days in a grid, today marked, the chosen day with the selection
-  outline), never the browser's date picker.
+  calendar (month with arrows, weeks from Sunday, days in a grid, today marked, the chosen day with
+  the selection outline), never the browser's date picker. A range (the entries' "Escolher datas")
+  outlines its first and last day and puts the days between on `sunken`.
 - **Nothing on the desktop depends on swiping.** A strip that scrolls sideways (the invoice
   months, "Repetir um recente") gets ‹ › arrows at its ends on the desktop, shown only while there
   is more on that side; the wheel and the touchpad keep scrolling it.
