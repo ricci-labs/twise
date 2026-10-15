@@ -8,6 +8,7 @@ import { PageFrame } from '@web/components/layout/page-frame'
 import { PageHeader } from '@web/components/layout/page-header'
 import { SubPageHeader } from '@web/components/layout/sub-page-header'
 import { periodsQueryOptions } from '@web/features/entries/api/entries.queries'
+import { EntriesFilterBar } from '@web/features/entries/components/entries-filter-bar'
 import {
   EntriesFilterButton,
   EntriesFilterChips,
@@ -54,15 +55,17 @@ function EntriesHeader({ workspaceId, permissions, search }: EntriesPageProps) {
   return (
     <PageHeader
       title={messages.title}
+      description={messages.description}
       actions={
         hasPermission(permissions, 'entries', 'delete') && (
           <Link
             to="/w/$workspaceId/trash"
             params={{ workspaceId }}
             aria-label={messages.trash}
-            className="grid size-touch place-items-center rounded-full text-ink outline-none hover:bg-sunken focus-visible:ring-2 focus-visible:ring-focus-ring"
+            className="grid size-touch place-items-center rounded-full text-ink outline-none hover:bg-sunken focus-visible:ring-2 focus-visible:ring-focus-ring lg:flex lg:w-auto lg:gap-1.5 lg:rounded-sm lg:px-3 lg:text-label lg:text-mint-ink"
           >
             <TwiseIcon name="trash" size="md" />
+            <span className="hidden lg:inline">{messages.trashLink}</span>
           </Link>
         )
       }
@@ -87,12 +90,17 @@ function EntriesBody(props: EntriesPageProps) {
   }
   return (
     <>
-      <EntriesPeriod {...props} shown={shown} periods={periods} />
-      <div className="flex gap-2">
-        <EntriesSearch search={props.search} onSearchChange={props.onSearchChange} />
-        <EntriesFilterButton {...props} />
+      <div className="flex flex-wrap items-center gap-x-2 gap-y-3 lg:gap-2.5">
+        <EntriesPeriod {...props} shown={shown} periods={periods} className="w-full lg:w-82.5" />
+        <EntriesSearch
+          search={props.search}
+          onSearchChange={props.onSearchChange}
+          className="lg:min-w-64"
+        />
+        <EntriesFilterButton {...props} className="lg:hidden" />
+        <EntriesFilterBar {...props} className="hidden lg:flex" />
       </div>
-      <EntriesFilterChips {...props} />
+      <EntriesFilterChips {...props} className="lg:hidden" />
       <EntriesList {...props} shown={shown} today={today} />
     </>
   )

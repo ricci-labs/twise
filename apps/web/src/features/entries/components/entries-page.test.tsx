@@ -14,8 +14,8 @@ import {
   workspaceList,
 } from '@web/testing/fake-api'
 import type { FakeAnswer } from '@web/testing/testing.types'
-import { describe, expect, it } from 'vitest'
-import { page } from 'vitest/browser'
+import { beforeEach, describe, expect, it } from 'vitest'
+import { page, userEvent } from 'vitest/browser'
 import { render } from 'vitest-browser-react'
 
 const BASE = `/api/workspaces/${WORKSPACE_ID}`
@@ -52,6 +52,10 @@ function asked(requests: URL[]): FakeAnswer {
 }
 
 describe('ENT-01 entries list', () => {
+  beforeEach(async () => {
+    await page.viewport(390, 844)
+  })
+
   it('lists the period by day, newest first, with the summary of the API', async () => {
     const requests: URL[] = []
     await page.viewport(390, 844)
@@ -210,7 +214,7 @@ describe('ENT-01 entries list', () => {
     await expect.element(page.getByText('Isso é tudo com essa busca.')).toBeVisible()
 
     await page.getByRole('button', { name: 'Limpar busca' }).click()
-    await expect.element(page.getByText('Saiu', { exact: false }).first()).toBeVisible()
+    await expect.element(page.getByText(/^Saiu/)).toBeVisible()
     await expect.element(page.getByText('Isso é tudo de out/26.')).toBeVisible()
   })
 
@@ -245,6 +249,51 @@ describe('ENT-01 entries list', () => {
       .element(page.getByRole('group', { name: 'Filtros ativos' }))
       .not.toBeInTheDocument()
     await expect.element(page.getByRole('button', { name: 'Filtros', exact: true })).toBeVisible()
+  })
+
+  it('filters on the desktop from one menu per filter, each showing its value', async () => {
+    const requests: URL[] = []
+    await page.viewport(1440, 900)
+    const app = await openEntries({ answers: { [ENTRIES]: asked(requests) } })
+
+    const bar = page.getByRole('group', { name: 'Filtros' })
+    await expect.element(bar).toBeVisible()
+    expect(page.getByRole('button', { name: 'Filtros', exact: true }).query()).toBeNull()
+    await bar.getByRole('button', { name: 'Tipo' }).click()
+    const types = page.getByRole('menu')
+    await types.getByRole('menuitemcheckbox', { name: 'Compra no cartão' }).click()
+    await expect.poll(() => requests.at(-1)?.searchParams.get('types')).toBe('card_purchase')
+    await types.getByRole('menuitemcheckbox', { name: 'Despesa' }).click()
+    await expect
+      .poll(() => requests.at(-1)?.searchParams.get('types'))
+      .toBe('expense,card_purchase')
+    await expect.element(bar.getByRole('button', { name: 'Tipo: 2 tipos' })).toBeVisible()
+    await expectNoAccessibilityViolations(types.element())
+    await userEvent.keyboard('{Escape}')
+
+    await bar.getByRole('button', { name: 'Conta ou cartão' }).click()
+    await page
+      .getByRole('dialog', { name: 'Conta ou cartão' })
+      .getByRole('button', { name: /Cartão X/ })
+      .click()
+    await expect.poll(() => requests.at(-1)?.searchParams.get('accountId')).toBe(CARD)
+    await expect
+      .element(bar.getByRole('button', { name: 'Conta ou cartão: Cartão X' }))
+      .toBeVisible()
+
+    await bar.getByRole('button', { name: 'Quem gastou' }).click()
+    await page.getByRole('menuitem', { name: 'Só os divididos com contatos' }).click()
+    await expect.poll(() => requests.at(-1)?.searchParams.get('shared')).toBe('true')
+    await expect
+      .element(bar.getByRole('button', { name: 'Quem gastou: Divididos com contatos' }))
+      .toBeVisible()
+
+    await bar.getByRole('button', { name: 'Limpar filtros' }).click()
+    await expect.poll(() => app.router.state.location.search).toEqual({})
+    await expect.element(bar.getByRole('button', { name: 'Tipo', exact: true })).toBeVisible()
+    await expect
+      .element(bar.getByRole('button', { name: 'Limpar filtros' }))
+      .not.toBeInTheDocument()
   })
 
   it('says nothing matched the filters and clears them', async () => {

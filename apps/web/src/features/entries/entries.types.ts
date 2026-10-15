@@ -335,6 +335,7 @@ export type EntriesPeriodProps = Pick<
 > & {
   shown: ShownRange
   periods: PeriodsOfYear
+  className?: string
 }
 
 export type EntriesListProps = EntriesPageProps & {
@@ -363,7 +364,9 @@ export type EntriesMoreProps = EntriesListProps & {
   hasFilters: boolean
 }
 
-export type EntriesSearchProps = Pick<EntriesPageProps, 'search' | 'onSearchChange'>
+export type EntriesSearchProps = Pick<EntriesPageProps, 'search' | 'onSearchChange'> & {
+  className?: string
+}
 
 export type EntriesResultsProps = Pick<EntriesListProps, 'search' | 'onSearchChange' | 'shown'> & {
   count: number
@@ -381,7 +384,29 @@ export type EntryFilterNames = {
 export type EntriesFiltersProps = Pick<
   EntriesPageProps,
   'workspaceId' | 'search' | 'onSearchChange' | 'memberDirectory'
->
+> & {
+  className?: string
+}
+
+export type EntriesFilterBarButtonsProps = EntriesFiltersProps & {
+  accounts: readonly LedgerAccount[]
+}
+
+export type EntryFilterBarValues = {
+  types: string | undefined
+  accountId: string | undefined
+  categoryId: string | undefined
+  spentBy: string | undefined
+}
+
+export type FilterMenuProps = {
+  label: string
+  value: string | undefined
+  valueLabel: string | undefined
+  items: readonly PickerItem[]
+  searchLabel?: string
+  onSelect: (value: string | undefined) => void
+}
 
 export type EntriesFilterSheetProps = EntriesFiltersProps & {
   accounts: readonly LedgerAccount[]
