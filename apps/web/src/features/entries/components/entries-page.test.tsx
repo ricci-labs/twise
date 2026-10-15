@@ -296,6 +296,41 @@ describe('ENT-01 entries list', () => {
       .not.toBeInTheDocument()
   })
 
+  it("shows the desktop table with the days as bands and each row's actions", async () => {
+    const deleted: string[] = []
+    await page.viewport(1440, 900)
+    const app = await openEntries({
+      search: '?types=%5B%22expense%22%5D',
+      answers: {
+        [`DELETE ${BASE}/entries/e1`]: (request) => {
+          deleted.push(new URL(request.url).pathname)
+          return new Response(null, { status: 204 })
+        },
+      },
+    })
+
+    const table = page.getByRole('table', { name: 'Lançamentos' })
+    await expect.element(page.getByRole('heading', { name: 'Outubro', level: 2 })).toBeVisible()
+    await expect.element(table.getByRole('columnheader', { name: 'Quem gastou' })).toBeVisible()
+    await expect.element(table.getByText('Hoje · ter, 20 out')).toBeVisible()
+    const purchase = table.getByRole('row', { name: /Tênis de corrida/ })
+    await expect.element(purchase.getByText('Cartão X')).toBeVisible()
+    await expect.element(purchase.getByText('em 3 parcelas')).toBeInTheDocument()
+    await expect
+      .element(table.getByRole('row', { name: /Reserva/ }).getByText('Conta X → Poupança'))
+      .toBeVisible()
+    await expectNoAccessibilityViolations(table.element())
+
+    await table.getByRole('button', { name: 'Ações de Mercado da semana' }).click()
+    await expect
+      .element(page.getByRole('menuitem', { name: 'Editar' }))
+      .toHaveAttribute('href', `/w/${WORKSPACE_ID}/entries/e1?edit=true`)
+    await page.getByRole('menuitem', { name: 'Excluir', exact: true }).click()
+    await expect.poll(() => deleted).toEqual([`${BASE}/entries/e1`])
+    await expect.element(page.getByText('Lançamento movido para a lixeira.')).toBeVisible()
+    expect(app.router.state.location.search).toEqual({ types: ['expense'] })
+  })
+
   it('says nothing matched the filters and clears them', async () => {
     await openEntries({
       search: '?types=%5B%22income%22%5D',

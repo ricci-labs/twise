@@ -307,6 +307,23 @@ export type EntryRowView = {
   direction: EntryDirection
   installmentCount: number
   isShared: boolean
+  columns: EntryRowColumns
+}
+
+export type EntryRowColumns = {
+  category: string
+  account: string
+  spentBy: string
+}
+
+export type EntriesTableProps = Pick<
+  EntriesListProps,
+  'workspaceId' | 'permissions' | 'shown' | 'today'
+> & {
+  entries: readonly ListedEntry[]
+  context: EntryRowContext
+  headline: ReactNode
+  more: ReactNode
 }
 
 export type EntryDay = {
@@ -354,6 +371,11 @@ export type EntriesEmptyProps = EntriesListProps & {
 export type EntriesDaysProps = EntriesListProps & {
   entries: readonly ListedEntry[]
   accounts: readonly LedgerAccount[]
+}
+
+export type EntriesShownProps = EntriesDaysProps & {
+  headline: ReactNode
+  more: ReactNode
 }
 
 export type EntriesMoreProps = EntriesListProps & {
@@ -511,6 +533,7 @@ export type EntryActionRequest =
 export type EntryDetailActionsProps = Pick<EntryDetailPageProps, 'workspaceId' | 'permissions'> & {
   entry: ListedEntry
   isOnClosedInvoice: boolean
+  isInList?: boolean
 }
 
 export type DeleteReasonSheetProps = {

@@ -18,10 +18,19 @@ export type DataTableRow = {
   isOpen?: boolean
 }
 
+export type DataTableBand = {
+  key: string
+  band: ReactNode
+}
+
 export type DataTableProps = Required<Pick<VariantProps<typeof dataTableRowVariants>, 'layout'>> & {
   label: string
   columns: readonly DataTableColumn[]
-  rows: readonly DataTableRow[]
+  rows: readonly (DataTableRow | DataTableBand)[]
+}
+
+export type DataTableBodyRowProps = Pick<DataTableProps, 'layout' | 'columns'> & {
+  row: DataTableRow | DataTableBand
 }
 
 export type DataTableNameLinkProps = {
@@ -35,6 +44,8 @@ export type DataTableNameProps = {
   icon: string | null
   color?: string | null
   detail?: string
+  artName?: string
+  badges?: ReactNode
   link?: ReactElement<DataTableNameLinkProps>
 }
 

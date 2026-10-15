@@ -333,14 +333,16 @@ passes the overview's numbers.
   20 × 24 px padding, 16 px before the body and the footer (the Home PNGs).
 - `DataTable` + `DataTableName` + `DataTableAmount` (`components/display/data-table`): the desktop
   tables of the design (`tb`): a `table` whose rows are grids on one of the column templates
-  (`layout`: `accounts`, `cards`, `invoices`, `lines`, `categories`, `incomes`, from
+  (`layout`: `accounts`, `cards`, `invoices`, `lines`, `categories`, `incomes`, `entries`, `trash`, from
   `--grid-template-columns-table-*`), 14 px muted cells, a divider per row, the name cell (40 px
   drawing, name, an optional `detail` line, colour dot, an optional link) and the bold amount. The
   money layouts have 60 px rows, a 12 px gap and a 14 px header (the accounts page's names sit 2 px
   lower, as measured on its PNG); the category ones (`ctb`) 64 px rows,
   a 16 px gap and the 12.5 px semibold header. A column can hide its label from view
   (`isLabelHidden`); the actions column (`isActions`) puts the "⋯" at the end, 8 px past the column
-  like the design. A row whose menu is open (`data-popup-open` in its last cell) gets the `page`
+  like the design. A row `{ key, band }` is a band across the columns (the entries table's days:
+  13 px bold ink, 14 px above). `DataTableName` takes `badges` after the name (`EntryMarks`) and
+  `artName` when the drawing comes from something else (an entry's category). A row whose menu is open (`data-popup-open` in its last cell) gets the `page`
   highlight; an `isOpen` row (a category showing all its chips) gets it too, top-aligned.
 - `PageHeader` (`components/layout/page-header`): a screen's title (`form-title-lg` on the phone,
   `display` from 1024 px), its description on the desktop only and the actions on the right.
@@ -792,7 +794,8 @@ online with `asChild` are translated to `render`.
   transfer, an invoice payment) muted with no sign. Nothing is cut: the description and the second
   line wrap. With `search`, the part of the description that matched (ignoring case and accents,
   `partsMatching` in `lib/long-lists.ts`) is marked on `mint-soft`. The `link` element wraps the
-  whole row. 64 px with a divider, as the design's `er`.
+  whole row. 64 px with a divider, as the design's `er`. `EntryMarks` (the marks) and
+  `EntryAmount` (the amount by `direction`) are exported for the desktop table.
 - `EntryDayGroup` (`components/finance/entry-day-group`): a day of entries, a region named by its
   heading ("Hoje · ter, 20 out", the detail muted; a past day only "sáb, 17 out") over the white
   card that holds its `EntryRow`s. The screen words the day.

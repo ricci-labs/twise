@@ -36,7 +36,7 @@ export function Card({
           <h2 id={titleId} className={cardTitleVariants()}>
             {title}
           </h2>
-          {description && <p className={cardDescriptionVariants()}>{description}</p>}
+          {description && <div className={cardDescriptionVariants()}>{description}</div>}
         </div>
         {headerAction}
       </div>

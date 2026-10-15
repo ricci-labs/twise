@@ -2,6 +2,8 @@ import { Amount } from '@web/components/display/amount'
 import { CategoryArt } from '@web/components/display/category-art'
 import { entryRowMessages as messages } from '@web/components/finance/entry-row/entry-row.messages'
 import type {
+  EntryAmountProps,
+  EntryMarksProps,
   EntryRowProps,
   EntryTitleProps,
 } from '@web/components/finance/entry-row/entry-row.types'
@@ -18,6 +20,7 @@ import {
   entryRowVariants,
 } from '@web/components/finance/entry-row/entry-row.variants'
 import { TwiseIcon } from '@web/components/icons/twise-icon'
+import { cn } from '@web/lib/cn'
 import { partsMatching } from '@web/lib/long-lists'
 import type { TextPart } from '@web/lib/long-lists.types'
 import { Paperclip } from 'lucide-react'
@@ -51,12 +54,7 @@ export function EntryRow({
         />
         <span className={entryRowDetailVariants()}>{detail}</span>
       </span>
-      <Amount
-        cents={SIGNED_CENTS[direction] * Math.abs(amountCents)}
-        sign={direction === 'in' ? 'always' : 'auto'}
-        size="inherit"
-        className={entryRowAmountVariants({ direction })}
-      />
+      <EntryAmount amountCents={amountCents} direction={direction} />
     </>
   )
   return (
@@ -99,6 +97,14 @@ function EntryTitle({
           ),
         )}
       </span>
+      <EntryMarks installmentCount={installmentCount} isShared={isShared} hasReceipt={hasReceipt} />
+    </span>
+  )
+}
+
+export function EntryMarks({ installmentCount = 1, isShared, hasReceipt }: EntryMarksProps) {
+  return (
+    <>
       {installmentCount > 1 && (
         <span className={entryRowBadgeVariants()}>
           <span aria-hidden="true">{messages.installments(installmentCount)}</span>
@@ -115,6 +121,17 @@ function EntryTitle({
           <Paperclip aria-hidden="true" />
         </span>
       )}
-    </span>
+    </>
+  )
+}
+
+export function EntryAmount({ amountCents, direction, className }: EntryAmountProps) {
+  return (
+    <Amount
+      cents={SIGNED_CENTS[direction] * Math.abs(amountCents)}
+      sign={direction === 'in' ? 'always' : 'auto'}
+      size="inherit"
+      className={cn(entryRowAmountVariants({ direction }), className)}
+    />
   )
 }
