@@ -2,6 +2,7 @@ import {
   ACCOUNT_CLASS_BY_KIND,
   accountClassOf,
   entryAmountCents,
+  entrySharesOf,
   isSystemAccountKind,
 } from '@shared/ledger/ledger/ledger'
 import { ACCOUNT_KINDS } from '@shared/ledger/ledger/ledger.constants'
@@ -42,5 +43,28 @@ describe('entryAmountCents', () => {
     ]
     expect(entryAmountCents(splitDinner)).toBe(30_000)
     expect(entryAmountCents([])).toBe(0)
+  })
+})
+
+describe('entrySharesOf', () => {
+  it('adds what each contact owes across the installments, never a payment back', () => {
+    const owed = (contactId: string, amountCents: number) => ({
+      accountKind: 'receivable' as const,
+      amountCents,
+      contactId,
+    })
+    expect(
+      entrySharesOf([
+        { accountKind: 'expense_category', amountCents: 20_000, contactId: null },
+        owed('c', 10_000),
+        owed('c', 10_000),
+        owed('d', 5_000),
+        owed('e', -3_000),
+        { accountKind: 'credit_card', amountCents: -45_000, contactId: null },
+      ]),
+    ).toEqual([
+      { contactId: 'c', amountCents: 20_000 },
+      { contactId: 'd', amountCents: 5_000 },
+    ])
   })
 })

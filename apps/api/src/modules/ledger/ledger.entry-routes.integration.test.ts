@@ -439,6 +439,11 @@ describe('entries shared with contacts', () => {
       }),
     )
     const dinner = (await listed()).find((item) => item.id === dinnerId)
+    expect(dinner?.shares).toEqual([
+      { contactId: j, amountCents: 10_000 },
+      { contactId: m, amountCents: 10_000 },
+    ])
+    expect(dinner?.ownCents).toBe(10_000)
     expect(
       dinner?.postings.map((posting) => [
         posting.accountKind,
@@ -466,6 +471,8 @@ describe('entries shared with contacts', () => {
     )
     const tv = (await listed()).find((item) => item.id === tvId)
     const owedByJ = tv?.postings.filter((posting) => posting.contactId === j) ?? []
+    expect(tv?.shares).toEqual([{ contactId: j, amountCents: 30_000 }])
+    expect(tv?.ownCents).toBe(90_000)
     expect(owedByJ.map((posting) => [posting.amountCents, posting.installmentNo])).toEqual([
       [10_000, 1],
       [10_000, 2],

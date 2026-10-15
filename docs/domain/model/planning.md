@@ -202,6 +202,7 @@ reserve_coverage  = the reserve goal's balance and target, its % (capped at 100)
 
 | Route | Permission | Does |
 |---|---|---|
+| `GET /occurrences/matched?entryId=` | `planning:view` | `findMatchedOccurrence` (G51): the planned occurrence an entry paid, with its rule's description and due date, or `null` (the entry detail's "Pagou a conta prevista…") |
 | `GET /periods?year=YYYY` | any member | `listPeriodsOfYear` (G48): `{ today, currentLabel, periods }`, the twelve financial periods labeled January to December of that year (default the current year), by the workspace's period settings and holidays, so the web never computes a period itself |
 | `GET /overview?period=YYYY-MM` | `reports:view` | `getPeriodOverview`: `{ today, period, metrics, insights }` for the current period, or the period labeled with that month |
 

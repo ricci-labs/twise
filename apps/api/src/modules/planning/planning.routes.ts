@@ -12,6 +12,7 @@ import {
   deleteGoal,
   deleteHoliday,
   deleteRecurrenceRule,
+  findMatchedOccurrence,
   listAllocationSteps,
   listBudgets,
   listGoals,
@@ -37,6 +38,7 @@ import {
   goalParamsSchema,
   holidayListQuerySchema,
   holidayParamsSchema,
+  matchedOccurrenceQuerySchema,
   newGoalSchema,
   newHolidaySchema,
   newRecurrenceRuleSchema,
@@ -165,6 +167,16 @@ function occurrenceRoutes({ db }: PlanningRouteDeps) {
       async (c) => {
         const { workspaceId } = currentWorkspace(c)
         return c.json(await listOccurrences(db, workspaceId, c.req.valid('query')))
+      },
+    )
+    .get(
+      '/matched',
+      authorize('planning', 'view'),
+      queryParams(matchedOccurrenceQuerySchema, 'OCCURRENCE_QUERY_INVALID'),
+      async (c) => {
+        const { workspaceId } = currentWorkspace(c)
+        const { entryId } = c.req.valid('query')
+        return c.json(await findMatchedOccurrence(db, workspaceId, entryId))
       },
     )
     .get(

@@ -9,6 +9,7 @@ import {
   insertOccurrencesIfMissing,
   lockOccurrence,
   selectActiveRules,
+  selectOccurrenceMatchedTo,
   selectOccurrencesBetween,
   selectPlannedDueDates,
 } from '@api/modules/planning/planning.repository'
@@ -51,6 +52,18 @@ export async function listOccurrences(
     const occurrences = await selectOccurrencesBetween(tx, from, to)
     return occurrences.map((occurrence) => withOverdueFlag(occurrence, today))
   })
+}
+
+export function findMatchedOccurrence(
+  db: Database,
+  workspaceId: string,
+  entryId: string,
+): Promise<OccurrenceRow | null> {
+  return withWorkspace(
+    db,
+    workspaceId,
+    async (tx) => (await selectOccurrenceMatchedTo(tx, entryId)) ?? null,
+  )
 }
 
 export async function readOccurrenceFacts(

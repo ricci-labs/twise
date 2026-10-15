@@ -32,6 +32,7 @@ export {
   unskipOccurrence,
 } from '@api/modules/planning/use-cases/occurrence-changes'
 export {
+  findMatchedOccurrence,
   listOccurrences,
   readOccurrenceFacts,
   readOccurrencesBetween,

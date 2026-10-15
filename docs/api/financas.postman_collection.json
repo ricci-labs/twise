@@ -2578,6 +2578,33 @@
           ]
         },
         {
+          "name": "Occurrence an entry paid",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/workspaces/{{workspaceId}}/occurrences/matched?entryId={{paidEntryId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "workspaces", "{{workspaceId}}", "occurrences", "matched"],
+              "query": [
+                {
+                  "key": "entryId",
+                  "value": "{{paidEntryId}}"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": ["pm.test('answers 200', () => pm.response.to.have.status(200))"]
+              }
+            }
+          ]
+        },
+        {
           "name": "Match payment to occurrence",
           "request": {
             "method": "POST",

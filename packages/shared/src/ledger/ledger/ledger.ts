@@ -4,6 +4,9 @@ import type {
   SystemAccountKind,
 } from '@shared/ledger/ledger/ledger.constants'
 import { SYSTEM_ACCOUNT_KINDS } from '@shared/ledger/ledger/ledger.constants'
+import type { EntryShare, ShareablePosting } from '@shared/ledger/ledger/ledger.types'
+
+const RECEIVABLE = 'receivable'
 
 export const ACCOUNT_CLASS_BY_KIND: Readonly<Record<AccountKind, AccountClass>> = {
   checking: 'asset',
@@ -35,4 +38,14 @@ export function isSystemAccountKind(kind: AccountKind): kind is SystemAccountKin
 
 export function entryAmountCents(postings: readonly { amountCents: number }[]): number {
   return postings.reduce((total, posting) => total + Math.max(posting.amountCents, 0), 0)
+}
+
+export function entrySharesOf(postings: readonly ShareablePosting[]): EntryShare[] {
+  const owed = new Map<string, number>()
+  for (const posting of postings) {
+    if (posting.contactId && posting.accountKind === RECEIVABLE && posting.amountCents > 0) {
+      owed.set(posting.contactId, (owed.get(posting.contactId) ?? 0) + posting.amountCents)
+    }
+  }
+  return [...owed].map(([contactId, amountCents]) => ({ contactId, amountCents }))
 }
