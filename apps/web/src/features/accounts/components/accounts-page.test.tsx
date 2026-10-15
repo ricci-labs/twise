@@ -152,6 +152,28 @@ describe('ACC-01 accounts', () => {
     expect(archived).toHaveBeenCalledOnce()
   })
 
+  it('opens the entries of an account from its actions, and from the row for a viewer', async () => {
+    const app = await openAccounts()
+
+    await page.getByRole('button', { name: 'Ações de Conta X' }).click()
+    await page.getByText('Ver lançamentos').click()
+    await expect.poll(() => app.router.state.location.pathname).toBe(`/w/${WORKSPACE_ID}/entries`)
+    expect(app.router.state.location.search).toMatchObject({
+      accountId: CHECKING,
+      back: 'accounts',
+    })
+  })
+
+  it('opens the entries of an account by its row for a viewer too', async () => {
+    const app = await openAccounts({ access: () => accessAs('Leitor', VIEWER_PERMISSIONS) })
+
+    await page
+      .getByRole('link', { name: /Conta X/ })
+      .first()
+      .click()
+    await expect.poll(() => app.router.state.location.search).toMatchObject({ accountId: CHECKING })
+  })
+
   it('shows the accounts without actions, owners or trash to a viewer', async () => {
     await openAccounts({ access: () => accessAs('Leitor', VIEWER_PERMISSIONS) })
 

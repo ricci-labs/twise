@@ -209,6 +209,10 @@ export const entriesMessages = {
     pageTitle: 'Lançamentos',
     title: 'Lançamentos',
     trash: 'Lixeira de lançamentos',
+    backTo: {
+      accounts: 'Voltar para Contas',
+      categories: 'Voltar para Categorias',
+    },
     today: 'Hoje',
     yesterday: 'Ontem',
     separator: ' · ',

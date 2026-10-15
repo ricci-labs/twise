@@ -11,6 +11,7 @@ import type {
 } from '@web/features/accounts/accounts.types'
 import { useAccountAction } from '@web/features/accounts/api/use-account-action'
 import { namesList, parentOf } from '@web/features/accounts/components/category-tree'
+import { categoryEntriesLink } from '@web/features/accounts/components/entries-links'
 import { MoveCategorySheet } from '@web/features/accounts/components/move-category-sheet'
 import { ApiError } from '@web/lib/api/api-error'
 import { errorMessageFor } from '@web/lib/errors/error-message'
@@ -105,7 +106,7 @@ export function CategoryActions({
       })
     })
 
-  const actions = actionsOf(node, {
+  const ownActions = actionsOf(node, {
     canCreate: hasPermission(permissions, 'accounts', 'create'),
     newSubcategory: (
       <Link to="." search={(previous) => ({ ...previous, category: 'new', parent: node.id })} />
@@ -118,9 +119,22 @@ export function CategoryActions({
     remove,
     move: () => setIsMoving(true),
   })
-  if (actions.length === 0) {
+  if (ownActions.length === 0) {
     return null
   }
+  const actions: ItemAction[] = [
+    ...(hasPermission(permissions, 'entries', 'view')
+      ? [
+          {
+            key: 'entries',
+            label: accountsMessages.actions.entries,
+            icon: 'list',
+            render: categoryEntriesLink(workspaceId, node.id),
+          } as const,
+        ]
+      : []),
+    ...ownActions,
+  ]
   return (
     <>
       <ItemActions

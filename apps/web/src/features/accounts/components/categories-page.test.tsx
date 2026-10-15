@@ -197,15 +197,29 @@ describe('ACC-02 categories', () => {
     await expect.element(page.getByRole('searchbox')).not.toBeInTheDocument()
   })
 
-  it('shows the tree without actions to a viewer', async () => {
+  it('opens the entries of a category and its subcategories from its actions', async () => {
+    const app = await openCategories()
+
+    await page.getByRole('button', { name: 'Ações de Mercado' }).click()
+    await page.getByText('Ver lançamentos').click()
+    await expect
+      .poll(() => app.router.state.location.search)
+      .toMatchObject({
+        categoryId: GROCERIES,
+        back: 'categories',
+      })
+  })
+
+  it('shows the tree without actions to a viewer, a chip opening its entries', async () => {
     localStorage.setItem(`openCategories:${WORKSPACE_ID}`, JSON.stringify([GROCERIES]))
-    await openCategories({ access: () => accessAs('Leitor', VIEWER_PERMISSIONS) })
+    const app = await openCategories({ access: () => accessAs('Leitor', VIEWER_PERMISSIONS) })
 
     await expect.element(page.getByText('Feira')).toBeVisible()
     await expect
       .element(page.getByRole('button', { name: 'Ações de Mercado' }))
       .not.toBeInTheDocument()
-    await expect.element(page.getByRole('button', { name: /^Feira/ })).not.toBeInTheDocument()
+    await page.getByRole('button', { name: 'Feira', exact: true }).click()
+    await expect.poll(() => app.router.state.location.search).toMatchObject({ categoryId: MARKET })
   })
 })
 

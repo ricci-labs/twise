@@ -2,7 +2,7 @@ import { createMemoryHistory } from '@tanstack/react-router'
 import { AppProviders } from '@web/app/providers'
 import { createApp } from '@web/app/router'
 import { expectNoAccessibilityViolations } from '@web/testing/accessibility'
-import { CARD, MEMBER_A } from '@web/testing/accounts-api'
+import { CARD, GROCERIES, MEMBER_A } from '@web/testing/accounts-api'
 import { entriesListAnswers, listedEntry, OCTOBER_ENTRIES } from '@web/testing/entries-api'
 import {
   accessAs,
@@ -255,6 +255,23 @@ describe('ENT-01 entries list', () => {
 
     await expect.element(page.getByText('Nada encontrado com esses filtros.')).toBeVisible()
     await expect.element(page.getByRole('button', { name: 'Tirar o filtro Receita' })).toBeVisible()
+  })
+
+  it('opens filtered by a category, with its subcategories, and goes back there', async () => {
+    const requests: URL[] = []
+    const app = await openEntries({
+      search: `?categoryId=${GROCERIES}&back=categories`,
+      answers: { [ENTRIES]: asked(requests) },
+    })
+
+    await expect
+      .element(page.getByRole('button', { name: 'Tirar o filtro Mercado e subcategorias' }))
+      .toBeVisible()
+    expect(requests.at(-1)?.searchParams.get('categoryId')).toBe(GROCERIES)
+    await page.getByRole('link', { name: 'Voltar para Categorias' }).click()
+    await expect
+      .poll(() => app.router.state.location.pathname)
+      .toBe(`/w/${WORKSPACE_ID}/categories`)
   })
 
   it('hides the trash from a viewer', async () => {
