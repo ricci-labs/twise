@@ -54,7 +54,7 @@ checks it with the accounts that are still usable (not archived nor deleted), el
 
 | Route | Permission | Does |
 |---|---|---|
-| `GET /recurrences` | `planning:view` | `listRecurrenceRules`: rules not deleted, by description, each with its `schedule` object |
+| `GET /recurrences` | `planning:view` | `listRecurrenceRules` → `{ items, summary }`: rules not deleted, by description, each with its `schedule` object, `nextOn` (its earliest pending occurrence, overdue ones included; `null` when none), `nextIsOverdue` and `monthlyCents` (`monthlyEquivalentCents`: weekly × 52 ÷ 12, yearly ÷ 12, divided by the interval); `summary` (`recurrenceSummary`, over the rules not yet ended) has `bills` (expense and card: `monthlyCents`, `count`, `includesEstimate`, `includesAveraged`), `income` (fixed only: `monthlyCents`, `count`, and the estimates left out, `leftOutEstimateCents`, `leftOutEstimateCount`) and `transfers` (`monthlyCents`, `count`) |
 | `POST /recurrences` | `planning:create` | `createRecurrenceRule` `{ description, entryType, amountCents, amountIsEstimate?, sourceAccountId, categoryAccountId, schedule, remindDaysBefore?, autoRecord? }` → `201 { ruleId }` |
 | `PATCH /recurrences/:ruleId` | `planning:update` | `changeRecurrenceRule`: only the fields sent (a `schedule` is replaced whole); never `entryType` → `204` |
 | `DELETE /recurrences/:ruleId` | `planning:delete` | `deleteRecurrenceRule` (soft, optional `reason`) → `204` |

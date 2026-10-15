@@ -42,3 +42,27 @@ export type MatchableOccurrence = {
   frequency: RecurrenceFrequency
   interval: number
 }
+
+export type SummarizableRecurrence = {
+  entryType: RecurringEntryType
+  amountIsEstimate: boolean
+  frequency: RecurrenceFrequency
+  interval: number
+  monthlyCents: number
+}
+
+export type RecurrenceSummary = {
+  bills: {
+    monthlyCents: number
+    count: number
+    includesEstimate: boolean
+    includesAveraged: boolean
+  }
+  income: {
+    monthlyCents: number
+    count: number
+    leftOutEstimateCents: number
+    leftOutEstimateCount: number
+  }
+  transfers: { monthlyCents: number; count: number }
+}

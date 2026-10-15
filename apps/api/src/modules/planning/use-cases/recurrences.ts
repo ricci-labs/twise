@@ -10,6 +10,7 @@ import {
   lockActiveRule,
   ruleAuditTarget,
   selectActiveRules,
+  selectNextPendingDueDates,
   updateRule,
 } from '@api/modules/planning/planning.repository'
 import type {
@@ -17,19 +18,24 @@ import type {
   DeleteRecurrenceRuleInput,
   PlanningContext,
   RecurrenceRuleItem,
+  RecurrenceRuleList,
   RecurrenceRuleRef,
   RecurrenceRuleRow,
 } from '@api/modules/planning/planning.types'
 import {
   dropPendingOccurrences,
+  refreshOccurrences,
   replanRuleOccurrences,
   scheduleOf,
   workspaceToday,
 } from '@api/modules/planning/use-cases/occurrences'
 import {
+  type IsoDate,
+  monthlyEquivalentCents,
   newRecurrenceRuleSchema,
   type RecurringEntryType,
   recurrenceRuleChangeSchema,
+  recurrenceSummary,
   recurringAccountsFit,
 } from '@financas/shared'
 
@@ -38,8 +44,17 @@ const RULE_INVALID = 'RECURRENCE_INVALID'
 export function listRecurrenceRules(
   db: Database,
   workspaceId: string,
-): Promise<RecurrenceRuleItem[]> {
-  return withWorkspace(db, workspaceId, async (tx) => (await selectActiveRules(tx)).map(itemOf))
+  clock: Clock = systemClock,
+): Promise<RecurrenceRuleList> {
+  return withWorkspace(db, workspaceId, async (tx) => {
+    const today = await workspaceToday(tx, clock)
+    await refreshOccurrences(tx, today)
+    const nextDueDates = await selectNextPendingDueDates(tx)
+    const rules = await selectActiveRules(tx)
+    const items = rules.map((rule) => itemOf(rule, nextDueDates.get(rule.id) ?? null, today))
+    const stillRunning = items.filter((item) => runsOnOrAfter(item, today))
+    return { items, summary: recurrenceSummary(stillRunning.map(summarizable)) }
+  })
 }
 
 export async function createRecurrenceRule(
@@ -134,7 +149,19 @@ async function assertAccountsFit(
   }
 }
 
-function itemOf(row: RecurrenceRuleRow): RecurrenceRuleItem {
+function runsOnOrAfter(item: RecurrenceRuleItem, today: IsoDate): boolean {
+  return item.schedule.endsOn === null || item.schedule.endsOn >= today
+}
+
+function summarizable(item: RecurrenceRuleItem) {
+  return { ...item, frequency: item.schedule.frequency, interval: item.schedule.interval }
+}
+
+function itemOf(
+  row: RecurrenceRuleRow,
+  nextOn: IsoDate | null,
+  today: IsoDate,
+): RecurrenceRuleItem {
   return {
     id: row.id,
     description: row.description,
@@ -146,5 +173,8 @@ function itemOf(row: RecurrenceRuleRow): RecurrenceRuleItem {
     schedule: scheduleOf(row),
     remindDaysBefore: row.remindDaysBefore,
     autoRecord: row.autoRecord,
+    nextOn,
+    nextIsOverdue: nextOn !== null && nextOn < today,
+    monthlyCents: monthlyEquivalentCents(row.amountCents, row),
   }
 }

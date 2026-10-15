@@ -44,5 +44,6 @@ export type {
   PlanningContext,
   PlanningRouteDeps,
   RecurrenceRuleItem,
+  RecurrenceRuleList,
   WorkspaceHoliday,
 } from '@api/modules/planning/planning.types'
