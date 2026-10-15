@@ -26,3 +26,9 @@ export type EntryTitleProps = Pick<
   EntryRowProps,
   'description' | 'installmentCount' | 'isShared' | 'hasReceipt' | 'search'
 >
+
+export type EntryMarksProps = Pick<EntryRowProps, 'installmentCount' | 'isShared' | 'hasReceipt'>
+
+export type EntryAmountProps = Pick<EntryRowProps, 'amountCents' | 'direction'> & {
+  className?: string
+}

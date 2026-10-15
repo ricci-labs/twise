@@ -11,6 +11,8 @@ export const dataTableRowVariants = cva('relative grid border-t border-border', 
       lines: 'grid-cols-table-lines gap-3',
       categories: 'grid-cols-table-categories gap-4',
       incomes: 'grid-cols-table-incomes gap-4',
+      entries: 'grid-cols-table-entries gap-4 px-1',
+      trash: 'grid-cols-table-trash gap-4 px-1',
     },
     isHead: {
       true: 'min-h-9 items-center border-t-0',
@@ -25,7 +27,7 @@ export const dataTableRowVariants = cva('relative grid border-t border-border', 
   compoundVariants: [
     {
       isHead: false,
-      layout: ['accounts', 'cards', 'invoices', 'lines'],
+      layout: ['accounts', 'cards', 'invoices', 'lines', 'entries', 'trash'],
       className: 'min-h-15',
     },
     {
@@ -47,6 +49,8 @@ export const dataTableHeadCellVariants = cva('text-ink-muted', {
       lines: 'text-body-sm font-normal',
       categories: 'text-toggle',
       incomes: 'text-toggle',
+      entries: 'text-note font-medium',
+      trash: 'text-note font-medium',
     },
     align: {
       start: 'text-left',
@@ -76,8 +80,14 @@ export const dataTableNameVariants = cva(
 
 export const dataTableNameTextVariants = cva('flex min-w-0 flex-col')
 
-export const dataTableNameLabelVariants = cva('truncate text-choice font-semibold')
+export const dataTableNameLabelVariants = cva('min-w-0 truncate text-choice font-semibold')
 
 export const dataTableNameDetailVariants = cva('truncate text-fine text-ink-muted')
 
 export const dataTableAmountVariants = cva('text-choice font-bold text-ink')
+
+export const dataTableBandVariants = cva('block border-t border-border px-1 pt-3.5 pb-2')
+
+export const dataTableBandCellVariants = cva('block text-left text-note font-bold text-ink')
+
+export const dataTableNameLineVariants = cva('flex min-w-0 items-center gap-1.5')

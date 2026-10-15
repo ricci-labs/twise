@@ -37,6 +37,12 @@ export function entryRowOf(entry: ListedEntry, context: EntryRowContext): EntryR
     direction: DIRECTIONS[entry.entryType] ?? 'neutral',
     installmentCount: entry.installmentCount,
     isShared: entry.postings.some((posting) => posting.contactId !== null),
+    columns: {
+      category: leadOf(entry, context) ?? SYSTEM_LABELS[entry.entryType] ?? messages.none,
+      account: accountsOf(entry, context) ?? messages.none,
+      spentBy:
+        (entry.spentByUserId && context.memberNames.get(entry.spentByUserId)) || messages.none,
+    },
   }
 }
 

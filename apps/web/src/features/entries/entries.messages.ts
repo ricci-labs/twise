@@ -258,6 +258,15 @@ export const entriesMessages = {
     today: 'Hoje',
     yesterday: 'Ontem',
     separator: ' · ',
+    none: '—',
+    table: {
+      entry: 'Lançamento',
+      category: 'Categoria',
+      account: 'Conta ou cartão',
+      spentBy: 'Quem gastou',
+      amount: 'Valor',
+      actions: 'Ações',
+    },
     arrow: ' → ',
     by: (name: string) => `por ${name}`,
     kinds: {
@@ -347,6 +356,8 @@ export const entriesMessages = {
       },
       actions: {
         trigger: 'Ações deste lançamento',
+        triggerOf: (description: string) => `Ações de ${description}`,
+        edit: 'Editar',
         repeat: 'Repetir',
         attach: 'Anexar comprovante',
         deleteWithReason: 'Excluir com motivo',

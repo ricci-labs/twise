@@ -16,6 +16,7 @@ import {
   entriesListQueryOptions,
   entrySummaryQueryOptions,
 } from '@web/features/entries/api/entries.queries'
+import { EntriesTable } from '@web/features/entries/components/entries-table'
 import { entryDaysOf } from '@web/features/entries/components/entry-days'
 import { entryRowOf } from '@web/features/entries/components/entry-row-view'
 import {
@@ -32,8 +33,13 @@ import type {
   EntriesListProps,
   EntriesMoreProps,
   EntriesResultsProps,
+  EntriesShownProps,
+  EntryRowContext,
+  LedgerAccount,
 } from '@web/features/entries/entries.types'
+import { useMediaQuery } from '@web/hooks/use-media-query'
 import { ApiError } from '@web/lib/api/api-error'
+import { DESKTOP_QUERY } from '@web/lib/breakpoints'
 import { formatMonthLabel } from '@web/lib/format/calendar'
 import { hasPermission } from '@web/lib/permissions'
 import { Plus } from 'lucide-react'
@@ -84,10 +90,33 @@ export function EntriesList(props: EntriesListProps) {
     return <EntriesEmpty {...props} hasFilters={hasFilters} />
   }
   return (
+    <EntriesShown
+      {...props}
+      entries={entries}
+      accounts={accounts.data}
+      headline={summary.data && <EntriesHeadline {...props} summary={summary.data} />}
+      more={<EntriesMore {...props} list={list} hasFilters={hasFilters} />}
+    />
+  )
+}
+
+function EntriesShown({ headline, more, ...props }: EntriesShownProps) {
+  const isDesktop = useMediaQuery(DESKTOP_QUERY)
+  if (isDesktop) {
+    return (
+      <EntriesTable
+        {...props}
+        context={contextOf(props.accounts, props)}
+        headline={headline}
+        more={more}
+      />
+    )
+  }
+  return (
     <>
-      {summary.data && <EntriesHeadline {...props} summary={summary.data} />}
-      <EntriesDays {...props} entries={entries} accounts={accounts.data} />
-      <EntriesMore {...props} list={list} hasFilters={hasFilters} />
+      {headline}
+      <EntriesDays {...props} />
+      {more}
     </>
   )
 }
@@ -132,11 +161,7 @@ function EntriesDays({
   today,
 }: EntriesDaysProps) {
   const context = useMemo(
-    () => ({
-      accounts: new Map(accounts.map((account) => [account.id, account])),
-      memberNames: new Map(memberDirectory.map((member) => [member.userId, member.displayName])),
-      currentUserId,
-    }),
+    () => contextOf(accounts, { memberDirectory, currentUserId }),
     [accounts, memberDirectory, currentUserId],
   )
   return (
@@ -257,4 +282,15 @@ function EntriesListEnd({ shown, search, hasFilters }: EntriesListEndProps) {
       }}
     />
   )
+}
+
+function contextOf(
+  accounts: readonly LedgerAccount[],
+  { memberDirectory, currentUserId }: Pick<EntriesListProps, 'memberDirectory' | 'currentUserId'>,
+): EntryRowContext {
+  return {
+    accounts: new Map(accounts.map((account) => [account.id, account])),
+    memberNames: new Map(memberDirectory.map((member) => [member.userId, member.displayName])),
+    currentUserId,
+  }
 }

@@ -22,6 +22,7 @@ export function EntryDetailActions({
   permissions,
   entry,
   isOnClosedInvoice,
+  isInList = false,
 }: EntryDetailActionsProps) {
   const navigate = useNavigate()
   const action = useEntryAction(workspaceId)
@@ -40,7 +41,9 @@ export function EntryDetailActions({
     try {
       await action.mutateAsync({ action: 'delete', entryId: entry.id, reason })
       setIsAskingReason(false)
-      await navigate({ to: '/w/$workspaceId/entries', params: { workspaceId } })
+      if (!isInList) {
+        await navigate({ to: '/w/$workspaceId/entries', params: { workspaceId } })
+      }
       showToast(messages.deleted, {
         tone: 'success',
         action: { label: messages.undo, onPress: () => void restore() },
@@ -52,6 +55,22 @@ export function EntryDetailActions({
 
   const canDelete = hasPermission(permissions, 'entries', 'delete') && !isOnClosedInvoice
   const actions: ItemAction[] = [
+    ...(isInList && hasPermission(permissions, 'entries', 'update')
+      ? [
+          {
+            key: 'edit',
+            label: messages.actions.edit,
+            icon: 'edit',
+            render: (
+              <Link
+                to="/w/$workspaceId/entries/$entry"
+                params={{ workspaceId, entry: entry.id }}
+                search={{ edit: true }}
+              />
+            ),
+          } as const,
+        ]
+      : []),
     ...(hasPermission(permissions, 'entries', 'create')
       ? [
           {
@@ -104,7 +123,9 @@ export function EntryDetailActions({
     <>
       <ItemActions
         title={entry.description}
-        triggerLabel={messages.actions.trigger}
+        triggerLabel={
+          isInList ? messages.actions.triggerOf(entry.description) : messages.actions.trigger
+        }
         actions={actions}
       />
       <DeleteReasonSheet

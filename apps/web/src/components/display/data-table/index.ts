@@ -5,6 +5,7 @@ export {
 } from '@web/components/display/data-table/data-table'
 export { dataTableExamples } from '@web/components/display/data-table/data-table.examples'
 export type {
+  DataTableBand,
   DataTableColumn,
   DataTableProps,
   DataTableRow,
