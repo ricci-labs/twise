@@ -317,11 +317,15 @@ updated: 2026-10-15
   3. [x] API: `GET /entries/summary` (G46)
   4. [x] Web: one selection style for the new entry's type pills (the period sheet's month comes
      with the sheet, in 7)
-  5. [ ] Web components: `SearchInput` (the three search fields built so far use it), `EntryRow`,
+  5. [x] Web components: `SearchInput` (the three search fields built so far use it), `EntryRow`,
      `EntryDayGroup`
-  6. [ ] Web components: `FilterChips`, `ListSummary`, `ListEnd`
-  7. [ ] Web components: the range calendar and the period sheet's other ranges
-  8. [ ] Web: `ENT-01` on the phone (days, paging, search, summary, every state)
+  6. [x] Web components: `FilterChips`, `ListSummary`, `ListEnd`
+  7. [x] Web components: the range calendar and the period sheet's other ranges (`CalendarMonth`,
+     `RangeCalendar`, `PeriodPicker`, also on the Home, whose label now opens the months as RF-HOME-1
+     asks), with the periods of a year from the API (G48)
+  8. [ ] Web: `ENT-01` on the phone (days, paging, search, summary, every state). Done: days,
+     paging, summary, the period and its ranges, every state; each row's amount (G49) and who spent
+     it (G50) come from the API. Left: the search
   9. [ ] Web: `ENT-01` filters, and the list opened ready-filtered by "Ver lançamentos" of
      `ACC-01`, `ACC-02` and `CARD-01`
   10. [ ] Web components: the detail sections (`EntryHeader`, `DetailSection`, `InstallmentRows`,
