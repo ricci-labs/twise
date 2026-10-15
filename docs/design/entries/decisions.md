@@ -12,7 +12,7 @@ Where the design and the requirement docs disagree, the design wins and the doc 
 
 | Topic | Requirement today | Design |
 |---|---|---|
-| Type choice (RF-ENT-5) | Segmented control | Wrapping pill buttons, all visible (no hidden scroll), selected in `--mint`; "Mais" opens a sheet and then shows the chosen type |
+| Type choice (RF-ENT-5) | Segmented control | Wrapping pill buttons, all visible (no hidden scroll), selected in `--mint` (now the ink outline, `../entries-list/decisions.md`); "Mais" opens a sheet and then shows the chosen type |
 | Date | Date field, default "Hoje" | Shortcuts "Hoje, dd mmm" · "Ontem" · "Outra data" (calendar) |
 | "Quem gastou" | Common field | Only on expense and card purchase |
 | Shares (RF-ENT-8) | Rows + "Sua parte" line | Dotted leader between name and value, values in one column, "Sua parte" as the last row with its value in that column |

@@ -1,7 +1,7 @@
 ---
 summary: How web components are layered and built — shadcn primitives, design-system components with one folder each (variants, types, copy, tests, examples), the props contract, forms, icons, copy, the workbench, tests and lint.
 read_when: Creating, changing or using any component in apps/web; adding a shadcn component; building a form; reviewing a web PR.
-updated: 2026-10-14
+updated: 2026-10-15
 ---
 
 # Web components
@@ -388,8 +388,9 @@ component here, so the form, and later the account, card and planning forms, sha
   as the field (288–480 px, `../product/requirements/ui-standards.md`'s menu rule): 15 px muted rows with the typed part in ink 650, the highlighted one on `sunken`.
   Arrows and Enter pick; `onPick` says which (the entry's description suggestions).
 - `ChoiceChips` (`components/inputs/choice-chips`, Base UI `RadioGroup`): one choice among a few,
-  all visible, as radios (arrow keys move the choice). `variant` `pill` (the entry types, chosen in
-  `mint`), `outline` (the date shortcuts, chosen with an ink outline; 48 px from 1024 px), `card`
+  all visible, as radios (arrow keys move the choice). `variant` `pill` (a pill that picks a list,
+  "Despesas | Receitas", chosen in `mint`), `pillOutline` (the entry types, chosen with the 2 px
+  ink outline and a bold label, the one selection style), `outline` (the date shortcuts, chosen with an ink outline; 48 px from 1024 px), `card`
   (who spent, two 48 px cards with a 30 px initial, `choice` text) and `member` (the account form's
   "De quem é": 44 px buttons that wrap, a 26 px initial and 14 px names; an option with `avatarIcon`
   shows that icon on paper instead of the initial, "Da casa"). An option can open a dialog (`opensDialog`,

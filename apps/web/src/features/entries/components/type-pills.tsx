@@ -41,6 +41,7 @@ export function TypePills({ value, canSeeContacts, onChange }: TypePillsProps) {
     <>
       <ChoiceChips
         label={messages.typesLabel}
+        variant="pillOutline"
         className="px-4 pt-3.5 lg:px-8 lg:pt-2.5"
         options={options}
         value={value}
