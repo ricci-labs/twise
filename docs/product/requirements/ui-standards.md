@@ -236,7 +236,7 @@ Decided by the user on 2026-10-14, for every screen, built or to be built.
 - An optional reason field ("Motivo") where the API accepts one (deletions), up to its limit.
 
 ## API errors
-Every response error has the shape `{ "error": { "code", "message", "ref" } }`.
+Every response error has the shape `{ "error": { "code", "message", "ref" } }`, with `details` when the screen needs them (the reason a restore was refused).
 - The UI shows the pt-BR message for the `code` from `error-messages.md`, never the API's
   `message`, which is English and for developers.
 - Unknown codes fall back to "Não foi possível concluir. Tente de novo." plus the `ref`.

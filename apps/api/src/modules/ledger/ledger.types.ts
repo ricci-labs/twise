@@ -339,3 +339,8 @@ export type InvoiceDue = {
 export type EntrySnapshot = typeof journalEntries.$inferSelect & {
   postings: PostingItem[]
 }
+
+export type RestoreRefusal =
+  | { reason: 'replaced' }
+  | { reason: 'closed_invoice' }
+  | { reason: 'deleted_account'; accountId: string; accountName: string }

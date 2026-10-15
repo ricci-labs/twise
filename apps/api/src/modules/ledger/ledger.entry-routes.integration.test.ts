@@ -326,6 +326,66 @@ describe('DELETE and restore /entries/:entryId', () => {
     ).toBe(204)
   })
 
+  it('says why a restore is refused: a newer version, a closed invoice or a deleted account', async () => {
+    const restoreOf = async (entryId: string) => {
+      const response = await member.post(`${entriesPath}/${entryId}/restore`)
+      const body = (await response.json()) as { error: { code: string; details?: object } }
+      return [response.status, body.error.code, body.error.details]
+    }
+
+    const original = await created(owner.post(entriesPath, expense('Versão antiga')))
+    await member.put(`${entriesPath}/${original}`, expense('Versão nova', '2026-10-05', 9000))
+    expect(await restoreOf(original)).toEqual([
+      409,
+      'ENTRY_CANNOT_BE_RESTORED',
+      { reason: 'replaced' },
+    ])
+
+    const cardOfClosed = await created(
+      owner.post(`${workspacePath}/cards`, { name: 'Card Restaurar', closingDay: 3, dueDay: 10 }),
+    )
+    const onCard = await created(
+      owner.post(entriesPath, {
+        entryType: 'card_purchase',
+        occurredOn: '2026-12-20',
+        description: 'Mesa',
+        amountCents: 30_000,
+        cardAccountId: cardOfClosed,
+        categoryId: groceriesId,
+      }),
+    )
+    await member.del(`${entriesPath}/${onCard}`)
+    const invoiceId = (
+      await databases.owner
+        .select({ invoiceId: cardInvoices.id })
+        .from(cardInvoices)
+        .where(eq(cardInvoices.cardAccountId, cardOfClosed))
+    )[0]?.invoiceId
+    await databases.owner
+      .update(cardInvoices)
+      .set({ status: 'closed' })
+      .where(eq(cardInvoices.id, invoiceId ?? ''))
+    expect(await restoreOf(onCard)).toEqual([
+      409,
+      'ENTRY_CANNOT_BE_RESTORED',
+      { reason: 'closed_invoice' },
+    ])
+
+    const oldAccount = await created(
+      owner.post(`${workspacePath}/accounts`, { kind: 'checking', name: 'Conta Y' }),
+    )
+    const fromOld = await created(
+      owner.post(entriesPath, { ...expense('Da conta antiga'), paidFromAccountId: oldAccount }),
+    )
+    await member.del(`${entriesPath}/${fromOld}`)
+    expect((await owner.del(`${workspacePath}/accounts/${oldAccount}`)).status).toBe(204)
+    expect(await restoreOf(fromOld)).toEqual([
+      409,
+      'ENTRY_CANNOT_BE_RESTORED',
+      { reason: 'deleted_account', accountId: oldAccount, accountName: 'Conta Y' },
+    ])
+  })
+
   it('answers 404 for a malformed or unknown entry id', async () => {
     for (const entryId of ['not-a-uuid', UNKNOWN_ID]) {
       const response = await owner.patch(`${entriesPath}/${entryId}`, { description: 'x' })

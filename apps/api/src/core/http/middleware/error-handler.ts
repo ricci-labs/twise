@@ -8,7 +8,7 @@ import {
   UnauthorizedError,
   ValidationError,
 } from '@api/core/http/errors'
-import type { AppEnv, ErrorBody } from '@api/core/http/http.types'
+import type { AppEnv, ErrorBody, ErrorDetails } from '@api/core/http/http.types'
 import { refOf } from '@api/core/http/middleware/request-context'
 import { logUnexpectedError } from '@api/core/observability/errors'
 import type { Context, ErrorHandler, NotFoundHandler } from 'hono'
@@ -43,7 +43,7 @@ const CODE_BY_HTTP_STATUS: Record<number, string> = {
 
 export const handleError: ErrorHandler<AppEnv> = (error, c) => {
   if (error instanceof AppError) {
-    return respond(c, statusOf(error), error.code, error.message)
+    return respond(c, statusOf(error), error.code, error.message, error.details)
   }
   if (error instanceof HTTPException && error.status < INTERNAL_SERVER_ERROR) {
     const code = CODE_BY_HTTP_STATUS[error.status] ?? 'REQUEST_REJECTED'
@@ -72,8 +72,17 @@ function statusOf(error: AppError): ContentfulStatusCode {
   return match?.[1] ?? INTERNAL_SERVER_ERROR
 }
 
-function respond(c: Context<AppEnv>, status: ContentfulStatusCode, code: string, message: string) {
+function respond(
+  c: Context<AppEnv>,
+  status: ContentfulStatusCode,
+  code: string,
+  message: string,
+  details?: ErrorDetails,
+) {
   c.set('errorCode', code)
-  const body: ErrorBody = { error: { code, message, ref: refOf(c.get('requestId')) } }
+  const ref = refOf(c.get('requestId'))
+  const body: ErrorBody = {
+    error: details ? { code, message, ref, details } : { code, message, ref },
+  }
   return c.json(body, status)
 }

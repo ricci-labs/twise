@@ -113,7 +113,7 @@ message.
 | `ENTRY_ALREADY_DELETED` | 409 | Changing a deleted or replaced entry | "Este lançamento foi excluído ou já foi editado por outra pessoa. Atualize a lista." | form |
 | `ENTRY_ON_CLOSED_INVOICE` | 409 | Deleting or editing (new version) an entry with a line on a closed invoice | "Parte deste lançamento está em uma fatura fechada, então ele não pode ser excluído nem ter valores alterados. Só a descrição e as observações mudam." | toast |
 | `ENTRY_NOT_DELETED` | 409 | Restoring an active entry | "Este lançamento já está ativo." | toast |
-| `ENTRY_CANNOT_BE_RESTORED` | 409 | Uses a deleted account, touches a closed invoice, or was replaced | "Não dá para restaurar: ele usa uma conta excluída, está numa fatura fechada ou já tem outra versão." | toast |
+| `ENTRY_CANNOT_BE_RESTORED` | 409 | Uses a deleted account, touches a closed invoice, or was replaced; `details.reason` says which, and the trash says it instead: `deleted_account` "Não dá para restaurar: ele usa a {accountName}, que está na lixeira." with "Restaurar {accountName}"; `closed_invoice` "Não dá para restaurar: parte dele está numa fatura fechada."; `replaced` "Não dá para restaurar: ele já tem outra versão." | "Não dá para restaurar: ele usa uma conta excluída, está numa fatura fechada ou já tem outra versão." | toast |
 | `ACCOUNT_NOT_AVAILABLE` | 400 | An account is archived or deleted | "{Conta} está arquivada ou foi excluída. Escolha outra." | the account field |
 | `NOT_A_MONEY_ACCOUNT` | 400 | Not a money account (guard) | "Escolha uma conta de dinheiro." | the account field |
 | `NOT_AN_EXPENSE_CATEGORY` | 400 | Not an expense category (guard) | "Escolha uma categoria de despesa." | field category |

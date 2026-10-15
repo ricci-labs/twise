@@ -162,7 +162,7 @@ Use cases live in `modules/ledger/use-cases/` (`accounts.ts`, `cards.ts`, `entri
 | `recordEntry(db, context, input)` | Validates with `entryInputSchema`, loads the accounts (same workspace, not archived, not deleted), plans the postings with `planPostings()` (`packages/shared/src/ledger/ledger/postings.ts`) and writes the entry with its postings |
 | `changeEntryDetails(db, ref, change)` | Description and notes in place |
 | `deleteEntry(db, input, clock)` | Soft delete with who, when and why |
-| `restoreEntry(db, ref)` | Back from the trash. A database refusal becomes `ENTRY_CANNOT_BE_RESTORED` |
+| `restoreEntry(db, ref)` | Back from the trash. Refused with `ENTRY_CANNOT_BE_RESTORED` and `details.reason` (G47): `replaced` (it has a newer version), `closed_invoice`, or `deleted_account` with `accountId` and `accountName`; a database refusal it didn't foresee becomes the same code without details |
 | `replaceEntry(db, context, entryId, input, clock)` | Locks the entry, soft-deletes it and records the new one with `replaces_entry_id`, in one transaction |
 
 Account errors: `ACCOUNT_INVALID`, `ACCOUNT_NOT_FOUND`, `ACCOUNT_DELETED`, `ACCOUNT_NAME_TAKEN`,

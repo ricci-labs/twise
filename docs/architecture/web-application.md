@@ -111,7 +111,7 @@ tests build their own with a memory history.
   slows down, the API exports a pre-compiled client type (`hcWithType`), per the Hono RPC guide.
 - `unwrap(request)` (`lib/api/unwrap.ts`) returns the typed body or throws an `ApiError`
   (`status`, `code`, `ref`, `retryAfterSeconds`, `isServerError`), parsed from
-  `{ error: { code, message, ref } }`; `unwrapEmpty` does the same for answers with no body (204).
+  `{ error: { code, message, ref, details? } }` (`ApiError.details`, `{}` when there are none); `unwrapEmpty` does the same for answers with no body (204).
   A response that isn't that shape becomes `UNKNOWN`; a failed fetch becomes `NetworkError`. It
   never imports `hono/client`: it takes any response with `ok`, `status`, `headers` and `json()`.
 - **Global handling** (`QueryCache` and `MutationCache` `onError`):

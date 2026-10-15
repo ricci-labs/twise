@@ -1,7 +1,7 @@
 ---
 summary: Coding conventions — naming, money, dates, IDs, errors, validation, tests, migrations, commits.
 read_when: Writing or reviewing any code.
-updated: 2026-10-09
+updated: 2026-10-15
 ---
 
 # Conventions
@@ -178,7 +178,7 @@ without comments.
   | `NotFoundError` | 404 |
   | `ConflictError` | 409 |
   | anything else | 500 `INTERNAL_ERROR`, logged once as `http.request.failed`; the message never reaches the client |
-- Every error response has the same body: `{ "error": { "code", "message", "ref" } }`. The web shows pt-BR text chosen by `code`, plus the `ref`.
+- Every error response has the same body: `{ "error": { "code", "message", "ref" } }`, plus `details` (a flat object of strings) when the web needs more than the code to say what happened, e.g. `ENTRY_CANNOT_BE_RESTORED` with `{ "reason": "deleted_account", "accountId", "accountName" }`. An error sets it with `new ConflictError(code, message, { details })`. The web shows pt-BR text chosen by `code` (and `details`), plus the `ref`.
 - Routes validate ids in the URL with `pathParams(schema, 'X_NOT_FOUND')`: a malformed id is a `404`
   before any query. Query strings go through `queryParams(schema, 'X_QUERY_INVALID')`. Routes validate bodies with `jsonBody(schema, 'X_INVALID')` (`core/http/validation.ts`, Hono's built-in validator + `parseOrThrow`), so validation errors take the same path. Bodies above 100 KB are refused with 413 before being read. The only exception is the attachment upload routes (`ATTACHMENT_UPLOAD_PATH` in its routes file), limited to `FILE_MAX_BYTES` plus the multipart overhead.
 - A list that grows without bound (entries, the trash) answers one page: `{ items, nextCursor }`. The

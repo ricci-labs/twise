@@ -33,6 +33,7 @@ async function errorFrom(response: ApiResponse<unknown>): Promise<ApiError> {
     status: response.status,
     code: body.success ? body.data.error.code : UNKNOWN_ERROR_CODE,
     ref: body.success ? (body.data.error.ref ?? null) : null,
+    details: body.success ? body.data.error.details : undefined,
     retryAfterSeconds: retryAfterSecondsOf(response.headers),
   })
 }

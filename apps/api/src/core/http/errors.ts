@@ -1,12 +1,15 @@
+import type { AppErrorOptions, ErrorDetails } from '@api/core/http/http.types'
 import type { z } from 'zod'
 
 export class AppError extends Error {
   readonly code: string
+  readonly details: ErrorDetails | undefined
 
-  constructor(code: string, message: string, options?: ErrorOptions) {
+  constructor(code: string, message: string, options?: AppErrorOptions) {
     super(message, options)
     this.name = new.target.name
     this.code = code
+    this.details = options?.details
   }
 }
 

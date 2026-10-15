@@ -9,14 +9,16 @@ export class ApiError extends Error {
   readonly code: string
   readonly ref: string | null
   readonly retryAfterSeconds: number | null
+  readonly details: Readonly<Record<string, string>>
 
-  constructor({ status, code, ref, retryAfterSeconds }: ApiErrorDetails) {
+  constructor({ status, code, ref, retryAfterSeconds, details = {} }: ApiErrorDetails) {
     super(`API answered ${status} ${code}`)
     this.name = 'ApiError'
     this.status = status
     this.code = code
     this.ref = ref
     this.retryAfterSeconds = retryAfterSeconds
+    this.details = details
   }
 
   get isServerError(): boolean {
