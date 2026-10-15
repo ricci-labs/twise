@@ -216,7 +216,7 @@ describe('a match follows its entry', () => {
 
 describe('listOccurrenceCandidates', () => {
   it('lists the entries of the same type and account, the likely payment first and marked', async () => {
-    const { workspaceId, groceries, pay, october } = await household('Candidates')
+    const { workspaceId, housing, groceries, pay, october } = await household('Candidates')
     const market = await pay(8_640, groceries, '2026-10-14')
     const late = await pay(200_000, undefined, '2026-11-20')
     const likely = await pay(200_000, undefined, '2026-10-12')
@@ -234,6 +234,7 @@ describe('listOccurrenceCandidates', () => {
       [market, false],
     ])
     expect(items[0]).toMatchObject({ description: 'Pagamento', amountCents: 200_000 })
+    expect(items.map((item) => item.counterpartAccountId)).toEqual([housing, housing, groceries])
   })
 
   it('leaves out entries that already pay an occurrence, and searches the description', async () => {

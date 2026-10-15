@@ -86,6 +86,7 @@ export function listOccurrenceCandidates(
         description: entry.description,
         occurredOn: entry.occurredOn,
         amountCents: entry.amountCents,
+        counterpartAccountId: counterpartOf(entry.postings, occurrence.sourceAccountId),
         isLikely: entry.isLikely,
       })),
     }
@@ -153,4 +154,15 @@ async function refusingEntriesAlreadyMatched<T>(work: () => Promise<T>): Promise
     }
     throw error
   }
+}
+
+function counterpartOf(
+  postings: readonly { accountId: string; amountCents: number }[],
+  sourceAccountId: string,
+): string | null {
+  const others = postings.filter((posting) => posting.accountId !== sourceAccountId)
+  const [largest] = [...others].sort(
+    (left, right) => Math.abs(right.amountCents) - Math.abs(left.amountCents),
+  )
+  return largest?.accountId ?? null
 }

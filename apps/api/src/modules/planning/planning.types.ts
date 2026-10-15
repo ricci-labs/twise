@@ -212,6 +212,7 @@ export type OccurrenceCandidate = {
   description: string
   occurredOn: IsoDate
   amountCents: number
+  counterpartAccountId: string | null
   isLikely: boolean
 }
 
