@@ -111,7 +111,8 @@ When to use each one: the design system guide → Colour, and each token's notes
   (`--grid-template-columns-table-accounts`, `-cards`, `-invoices`, `-lines`, `-categories`,
   `-incomes`), copied from the design CSS, so a table row uses `grid-cols-table-accounts` instead
   of an arbitrary value. Their amount column keeps at least 8.75 rem, so a 7-digit amount is never
-  cut (`../product/requirements/ui-standards.md` → Long text).
+  cut (`../product/requirements/ui-standards.md` → Long text). `--grid-template-columns-next-dates`
+  (date, weekday, amount) lays out the planning form's next dates preview.
 - **Amounts** always use `tabular-nums`. It lives inside the `Amount` component, so no screen has
   to remember it (`web-components.md`). Inputs use 16 px (`body`) so iPhones don't zoom.
 

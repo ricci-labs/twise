@@ -88,3 +88,10 @@ export type OccurrenceTotals = {
 }
 
 export type RankedCandidate<Entry> = Entry & { isLikely: boolean }
+
+export type PlannedDate = {
+  dueOn: IsoDate
+  nominalOn: IsoDate
+  movedBy: 'weekend' | 'holiday' | null
+  isAfterHoliday: boolean
+}

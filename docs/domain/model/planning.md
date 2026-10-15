@@ -77,6 +77,11 @@ holidays passed must cover the range plus `DAYS_A_DUE_DATE_MAY_SHIFT` (10). The 
 | `skipped_by_user_id` | uuid FK users null | Who skipped it; only while `skipped` (CHECK), cleared on unskip (older skipped rows have none) |
 | timestamps | | No soft delete: occurrences are derived from the rule, and pending ones are rebuilt |
 
+`plannedDatesBetween` (`@financas/shared`) is `dueDatesBetween` with the reason of each date:
+its nominal day, `movedBy` (`weekend`, `holiday` or `null`) and, for an N-th business day,
+`isAfterHoliday` (a weekday holiday earlier that month pushed it). The recurrence form's preview
+words them; `dueDatesBetween` is built on it.
+
 **Planning** (`use-cases/occurrences.ts`), with "today" in the workspace time zone:
 - Occurrences exist from today (or `starts_on`, if later) up to the end of the month
   **6 months ahead** (`OCCURRENCE_HORIZON_MONTHS`). The past is never planned.

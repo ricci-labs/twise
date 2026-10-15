@@ -1,5 +1,9 @@
 import { holidayDatesBetween } from '@shared/core/calendar/holidays'
-import { dueDatesBetween, withoutDatesNearKept } from '@shared/planning/recurrence/recurrence'
+import {
+  dueDatesBetween,
+  plannedDatesBetween,
+  withoutDatesNearKept,
+} from '@shared/planning/recurrence/recurrence'
 import {
   occurrenceListQuerySchema,
   recurrenceScheduleSchema,
@@ -161,5 +165,40 @@ describe('occurrenceListQuerySchema', () => {
     expect(
       occurrenceListQuerySchema.safeParse({ from: '2026-10-02', to: '2026-10-01' }).success,
     ).toBe(false)
+  })
+})
+
+describe('plannedDatesBetween', () => {
+  const holidays = new Set(['2027-01-01', '2026-11-20'])
+
+  it('says when a date moved off a weekend or a holiday, and from which day', () => {
+    const planned = plannedDatesBetween(
+      schedule({ dayOfMonth: 10, weekendRule: 'next_business_day', startsOn: '2026-11-10' }),
+      { from: '2026-11-01', to: '2027-01-31' },
+      holidays,
+    )
+    expect(planned).toEqual([
+      { dueOn: '2026-11-10', nominalOn: '2026-11-10', movedBy: null, isAfterHoliday: false },
+      { dueOn: '2026-12-10', nominalOn: '2026-12-10', movedBy: null, isAfterHoliday: false },
+      { dueOn: '2027-01-11', nominalOn: '2027-01-10', movedBy: 'weekend', isAfterHoliday: false },
+    ])
+    const onHoliday = plannedDatesBetween(
+      schedule({ dayOfMonth: 20, weekendRule: 'next_business_day', startsOn: '2026-11-20' }),
+      { from: '2026-11-01', to: '2026-11-30' },
+      holidays,
+    )
+    expect(onHoliday[0]).toMatchObject({ dueOn: '2026-11-23', movedBy: 'holiday' })
+  })
+
+  it('marks a business day pushed later by a holiday earlier in the month', () => {
+    const planned = plannedDatesBetween(
+      schedule({ dayOfMonth: null, nthBusinessDay: 1, startsOn: '2026-12-01' }),
+      { from: '2026-12-01', to: '2027-01-31' },
+      holidays,
+    )
+    expect(planned.map((date) => [date.dueOn, date.isAfterHoliday])).toEqual([
+      ['2026-12-01', false],
+      ['2027-01-04', true],
+    ])
   })
 })
