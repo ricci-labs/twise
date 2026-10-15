@@ -268,6 +268,12 @@ export type TrashedAccount = LedgerAccountItem & Deletion
 
 export type TrashedEntry = EntryItem & Deletion
 
+export type EntrySummary = {
+  outCents: number
+  inCents: number
+  count: number
+}
+
 export type EntrySuggestion = {
   description: string
   categoryId: string | null

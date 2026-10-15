@@ -106,6 +106,14 @@ beforeAll(async () => {
     fromAccountId: checkingId,
     toAccountId: savingsId,
   })
+  await record({
+    entryType: 'settlement',
+    occurredOn: '2026-10-18',
+    description: 'Contact J pagou',
+    amountCents: 3_000,
+    contactId: contact.contactId,
+    receivedInAccountId: checkingId,
+  })
   await record(expense('Mercado de setembro', groceriesId, '2026-09-20', ownerId))
 })
 
@@ -189,11 +197,53 @@ describe('GET /entries search and filters', () => {
     expect(page.items.length).toBeLessThanOrEqual(50)
   })
 
+  it('counts as shared only what was split, not a contact paying back', async () => {
+    expect(await descriptions(`${OCTOBER}&types=settlement`)).toEqual(['Contact J pagou'])
+    expect(await descriptions(`${OCTOBER}&shared=true`)).toEqual(['Cinema com Contact J'])
+  })
+
   it('refuses a one-letter search and an unknown type', async () => {
     for (const query of ['q=a', 'types=gift', 'shared=yes']) {
       const response = await viewer.get(`${entriesPath}?${query}`)
       const body = (await response.json()) as { error: { code: string } }
       expect([response.status, body.error.code]).toEqual([400, 'ENTRY_QUERY_INVALID'])
     }
+  })
+})
+
+describe('GET /entries/summary', () => {
+  async function summary(query: string) {
+    const response = await viewer.get(`${entriesPath}/summary?${query}`)
+    expect(response.status).toBe(200)
+    return response.json()
+  }
+
+  it('adds what went out and what came in, never transfers, and counts every entry', async () => {
+    expect(await summary(OCTOBER)).toEqual({ outCents: 320_000, inCents: 503_000, count: 8 })
+  })
+
+  it('follows the search and the filters of the list', async () => {
+    expect(await summary(`${OCTOBER}&categoryId=${groceriesId}`)).toEqual({
+      outCents: 315_000,
+      inCents: 0,
+      count: 4,
+    })
+    expect(await summary(`${OCTOBER}&types=transfer`)).toEqual({
+      outCents: 0,
+      inCents: 0,
+      count: 1,
+    })
+    expect(await summary('q=mercado')).toEqual({ outCents: 10_000, inCents: 0, count: 2 })
+    expect(await summary(`${OCTOBER}&q=nada assim`)).toEqual({
+      outCents: 0,
+      inCents: 0,
+      count: 0,
+    })
+  })
+
+  it('refuses a malformed filter', async () => {
+    const response = await viewer.get(`${entriesPath}/summary?from=2026-10-31&to=2026-10-01`)
+    const body = (await response.json()) as { error: { code: string } }
+    expect([response.status, body.error.code]).toEqual([400, 'ENTRY_QUERY_INVALID'])
   })
 })

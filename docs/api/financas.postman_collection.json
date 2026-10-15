@@ -1466,6 +1466,37 @@
           ]
         },
         {
+          "name": "Entries summary",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/workspaces/{{workspaceId}}/entries/summary?types=expense,card_purchase&q=merc",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "workspaces", "{{workspaceId}}", "entries", "summary"],
+              "query": [
+                {
+                  "key": "types",
+                  "value": "expense,card_purchase"
+                },
+                {
+                  "key": "q",
+                  "value": "merc"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": ["pm.test('answers 200', () => pm.response.to.have.status(200))"]
+              }
+            }
+          ]
+        },
+        {
           "name": "Suggestions for a description",
           "request": {
             "method": "GET",
