@@ -344,3 +344,8 @@ export type RestoreRefusal =
   | { reason: 'replaced' }
   | { reason: 'closed_invoice' }
   | { reason: 'deleted_account'; accountId: string; accountName: string }
+
+export type EntryPayment = {
+  occurredOn: IsoDate
+  amountCents: number
+}

@@ -42,6 +42,7 @@ export {
   readContactItems,
   readContactPostings,
   readEntryDates,
+  readEntryPayments,
   readInvoiceFacts,
   readInvoicesDueBetween,
   readPostingDetails,

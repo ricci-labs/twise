@@ -1,0 +1,3 @@
+ALTER TABLE "planned_occurrences" ADD COLUMN "skipped_by_user_id" uuid;--> statement-breakpoint
+ALTER TABLE "planned_occurrences" ADD CONSTRAINT "planned_occurrences_skipped_by_user_id_users_id_fk" FOREIGN KEY ("skipped_by_user_id") REFERENCES "public"."users"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "planned_occurrences" ADD CONSTRAINT "planned_occurrences_skipper_only_when_skipped" CHECK ("planned_occurrences"."skipped_by_user_id" is null or "planned_occurrences"."status" = 'skipped');

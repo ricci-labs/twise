@@ -117,12 +117,15 @@ export type OccurrenceRow = {
   amountIsEstimate: boolean
   status: OccurrenceStatus
   matchedEntryId: string | null
+  skippedByUserId: string | null
   frequency: RecurrenceFrequency
   interval: number
 }
 
 export type OccurrenceItem = OccurrenceRow & {
   isOverdue: boolean
+  paidOn: IsoDate | null
+  paidCents: number | null
 }
 
 export type OccurrenceList = {
@@ -135,9 +138,15 @@ export type OccurrenceRef = {
   occurrenceId: string
 }
 
+export type OccurrenceChangeRef = OccurrenceRef & {
+  userId: string
+}
+
 export type LockedOccurrence = OccurrenceRow
 
-export type OccurrenceUpdate = Partial<Pick<NewOccurrenceRow, 'status' | 'amountCents'>>
+export type OccurrenceUpdate = Partial<
+  Pick<NewOccurrenceRow, 'status' | 'amountCents' | 'skippedByUserId'>
+>
 
 export type BudgetItem = {
   categoryAccountId: string

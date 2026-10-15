@@ -208,7 +208,9 @@ function occurrenceRoutes({ db }: PlanningRouteDeps) {
     })
     .post('/:occurrenceId/skip', authorize('planning', 'update'), occurrence, async (c) => {
       const { workspaceId } = currentWorkspace(c)
-      await skipOccurrence(db, { workspaceId, occurrenceId: c.req.valid('param').occurrenceId })
+      const { userId } = currentSession(c)
+      const { occurrenceId } = c.req.valid('param')
+      await skipOccurrence(db, { workspaceId, occurrenceId, userId })
       return c.body(null, NO_CONTENT)
     })
     .post('/:occurrenceId/unskip', authorize('planning', 'update'), occurrence, async (c) => {
