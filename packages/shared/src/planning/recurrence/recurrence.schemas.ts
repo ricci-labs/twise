@@ -1,6 +1,7 @@
 import { WEEKEND_RULES } from '@shared/core/calendar/calendar.constants'
 import { daysBetween } from '@shared/core/calendar/dates'
-import { isoDateSchema } from '@shared/ledger/ledger/ledger.schemas'
+import { ENTRY_SEARCH_MIN_LENGTH } from '@shared/ledger/ledger/ledger.constants'
+import { ENTRY_DESCRIPTION_MAX_LENGTH, isoDateSchema } from '@shared/ledger/ledger/ledger.schemas'
 import {
   MAX_OCCURRENCE_LIST_DAYS,
   MAX_RECURRENCE_BUSINESS_DAY,
@@ -97,6 +98,12 @@ export const occurrenceSuggestionQuerySchema = z.object({ entryId: z.uuid() })
 export const matchedOccurrenceQuerySchema = z.object({ entryId: z.uuid() })
 
 export const occurrenceMatchSchema = z.strictObject({ entryId: z.uuid() })
+
+export const occurrenceCandidateQuerySchema = z.object({
+  q: z.string().trim().min(ENTRY_SEARCH_MIN_LENGTH).max(ENTRY_DESCRIPTION_MAX_LENGTH).optional(),
+})
+
+export type OccurrenceCandidateQuery = z.infer<typeof occurrenceCandidateQuerySchema>
 
 export const occurrenceChangeSchema = z.strictObject({
   amountCents: z.number().int().positive().max(Number.MAX_SAFE_INTEGER),

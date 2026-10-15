@@ -17,6 +17,7 @@ import {
   listBudgets,
   listGoals,
   listHolidays,
+  listOccurrenceCandidates,
   listOccurrencesWithTotals,
   listRecurrenceRules,
   matchOccurrence,
@@ -42,6 +43,7 @@ import {
   newGoalSchema,
   newHolidaySchema,
   newRecurrenceRuleSchema,
+  occurrenceCandidateQuerySchema,
   occurrenceChangeSchema,
   occurrenceListQuerySchema,
   occurrenceMatchSchema,
@@ -187,6 +189,19 @@ function occurrenceRoutes({ db }: PlanningRouteDeps) {
         const { workspaceId } = currentWorkspace(c)
         const { entryId } = c.req.valid('query')
         return c.json(await suggestOccurrencesForEntry(db, workspaceId, entryId))
+      },
+    )
+    .get(
+      '/:occurrenceId/candidates',
+      authorize('planning', 'update'),
+      occurrence,
+      queryParams(occurrenceCandidateQuerySchema, 'OCCURRENCE_QUERY_INVALID'),
+      async (c) => {
+        const { workspaceId } = currentWorkspace(c)
+        const { occurrenceId } = c.req.valid('param')
+        return c.json(
+          await listOccurrenceCandidates(db, { workspaceId, occurrenceId }, c.req.valid('query')),
+        )
       },
     )
     .post(

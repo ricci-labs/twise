@@ -86,3 +86,5 @@ export type OccurrenceTotals = {
   toReceive: PendingTotal
   groups: { overdue: number; upcoming: number; matched: number; skipped: number }
 }
+
+export type RankedCandidate<Entry> = Entry & { isLikely: boolean }

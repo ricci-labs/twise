@@ -129,7 +129,7 @@ row ("Registrar pagamento" when pending, "Ver lançamento" when paid) and "⋯" 
 | Action | Shown when | Does |
 |---|---|---|
 | "Registrar pagamento" / "Registrar recebimento" | pending | opens `ENT-02` prefilled (type, accounts, amount, description, date = today); after saving, a sheet with the occurrence card asks "Este lançamento paga {descrição} de {data}?" with "Sim, paga" as the primary action and "Não" (leaves the entry unmatched) → match (`entries:create` + `planning:update`) |
-| "Já registrei" | pending | a sheet with entries of the same type and accounts, the most similar first (the first one badged "Mais provável"), a search, 5 + "Mostrar mais"; pick one and "Marcar como pago" → match. `ENTRY_ALREADY_MATCHED` and `OCCURRENCE_ENTRY_MISMATCH` show as the sheet's alert |
+| "Já registrei" | pending | a sheet with entries of the same type and account, the most similar first (the likely ones badged "Mais provável"), a search, 5 + "Mostrar mais" (`GET /occurrences/:id/candidates`, G56); pick one and "Marcar como pago" → match. `ENTRY_ALREADY_MATCHED` and `OCCURRENCE_ENTRY_MISMATCH` show as the sheet's alert |
 | "Mudar o valor deste" | pending | a sheet with "Valor deste mês", help "Não muda a conta fixa.", "Salvar valor"; editing the recurrence later brings the amount back (G17: the form warns) |
 | "Pular este mês" | pending | skip without asking; the row moves to "Pulados" and a toast offers "Desfazer" (unskip) for 8 s |
 | "Desfazer pagamento" | matched | unmatch; the entry stays; toast with "Desfazer" |
