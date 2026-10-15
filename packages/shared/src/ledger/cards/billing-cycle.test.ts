@@ -2,6 +2,7 @@ import {
   invoiceForPurchase,
   invoiceForReferenceMonth,
   invoiceOpeningOn,
+  invoiceStateOn,
   invoiceStatusOn,
   invoicesForInstallments,
 } from '@shared/ledger/cards/billing-cycle'
@@ -116,5 +117,22 @@ describe('invoiceForReferenceMonth', () => {
   it('names the same invoice a purchase lands on', () => {
     const invoice = invoiceForPurchase('2027-02-15', cardZ)
     expect(invoiceForReferenceMonth(invoice.referenceMonth, cardZ)).toEqual(invoice)
+  })
+})
+
+describe('invoiceStateOn', () => {
+  const card = { closingDay: 25, dueDay: 4, purchaseOnClosingDayGoesNext: false }
+  const october = { closingOn: '2026-10-25' as const, referenceMonth: '2026-11' }
+
+  it('reads a closed invoice with nothing left to pay as paid', () => {
+    expect(invoiceStateOn({ ...october, totalCents: 1000, dueCents: 0 }, '2026-10-30', card)).toBe(
+      'paid',
+    )
+    expect(
+      invoiceStateOn({ ...october, totalCents: 1000, dueCents: 500 }, '2026-10-30', card),
+    ).toBe('closed')
+    expect(invoiceStateOn({ ...october, totalCents: 1000, dueCents: 0 }, '2026-10-20', card)).toBe(
+      'open',
+    )
   })
 })

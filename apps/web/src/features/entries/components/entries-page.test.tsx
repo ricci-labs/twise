@@ -274,6 +274,15 @@ describe('ENT-01 entries list', () => {
       .toBe(`/w/${WORKSPACE_ID}/categories`)
   })
 
+  it('opens an entry from its row', async () => {
+    const app = await openEntries()
+
+    await page.getByRole('link', { name: /Mercado da semana/ }).click()
+    await expect
+      .poll(() => app.router.state.location.pathname)
+      .toBe(`/w/${WORKSPACE_ID}/entries/e1`)
+  })
+
   it('hides the trash from a viewer', async () => {
     await openEntries({ access: () => accessAs('Leitor', VIEWER_PERMISSIONS) })
 

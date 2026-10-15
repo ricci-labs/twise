@@ -6,6 +6,8 @@ import { workspacesMessages } from '@web/features/workspaces/workspaces.messages
 import type { WorkspaceArea, WorkspaceNavigation } from '@web/features/workspaces/workspaces.types'
 import { hasPermission } from '@web/lib/permissions'
 
+const ENTRIES_AREA = 'entries'
+
 const labels = workspacesMessages.shell.nav
 
 const NEW_ENTRY = 'new'
@@ -56,6 +58,11 @@ export function workspaceNavigation(
       <Link to="." search={(previous) => ({ ...previous, entry: NEW_ENTRY })} data-write="" />
     ) : null,
   }
+}
+
+export function hasNewEntryButton(pathname: string): boolean {
+  const [, , , area, item] = pathname.split('/')
+  return !(area === ENTRIES_AREA && item !== undefined && item !== '')
 }
 
 export function currentAreaOf(pathname: string): string | null {

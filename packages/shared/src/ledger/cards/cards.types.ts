@@ -1,4 +1,5 @@
 import type { IsoDate } from '@shared/core/calendar/calendar.types'
+import type { InvoiceStatus } from '@shared/ledger/ledger/ledger.constants'
 
 export type CardCycle = {
   closingDay: number
@@ -11,3 +12,5 @@ export type InvoiceRef = {
   dueOn: IsoDate
   referenceMonth: string
 }
+
+export type InvoiceState = InvoiceStatus | 'paid'

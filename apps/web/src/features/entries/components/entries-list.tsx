@@ -123,6 +123,7 @@ function EntriesEmpty({ permissions, onSearchChange, hasFilters }: EntriesEmptyP
 }
 
 function EntriesDays({
+  workspaceId,
   entries,
   accounts,
   memberDirectory,
@@ -155,6 +156,12 @@ function EntriesDays({
                 installmentCount={row.installmentCount}
                 isShared={row.isShared}
                 search={searchTextOf(search)}
+                link={
+                  <Link
+                    to="/w/$workspaceId/entries/$entry"
+                    params={{ workspaceId, entry: row.id }}
+                  />
+                }
               />
             )
           })}
