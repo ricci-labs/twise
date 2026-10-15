@@ -239,6 +239,7 @@ export type EntryItem = {
   createdByUserId: string
   source: EntrySource
   replacesEntryId: string | null
+  amountCents: number
   postings: PostingItem[]
 }
 

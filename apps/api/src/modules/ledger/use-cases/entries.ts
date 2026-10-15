@@ -44,6 +44,7 @@ import {
   type EntryInput,
   type EntryListQuery,
   type EntryPlan,
+  entryAmountCents,
   entryDetailsChangeSchema,
   entryInputSchema,
   type IsoDate,
@@ -191,7 +192,7 @@ export async function listTrashedEntries(
 async function withPostings<T extends { id: string }>(
   tx: WorkspaceTransaction,
   entries: T[],
-): Promise<(T & { postings: PostingItem[] })[]> {
+): Promise<(T & { amountCents: number; postings: PostingItem[] })[]> {
   if (entries.length === 0) {
     return []
   }
@@ -199,12 +200,12 @@ async function withPostings<T extends { id: string }>(
     tx,
     entries.map((entry) => entry.id),
   )
-  return entries.map((entry) => ({
-    ...entry,
-    postings: postingRows
+  return entries.map((entry) => {
+    const postings = postingRows
       .filter((posting) => posting.entryId === entry.id)
-      .map(({ entryId: _entryId, ...posting }) => posting),
-  }))
+      .map(({ entryId: _entryId, ...posting }) => posting)
+    return { ...entry, amountCents: entryAmountCents(postings), postings }
+  })
 }
 
 export async function changeEntryDetails(
