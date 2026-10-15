@@ -147,3 +147,25 @@ export const entryFormSchema = z
     },
     { path: ['shares'], message: entriesMessages.shares.exceed, when: () => true },
   )
+
+const LIST_PRESETS = ['last30Days', 'thisYear'] as const
+
+const LIST_TYPES = [...FORM_ENTRY_TYPES] as const
+
+export const entriesListSearchSchema = z.object({
+  period: z
+    .string()
+    .regex(/^\d{4}-\d{2}$/)
+    .optional()
+    .catch(undefined),
+  from: isoDateSchema.optional().catch(undefined),
+  to: isoDateSchema.optional().catch(undefined),
+  preset: z.enum(LIST_PRESETS).optional().catch(undefined),
+  q: z.string().max(ENTRY_DESCRIPTION_MAX_LENGTH).optional().catch(undefined),
+  everywhere: z.boolean().optional().catch(undefined),
+  types: z.array(z.enum(LIST_TYPES)).optional().catch(undefined),
+  accountId: z.uuid().optional().catch(undefined),
+  categoryId: z.uuid().optional().catch(undefined),
+  spentBy: z.uuid().optional().catch(undefined),
+  shared: z.boolean().optional().catch(undefined),
+})

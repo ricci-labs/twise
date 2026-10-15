@@ -1,9 +1,13 @@
 import type {
   EntryTypeWithCategory,
   IsoDate,
+  Period,
+  PeriodsOfYear,
   Permission,
   PlannedInstallment,
 } from '@financas/shared'
+import type { UseInfiniteQueryResult } from '@tanstack/react-query'
+import type { EntryDirection } from '@web/components/finance/entry-row'
 import type { FieldControlProps } from '@web/components/forms/form-field'
 import type { PickerEmpty, PickerItem, PickerSheetProps } from '@web/components/inputs/picker-sheet'
 import type {
@@ -13,11 +17,16 @@ import type {
   fetchCards,
   fetchContactBalances,
   fetchContacts,
+  fetchEntriesPage,
   fetchEntrySuggestions,
   fetchLatestEntries,
   fetchMembers,
 } from '@web/features/entries/api/entries.queries'
-import type { entryFormSchema, newEntrySearchSchema } from '@web/features/entries/entries.schemas'
+import type {
+  entriesListSearchSchema,
+  entryFormSchema,
+  newEntrySearchSchema,
+} from '@web/features/entries/entries.schemas'
 import type { RefObject } from 'react'
 import type { UseFormReturn } from 'react-hook-form'
 import type { z } from 'zod'
@@ -269,3 +278,78 @@ export type FormFooterProps = {
 }
 
 export type AfterSave = 'close' | 'another'
+
+export type EntriesListSearch = z.infer<typeof entriesListSearchSchema>
+
+export type ListedEntry = Awaited<ReturnType<typeof fetchEntriesPage>>['items'][number]
+
+export type EntryRowContext = {
+  accounts: ReadonlyMap<string, LedgerAccount>
+  memberNames: ReadonlyMap<string, string>
+  currentUserId: string
+}
+
+export type EntryRowView = {
+  id: string
+  description: string
+  detail: string
+  art: { name: string; icon: string | null }
+  amountCents: number
+  direction: EntryDirection
+  installmentCount: number
+  isShared: boolean
+}
+
+export type EntryDay = {
+  date: IsoDate
+  title: string
+  detail?: string
+  entries: ListedEntry[]
+}
+
+export type ShownRange =
+  | { kind: 'period'; period: Period; title: string; detail: string }
+  | { kind: 'range'; from: IsoDate; to: IsoDate; title: string; detail?: string }
+
+export type EntriesPageProps = {
+  workspaceId: string
+  permissions: readonly Permission[]
+  currentUserId: string
+  memberDirectory: readonly { userId: string; displayName: string }[]
+  search: EntriesListSearch
+  onSearchChange: (change: Partial<EntriesListSearch>) => void
+}
+
+export type EntriesPeriodProps = Pick<
+  EntriesPageProps,
+  'workspaceId' | 'search' | 'onSearchChange'
+> & {
+  shown: ShownRange
+  periods: PeriodsOfYear
+}
+
+export type EntriesListProps = EntriesPageProps & {
+  shown: ShownRange
+  today: IsoDate
+}
+
+export type EntriesListEndProps = Pick<EntriesListProps, 'shown'> & {
+  hasFilters: boolean
+}
+
+export type EntriesEmptyProps = EntriesListProps & {
+  hasFilters: boolean
+}
+
+export type EntriesDaysProps = EntriesListProps & {
+  entries: readonly ListedEntry[]
+  accounts: readonly LedgerAccount[]
+}
+
+export type EntriesMoreProps = EntriesListProps & {
+  list: Pick<
+    UseInfiniteQueryResult,
+    'hasNextPage' | 'isFetchNextPageError' | 'isFetchingNextPage' | 'fetchNextPage'
+  >
+  hasFilters: boolean
+}
