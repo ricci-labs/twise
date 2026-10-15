@@ -19,6 +19,7 @@ import type {
   EntryFormValues,
   EntryPrefill,
   FormEntryType,
+  SavedEntry,
 } from '@web/features/entries/entries.types'
 import { useAmountWarning } from '@web/features/entries/hooks/use-amount-warning'
 import { useAutoFill } from '@web/features/entries/hooks/use-auto-fill'
@@ -29,6 +30,7 @@ import { useIsOnline } from '@web/hooks/use-is-online'
 import { ApiError } from '@web/lib/api/api-error'
 import { errorMessageFor } from '@web/lib/errors/error-message'
 import { formatMonthName } from '@web/lib/format/calendar'
+import { centsOfTypedAmount } from '@web/lib/format/money'
 import { fill } from '@web/lib/format/template'
 import { useSchemaForm } from '@web/lib/forms/use-schema-form'
 import { type BaseSyntheticEvent, useRef, useState } from 'react'
@@ -73,6 +75,7 @@ export function EntryForm({
   today,
   prefill = {},
   onClose,
+  onSaved,
 }: EntryFormProps) {
   const isOnline = useIsOnline()
   const navigate = useNavigate()
@@ -121,27 +124,39 @@ export function EntryForm({
         },
       })
       if (afterSaveOf(event) === 'another') {
-        form.reset(
-          {
-            ...blank,
-            entryType: values.entryType,
-            description: values.entryType === OPENING_BALANCE ? messages.openingDescription : '',
-            occurredOn: values.occurredOn,
-            accountId: values.accountId,
-            toAccountId: values.toAccountId,
-            cardAccountId: values.cardAccountId,
-            paymentMethod: values.entryType === CARD_PURCHASE ? CREDIT : '',
-          },
-          { keepFieldsRef: true },
-        )
-        autoFill.forget()
-        form.setFocus('amount')
+        startAnother(values)
         return
       }
-      onClose()
+      finish(entryId, values)
     } catch (error) {
       showProblem(error)
     }
+  }
+
+  function startAnother(values: EntryFormValues) {
+    form.reset(
+      {
+        ...blank,
+        entryType: values.entryType,
+        description: values.entryType === OPENING_BALANCE ? messages.openingDescription : '',
+        occurredOn: values.occurredOn,
+        accountId: values.accountId,
+        toAccountId: values.toAccountId,
+        cardAccountId: values.cardAccountId,
+        paymentMethod: values.entryType === CARD_PURCHASE ? CREDIT : '',
+      },
+      { keepFieldsRef: true },
+    )
+    autoFill.forget()
+    form.setFocus('amount')
+  }
+
+  function finish(entryId: string, values: EntryFormValues) {
+    if (onSaved) {
+      onSaved(savedOf(entryId, values))
+      return
+    }
+    onClose()
   }
 
   function changeType(next: FormEntryType) {
@@ -252,6 +267,7 @@ function prefilled(blank: EntryFormInput, prefill: EntryPrefill): EntryFormInput
     accountId: prefill.accountId ?? blank.accountId,
     cardAccountId: prefill.cardAccountId ?? blank.cardAccountId,
     invoiceId: prefill.invoiceId ?? blank.invoiceId,
+    ...prefill.planned,
   }
 }
 
@@ -293,4 +309,13 @@ function fieldMessageOf(field: keyof EntryFormInput, error: unknown): string {
   return field === 'contactId'
     ? entriesMessages.settlements.gone
     : errorMessageFor(error, { Conta: fields.paidFrom })
+}
+
+function savedOf(entryId: string, values: EntryFormValues): SavedEntry {
+  return {
+    entryId,
+    description: values.description,
+    amountCents: centsOfTypedAmount(values.amount) ?? 0,
+    accountId: values.entryType === CARD_PURCHASE ? values.cardAccountId : values.accountId,
+  }
 }

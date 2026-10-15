@@ -216,6 +216,7 @@ function entryAnswers(
       Response.json([contact(MEMBER_C, 'Member C'), contact(MEMBER_D, 'Member D')]),
     [`GET ${BASE}/entries`]: () =>
       Response.json({ items: [latestExpense(WALLET, GROCERIES)], nextCursor: null }),
+    [`GET ${BASE}/occurrences/suggestions`]: () => Response.json([]),
     [`POST ${BASE}/entries`]: async (request: Request) => {
       recorded.push(await request.json())
       return recordAnswer
@@ -230,11 +231,13 @@ async function openNewEntry({
   access = workspaceAccess,
   cards,
   search = '',
+  answers = {},
 }: {
   recordAnswer?: FakeAnswer
   access?: FakeAnswer
   cards?: readonly unknown[]
   search?: string
+  answers?: Record<string, FakeAnswer>
 } = {}) {
   const recorded: unknown[] = []
   fakeApi({
@@ -248,6 +251,7 @@ async function openNewEntry({
     [`GET ${BASE}`]: access,
     ...demoAnswers(),
     ...entryAnswers(recorded, recordAnswer, cards),
+    ...answers,
   })
   const app = createApp(
     createMemoryHistory({ initialEntries: [`/w/${WORKSPACE_ID}?entry=new${search}`] }),
@@ -883,6 +887,112 @@ describe('ENT-02 shortcuts', () => {
 
     await expect
       .element(page.getByRole('heading', { name: 'Repetir um recente' }))
+      .not.toBeInTheDocument()
+  })
+})
+
+describe('ENT-02 and the planned bills', () => {
+  const INTERNET_ID = '00000000-0000-4000-8000-0000000006a1'
+  const LIGHT_ID = '00000000-0000-4000-8000-0000000006a2'
+
+  function planned(id: string, description: string, overrides: Record<string, unknown> = {}) {
+    return {
+      id,
+      ruleId: `rule-${id}`,
+      description,
+      entryType: 'expense',
+      sourceAccountId: WALLET,
+      categoryAccountId: MARKET,
+      dueOn: '2026-10-18',
+      amountCents: 12_000,
+      amountIsEstimate: false,
+      status: 'pending',
+      matchedEntryId: null,
+      skippedByUserId: null,
+      frequency: 'monthly',
+      interval: 1,
+      isOverdue: true,
+      paidOn: null,
+      paidCents: null,
+      ...overrides,
+    }
+  }
+
+  function matchRecorder(calls: string[]): Record<string, FakeAnswer> {
+    return Object.fromEntries(
+      [INTERNET_ID, LIGHT_ID].map((id) => [
+        `POST ${BASE}/occurrences/${id}/match`,
+        async (request: Request) => {
+          calls.push(`${id} ${await request.text()}`)
+          return new Response(null, { status: 204 })
+        },
+      ]),
+    )
+  }
+
+  it('fills the form from a planned bill and asks whether the entry pays it', async () => {
+    const calls: string[] = []
+    const { recorded } = await openNewEntry({
+      search: `&entryOccurrence=${INTERNET_ID}`,
+      answers: {
+        [`GET ${BASE}/occurrences/${INTERNET_ID}`]: () =>
+          Response.json(planned(INTERNET_ID, 'Internet')),
+        ...matchRecorder(calls),
+      },
+    })
+    await expect.element(page.getByLabelText(/^Descrição/)).toHaveValue('Internet')
+    await expect.element(page.getByLabelText(/^Valor/)).toHaveValue('120,00')
+
+    await page.getByRole('button', { name: 'Salvar lançamento' }).click()
+
+    const question = page.getByRole('dialog', { name: 'Este lançamento paga Internet de 18/10?' })
+    await expect.element(question).toBeVisible()
+    await expect.element(question.getByText(/Prevista para 18\/10/)).toBeVisible()
+    await expectNoAccessibilityViolations(question.element())
+    await question.getByRole('button', { name: 'Sim, paga' }).click()
+    await expect.element(page.getByText('Internet de 18/10 marcada como paga.')).toBeVisible()
+    expect(calls).toEqual([`${INTERNET_ID} {"entryId":"entry-1"}`])
+    expect(recorded).toEqual([
+      expect.objectContaining({ description: 'Internet', amountCents: 12_000, categoryId: MARKET }),
+    ])
+  })
+
+  it('asks after any entry when the API finds planned bills like it, the likeliest chosen', async () => {
+    const calls: string[] = []
+    await openNewEntry({
+      answers: {
+        [`GET ${BASE}/occurrences/suggestions`]: () =>
+          Response.json([
+            planned(LIGHT_ID, 'Luz', {
+              dueOn: '2026-10-22',
+              amountIsEstimate: true,
+              isOverdue: false,
+            }),
+            planned(INTERNET_ID, 'Internet'),
+          ]),
+        ...matchRecorder(calls),
+      },
+    })
+    await fillExpense()
+    await page.getByRole('button', { name: 'Salvar lançamento' }).click()
+
+    const question = page.getByRole('dialog', { name: 'Isto paga alguma conta prevista?' })
+    await expect.element(question.getByRole('radio', { name: /Luz/ })).toBeChecked()
+    await expect.element(question.getByText(/Atrasada desde 18\/10/)).toBeVisible()
+    await question.getByRole('radio', { name: /Internet/ }).click()
+    await question.getByRole('button', { name: 'Paga Internet' }).click()
+    await expect.poll(() => calls).toEqual([`${INTERNET_ID} {"entryId":"entry-1"}`])
+  })
+
+  it('closes without asking when nothing planned looks like the entry', async () => {
+    await openNewEntry()
+    await fillExpense()
+    await page.getByRole('button', { name: 'Salvar lançamento' }).click()
+    await expect
+      .element(page.getByRole('dialog', { name: 'Novo lançamento' }))
+      .not.toBeInTheDocument()
+    await expect
+      .element(page.getByRole('dialog', { name: 'Isto paga alguma conta prevista?' }))
       .not.toBeInTheDocument()
   })
 })

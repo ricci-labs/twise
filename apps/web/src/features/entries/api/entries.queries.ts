@@ -145,6 +145,23 @@ export function matchedOccurrenceQueryOptions(workspaceId: string, entryId: stri
   })
 }
 
+export function plannedOccurrenceQueryOptions(workspaceId: string, occurrenceId: string) {
+  return queryOptions({
+    queryKey: [...queryKeys.workspace(workspaceId), 'occurrences', 'one', occurrenceId] as const,
+    queryFn: () => fetchPlannedOccurrence(workspaceId, occurrenceId),
+  })
+}
+
+export function occurrenceSuggestionsQueryOptions(workspaceId: string, entryId: string) {
+  return queryOptions({
+    queryKey: [...queryKeys.workspace(workspaceId), 'occurrences', 'suggested', entryId] as const,
+    queryFn: () =>
+      unwrap(
+        workspaceApi.occurrences.suggestions.$get({ param: { workspaceId }, query: { entryId } }),
+      ),
+  })
+}
+
 export function latestEntriesQueryOptions(workspaceId: string) {
   return queryOptions({
     queryKey: [...queryKeys.workspace(workspaceId), 'entries', 'latest'] as const,
@@ -239,5 +256,11 @@ export function fetchTrashPage(workspaceId: string, cursor: string | undefined) 
       param: { workspaceId },
       query: { limit: LIST_PAGE_SIZE, ...(cursor ? { cursor } : {}) } as TrashPageQuery,
     }),
+  )
+}
+
+export function fetchPlannedOccurrence(workspaceId: string, occurrenceId: string) {
+  return unwrap(
+    workspaceApi.occurrences[':occurrenceId'].$get({ param: { workspaceId, occurrenceId } }),
   )
 }

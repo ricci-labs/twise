@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { Link } from '@tanstack/react-router'
+import { Link, useNavigate } from '@tanstack/react-router'
 import { Button } from '@web/components/actions/button'
 import { ShowMoreButton } from '@web/components/actions/show-more-button'
 import { EmptyBlock } from '@web/components/feedback/empty-block'
@@ -14,7 +14,10 @@ import {
   occurrencesQueryOptions,
   periodsQueryOptions,
 } from '@web/features/planning/api/planning.queries'
-import { OccurrenceActions } from '@web/features/planning/components/occurrence-actions'
+import {
+  OccurrenceActions,
+  recordLabelOf,
+} from '@web/features/planning/components/occurrence-actions'
 import {
   occurrenceGroupsOf,
   summaryTilesOf,
@@ -105,11 +108,23 @@ function OccurrencesBody({
       context={context}
       accounts={new Map(accounts.data.map((account) => [account.id, account]))}
       canUpdate={hasPermission(permissions, 'planning', 'update')}
+      canRecord={
+        hasPermission(permissions, 'planning', 'update') &&
+        hasPermission(permissions, 'entries', 'create')
+      }
     />
   )
 }
 
-function Occurrences({ workspaceId, list, context, accounts, canUpdate }: OccurrencesProps) {
+function Occurrences({
+  workspaceId,
+  list,
+  context,
+  accounts,
+  canUpdate,
+  canRecord,
+}: OccurrencesProps) {
+  const navigate = useNavigate()
   const byId = new Map(list.items.map((item) => [item.id, item]))
   const linkOf = (id: string) => {
     const occurrence = byId.get(id)
@@ -117,20 +132,39 @@ function Occurrences({ workspaceId, list, context, accounts, canUpdate }: Occurr
       return undefined
     }
     return (
-      <OccurrenceActions workspaceId={workspaceId} occurrence={occurrence} accounts={accounts} />
+      <OccurrenceActions
+        workspaceId={workspaceId}
+        occurrence={occurrence}
+        accounts={accounts}
+        canRecord={canRecord}
+      />
     )
+  }
+  const registerOf = (id: string) => {
+    const occurrence = byId.get(id)
+    if (!canRecord || !occurrence?.isOverdue) {
+      return undefined
+    }
+    return {
+      label: recordLabelOf(occurrence),
+      onPress: () =>
+        void navigate({
+          to: '.',
+          search: (previous) => ({ ...previous, entry: 'new', entryOccurrence: occurrence.id }),
+        }),
+    }
   }
   return (
     <>
       <PlanSummaryTiles label={messages.summaryLabel} tiles={summaryTilesOf(list)} />
       {occurrenceGroupsOf(list, context).map((group) => (
-        <Group key={group.key} group={group} linkOf={linkOf} />
+        <Group key={group.key} group={group} linkOf={linkOf} registerOf={registerOf} />
       ))}
     </>
   )
 }
 
-function Group({ group, linkOf }: GroupProps) {
+function Group({ group, linkOf, registerOf }: GroupProps) {
   const [isOpen, setIsOpen] = useState(false)
   const shown = isOpen ? group.rows : group.rows.slice(0, SHOWN_PER_GROUP)
   const hiddenCount = group.rows.length - shown.length
@@ -146,7 +180,7 @@ function Group({ group, linkOf }: GroupProps) {
       }
     >
       {shown.map(({ id, ...row }) => (
-        <OccurrenceRow key={id} {...row} link={linkOf(id)} />
+        <OccurrenceRow key={id} {...row} link={linkOf(id)} register={registerOf(id)} />
       ))}
     </OccurrenceGroup>
   )

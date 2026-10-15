@@ -1,4 +1,23 @@
 export const entriesMessages = {
+  match: {
+    planned: (description: string, date: string) =>
+      `Este lançamento paga ${description} de ${date}?`,
+    suggested: 'Isto paga alguma conta prevista?',
+    justRecorded: (description: string, amount: string, account: string) =>
+      `Você acabou de registrar **${description}**, ${amount}, pela ${account}.`,
+    recorded: (description: string, amount: string, account: string) =>
+      `Você registrou **${description}**, ${amount}, pela ${account}. Ela parece com:`,
+    optionsLabel: 'Contas previstas',
+    plannedFor: (date: string, amount: string) => `Prevista para ${date} · ${amount}`,
+    plannedForWith: (date: string, amount: string, account: string) =>
+      `Prevista para ${date} · ${amount} · ${account}`,
+    overdueSince: (date: string, amount: string) => `Atrasada desde ${date} · ${amount}`,
+    no: 'Não',
+    none: 'Não, nenhuma',
+    yes: 'Sim, paga',
+    pays: (description: string) => `Paga ${description}`,
+    linked: (description: string, date: string) => `${description} de ${date} marcada como paga.`,
+  },
   newEntry: {
     title: 'Novo lançamento',
     close: 'Cancelar',

@@ -26,6 +26,7 @@ import type {
   fetchEntrySuggestions,
   fetchLatestEntries,
   fetchMembers,
+  fetchPlannedOccurrence,
   fetchTrashPage,
 } from '@web/features/entries/api/entries.queries'
 import type {
@@ -132,8 +133,38 @@ export type NewEntryProps = {
   isOpen: boolean
   prefill?: EntryPrefill
   repeatEntryId?: string
+  occurrenceId?: string
   onClose: () => void
+  onSaved?: (saved: SavedEntry) => void
 }
+
+export type PlannedOccurrence = Awaited<ReturnType<typeof fetchPlannedOccurrence>>
+
+export type SavedEntry = {
+  entryId: string
+  description: string
+  amountCents: number
+  accountId: string
+}
+
+export type OccurrenceMatchRequest = {
+  occurrenceId: string
+  entryId: string
+}
+
+export type EntryMatchQuestionProps = {
+  workspaceId: string
+  saved: SavedEntry
+  occurrence?: PlannedOccurrence
+  onDone: () => void
+}
+
+export type PlannedEntryProps = NewEntryProps & { occurrenceId: string }
+
+export type MatchableOccurrenceView = Pick<
+  PlannedOccurrence,
+  'id' | 'description' | 'dueOn' | 'amountCents' | 'amountIsEstimate' | 'isOverdue'
+>
 
 export type EntryPrefill = {
   values?: EntryFormInput
@@ -141,6 +172,7 @@ export type EntryPrefill = {
   accountId?: string
   cardAccountId?: string
   invoiceId?: string
+  planned?: Partial<Pick<EntryFormInput, 'amount' | 'description' | 'categoryId' | 'toAccountId'>>
 }
 
 export type EntryFormProps = {
@@ -154,6 +186,7 @@ export type EntryFormProps = {
   today: IsoDate
   prefill?: EntryPrefill
   onClose: () => void
+  onSaved?: (saved: SavedEntry) => void
 }
 
 export type FieldsProps = {

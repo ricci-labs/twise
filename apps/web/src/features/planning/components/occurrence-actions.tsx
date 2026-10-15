@@ -24,6 +24,7 @@ export function OccurrenceActions({
   workspaceId,
   occurrence,
   accounts,
+  canRecord,
   className,
   children,
 }: OccurrenceActionsProps) {
@@ -70,7 +71,7 @@ export function OccurrenceActions({
     )
   }
 
-  const actions = actionsOf(occurrence, workspaceId, {
+  const actions = actionsOf(occurrence, workspaceId, canRecord, {
     changeAmount: () => setIsChangingAmount(true),
     pickEntry: () => setIsPickingEntry(true),
     skip,
@@ -108,9 +109,15 @@ export function OccurrenceActions({
   )
 }
 
+export function recordLabelOf(occurrence: ListedOccurrence): string {
+  const action = occurrence.entryType === 'income' ? copy.recordIncome : copy.recordPayment
+  return copy.recordFor(action, occurrence.description)
+}
+
 function actionsOf(
   occurrence: ListedOccurrence,
   workspaceId: string,
+  canRecord: boolean,
   handlers: OccurrenceHandlers,
 ): ItemAction[] {
   if (occurrence.status === 'skipped') {
@@ -137,6 +144,25 @@ function actionsOf(
     ]
   }
   return [
+    ...(canRecord
+      ? [
+          {
+            key: 'record',
+            label: occurrence.entryType === 'income' ? copy.recordIncome : copy.recordPayment,
+            icon: 'plus',
+            render: (
+              <Link
+                to="."
+                search={(previous) => ({
+                  ...previous,
+                  entry: 'new',
+                  entryOccurrence: occurrence.id,
+                })}
+              />
+            ),
+          } as const,
+        ]
+      : []),
     { key: 'picked', label: copy.alreadyRecorded, icon: 'ok', onSelect: handlers.pickEntry },
     { key: 'amount', label: copy.amount, icon: 'edit', onSelect: handlers.changeAmount },
     { key: 'skip', label: copy.skip, icon: 'calendar', onSelect: handlers.skip },

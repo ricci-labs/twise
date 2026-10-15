@@ -884,3 +884,8 @@ online with `asChild` are translated to `render`.
   label) for tabs that switch a page's parts, as Planning's "Previstos | Contas fixas | Orçamentos |
   Metas"; the default `raised` keeps the white pill with a shadow. With `width="full"` the options
   size to their labels and share what is left, so the four tabs fit a 360 px phone.
+- `MatchQuestion` (`components/finance/match-question`): the sheet (a dialog on the desktop) that
+  asks whether an entry pays a planned bill. One option shows as a card ("Este lançamento paga a
+  Internet de 18/10?", with the `note` "Você acabou de registrar **Internet**…"); several are
+  selectable rows with the one selection style, under the `lead` ("Você registrou… Ela parece
+  com:"). Decline and confirm buttons, a `problem` alert. The entries feature words and drives it.
