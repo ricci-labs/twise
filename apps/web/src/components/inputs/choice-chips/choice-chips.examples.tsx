@@ -40,8 +40,28 @@ export const choiceChipsExamples: ComponentExamples = {
   component: 'ChoiceChips',
   examples: [
     {
-      name: 'Tipos (pílulas)',
-      render: () => <Example label="Tipo de lançamento" options={TYPES} initial="expense" />,
+      name: 'Tipos (pílulas com contorno)',
+      render: () => (
+        <Example
+          label="Tipo de lançamento"
+          variant="pillOutline"
+          options={TYPES}
+          initial="expense"
+        />
+      ),
+    },
+    {
+      name: 'Listas (pílulas menta)',
+      render: () => (
+        <Example
+          label="Categorias"
+          options={[
+            { value: 'expense', label: 'Despesas' },
+            { value: 'income', label: 'Receitas' },
+          ]}
+          initial="expense"
+        />
+      ),
     },
     {
       name: 'Datas (contorno)',
