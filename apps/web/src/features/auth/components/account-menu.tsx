@@ -20,12 +20,12 @@ export function AccountMenu({ accountLink }: AccountLinkProps) {
       trigger={
         <button
           type="button"
-          aria-label={messages.label(account.displayName)}
           className="flex w-full cursor-pointer items-center gap-2.5 rounded-md pl-2 text-left hover:bg-sunken group-data-collapsed/sidebar:w-auto group-data-collapsed/sidebar:rounded-full group-data-collapsed/sidebar:pl-0"
         >
           <Avatar name={account.displayName} />
-          <span className="flex min-w-0 flex-1 flex-col group-data-collapsed/sidebar:hidden">
-            <span className="truncate text-account-name">{account.displayName}</span>
+          <span className="flex min-w-0 flex-1 flex-col group-data-collapsed/sidebar:sr-only">
+            <span className="sr-only">{messages.label}</span>{' '}
+            <span className="truncate text-account-name">{account.displayName}</span>{' '}
             <span className="truncate text-caption text-ink-muted">{account.email}</span>
           </span>
           <span className="grid size-touch shrink-0 place-items-center text-ink-muted group-data-collapsed/sidebar:hidden">

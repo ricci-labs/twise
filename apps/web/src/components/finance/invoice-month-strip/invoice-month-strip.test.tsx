@@ -17,7 +17,7 @@ describe('InvoiceMonthStrip', () => {
             key: 'nov',
             month: 'nov',
             status: 'Aberta',
-            accessibleLabel: 'Fatura de nov de 2026, Aberta',
+            accessibleLabel: 'Fatura de nov, Aberta, 2026',
             isCurrent: true,
             link: <a href="#nov">nov</a>,
           },
@@ -25,7 +25,7 @@ describe('InvoiceMonthStrip', () => {
             key: 'jan',
             month: 'jan',
             status: 'Futura',
-            accessibleLabel: 'Fatura de jan de 2027, Futura',
+            accessibleLabel: 'Fatura de jan, Futura, 2027',
             yearBefore: '2027',
             isCurrent: false,
             link: <a href="#jan">jan</a>,
@@ -35,7 +35,7 @@ describe('InvoiceMonthStrip', () => {
     )
 
     await expect
-      .element(screen.getByRole('link', { name: 'Fatura de nov de 2026, Aberta' }))
+      .element(screen.getByRole('link', { name: 'Fatura de nov, Aberta, 2026' }))
       .toHaveAttribute('aria-current', 'true')
     await screen.getByRole('button', { name: 'Todas' }).click()
     expect(onAll).toHaveBeenCalledOnce()

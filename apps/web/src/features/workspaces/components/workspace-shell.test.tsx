@@ -77,7 +77,9 @@ describe('SHELL-01 workspace shell', () => {
     await page.viewport(1440, 900)
     const { screen } = await openWorkspace()
 
-    await screen.getByRole('button', { name: 'Trocar de espaço. Atual: Casa' }).click()
+    await screen
+      .getByRole('button', { name: 'Trocar de espaço. Atual: Casa, Dono · 2 pessoas' })
+      .click()
 
     await expect
       .element(screen.getByRole('menuitem', { name: /Casa/ }))

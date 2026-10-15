@@ -6,7 +6,7 @@ export const demoMessages = {
   overspent: 'Passou do planejado',
   logIn: 'Entrar',
   signUp: 'Criar conta',
-  accountLabel: 'Conta de exemplo: Member A',
+  accountLabel: 'Conta de exemplo:',
   email: 'member.a@exemplo.com',
   onlyHome: 'Na demonstração, só a Início está aberta.',
   displayName: 'Member A',

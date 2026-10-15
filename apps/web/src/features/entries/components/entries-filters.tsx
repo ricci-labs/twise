@@ -207,7 +207,9 @@ function FilterPicker({
     <FieldGroup label={label} help={help}>
       <PickerField
         ref={anchor}
-        aria-label={label}
+        aria-label={[`${label}: ${chosen?.label ?? placeholder}`, chosen?.detail]
+          .filter(Boolean)
+          .join(', ')}
         value={chosen?.label ?? null}
         detail={chosen?.detail}
         art={chosen && <CategoryArt name={chosen.label} icon={chosen.icon} />}

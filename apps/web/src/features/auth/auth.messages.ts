@@ -220,7 +220,7 @@ export const authMessages = {
   },
   logOut: 'Sair',
   accountMenu: {
-    label: (name: string) => `Conta de ${name}`,
+    label: 'Conta de',
     myAccount: 'Minha conta',
   },
 } as const

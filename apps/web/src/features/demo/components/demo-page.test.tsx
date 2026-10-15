@@ -79,7 +79,9 @@ describe('demo page', () => {
       .toHaveAttribute('aria-current', 'page')
     await expect.element(menu.getByText('Dono · 2 pessoas')).toBeVisible()
     await expect
-      .element(menu.getByRole('button', { name: 'Conta de exemplo: Member A' }))
+      .element(
+        menu.getByRole('button', { name: 'Conta de exemplo: Member A member.a@exemplo.com' }),
+      )
       .toBeVisible()
 
     await menu.getByRole('link', { name: 'Lançamentos' }).click()
