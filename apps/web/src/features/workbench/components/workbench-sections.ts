@@ -63,6 +63,9 @@ import { invoicePreviewExamples } from '@web/components/finance/invoice-preview'
 import { invoiceSummaryExamples } from '@web/components/finance/invoice-summary'
 import { invoiceYearSheetExamples } from '@web/components/finance/invoice-year-sheet'
 import { linkedItemExamples } from '@web/components/finance/linked-item'
+import { occurrenceGroupExamples } from '@web/components/finance/occurrence-group'
+import { occurrenceRowExamples } from '@web/components/finance/occurrence-row'
+import { planSummaryTilesExamples } from '@web/components/finance/plan-summary-tiles'
 import { recentEntriesExamples } from '@web/components/finance/recent-entries'
 import { shareRowsExamples } from '@web/components/finance/share-rows'
 import { sharesListExamples } from '@web/components/finance/shares-list'
@@ -171,6 +174,9 @@ export const workbenchSections: readonly ComponentExamples[] = [
   cyclePreviewExamples,
   entryDayGroupExamples,
   entryRowExamples,
+  occurrenceRowExamples,
+  occurrenceGroupExamples,
+  planSummaryTilesExamples,
   invoiceMonthStripExamples,
   invoiceSummaryExamples,
   invoiceLineExamples,

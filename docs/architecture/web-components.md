@@ -852,3 +852,23 @@ online with `asChild` are translated to `render`.
   leader and amount, and an optional note. The amounts come from the API (`shares`, `ownCents`).
 - `TransferFlow` (`components/finance/transfer-flow`): "Saiu de Conta X" → "Entrou em Poupança"
   as two boxes on the page colour with their drawings and an arrow, and an optional note.
+
+## Planning building blocks
+`../design/planning/components.md`; the planned occurrences, the recurrences and the budgets share them.
+- `OccurrenceRow` (`components/finance/occurrence-row`): one planned occurrence: the date block
+  (42 × 46, the day in the display face over the month in caps; danger tint when `isOverdue`), the
+  description (2 lines at most, then "…"), the second line (2 lines at most) starting with the
+  status badge (`overdue` "Atrasado", `today` "Hoje", `paid` "Pago", `received` "Recebido", `done`
+  "Feita", `skipped` "Pulado"), and the amount with no sign, which never wraps: `out` in ink, `in`
+  in `mint-ink`, `neutral` muted, and every `isDone` row muted. `isEstimate` puts "≈" before it,
+  read as "Valor aproximado". The `link` element wraps the row; `register` adds the compact dark
+  "Registrar" under the amount, outside the link, without growing the row.
+- `OccurrenceGroup` (`components/finance/occurrence-group`): a region named by its heading and
+  count ("A vencer 4", the count read as "4 previstos") over the white card of its rows;
+  `tone="danger"` draws the overdue group (red heading, the 1.5 px danger border, the larger inner
+  padding). `footer` holds its "Mostrar mais".
+- `PlanSummaryTiles` (`components/finance/plan-summary-tiles`): two tiles ("Falta pagar" / "Falta
+  receber", "Contas fixas por mês" / "Receitas fixas por mês") as a description list, each with its
+  amount (income in `mint-ink`, "≈" for an estimate) and a muted note. Side by side while both
+  amounts fit; when they don't (7-digit amounts on a narrow phone) each takes the whole row, so an
+  amount is never cut.
