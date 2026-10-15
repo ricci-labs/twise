@@ -10,6 +10,7 @@ import type {
   ListedAccount,
 } from '@web/features/accounts/accounts.types'
 import { useAccountAction } from '@web/features/accounts/api/use-account-action'
+import { accountEntriesLink } from '@web/features/accounts/components/entries-links'
 import { ApiError } from '@web/lib/api/api-error'
 import { errorMessageFor } from '@web/lib/errors/error-message'
 import { hasPermission } from '@web/lib/permissions'
@@ -74,7 +75,17 @@ export function AccountRowActions({
       })}
     />
   )
-  const actions = [
+  const seeEntries: ItemAction[] = hasPermission(permissions, 'entries', 'view')
+    ? [
+        {
+          key: 'entries',
+          label: messages.actions.entries,
+          icon: 'list',
+          render: accountEntriesLink(workspaceId, account.id),
+        },
+      ]
+    : []
+  const ownActions = [
     ...leadingActions,
     ...actionsOf(account, {
       edit,
@@ -87,6 +98,7 @@ export function AccountRowActions({
       remove,
     }),
   ]
+  const actions = ownActions.length > 0 ? [...seeEntries, ...ownActions] : []
   return (
     <>
       <ItemActions

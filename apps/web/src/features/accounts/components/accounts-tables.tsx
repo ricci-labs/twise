@@ -10,6 +10,8 @@ import { accountsMessages } from '@web/features/accounts/accounts.messages'
 import type { AccountsListsProps, ListedAccount } from '@web/features/accounts/accounts.types'
 import { AccountRowActions } from '@web/features/accounts/components/account-row-actions'
 import { cardEditActionsOf } from '@web/features/accounts/components/card-edit-actions'
+import { accountEntriesLink } from '@web/features/accounts/components/entries-links'
+import { hasPermission } from '@web/lib/permissions'
 
 const messages = accountsMessages.groups
 const columns = messages.columns
@@ -34,6 +36,9 @@ export function AccountsTables({ workspaceId, permissions, accounts }: AccountsL
   const money = active.filter((account) => account.isMoney)
   const cards = active.filter((account) => account.isCard)
   const archived = accounts.filter((account) => account.isArchived)
+  const canSeeEntries = hasPermission(permissions, 'entries', 'view')
+  const entriesLinkOf = (account: ListedAccount) =>
+    canSeeEntries ? accountEntriesLink(workspaceId, account.id) : undefined
   const actionsOf = (account: ListedAccount) => (
     <AccountRowActions
       key="actions"
@@ -48,7 +53,13 @@ export function AccountsTables({ workspaceId, permissions, accounts }: AccountsL
   const moneyRow = (account: ListedAccount) => ({
     key: account.id,
     cells: [
-      <DataTableName key="name" name={account.name} icon={account.icon} color={account.color} />,
+      <DataTableName
+        key="name"
+        name={account.name}
+        icon={account.icon}
+        color={account.color}
+        link={entriesLinkOf(account)}
+      />,
       account.kindLabel,
       account.ownerLabel,
       <DataTableAmount key="balance" cents={account.amountCents} />,
@@ -81,6 +92,7 @@ export function AccountsTables({ workspaceId, permissions, accounts }: AccountsL
                   name={account.name}
                   icon={account.icon}
                   color={account.color}
+                  link={entriesLinkOf(account)}
                 />,
                 account.kindLabel,
                 <DataTableAmount key="open" cents={account.amountCents} />,

@@ -582,3 +582,9 @@ export type ChangeCardProps = CardEditorProps & {
   canRename: boolean
   canChangeCycle: boolean
 }
+
+export type ViewerChipProps = {
+  workspaceId: string
+  permissions: readonly Permission[]
+  node: CategoryNode
+}

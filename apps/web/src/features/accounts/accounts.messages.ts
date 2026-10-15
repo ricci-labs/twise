@@ -59,6 +59,7 @@ export const accountsMessages = {
   detail: (kind: string, owner: string) => `${kind} · ${owner}`,
   actions: {
     trigger: (name: string) => `Ações de ${name}`,
+    entries: 'Ver lançamentos',
     edit: 'Editar',
     openingBalance: 'Informar saldo inicial',
     archive: 'Arquivar',

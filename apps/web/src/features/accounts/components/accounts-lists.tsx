@@ -7,6 +7,7 @@ import type { AccountsListsProps, ListedAccount } from '@web/features/accounts/a
 import { AccountRowActions } from '@web/features/accounts/components/account-row-actions'
 import { AccountsTables } from '@web/features/accounts/components/accounts-tables'
 import { cardEditActionsOf } from '@web/features/accounts/components/card-edit-actions'
+import { accountEntriesLink } from '@web/features/accounts/components/entries-links'
 import { useMediaQuery } from '@web/hooks/use-media-query'
 import { DESKTOP_QUERY } from '@web/lib/breakpoints'
 import { hasPermission } from '@web/lib/permissions'
@@ -23,6 +24,7 @@ function AccountsGroups({ workspaceId, permissions, accounts, highlightedId }: A
   const money = active.filter((account) => account.isMoney)
   const cards = active.filter((account) => account.isCard)
   const archived = accounts.filter((account) => account.isArchived)
+  const canSeeEntries = hasPermission(permissions, 'entries', 'view')
   const rowOf = (account: ListedAccount) => (
     <AccountRow
       key={account.id}
@@ -33,6 +35,7 @@ function AccountsGroups({ workspaceId, permissions, accounts, highlightedId }: A
       amountCents={account.amountCents}
       isArchived={account.isArchived}
       isHighlighted={account.id === highlightedId}
+      link={canSeeEntries ? accountEntriesLink(workspaceId, account.id) : undefined}
       actions={
         <AccountRowActions
           workspaceId={workspaceId}

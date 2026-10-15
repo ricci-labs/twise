@@ -6,6 +6,7 @@ import { SectionError } from '@web/components/feedback/section-error'
 import { TwiseIcon } from '@web/components/icons/twise-icon'
 import { PageFrame } from '@web/components/layout/page-frame'
 import { PageHeader } from '@web/components/layout/page-header'
+import { SubPageHeader } from '@web/components/layout/sub-page-header'
 import { periodsQueryOptions } from '@web/features/entries/api/entries.queries'
 import {
   EntriesFilterButton,
@@ -25,26 +26,47 @@ const messages = entriesMessages.list
 
 export function EntriesPage(props: EntriesPageProps) {
   usePageTitle(messages.pageTitle)
-  const { workspaceId, permissions } = props
   return (
     <PageFrame className="gap-3 lg:gap-4">
-      <PageHeader
-        title={messages.title}
-        actions={
-          hasPermission(permissions, 'entries', 'delete') && (
-            <Link
-              to="/w/$workspaceId/$area"
-              params={{ workspaceId, area: 'trash' }}
-              aria-label={messages.trash}
-              className="grid size-touch place-items-center rounded-full text-ink outline-none hover:bg-sunken focus-visible:ring-2 focus-visible:ring-focus-ring"
-            >
-              <TwiseIcon name="trash" size="md" />
-            </Link>
-          )
-        }
-      />
+      <EntriesHeader {...props} />
       <EntriesBody {...props} />
     </PageFrame>
+  )
+}
+
+function EntriesHeader({ workspaceId, permissions, search }: EntriesPageProps) {
+  if (search.back) {
+    return (
+      <SubPageHeader
+        title={messages.title}
+        backLabel={messages.backTo[search.back]}
+        back={
+          <Link
+            to={
+              search.back === 'accounts' ? '/w/$workspaceId/accounts' : '/w/$workspaceId/categories'
+            }
+            params={{ workspaceId }}
+          />
+        }
+      />
+    )
+  }
+  return (
+    <PageHeader
+      title={messages.title}
+      actions={
+        hasPermission(permissions, 'entries', 'delete') && (
+          <Link
+            to="/w/$workspaceId/$area"
+            params={{ workspaceId, area: 'trash' }}
+            aria-label={messages.trash}
+            className="grid size-touch place-items-center rounded-full text-ink outline-none hover:bg-sunken focus-visible:ring-2 focus-visible:ring-focus-ring"
+          >
+            <TwiseIcon name="trash" size="md" />
+          </Link>
+        )
+      }
+    />
   )
 }
 

@@ -1,4 +1,4 @@
-import { Link } from '@tanstack/react-router'
+import { Link, useNavigate } from '@tanstack/react-router'
 import { ArchivedToggle } from '@web/components/display/archived-toggle'
 import { Badge } from '@web/components/display/badge'
 import { AccountGroup } from '@web/components/finance/account-group'
@@ -11,6 +11,7 @@ import type {
   CategoryListProps,
   CategoryNodeProps,
   NatureBadgeProps,
+  ViewerChipProps,
 } from '@web/features/accounts/accounts.types'
 import { CategoryActions } from '@web/features/accounts/components/category-actions'
 import { useRememberedIds } from '@web/hooks/use-remembered-ids'
@@ -114,7 +115,7 @@ export function Subcategory({ workspaceId, permissions, tree, node }: CategoryNo
     hasPermission(permissions, 'accounts', 'update') ||
     hasPermission(permissions, 'accounts', 'delete')
   if (!canAct || !parent) {
-    return <SubcategoryChip label={node.name} tone="plain" />
+    return <ViewerChip workspaceId={workspaceId} permissions={permissions} node={node} />
   }
   return (
     <CategoryActions
@@ -146,4 +147,23 @@ export function NatureBadge({ node }: NatureBadgeProps) {
     )
   }
   return null
+}
+
+function ViewerChip({ workspaceId, permissions, node }: ViewerChipProps) {
+  const navigate = useNavigate()
+  if (!hasPermission(permissions, 'entries', 'view')) {
+    return <SubcategoryChip label={node.name} tone="plain" />
+  }
+  return (
+    <SubcategoryChip
+      label={node.name}
+      onClick={() =>
+        void navigate({
+          to: '/w/$workspaceId/entries',
+          params: { workspaceId },
+          search: { categoryId: node.id, back: 'categories' },
+        })
+      }
+    />
+  )
 }
