@@ -288,6 +288,8 @@ describe('budgetPace', () => {
         overCents: 10_000,
         aheadPoints: 102,
         status: 'over',
+        directCents: 0,
+        children: [{ categoryAccountId: 'groceries', spentCents: 30_000 }],
       },
       {
         categoryAccountId: 'housing',
@@ -297,6 +299,8 @@ describe('budgetPace', () => {
         overCents: 0,
         aheadPoints: 0,
         status: 'within',
+        directCents: 0,
+        children: [],
       },
       {
         categoryAccountId: 'electronics',
@@ -306,6 +310,8 @@ describe('budgetPace', () => {
         overCents: 0,
         aheadPoints: 27,
         status: 'ahead',
+        directCents: 30_000,
+        children: [],
       },
     ])
   })

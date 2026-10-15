@@ -79,6 +79,8 @@ describe('computeInsights', () => {
             overCents: 0,
             aheadPoints: 10,
             status: 'ahead',
+            directCents: 0,
+            children: [],
           },
           {
             categoryAccountId: 'fun',
@@ -88,6 +90,8 @@ describe('computeInsights', () => {
             overCents: 20,
             aheadPoints: 80,
             status: 'over',
+            directCents: 0,
+            children: [],
           },
           {
             categoryAccountId: 'home',
@@ -97,6 +101,8 @@ describe('computeInsights', () => {
             overCents: 0,
             aheadPoints: 0,
             status: 'within',
+            directCents: 0,
+            children: [],
           },
         ],
       }),

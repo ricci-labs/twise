@@ -100,6 +100,11 @@ export type PeriodFacts = {
   contactBalances: readonly ContactBalance[]
 }
 
+export type CategorySpending = {
+  categoryAccountId: string
+  spentCents: number
+}
+
 export type BudgetPace = {
   categoryAccountId: string
   limitCents: number
@@ -108,6 +113,27 @@ export type BudgetPace = {
   overCents: number
   aheadPoints: number
   status: 'within' | 'ahead' | 'over'
+  directCents: number
+  children: CategorySpending[]
+}
+
+export type BudgetTotals = {
+  count: number
+  limitCents: number
+  spentCents: number
+  expectedCents: number
+  usedPercent: number
+  offPaceCount: number
+}
+
+export type CategoryAverage = {
+  categoryAccountId: string
+  averageCents: number
+}
+
+export type CategoryAverages = {
+  periods: number
+  lines: CategoryAverage[]
 }
 
 export type PeriodDays = {
