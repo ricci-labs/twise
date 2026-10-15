@@ -15,5 +15,6 @@ export type RadioCardListProps = VariantProps<typeof radioCardListVariants> & {
   value: string | null
   onSelect: (value: string) => void
   onBlur?: () => void
+  searchLabel?: string
   className?: string
 }

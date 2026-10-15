@@ -11,6 +11,7 @@ import { homeMessages } from '@web/features/home/home.messages'
 import type { ReserveGoalsCardProps } from '@web/features/home/home.types'
 import { cn } from '@web/lib/cn'
 import { formatMonthLabel } from '@web/lib/format/calendar'
+import { SHORT_LIST_SIZE } from '@web/lib/long-lists'
 
 const messages = homeMessages.reserve
 const MONTHS = new Intl.NumberFormat('pt-BR', {
@@ -78,7 +79,7 @@ export function ReserveGoalsCard({
           reserve && goals.length > 0 && 'mt-3.5 border-t border-border pt-3.5',
         )}
       >
-        {goals.map((goal) => (
+        {goals.slice(0, SHORT_LIST_SIZE).map((goal) => (
           <li key={goal.goalId} className="flex flex-col gap-1">
             <p className="flex items-baseline justify-between gap-2 text-body">
               <span className="text-title-sm">{goal.name}</span>

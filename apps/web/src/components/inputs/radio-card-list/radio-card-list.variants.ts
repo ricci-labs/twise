@@ -36,3 +36,7 @@ export const radioCardTextVariants = cva('flex min-w-0 flex-1 flex-col')
 export const radioCardDetailVariants = cva(
   'text-note font-normal text-ink-muted [&_strong]:font-emphasis [&_strong]:text-ink [&_strong]:tabular-nums',
 )
+
+export const radioCardListBoxVariants = cva('flex flex-col gap-2')
+
+export const radioCardListEmptyVariants = cva('px-1 text-note font-medium text-ink-muted')

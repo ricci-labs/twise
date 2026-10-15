@@ -3,6 +3,7 @@ import { addTileExamples } from '@web/components/actions/add-tile'
 import { buttonExamples } from '@web/components/actions/button'
 import { itemActionsExamples } from '@web/components/actions/item-actions'
 import { segmentedControlExamples } from '@web/components/actions/segmented-control'
+import { showMoreButtonExamples } from '@web/components/actions/show-more-button'
 import { textLinkExamples } from '@web/components/actions/text-link'
 import { appSplashExamples } from '@web/components/brand/app-splash'
 import { logoExamples } from '@web/components/brand/logo'
@@ -156,6 +157,7 @@ export const workbenchSections: readonly ComponentExamples[] = [
   sheetExamples,
   avatarExamples,
   textLinkExamples,
+  showMoreButtonExamples,
   addTileExamples,
   breadcrumbExamples,
   scrollArrowsExamples,
