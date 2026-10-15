@@ -1,7 +1,7 @@
 ---
 summary: Planning tables — recurrence rules and planned occurrences (forecast, reminders, matching to real entries), financial period calculation, budgets, goals, holidays — and the dashboard metrics, insights, commission split, balance forecast and purchase simulation built on them.
 read_when: Working on projections, fixed bills, salaries/commission forecasts, reminders, budgets, goals, or the financial period.
-updated: 2026-10-09
+updated: 2026-10-15
 ---
 
 # Planning: forecast, periods, budgets, goals
@@ -202,6 +202,7 @@ reserve_coverage  = the reserve goal's balance and target, its % (capped at 100)
 
 | Route | Permission | Does |
 |---|---|---|
+| `GET /periods?year=YYYY` | any member | `listPeriodsOfYear` (G48): `{ today, currentLabel, periods }`, the twelve financial periods labeled January to December of that year (default the current year), by the workspace's period settings and holidays, so the web never computes a period itself |
 | `GET /overview?period=YYYY-MM` | `reports:view` | `getPeriodOverview`: `{ today, period, metrics, insights }` for the current period, or the period labeled with that month |
 
 **Insights** (`packages/shared/src/reports/insights/`, one rule per file, in `INSIGHTS`): each is
