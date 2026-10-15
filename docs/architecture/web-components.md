@@ -416,7 +416,7 @@ component here, so the form, and later the account, card and planning forms, sha
   pressing it opens the row "Em {mãe}" below the grid with "Só {mãe}" and the children as chips.
   `searchLabel` adds a 44 px search (with its icon) that ignores case and accents and also finds children,
   shown "em {mãe}" with the parent's drawing, once the list holds more than 10 items (more than 12
-  in the `grid`, children counted). The `list` layout shows the first 5 and a `ShowMoreButton`
+  in the category `grid`, children counted). The `list` layout shows the first 5 and a `ShowMoreButton`
   ("Mostrar mais (n)") that reveals the rest and focuses the first revealed row; the whole list
   shows from the start when the current choice is past the first 5. The caller orders the items,
   the most relevant first; `empty` replaces the list with the drawing, a sentence

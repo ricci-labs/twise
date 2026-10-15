@@ -112,6 +112,10 @@ fit (most used first), then "+{n} mais" (opens that row only, which then ends wi
 and "{n} subcategorias" under the name; the "+" chip always last. Tapping a chip opens its actions
 (sheet / menu under the chip); the chip keeps the ink outline while they are open. A viewer's chip
 opens its entries.
+**RF-ACC-3c** Search. With more than 12 active categories (on the phone, of the kind shown; on the
+desktop, of both), a "Buscar categoria" field sits above the list. It ignores case and accents and
+keeps a category whose name matches with all its subcategories, or the parent of a matching
+subcategory with only the matches, opened; no match shows "Nenhuma categoria com esse nome."
 
 | Action | Permission | On |
 |---|---|---|

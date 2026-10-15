@@ -160,6 +160,32 @@ describe('ACC-02 categories', () => {
     expect(moves).toEqual([{ parentId: HOUSE }])
   })
 
+  it('searches the categories once there are more than 12, opening the parent of a match', async () => {
+    await openCategories({
+      answers: {
+        [`GET ${BASE}/accounts`]: () => Response.json([...CATEGORIES, ...HOUSE_CHILDREN]),
+      },
+    })
+    const search = page.getByRole('searchbox', { name: 'Buscar categoria' })
+
+    await search.fill('iptu')
+    await expect
+      .element(page.getByRole('button', { name: 'IPTU, subcategoria de Casa: ações' }))
+      .toBeVisible()
+    await expect
+      .element(page.getByRole('button', { name: 'Ações de Mercado' }))
+      .not.toBeInTheDocument()
+    await search.fill('xyz')
+    await expect.element(page.getByText('Nenhuma categoria com esse nome.')).toBeVisible()
+  })
+
+  it('has no search while the categories are few', async () => {
+    await openCategories()
+
+    await expect.element(page.getByRole('button', { name: 'Ações de Mercado' })).toBeVisible()
+    await expect.element(page.getByRole('searchbox')).not.toBeInTheDocument()
+  })
+
   it('shows the tree without actions to a viewer', async () => {
     localStorage.setItem(`openCategories:${WORKSPACE_ID}`, JSON.stringify([GROCERIES]))
     await openCategories({ access: () => accessAs('Leitor', VIEWER_PERMISSIONS) })
