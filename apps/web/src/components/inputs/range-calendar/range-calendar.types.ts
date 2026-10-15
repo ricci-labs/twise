@@ -9,6 +9,7 @@ export type RangeCalendarProps = {
   value: DateRange
   today: IsoDate
   onChange: (range: DateRange) => void
+  hasEnds?: boolean
 }
 
 export type RangeEndProps = {

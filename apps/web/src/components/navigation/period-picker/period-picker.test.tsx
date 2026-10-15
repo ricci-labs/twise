@@ -115,6 +115,44 @@ describe('PeriodPicker', () => {
     await expect.element(page.getByRole('dialog', { name: 'Escolher período' })).toBeVisible()
   })
 
+  it('opens the shortcuts and the calendar under the bar on the desktop', async () => {
+    await page.viewport(1440, 900)
+    const onPreset = vi.fn()
+    const onRange = vi.fn()
+    const { props, sheet } = picker({
+      ranges: { today: TODAY, value: { from: null, to: null }, onPreset, onRange },
+    })
+    await render(<PeriodPicker {...props} />)
+
+    await page.getByRole('button', { name: /out\/26/ }).click()
+    const popover = page.getByRole('dialog', { name: 'Escolher período' })
+    await expect
+      .element(popover.getByRole('button', { name: 'Este período (out/26)' }))
+      .toHaveAttribute('aria-pressed', 'true')
+    await expect.element(popover.getByText('5 out – 4 nov')).toBeVisible()
+    await expect.element(popover.getByText(/31 dias/)).toBeVisible()
+    await expectNoAccessibilityViolations(popover.element())
+    await popover.getByRole('button', { name: 'Período anterior' }).click()
+    expect(sheet.onPick).toHaveBeenCalledWith('2026-09')
+    await expect.element(popover).not.toBeInTheDocument()
+
+    await page.getByRole('button', { name: /out\/26/ }).click()
+    await page.getByRole('button', { name: '5 de outubro' }).click()
+    await expect
+      .element(page.getByRole('button', { name: 'Escolher datas' }))
+      .toHaveAttribute('aria-pressed', 'true')
+    await expect.element(page.getByText('Escolha o último dia')).toBeVisible()
+    await page.getByRole('button', { name: '20 de outubro' }).click()
+    await expect.element(page.getByText(/16 dias/)).toBeVisible()
+    await page.getByRole('button', { name: 'Aplicar' }).click()
+    expect(onRange).toHaveBeenCalledWith({ from: '2026-10-05', to: '2026-10-20' })
+    await expect.element(page.getByRole('dialog')).not.toBeInTheDocument()
+
+    await page.getByRole('button', { name: /out\/26/ }).click()
+    await page.getByRole('button', { name: 'Este ano' }).click()
+    expect(onPreset).toHaveBeenCalledWith('thisYear')
+  })
+
   it('says when the periods could not be loaded and tries again', async () => {
     const onRetry = vi.fn()
     const { props, sheet } = picker()

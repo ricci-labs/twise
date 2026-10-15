@@ -653,7 +653,8 @@ component here, so the form, and later the account, card and planning forms, sha
 - `RangeCalendar` (`components/inputs/range-calendar`): picks a range (the entries' "Escolher
   datas"): "De" → "Até" on top (the one still to pick is white with the ink outline and
   "Escolha", the others `sunken`; a `status`, so the choice is read), the hint "Toque no primeiro e
-  no último dia. Hoje tem o pontinho.", then the `CalendarMonth`. The first tap sets "De", the
+  no último dia. Hoje tem o pontinho.", then the `CalendarMonth` (`hasEnds={false}` keeps only the
+  month, for the desktop period popover). The first tap sets "De", the
   second "Até"; a day before "De", or any tap once both are set, starts again from it. The caller
   owns the footer ("Ver de 5 a 20 out").
 - `DayField` (`components/inputs/day-field`): a day of the month, the field the card form uses
@@ -817,8 +818,13 @@ online with `asChild` are translated to `render`.
   `note` with "Tracejados: períodos futuros.". With `ranges`, "Outros intervalos" adds "Últimos 30
   dias", "Este ano" (`onPreset`) and "Escolher datas", which turns the sheet into the
   `RangeCalendar` with "Voltar" and "Ver de 5 a 20 out" ("Escolha o primeiro / último dia",
-  disabled, until both are picked; `onRange`). The caller owns the year, the query and what the
-  choice means.
+  disabled, until both are picked; `onRange`). With `ranges` on the desktop it opens the design's
+  560 px popover under the bar instead (`Lista-desktop-periodo.png`): the shortcuts on the left
+  ("Este período (out/26)", "Período anterior", "Últimos 30 dias", "Este ano", "Escolher datas", the
+  one in use with the selection outline; `ranges.preset` says which preset is on) and the
+  `RangeCalendar` without its ends on the right, starting on the shown range, with "5 out – 20 out ·
+  16 dias" and "Aplicar" under it. A shortcut applies and closes; picking a day marks "Escolher
+  datas". The caller owns the year, the query and what the choice means.
 - `EntryHeader` (`components/finance/entry-header`): the top of an entry's detail (`Detalhe.png`,
   option B): the drawing and the name on one line with the type small and muted above the name
   (no badge: it would read as a status), the amount in display type with raised cents (`mint-ink`

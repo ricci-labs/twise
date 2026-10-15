@@ -1,13 +1,26 @@
-import { type IsoDate, parseIsoDate } from '@financas/shared'
+import { Popover } from '@base-ui/react/popover'
+import {
+  addMonths,
+  daysBetween,
+  type IsoDate,
+  parseIsoDate,
+  toYearMonthLabel,
+} from '@financas/shared'
 import { Button } from '@web/components/actions/button'
-import { RangeCalendar } from '@web/components/inputs/range-calendar'
+import { type DateRange, RangeCalendar } from '@web/components/inputs/range-calendar'
 import { Sheet } from '@web/components/layout/sheet'
 import { periodPickerMessages as messages } from '@web/components/navigation/period-picker/period-picker.messages'
 import type {
   PeriodDatesProps,
   PeriodMonthsProps,
   PeriodPickerProps,
+  PeriodPopoverProps,
   PeriodPreset,
+  PeriodRangeFootProps,
+  PeriodRanges,
+  PeriodSheetData,
+  PeriodShortcut,
+  PeriodShortcutsProps,
   PeriodStepProps,
 } from '@web/components/navigation/period-picker/period-picker.types'
 import {
@@ -24,11 +37,23 @@ import {
   periodNoteVariants,
   periodOthersLabelVariants,
   periodOthersVariants,
+  periodPopoverVariants,
+  periodRangeFootVariants,
+  periodRangeVariants,
+  periodShortcutsVariants,
+  periodShortcutVariants,
   periodStepVariants,
   periodYearVariants,
 } from '@web/components/navigation/period-picker/period-picker.variants'
+import { useMediaQuery } from '@web/hooks/use-media-query'
+import { DESKTOP_QUERY } from '@web/lib/breakpoints'
 import { cn } from '@web/lib/cn'
-import { formatDayMonth, formatRange, formatShortMonthName } from '@web/lib/format/calendar'
+import {
+  formatDayMonth,
+  formatMonthLabel,
+  formatRange,
+  formatShortMonthName,
+} from '@web/lib/format/calendar'
 import { Calendar, ChevronLeft, ChevronRight } from 'lucide-react'
 import { cloneElement, useState } from 'react'
 
@@ -48,9 +73,12 @@ export function PeriodPicker({
   const [isOpen, setIsOpen] = useState(false)
   const [isChoosingDates, setIsChoosingDates] = useState(false)
   const [button, setButton] = useState<HTMLButtonElement | null>(null)
+  const [bar, setBar] = useState<HTMLElement | null>(null)
+  const isDesktop = useMediaQuery(DESKTOP_QUERY)
   const close = () => setIsOpen(false)
   return (
     <nav
+      ref={setBar}
       aria-label={label}
       data-slot="period-picker"
       className={cn(periodBarVariants(), className)}
@@ -71,26 +99,171 @@ export function PeriodPicker({
         {detail && <span className={periodDetailVariants()}>· {detail}</span>}
       </button>
       <PeriodStep link={next} label={messages.next} direction="next" />
-      <Sheet
-        title={isChoosingDates ? messages.chooseDates : messages.choose}
-        closeLabel={messages.close}
-        anchor={button}
-        isOpen={isOpen}
-        onOpenChange={setIsOpen}
-      >
-        {isChoosingDates && ranges ? (
-          <PeriodDates ranges={ranges} onBack={() => setIsChoosingDates(false)} onDone={close} />
-        ) : (
-          <PeriodMonths
-            {...sheet}
-            ranges={ranges}
-            onChooseDates={() => setIsChoosingDates(true)}
-            onDone={close}
-          />
-        )}
-      </Sheet>
+      {isDesktop && ranges ? (
+        <PeriodPopover
+          sheet={sheet}
+          ranges={ranges}
+          anchor={bar}
+          isOpen={isOpen}
+          onOpenChange={setIsOpen}
+        />
+      ) : (
+        <Sheet
+          title={isChoosingDates ? messages.chooseDates : messages.choose}
+          closeLabel={messages.close}
+          anchor={button}
+          isOpen={isOpen}
+          onOpenChange={setIsOpen}
+        >
+          {isChoosingDates && ranges ? (
+            <PeriodDates ranges={ranges} onBack={() => setIsChoosingDates(false)} onDone={close} />
+          ) : (
+            <PeriodMonths
+              {...sheet}
+              ranges={ranges}
+              onChooseDates={() => setIsChoosingDates(true)}
+              onDone={close}
+            />
+          )}
+        </Sheet>
+      )}
     </nav>
   )
+}
+
+function PeriodPopover({ sheet, ranges, anchor, isOpen, onOpenChange }: PeriodPopoverProps) {
+  return (
+    <Popover.Root open={isOpen} onOpenChange={(open) => onOpenChange(open)}>
+      <Popover.Portal>
+        <Popover.Positioner
+          anchor={anchor}
+          side="bottom"
+          align="start"
+          sideOffset={8}
+          className="z-modal"
+        >
+          <Popover.Popup aria-label={messages.choose} className={periodPopoverVariants()}>
+            <PeriodShortcuts sheet={sheet} ranges={ranges} onDone={() => onOpenChange(false)} />
+          </Popover.Popup>
+        </Popover.Positioner>
+      </Popover.Portal>
+    </Popover.Root>
+  )
+}
+
+function PeriodShortcuts({ sheet, ranges, onDone }: PeriodShortcutsProps) {
+  const [range, setRange] = useState(() => shownRangeOf(sheet, ranges))
+  const [isChoosing, setIsChoosing] = useState(false)
+  const chosen: PeriodShortcut | null = isChoosing ? 'dates' : shortcutOf(sheet, ranges)
+  const previous = previousLabelOf(sheet.currentLabel)
+  const shortcuts: readonly { key: PeriodShortcut; label: string; onPress: () => void }[] = [
+    {
+      key: 'current',
+      label: messages.thisPeriod(formatMonthLabel(sheet.currentLabel)),
+      onPress: () => sheet.onPick(sheet.currentLabel),
+    },
+    { key: 'previous', label: messages.previousPeriod, onPress: () => sheet.onPick(previous) },
+    ...PRESETS.map((preset) => ({
+      key: preset,
+      label: messages.presets[preset],
+      onPress: () => ranges.onPreset(preset),
+    })),
+  ]
+  return (
+    <>
+      <fieldset aria-label={messages.shortcuts} className={periodShortcutsVariants()}>
+        {shortcuts.map((shortcut) => (
+          <button
+            key={shortcut.key}
+            type="button"
+            aria-pressed={chosen === shortcut.key}
+            className={periodShortcutVariants()}
+            onClick={() => {
+              shortcut.onPress()
+              onDone()
+            }}
+          >
+            {shortcut.label}
+          </button>
+        ))}
+        <button
+          type="button"
+          aria-pressed={chosen === 'dates'}
+          className={periodShortcutVariants()}
+          onClick={() => setIsChoosing(true)}
+        >
+          {messages.chooseDates}
+        </button>
+      </fieldset>
+      <div className={periodRangeVariants()}>
+        <RangeCalendar
+          value={range}
+          today={ranges.today}
+          hasEnds={false}
+          onChange={(next) => {
+            setIsChoosing(true)
+            setRange(next)
+          }}
+        />
+        <PeriodRangeFoot
+          range={range}
+          onApply={(picked) => {
+            ranges.onRange(picked)
+            onDone()
+          }}
+        />
+      </div>
+    </>
+  )
+}
+
+function PeriodRangeFoot({ range: { from, to }, onApply }: PeriodRangeFootProps) {
+  if (!from || !to) {
+    return (
+      <div className={periodRangeFootVariants()}>
+        <p role="status">{from ? messages.pickLast : messages.pickFirst}</p>
+        <Button size="sm" isDisabled>
+          {messages.apply}
+        </Button>
+      </div>
+    )
+  }
+  return (
+    <div className={periodRangeFootVariants()}>
+      <p role="status">
+        <b>{formatRange(from, to)}</b>
+        {` · ${messages.dayCount(daysBetween(from, to) + 1)}`}
+      </p>
+      <Button size="sm" onClick={() => onApply({ from, to })}>
+        {messages.apply}
+      </Button>
+    </div>
+  )
+}
+
+function shortcutOf(sheet: PeriodSheetData, ranges: PeriodRanges): PeriodShortcut | null {
+  if (ranges.preset) {
+    return ranges.preset
+  }
+  if (ranges.value.from) {
+    return 'dates'
+  }
+  if (sheet.chosenLabel === sheet.currentLabel) {
+    return 'current'
+  }
+  return sheet.chosenLabel === previousLabelOf(sheet.currentLabel) ? 'previous' : null
+}
+
+function shownRangeOf(sheet: PeriodSheetData, ranges: PeriodRanges): DateRange {
+  if (ranges.value.from) {
+    return ranges.value
+  }
+  const period = sheet.periods?.find((each) => each.label === sheet.chosenLabel)
+  return period ? { from: period.start, to: period.end } : { from: null, to: null }
+}
+
+function previousLabelOf(label: string): string {
+  return toYearMonthLabel(addMonths(parseIsoDate(`${label}-01`), -1))
 }
 
 function PeriodStep({ link, label, direction }: PeriodStepProps) {

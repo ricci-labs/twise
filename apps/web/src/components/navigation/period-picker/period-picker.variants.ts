@@ -57,3 +57,21 @@ export const periodDatesFooterVariants = cva(
 export const periodFailedVariants = cva(
   'flex flex-col items-start gap-2 py-4 text-body-sm text-ink-muted',
 )
+
+export const periodPopoverVariants = cva(
+  'flex w-140 gap-3 rounded-lg border border-border bg-surface p-3 text-ink shadow-dialog outline-none transition duration-popover ease-out data-ending-style:scale-96 data-ending-style:opacity-0 data-starting-style:scale-96 data-starting-style:opacity-0',
+)
+
+export const periodShortcutsVariants = cva(
+  'flex w-46 shrink-0 flex-col gap-1 border-r border-border pr-3',
+)
+
+export const periodShortcutVariants = cva(
+  'min-h-10 cursor-pointer rounded-sm px-2.5 text-left text-body-sm font-medium text-ink outline-none hover:bg-page focus-visible:ring-2 focus-visible:ring-focus-ring aria-pressed:font-bold aria-pressed:ring-2 aria-pressed:ring-ink aria-pressed:ring-inset',
+)
+
+export const periodRangeVariants = cva('flex min-w-0 flex-1 flex-col')
+
+export const periodRangeFootVariants = cva(
+  'mt-2 flex items-center justify-between gap-3 border-t border-border pt-3 text-note text-ink-muted [&_b]:font-bold [&_b]:text-ink',
+)
