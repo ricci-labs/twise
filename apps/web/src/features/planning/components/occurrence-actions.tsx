@@ -3,12 +3,14 @@ import { Link } from '@tanstack/react-router'
 import { type ItemAction, ItemActions } from '@web/components/actions/item-actions'
 import { showToast } from '@web/components/feedback/toast'
 import { useOccurrenceAction } from '@web/features/planning/api/use-occurrence-action'
+import { EntryPickerSheet } from '@web/features/planning/components/entry-picker-sheet'
 import { OccurrenceAmountSheet } from '@web/features/planning/components/occurrence-amount-sheet'
 import { planningMessages } from '@web/features/planning/planning.messages'
 import type {
   ListedOccurrence,
   OccurrenceActionRequest,
   OccurrenceActionsProps,
+  OccurrenceHandlers,
 } from '@web/features/planning/planning.types'
 import { errorMessageFor } from '@web/lib/errors/error-message'
 import { formatShortDate } from '@web/lib/format/calendar'
@@ -21,12 +23,14 @@ const ESTIMATE = '≈ '
 export function OccurrenceActions({
   workspaceId,
   occurrence,
-  accountName,
+  accounts,
   className,
   children,
 }: OccurrenceActionsProps) {
   const action = useOccurrenceAction(workspaceId)
   const [isChangingAmount, setIsChangingAmount] = useState(false)
+  const [isPickingEntry, setIsPickingEntry] = useState(false)
+  const accountName = accounts.get(occurrence.sourceAccountId)?.name ?? ''
   const when = formatShortDate(occurrence.dueOn)
 
   async function run(request: OccurrenceActionRequest, done?: () => void) {
@@ -68,6 +72,7 @@ export function OccurrenceActions({
 
   const actions = actionsOf(occurrence, workspaceId, {
     changeAmount: () => setIsChangingAmount(true),
+    pickEntry: () => setIsPickingEntry(true),
     skip,
     unskip: () => void unskip(),
     unmatch,
@@ -86,6 +91,13 @@ export function OccurrenceActions({
           </button>
         }
       />
+      <EntryPickerSheet
+        workspaceId={workspaceId}
+        occurrence={occurrence}
+        accounts={accounts}
+        isOpen={isPickingEntry}
+        onOpenChange={setIsPickingEntry}
+      />
       <OccurrenceAmountSheet
         workspaceId={workspaceId}
         occurrence={occurrence}
@@ -99,7 +111,7 @@ export function OccurrenceActions({
 function actionsOf(
   occurrence: ListedOccurrence,
   workspaceId: string,
-  handlers: { changeAmount: () => void; skip: () => void; unskip: () => void; unmatch: () => void },
+  handlers: OccurrenceHandlers,
 ): ItemAction[] {
   if (occurrence.status === 'skipped') {
     return [{ key: 'unskip', label: copy.unskip, icon: 'refresh', onSelect: handlers.unskip }]
@@ -125,6 +137,7 @@ function actionsOf(
     ]
   }
   return [
+    { key: 'picked', label: copy.alreadyRecorded, icon: 'ok', onSelect: handlers.pickEntry },
     { key: 'amount', label: copy.amount, icon: 'edit', onSelect: handlers.changeAmount },
     { key: 'skip', label: copy.skip, icon: 'calendar', onSelect: handlers.skip },
   ]

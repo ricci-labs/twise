@@ -30,6 +30,18 @@ export function occurrencesQueryOptions(workspaceId: string, from: IsoDate, to: 
   })
 }
 
+export function candidatesQueryOptions(workspaceId: string, occurrenceId: string) {
+  return queryOptions({
+    queryKey: [
+      ...queryKeys.workspace(workspaceId),
+      'occurrences',
+      occurrenceId,
+      'candidates',
+    ] as const,
+    queryFn: () => fetchCandidates(workspaceId, occurrenceId),
+  })
+}
+
 export function fetchPeriods(workspaceId: string, year: number | undefined) {
   return unwrap(workspaceApi.periods.$get({ param: { workspaceId }, query: year ? { year } : {} }))
 }
@@ -40,4 +52,13 @@ export function fetchAccounts(workspaceId: string) {
 
 export function fetchOccurrences(workspaceId: string, from: IsoDate, to: IsoDate) {
   return unwrap(workspaceApi.occurrences.$get({ param: { workspaceId }, query: { from, to } }))
+}
+
+export function fetchCandidates(workspaceId: string, occurrenceId: string) {
+  return unwrap(
+    workspaceApi.occurrences[':occurrenceId'].candidates.$get({
+      param: { workspaceId, occurrenceId },
+      query: {},
+    }),
+  )
 }

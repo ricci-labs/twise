@@ -1,4 +1,4 @@
-import { CARD, CHECKING, SAVINGS } from '@web/testing/accounts-api'
+import { CARD, CHECKING, GROCERIES, SAVINGS } from '@web/testing/accounts-api'
 import { WORKSPACE_ID } from '@web/testing/fake-api'
 import type { FakeAnswer } from '@web/testing/testing.types'
 
@@ -67,4 +67,32 @@ export function occurrencesAnswer(
   totals: object = OCTOBER_OCCURRENCE_TOTALS,
 ): Record<string, FakeAnswer> {
   return { [`GET ${BASE}/occurrences`]: () => Response.json({ items, totals }) }
+}
+
+export const INTERNET_CANDIDATES = [
+  {
+    entryId: '00000000-0000-4000-8000-0000000005a1',
+    description: 'Internet Fibra',
+    occurredOn: '2026-10-19',
+    amountCents: 12000,
+    counterpartAccountId: null,
+    isLikely: true,
+  },
+  {
+    entryId: '00000000-0000-4000-8000-0000000005a2',
+    description: 'Mercado da semana',
+    occurredOn: '2026-10-20',
+    amountCents: 8640,
+    counterpartAccountId: GROCERIES,
+    isLikely: false,
+  },
+]
+
+export function candidatesAnswer(
+  occurrenceId: string,
+  items: readonly object[] = INTERNET_CANDIDATES,
+): Record<string, FakeAnswer> {
+  return {
+    [`GET ${BASE}/occurrences/${occurrenceId}/candidates`]: () => Response.json({ items }),
+  }
 }

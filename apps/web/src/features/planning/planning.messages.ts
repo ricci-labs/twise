@@ -48,6 +48,7 @@ export const planningMessages = {
       receivedIn: (date: string, account: string) => `Recebido em ${date} na ${account}`,
       doneOn: (date: string) => `Feita em ${date}`,
       amount: 'Mudar o valor deste',
+      alreadyRecorded: 'Já registrei',
       skip: 'Pular este mês',
       seeEntry: 'Ver lançamento',
       unmatch: 'Desfazer pagamento',
@@ -57,6 +58,30 @@ export const planningMessages = {
     unmatchedToast: (description: string, date: string) =>
       `${description} de ${date} voltou a esperar o pagamento.`,
     undo: 'Desfazer',
+    picker: {
+      title: 'Já registrei',
+      text: (kind: string, account: string, description: string, date: string) =>
+        `Lançamentos de ${kind} da ${account}, os mais parecidos primeiro. Escolha o lançamento que pagou ${description} de ${date}.`,
+      kinds: {
+        expense: 'despesa',
+        card_purchase: 'compra no cartão',
+        income: 'receita',
+        transfer: 'transferência',
+      },
+      label: 'Lançamentos',
+      search: 'Buscar lançamento',
+      likely: 'Mais provável',
+      detail: (account: string, date: string) => `${account} · ${date}`,
+      empty: 'Nenhum lançamento parecido perto desta data.',
+      failed: 'Não deu para carregar os lançamentos.',
+      cancel: 'Cancelar',
+      markPaid: 'Marcar como pago',
+      markReceived: 'Marcar como recebido',
+      paidToast: (description: string, date: string) =>
+        `${description} de ${date} marcada como paga.`,
+      receivedToast: (description: string, date: string) =>
+        `${description} de ${date} marcada como recebida.`,
+    },
     amount: {
       title: 'Mudar o valor deste',
       description: (description: string, date: string) => `${description} · previsto para ${date}`,
