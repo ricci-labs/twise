@@ -88,6 +88,7 @@ import { suggestInputExamples } from '@web/components/inputs/suggest-input'
 import { switchExamples } from '@web/components/inputs/switch'
 import { textAreaExamples } from '@web/components/inputs/text-area'
 import { textInputExamples } from '@web/components/inputs/text-input'
+import { toggleChipsExamples } from '@web/components/inputs/toggle-chips'
 import { authLayoutExamples } from '@web/components/layout/auth-layout'
 import { formOverlayExamples } from '@web/components/layout/form-overlay'
 import { momentScreenExamples } from '@web/components/layout/moment-screen'
@@ -177,6 +178,7 @@ export const workbenchSections: readonly ComponentExamples[] = [
   scrollArrowsExamples,
   searchInputExamples,
   textInputExamples,
+  toggleChipsExamples,
   filterChipsExamples,
   listSummaryExamples,
   listEndExamples,

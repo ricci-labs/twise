@@ -401,6 +401,10 @@ component here, so the form, and later the account, card and planning forms, sha
   shows that icon on paper instead of the initial, "Da casa"). An option can open a dialog (`opensDialog`,
   `aria-haspopup`) and carry an icon (`calendar` before the label, `chevron` after it); `onSelect`
   fires for every press, even on the chosen option, so "Mais" and "Outra data" reopen their sheet.
+- `ToggleChips` (`components/inputs/toggle-chips`, Base UI `ToggleGroup` with `multiple`): one or
+  more choices among a few, all visible, as pressed buttons in a group named by its label: 40 px
+  pills that wrap, the pressed ones with the 2 px ink outline and a bold label (the entries' "Tipo"
+  filter, `Lista-filtros.png`).
 - `PickerField` (`components/inputs/picker-field`): the field of an account, card, category or
   contact: a button named by its `FormField` label that opens a dialog, with the drawing, the name
   and a grey second line ("Saldo de hoje: R$ 4.200,00"); a subcategory reads with its parent
