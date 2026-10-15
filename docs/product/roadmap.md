@@ -343,6 +343,25 @@ updated: 2026-10-15
      (#315–#319)
   16. [x] Review of the round against every PNG: the phone's search row and the detail's header
      actions fixed, the desktop tables cut long cells with "…" as the design does
+- [ ] **Planning round A: PLAN-01..04** (design `../design/planning/`, exported 2026-10-15; the
+  user asked on 2026-10-15 for the same flow: one PR per step, merged by Claude when CI is green,
+  every screen checked side by side with its PNG):
+  1. [ ] Design package in `docs/design/planning/`; requirements (`requirements/modules/planning.md`
+     opens on Previstos, `requirements/ui-standards.md` → Long text), API gaps G52–G54
+  2. [ ] Web: the long-text rule on the screens already built (entries, invoice lines, accounts,
+     cards, categories, the Home lists)
+  3. [ ] API: each recurrence's next date and monthly equivalent, and the monthly totals (G52)
+  4. [ ] API: the totals of the planned occurrences (G53)
+  5. [ ] API: the budgets' totals, spending by subcategory, unbudgeted spending, 3-month average (G54)
+  6. [ ] Web components: `OccurrenceRow`, `OccurrenceGroup`, `PlanSummaryTiles`
+  7. [ ] Web: the "Planejamento" tabs and `PLAN-03` on the phone (groups, every state)
+  8. [ ] Web: `PLAN-03` actions, "Já registrei", "Mudar o valor deste", skip and undo, and both match
+     questions (RF-PLAN-6, RF-PLAN-7)
+  9. [ ] Web: `RecurrenceRow` and `PLAN-01` on the phone
+  10. [ ] Web: `PLAN-02` (`RecurrenceForm`, `NextDatesPreview` with the reason for a moved date)
+  11. [ ] Web: `PLAN-04` (`BudgetRow`, `BudgetSummary`, `BudgetSheet`)
+  12. [ ] Web: the desktop versions
+  13. [ ] Review of the round against every PNG
 - [ ] Remaining project skills (`new-module`, `db-migration`, `domain-rule`, `pr`) and Claude Code hooks
 
 ## Phase 1: MVP
