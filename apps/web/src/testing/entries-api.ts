@@ -39,19 +39,25 @@ export function listedEntry(
     createdByUserId: MEMBER_A_ID,
     source: 'web',
     replacesEntryId: null,
-    amountCents: lines.reduce((total, [, amount]) => total + Math.max(amount, 0), 0),
-    postings: lines.map(([accountId, amountCents], index) => ({
+    amountCents: amountOf(lines),
+    shares: [],
+    ownCents: amountOf(lines),
+    postings: lines.map(([accountId, amountCents, extra = {}], index) => ({
       lineNo: index + 1,
       accountId,
       accountKind: KIND_OF[accountId] ?? 'receivable',
       amountCents,
       effectiveOn: occurredOn,
-      invoiceId: null,
-      installmentNo: null,
-      contactId: null,
+      invoiceId: extra.invoiceId ?? null,
+      installmentNo: extra.installmentNo ?? null,
+      contactId: extra.contactId ?? null,
     })),
     ...extra,
   }
+}
+
+function amountOf(lines: readonly EntryLine[]): number {
+  return lines.reduce((total, [, amount]) => total + Math.max(amount, 0), 0)
 }
 
 export const OCTOBER_ENTRIES = [

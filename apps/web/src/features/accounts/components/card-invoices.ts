@@ -4,7 +4,7 @@ import {
   type IsoDate,
   invoiceForPurchase,
   invoiceForReferenceMonth,
-  invoiceStatusOn,
+  invoiceStateOn,
   parseIsoDate,
   todayIn,
   toYearMonthLabel,
@@ -112,7 +112,7 @@ export function todayOnDevice(): IsoDate {
 function fromStored(invoice: StoredInvoice, card: CardSummary, today: IsoDate): CardInvoice {
   return {
     ...invoice,
-    state: stateOf(invoice, card, today),
+    state: invoiceStateOn(invoice, today, card),
   }
 }
 
@@ -121,23 +121,13 @@ function emptyInvoice(referenceMonth: string, card: CardSummary, today: IsoDate)
   return {
     ...invoice,
     invoiceId: null,
-    state: stateOf({ ...invoice, dueCents: 0, totalCents: 0 }, card, today),
+    state: invoiceStateOn({ ...invoice, dueCents: 0, totalCents: 0 }, today, card),
     totalCents: 0,
     paidCents: 0,
     dueCents: 0,
     ownCents: 0,
     frontedCents: 0,
   }
-}
-
-function stateOf(
-  invoice: { closingOn: string; referenceMonth: string; dueCents: number; totalCents: number },
-  card: CardSummary,
-  today: IsoDate,
-): InvoiceState {
-  const status = invoiceStatusOn(invoice, today, card)
-  const isSettled = status === 'closed' && invoice.totalCents > 0 && invoice.dueCents <= 0
-  return isSettled ? 'paid' : status
 }
 
 function firstMonthOf(card: CardSummary, stored: readonly StoredInvoice[]): string {

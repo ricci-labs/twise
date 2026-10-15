@@ -14,6 +14,7 @@ import { MobileTopBar } from '@web/features/workspaces/components/mobile-top-bar
 import { MoreSheet } from '@web/features/workspaces/components/more-sheet'
 import {
   currentAreaOf,
+  hasNewEntryButton,
   workspaceNavigation,
 } from '@web/features/workspaces/components/workspace-navigation'
 import { WorkspaceSwitcher } from '@web/features/workspaces/components/workspace-switcher'
@@ -101,6 +102,7 @@ export function WorkspaceShell({
         }
         floatingAction={
           navigation.newEntry &&
+          hasNewEntryButton(pathname) &&
           cloneElement(navigation.newEntry, {
             'aria-label': messages.newEntry,
             className:

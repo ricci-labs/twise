@@ -7,7 +7,11 @@ import type {
   PlannedInstallment,
 } from '@financas/shared'
 import type { UseInfiniteQueryResult } from '@tanstack/react-query'
+import type { EntryHeaderProps } from '@web/components/finance/entry-header'
 import type { EntryDirection } from '@web/components/finance/entry-row'
+import type { InstallmentRow } from '@web/components/finance/installment-rows'
+import type { ShareRow } from '@web/components/finance/share-rows'
+import type { TransferEnd } from '@web/components/finance/transfer-flow'
 import type { FieldControlProps } from '@web/components/forms/form-field'
 import type { PickerEmpty, PickerItem, PickerSheetProps } from '@web/components/inputs/picker-sheet'
 import type {
@@ -394,4 +398,62 @@ export type FilterPickerProps = {
   value: string | undefined
   searchLabel: string
   onSelect: (value: string | undefined) => void
+}
+
+export type DetailValue =
+  | { kind: 'text'; text: string }
+  | { kind: 'art'; name: string; icon: string | null }
+  | { kind: 'member'; name: string }
+  | { kind: 'invoice'; text: string; cardId: string; invoiceId: string }
+
+export type EntryDetailRow = {
+  key: string
+  label: string
+  value: DetailValue
+}
+
+export type EntryInstallment = Omit<InstallmentRow, 'link'> & {
+  invoiceId: string
+}
+
+export type EntryDetailContext = {
+  accounts: ReadonlyMap<string, LedgerAccount>
+  memberNames: ReadonlyMap<string, string>
+  contactNames: ReadonlyMap<string, string>
+  invoices: ReadonlyMap<string, CardInvoice>
+  card: CardSummary | undefined
+  today: IsoDate
+}
+
+export type EntryDetailView = {
+  header: EntryHeaderProps
+  cardId: string | null
+  isOnClosedInvoice: boolean
+  rows: EntryDetailRow[]
+  installments: { start: number; rows: EntryInstallment[] }
+  shares: ShareRow[]
+  ownCents: number
+  transfer?: { from: TransferEnd; to: TransferEnd }
+  note?: string
+}
+
+export type EntryDetailPageProps = {
+  workspaceId: string
+  entryId: string
+  permissions: readonly Permission[]
+  currentUserId: string
+  memberDirectory: readonly { userId: string; displayName: string }[]
+}
+
+export type EntryDetailBodyProps = EntryDetailPageProps & {
+  entry: ListedEntry
+}
+
+export type EntryDetailSectionsProps = EntryDetailBodyProps & {
+  view: EntryDetailView
+}
+
+export type DetailValueViewProps = {
+  workspaceId: string
+  value: DetailValue
 }

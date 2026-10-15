@@ -31,6 +31,7 @@ import { Route as AppWWorkspaceIdCategoriesRouteImport } from './routes/_app/w/$
 import { Route as AppWWorkspaceIdEntriesRouteImport } from './routes/_app/w/$workspaceId/entries'
 import { Route as AppWWorkspaceIdAccountsTrashRouteImport } from './routes/_app/w/$workspaceId/accounts_.trash'
 import { Route as AppWWorkspaceIdCardsCardRouteImport } from './routes/_app/w/$workspaceId/cards_/$card'
+import { Route as AppWWorkspaceIdEntriesEntryRouteImport } from './routes/_app/w/$workspaceId/entries_/$entry'
 import { Route as AppWWorkspaceIdCardsCardInvoicesInvoiceRouteImport } from './routes/_app/w/$workspaceId/cards_/$card_/invoices/$invoice'
 
 const AppRoute = AppRouteImport.update({
@@ -144,6 +145,12 @@ const AppWWorkspaceIdCardsCardRoute =
     path: '/cards/$card',
     getParentRoute: () => AppWWorkspaceIdRouteRoute,
   } as any)
+const AppWWorkspaceIdEntriesEntryRoute =
+  AppWWorkspaceIdEntriesEntryRouteImport.update({
+    id: '/entries_/$entry',
+    path: '/entries/$entry',
+    getParentRoute: () => AppWWorkspaceIdRouteRoute,
+  } as any)
 const AppWWorkspaceIdCardsCardInvoicesInvoiceRoute =
   AppWWorkspaceIdCardsCardInvoicesInvoiceRouteImport.update({
     id: '/cards_/$card_/invoices/$invoice',
@@ -172,6 +179,7 @@ export interface FileRoutesByFullPath {
   '/w/$workspaceId/': typeof AppWWorkspaceIdIndexRoute
   '/w/$workspaceId/accounts/trash': typeof AppWWorkspaceIdAccountsTrashRoute
   '/w/$workspaceId/cards/$card': typeof AppWWorkspaceIdCardsCardRoute
+  '/w/$workspaceId/entries/$entry': typeof AppWWorkspaceIdEntriesEntryRoute
   '/w/$workspaceId/cards/$card/invoices/$invoice': typeof AppWWorkspaceIdCardsCardInvoicesInvoiceRoute
 }
 export interface FileRoutesByTo {
@@ -194,6 +202,7 @@ export interface FileRoutesByTo {
   '/w/$workspaceId': typeof AppWWorkspaceIdIndexRoute
   '/w/$workspaceId/accounts/trash': typeof AppWWorkspaceIdAccountsTrashRoute
   '/w/$workspaceId/cards/$card': typeof AppWWorkspaceIdCardsCardRoute
+  '/w/$workspaceId/entries/$entry': typeof AppWWorkspaceIdEntriesEntryRoute
   '/w/$workspaceId/cards/$card/invoices/$invoice': typeof AppWWorkspaceIdCardsCardInvoicesInvoiceRoute
 }
 export interface FileRoutesById {
@@ -220,6 +229,7 @@ export interface FileRoutesById {
   '/_app/w/$workspaceId/': typeof AppWWorkspaceIdIndexRoute
   '/_app/w/$workspaceId/accounts_/trash': typeof AppWWorkspaceIdAccountsTrashRoute
   '/_app/w/$workspaceId/cards_/$card': typeof AppWWorkspaceIdCardsCardRoute
+  '/_app/w/$workspaceId/entries_/$entry': typeof AppWWorkspaceIdEntriesEntryRoute
   '/_app/w/$workspaceId/cards_/$card_/invoices/$invoice': typeof AppWWorkspaceIdCardsCardInvoicesInvoiceRoute
 }
 export interface FileRouteTypes {
@@ -245,6 +255,7 @@ export interface FileRouteTypes {
     | '/w/$workspaceId/'
     | '/w/$workspaceId/accounts/trash'
     | '/w/$workspaceId/cards/$card'
+    | '/w/$workspaceId/entries/$entry'
     | '/w/$workspaceId/cards/$card/invoices/$invoice'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -267,6 +278,7 @@ export interface FileRouteTypes {
     | '/w/$workspaceId'
     | '/w/$workspaceId/accounts/trash'
     | '/w/$workspaceId/cards/$card'
+    | '/w/$workspaceId/entries/$entry'
     | '/w/$workspaceId/cards/$card/invoices/$invoice'
   id:
     | '__root__'
@@ -292,6 +304,7 @@ export interface FileRouteTypes {
     | '/_app/w/$workspaceId/'
     | '/_app/w/$workspaceId/accounts_/trash'
     | '/_app/w/$workspaceId/cards_/$card'
+    | '/_app/w/$workspaceId/entries_/$entry'
     | '/_app/w/$workspaceId/cards_/$card_/invoices/$invoice'
   fileRoutesById: FileRoutesById
 }
@@ -460,6 +473,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppWWorkspaceIdCardsCardRouteImport
       parentRoute: typeof AppWWorkspaceIdRouteRoute
     }
+    '/_app/w/$workspaceId/entries_/$entry': {
+      id: '/_app/w/$workspaceId/entries_/$entry'
+      path: '/entries/$entry'
+      fullPath: '/w/$workspaceId/entries/$entry'
+      preLoaderRoute: typeof AppWWorkspaceIdEntriesEntryRouteImport
+      parentRoute: typeof AppWWorkspaceIdRouteRoute
+    }
     '/_app/w/$workspaceId/cards_/$card_/invoices/$invoice': {
       id: '/_app/w/$workspaceId/cards_/$card_/invoices/$invoice'
       path: '/cards/$card/invoices/$invoice'
@@ -479,6 +499,7 @@ interface AppWWorkspaceIdRouteRouteChildren {
   AppWWorkspaceIdIndexRoute: typeof AppWWorkspaceIdIndexRoute
   AppWWorkspaceIdAccountsTrashRoute: typeof AppWWorkspaceIdAccountsTrashRoute
   AppWWorkspaceIdCardsCardRoute: typeof AppWWorkspaceIdCardsCardRoute
+  AppWWorkspaceIdEntriesEntryRoute: typeof AppWWorkspaceIdEntriesEntryRoute
   AppWWorkspaceIdCardsCardInvoicesInvoiceRoute: typeof AppWWorkspaceIdCardsCardInvoicesInvoiceRoute
 }
 
@@ -491,6 +512,7 @@ const AppWWorkspaceIdRouteRouteChildren: AppWWorkspaceIdRouteRouteChildren = {
   AppWWorkspaceIdIndexRoute: AppWWorkspaceIdIndexRoute,
   AppWWorkspaceIdAccountsTrashRoute: AppWWorkspaceIdAccountsTrashRoute,
   AppWWorkspaceIdCardsCardRoute: AppWWorkspaceIdCardsCardRoute,
+  AppWWorkspaceIdEntriesEntryRoute: AppWWorkspaceIdEntriesEntryRoute,
   AppWWorkspaceIdCardsCardInvoicesInvoiceRoute:
     AppWWorkspaceIdCardsCardInvoicesInvoiceRoute,
 }

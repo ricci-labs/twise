@@ -92,6 +92,10 @@ export function formatWeekday(date: IsoDate): string {
   return WEEKDAYS[dayOfWeek(date)] ?? ''
 }
 
+export function formatWeekdayDayMonthYear(date: IsoDate): string {
+  return `${formatWeekdayDayMonth(date)} ${parseIsoDate(date).year}`
+}
+
 export function formatWeekdayDayMonth(date: IsoDate): string {
   return `${SHORT_WEEKDAYS[dayOfWeek(date)] ?? ''}, ${formatDayMonth(date)}`
 }

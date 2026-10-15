@@ -6,7 +6,7 @@ import {
   parseIsoDate,
   toYearMonthLabel,
 } from '@shared/core/calendar/dates'
-import type { CardCycle, InvoiceRef } from '@shared/ledger/cards/cards.types'
+import type { CardCycle, InvoiceRef, InvoiceState } from '@shared/ledger/cards/cards.types'
 import type { InvoiceStatus } from '@shared/ledger/ledger/ledger.constants'
 
 export function invoiceForPurchase(purchaseDate: IsoDate, card: CardCycle): InvoiceRef {
@@ -79,6 +79,19 @@ export function invoiceStatusOn(
   }
   const openReferenceMonth = invoiceForPurchase(today, card).referenceMonth
   return invoice.referenceMonth <= openReferenceMonth ? 'open' : 'future'
+}
+
+export function invoiceStateOn(
+  invoice: Pick<InvoiceRef, 'closingOn' | 'referenceMonth'> & {
+    totalCents: number
+    dueCents: number
+  },
+  today: IsoDate,
+  card: CardCycle,
+): InvoiceState {
+  const status = invoiceStatusOn(invoice, today, card)
+  const isSettled = status === 'closed' && invoice.totalCents > 0 && invoice.dueCents <= 0
+  return isSettled ? 'paid' : status
 }
 
 export function invoiceOpeningOn(invoice: Pick<InvoiceRef, 'closingOn'>, card: CardCycle): IsoDate {

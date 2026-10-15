@@ -119,6 +119,22 @@ export function periodsQueryOptions(workspaceId: string, year: number | undefine
   })
 }
 
+export function entryQueryOptions(workspaceId: string, entryId: string) {
+  return queryOptions({
+    queryKey: [...queryKeys.workspace(workspaceId), 'entries', 'one', entryId] as const,
+    queryFn: () =>
+      unwrap(workspaceApi.entries[':entryId'].$get({ param: { workspaceId, entryId } })),
+  })
+}
+
+export function matchedOccurrenceQueryOptions(workspaceId: string, entryId: string) {
+  return queryOptions({
+    queryKey: [...queryKeys.workspace(workspaceId), 'occurrences', 'matched', entryId] as const,
+    queryFn: () =>
+      unwrap(workspaceApi.occurrences.matched.$get({ param: { workspaceId }, query: { entryId } })),
+  })
+}
+
 export function latestEntriesQueryOptions(workspaceId: string) {
   return queryOptions({
     queryKey: [...queryKeys.workspace(workspaceId), 'entries', 'latest'] as const,

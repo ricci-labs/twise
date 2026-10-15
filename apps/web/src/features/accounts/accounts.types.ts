@@ -5,6 +5,7 @@ import type {
   NewAccountInput,
   NewCardInput,
   Permission,
+  InvoiceState as SharedInvoiceState,
 } from '@financas/shared'
 import type { ItemAction } from '@web/components/actions/item-actions'
 import type { InvoiceMonth } from '@web/components/finance/invoice-month-strip'
@@ -405,7 +406,7 @@ export type CardItemProps = CardsPageProps & {
   holder: string | null
 }
 
-export type InvoiceState = 'future' | 'open' | 'closed' | 'paid'
+export type InvoiceState = SharedInvoiceState
 
 export type CardInvoice = {
   invoiceId: string | null
