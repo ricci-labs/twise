@@ -46,6 +46,8 @@ export type EntryTypeWithCategory = (typeof ENTRY_TYPES_WITH_CATEGORY)[number]
 
 export const SPENDING_ENTRY_TYPES = ['expense', 'card_purchase'] as const
 
+export const MONEY_IN_ENTRY_TYPES = ['income', 'settlement'] as const
+
 export const ENTRIES_PAGE_SIZE = 50
 
 export const ENTRY_SEARCH_MIN_LENGTH = 2

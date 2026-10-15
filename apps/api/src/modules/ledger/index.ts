@@ -52,6 +52,7 @@ export type {
   EntryItem,
   EntryRef,
   EntrySuggestion,
+  EntrySummary,
   InvoiceDue,
   InvoiceLine,
   InvoiceTotal,

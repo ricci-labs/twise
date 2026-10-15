@@ -314,7 +314,7 @@ updated: 2026-10-15
   1. [x] Design package in `docs/design/entries-list/`; requirements (`requirements/modules/entries.md`,
      the shared trash in `ACC-04`, `requirements/ui-standards.md`, `requirements/modules/dashboard.md`), API gaps G45–G47
   2. [x] API: search and filters on `GET /entries` (G45)
-  3. [ ] API: `GET /entries/summary` (G46)
+  3. [x] API: `GET /entries/summary` (G46)
   4. [ ] Web: one selection style for the new entry's type pills and the period sheet's month
   5. [ ] Web components: `SearchInput` (the three search fields built so far use it), `EntryRow`,
      `EntryDayGroup`

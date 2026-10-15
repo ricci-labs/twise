@@ -32,6 +32,7 @@ export {
   recordEntryInTransaction,
   replaceEntry,
   restoreEntry,
+  summarizeEntries,
 } from '@api/modules/ledger/use-cases/entries'
 export {
   activeEntryIdsOf,

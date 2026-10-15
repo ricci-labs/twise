@@ -28,6 +28,7 @@ import {
   replaceEntry,
   restoreAccount,
   restoreEntry,
+  summarizeEntries,
   unarchiveAccount,
 } from '@api/modules/ledger/ledger.service'
 import type { EntryContext, LedgerRouteDeps } from '@api/modules/ledger/ledger.types'
@@ -38,6 +39,7 @@ import {
   cardParamsSchema,
   deletionRequestSchema,
   entryDetailsChangeSchema,
+  entryFilterSchema,
   entryInputSchema,
   entryListQuerySchema,
   entryParamsSchema,
@@ -208,6 +210,15 @@ function entryRoutes({ db }: LedgerRouteDeps) {
       async (c) => {
         const { workspaceId } = currentWorkspace(c)
         return c.json(await listTrashedEntries(db, workspaceId, c.req.valid('query')))
+      },
+    )
+    .get(
+      '/summary',
+      authorize('entries', 'view'),
+      queryParams(entryFilterSchema, 'ENTRY_QUERY_INVALID'),
+      async (c) => {
+        const { workspaceId } = currentWorkspace(c)
+        return c.json(await summarizeEntries(db, workspaceId, c.req.valid('query')))
       },
     )
     .get(

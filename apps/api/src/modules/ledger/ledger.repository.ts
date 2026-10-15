@@ -21,13 +21,15 @@ import type {
   NewPosting,
   RecentDescriptionFilter,
 } from '@api/modules/ledger/ledger.types'
-import type {
-  EntryFilter,
-  EntryListQuery,
-  InvoiceStatus,
-  IsoDate,
-  SystemAccountKind,
-  TrashQuery,
+import {
+  type EntryFilter,
+  type EntryListQuery,
+  type InvoiceStatus,
+  type IsoDate,
+  MONEY_IN_ENTRY_TYPES,
+  SPENDING_ENTRY_TYPES,
+  type SystemAccountKind,
+  type TrashQuery,
 } from '@financas/shared'
 import {
   type AnyColumn,
@@ -444,6 +446,36 @@ export function selectEntries(tx: WorkspaceTransaction, query: EntryListQuery) {
     .limit(query.limit + 1)
 }
 
+export async function selectEntrySummary(tx: WorkspaceTransaction, filter: EntryFilter) {
+  const totals = tx
+    .select({
+      entryType: journalEntries.entryType,
+      totalCents:
+        sql<number>`sum(${postings.amountCents}) filter (where ${postings.amountCents} > 0)`.as(
+          'total_cents',
+        ),
+    })
+    .from(journalEntries)
+    .innerJoin(postings, eq(postings.entryId, journalEntries.id))
+    .where(and(...entryFilterConditions(tx, filter)))
+    .groupBy(journalEntries.id, journalEntries.entryType)
+    .as('totals')
+  const [summary] = await tx
+    .select({
+      outCents:
+        sql<number>`coalesce(sum(${totals.totalCents}) filter (where ${inArray(totals.entryType, SPENDING_ENTRY_TYPES)}), 0)`.mapWith(
+          Number,
+        ),
+      inCents:
+        sql<number>`coalesce(sum(${totals.totalCents}) filter (where ${inArray(totals.entryType, MONEY_IN_ENTRY_TYPES)}), 0)`.mapWith(
+          Number,
+        ),
+      count: sql<number>`count(*)`.mapWith(Number),
+    })
+    .from(totals)
+  return summary ?? { outCents: 0, inCents: 0, count: 0 }
+}
+
 function entryFilterConditions(tx: WorkspaceTransaction, filter: EntryFilter): SQL[] {
   const conditions = [isNull(journalEntries.deletedAt)]
   if (filter.from) {
@@ -480,7 +512,10 @@ function entryFilterConditions(tx: WorkspaceTransaction, filter: EntryFilter): S
     )
   }
   if (filter.shared) {
-    conditions.push(inArray(journalEntries.id, entriesTouching(tx, isNotNull(postings.contactId))))
+    conditions.push(
+      inArray(journalEntries.entryType, SPENDING_ENTRY_TYPES),
+      inArray(journalEntries.id, entriesTouching(tx, isNotNull(postings.contactId))),
+    )
   }
   return conditions
 }

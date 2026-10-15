@@ -15,6 +15,7 @@ import {
   selectActiveEntry,
   selectEntries,
   selectEntryRow,
+  selectEntrySummary,
   selectEntryTouchesClosedInvoice,
   selectPostingsOfEntries,
   selectTrashedEntries,
@@ -26,6 +27,7 @@ import type {
   EntryContext,
   EntryItem,
   EntrySnapshot,
+  EntrySummary,
   PostingItem,
   RecordedEntry,
   TrashedEntry,
@@ -38,6 +40,7 @@ import {
   type AccountRef,
   type AuditAction,
   type ContactShare,
+  type EntryFilter,
   type EntryInput,
   type EntryListQuery,
   type EntryPlan,
@@ -139,6 +142,14 @@ export async function listEntries(
     }))
     return { ...page, items: await withPostings(tx, page.items) }
   })
+}
+
+export function summarizeEntries(
+  db: Database,
+  workspaceId: string,
+  filter: EntryFilter,
+): Promise<EntrySummary> {
+  return withWorkspace(db, workspaceId, (tx) => selectEntrySummary(tx, filter))
 }
 
 export function getEntry(db: Database, workspaceId: string, entryId: string): Promise<EntryItem> {
