@@ -906,3 +906,5 @@ online with `asChild` are translated to `render`.
   the budget. `actions` takes the row's "⋯".
 - `BudgetSummary` (`components/finance/budget-summary`): "Gasto nas categorias com orçamento": the
   spending in the display face, "de R$ 3.200,00", the thick bar with the pace mark and its legend.
+- `Button` `variant="dangerText"`: a destructive action written as text ("Remover orçamento"), red
+  and underlined like the tertiary one.

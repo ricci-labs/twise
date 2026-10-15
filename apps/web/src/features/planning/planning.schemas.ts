@@ -23,3 +23,10 @@ export const occurrenceAmountFormSchema = z.object({
       planningMessages.occurrences.amount.invalid,
     ),
 })
+
+export const budgetFormSchema = z.object({
+  amount: z
+    .string()
+    .refine((text) => (centsOfTypedAmount(text) ?? 0) > 0, planningMessages.budgets.sheet.invalid),
+  fromPeriod: z.string().regex(/^\d{4}-(0[1-9]|1[0-2])$/),
+})

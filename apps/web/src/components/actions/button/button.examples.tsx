@@ -21,6 +21,10 @@ export const buttonExamples: ComponentExamples = {
       ),
     },
     { name: 'Terciária', render: () => <Button variant="tertiary">Esqueci minha senha</Button> },
+    {
+      name: 'Texto de perigo',
+      render: () => <Button variant="dangerText">Remover orçamento</Button>,
+    },
     { name: 'Perigo', render: () => <Button variant="danger">Remover membro</Button> },
     {
       name: 'Com ícone',

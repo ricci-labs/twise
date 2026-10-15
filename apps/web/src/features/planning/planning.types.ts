@@ -1,4 +1,5 @@
 import type { IsoDate, Permission } from '@financas/shared'
+import type { BudgetChild, BudgetStatus } from '@web/components/finance/budget-row'
 import type {
   OccurrenceBadge,
   OccurrenceDirection,
@@ -11,9 +12,11 @@ import type {
   fetchAccounts,
   fetchCandidates,
   fetchOccurrences,
+  fetchOverview,
   fetchRecurrences,
 } from '@web/features/planning/api/planning.queries'
 import type {
+  budgetFormSchema,
   occurrenceAmountFormSchema,
   PLANNING_TABS,
   planningSearchSchema,
@@ -183,4 +186,78 @@ export type RecurrenceActionsProps = {
   canDelete: boolean
   className?: string
   children?: ReactNode
+}
+
+export type PlanningOverview = Awaited<ReturnType<typeof fetchOverview>>
+
+export type BudgetLine = PlanningOverview['metrics']['budgetPace'][number]
+
+export type BudgetAccounts = ReadonlyMap<
+  string,
+  Pick<PlanningAccount, 'id' | 'name' | 'parentId' | 'icon' | 'kind' | 'archivedAt'>
+>
+
+export type BudgetLineView = {
+  categoryAccountId: string
+  name: string
+  art: { name: string; icon: string | null }
+  spentCents: number
+  limitCents: number
+  status: BudgetStatus
+  statusText: string
+  subcategories: BudgetChild[]
+}
+
+export type UnbudgetedView = {
+  categoryAccountId: string
+  name: string
+  art: { name: string; icon: string | null }
+  spentCents: number
+}
+
+export type BudgetSheetView = {
+  categoryAccountId: string
+  name: string
+  art: { name: string; icon: string | null }
+  childNames: string[]
+  limitCents: number | null
+  spending: { label: string; amountCents: number }[]
+  totalCents: number
+  average: { periods: number; amountCents: number } | null
+}
+
+export type BudgetSetRequest = {
+  categoryId: string
+  limitCents: number | null
+  fromPeriod: string
+}
+
+export type BudgetsTabProps = Omit<PlanningPageProps, 'tab'>
+
+export type BudgetSheetProps = {
+  workspaceId: string
+  view: BudgetSheetView
+  periodLabel: string
+  periodOptions: readonly { value: string; label: string }[]
+  isOpen: boolean
+  onOpenChange: (isOpen: boolean) => void
+}
+
+export type BudgetFormInput = z.input<typeof budgetFormSchema>
+
+export type BudgetsProps = {
+  workspaceId: string
+  overview: PlanningOverview
+  accounts: BudgetAccounts
+  canChange: boolean
+}
+
+export type UnbudgetedRowProps = {
+  category: UnbudgetedView
+  onDefine?: () => void
+}
+
+export type BudgetSheetViewProps = {
+  view: BudgetSheetView
+  periodLabel: string
 }

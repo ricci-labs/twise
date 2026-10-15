@@ -1,4 +1,12 @@
-import { CARD, CHECKING, GROCERIES, SAVINGS } from '@web/testing/accounts-api'
+import {
+  BAKERY,
+  CARD,
+  CHECKING,
+  GROCERIES,
+  HOUSE,
+  MARKET,
+  SAVINGS,
+} from '@web/testing/accounts-api'
 import { WORKSPACE_ID } from '@web/testing/fake-api'
 import type { FakeAnswer } from '@web/testing/testing.types'
 
@@ -160,4 +168,54 @@ export function recurrencesAnswer(
   summary: object = RULES_SUMMARY,
 ): Record<string, FakeAnswer> {
   return { [`GET ${BASE}/recurrences`]: () => Response.json({ items, summary }) }
+}
+
+export const OCTOBER_PERIOD = { label: '2026-10', start: '2026-10-05', end: '2026-11-04' }
+
+export function budgetOverview(overrides: Record<string, unknown> = {}) {
+  return {
+    today: '2026-10-20',
+    period: OCTOBER_PERIOD,
+    insights: [],
+    metrics: {
+      budgetPace: [
+        {
+          categoryAccountId: GROCERIES,
+          limitCents: 120000,
+          spentCents: 82000,
+          expectedCents: 61935,
+          overCents: 0,
+          aheadPoints: 16,
+          status: 'ahead',
+          directCents: 51500,
+          children: [
+            { categoryAccountId: MARKET, spentCents: 21000 },
+            { categoryAccountId: BAKERY, spentCents: 9500 },
+          ],
+        },
+      ],
+      budgetTotals: {
+        count: 1,
+        limitCents: 120000,
+        spentCents: 82000,
+        expectedCents: 61935,
+        usedPercent: 68,
+        offPaceCount: 1,
+      },
+      unbudgetedSpending: [{ categoryAccountId: HOUSE, spentCents: 14500 }],
+      categoryAverages: {
+        periods: 3,
+        lines: [
+          { categoryAccountId: GROCERIES, averageCents: 115000 },
+          { categoryAccountId: HOUSE, averageCents: 9600 },
+        ],
+      },
+      periodProgress: { total: 31, elapsed: 16, left: 16, elapsedPercent: 52 },
+    },
+    ...overrides,
+  }
+}
+
+export function overviewAnswer(overview: object = budgetOverview()): Record<string, FakeAnswer> {
+  return { [`GET ${BASE}/overview`]: () => Response.json(overview) }
 }
