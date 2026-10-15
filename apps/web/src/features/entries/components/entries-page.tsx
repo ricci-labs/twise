@@ -7,6 +7,10 @@ import { TwiseIcon } from '@web/components/icons/twise-icon'
 import { PageFrame } from '@web/components/layout/page-frame'
 import { PageHeader } from '@web/components/layout/page-header'
 import { periodsQueryOptions } from '@web/features/entries/api/entries.queries'
+import {
+  EntriesFilterButton,
+  EntriesFilterChips,
+} from '@web/features/entries/components/entries-filters'
 import { EntriesList } from '@web/features/entries/components/entries-list'
 import { EntriesPeriod } from '@web/features/entries/components/entries-period'
 import { EntriesSearch } from '@web/features/entries/components/entries-search'
@@ -64,7 +68,9 @@ function EntriesBody(props: EntriesPageProps) {
       <EntriesPeriod {...props} shown={shown} periods={periods} />
       <div className="flex gap-2">
         <EntriesSearch search={props.search} onSearchChange={props.onSearchChange} />
+        <EntriesFilterButton {...props} />
       </div>
+      <EntriesFilterChips {...props} />
       <EntriesList {...props} shown={shown} today={today} />
     </>
   )

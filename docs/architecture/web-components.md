@@ -441,7 +441,8 @@ component here, so the form, and later the account, card and planning forms, sha
   **R$ 333,34**", "de 10"). The aria-labels are the screen's ("Menos uma parcela", "Parcela
   anterior").
 - `Switch` (`components/inputs/switch`, Base UI `Switch`, the design's `InProgressSwitch`): the
-  label beside the switch, which the label also turns; on the desktop the switch sits right after
+  label beside the switch, which the label also turns; the switch is a native `button`, so a
+  bottom sheet's drag doesn't swallow its tap (found with the entries filters); on the desktop the switch sits right after
   its label, not at the far edge (`../product/requirements/ui-standards.md` → Visual rules).
 - `RadioCardList` (`components/inputs/radio-card-list`, Base UI `RadioGroup`, the design's
   `InvoiceRadioList`): one choice among rows with a radio dot, a title, a detail with `**bold**`
