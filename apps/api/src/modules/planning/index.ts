@@ -9,6 +9,7 @@ export {
   deleteHoliday,
   deleteRecurrenceRule,
   findMatchedOccurrence,
+  getOccurrence,
   holidayDatesOf,
   listAllocationSteps,
   listBudgets,

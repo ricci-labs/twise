@@ -371,5 +371,16 @@ describe('changing one occurrence over HTTP', () => {
     expect((await member.patch(occurrencePath, { amountCents: 12_345 })).status).toBe(204)
     const invalid = await member.patch(occurrencePath, { amountCents: -1 })
     expect([invalid.status, await codeOf(invalid)]).toEqual([400, 'OCCURRENCE_INVALID'])
+
+    const one = await viewer.get(occurrencePath)
+    expect(one.status).toBe(200)
+    expect(await one.json()).toMatchObject({
+      description: 'Jardinagem',
+      amountCents: 12_345,
+      status: 'pending',
+      paidOn: null,
+    })
+    const unknown = await viewer.get(`${occurrencesPath}/${UNKNOWN_ID}`)
+    expect([unknown.status, await codeOf(unknown)]).toEqual([404, 'OCCURRENCE_NOT_FOUND'])
   })
 })
