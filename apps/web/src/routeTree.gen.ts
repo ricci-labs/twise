@@ -29,6 +29,7 @@ import { Route as AppWWorkspaceIdAccountsRouteImport } from './routes/_app/w/$wo
 import { Route as AppWWorkspaceIdCardsRouteImport } from './routes/_app/w/$workspaceId/cards'
 import { Route as AppWWorkspaceIdCategoriesRouteImport } from './routes/_app/w/$workspaceId/categories'
 import { Route as AppWWorkspaceIdEntriesRouteImport } from './routes/_app/w/$workspaceId/entries'
+import { Route as AppWWorkspaceIdTrashRouteImport } from './routes/_app/w/$workspaceId/trash'
 import { Route as AppWWorkspaceIdAccountsTrashRouteImport } from './routes/_app/w/$workspaceId/accounts_.trash'
 import { Route as AppWWorkspaceIdCardsCardRouteImport } from './routes/_app/w/$workspaceId/cards_/$card'
 import { Route as AppWWorkspaceIdEntriesEntryRouteImport } from './routes/_app/w/$workspaceId/entries_/$entry'
@@ -133,6 +134,11 @@ const AppWWorkspaceIdEntriesRoute = AppWWorkspaceIdEntriesRouteImport.update({
   path: '/entries',
   getParentRoute: () => AppWWorkspaceIdRouteRoute,
 } as any)
+const AppWWorkspaceIdTrashRoute = AppWWorkspaceIdTrashRouteImport.update({
+  id: '/trash',
+  path: '/trash',
+  getParentRoute: () => AppWWorkspaceIdRouteRoute,
+} as any)
 const AppWWorkspaceIdAccountsTrashRoute =
   AppWWorkspaceIdAccountsTrashRouteImport.update({
     id: '/accounts_/trash',
@@ -176,6 +182,7 @@ export interface FileRoutesByFullPath {
   '/w/$workspaceId/cards': typeof AppWWorkspaceIdCardsRoute
   '/w/$workspaceId/categories': typeof AppWWorkspaceIdCategoriesRoute
   '/w/$workspaceId/entries': typeof AppWWorkspaceIdEntriesRoute
+  '/w/$workspaceId/trash': typeof AppWWorkspaceIdTrashRoute
   '/w/$workspaceId/': typeof AppWWorkspaceIdIndexRoute
   '/w/$workspaceId/accounts/trash': typeof AppWWorkspaceIdAccountsTrashRoute
   '/w/$workspaceId/cards/$card': typeof AppWWorkspaceIdCardsCardRoute
@@ -199,6 +206,7 @@ export interface FileRoutesByTo {
   '/w/$workspaceId/cards': typeof AppWWorkspaceIdCardsRoute
   '/w/$workspaceId/categories': typeof AppWWorkspaceIdCategoriesRoute
   '/w/$workspaceId/entries': typeof AppWWorkspaceIdEntriesRoute
+  '/w/$workspaceId/trash': typeof AppWWorkspaceIdTrashRoute
   '/w/$workspaceId': typeof AppWWorkspaceIdIndexRoute
   '/w/$workspaceId/accounts/trash': typeof AppWWorkspaceIdAccountsTrashRoute
   '/w/$workspaceId/cards/$card': typeof AppWWorkspaceIdCardsCardRoute
@@ -226,6 +234,7 @@ export interface FileRoutesById {
   '/_app/w/$workspaceId/cards': typeof AppWWorkspaceIdCardsRoute
   '/_app/w/$workspaceId/categories': typeof AppWWorkspaceIdCategoriesRoute
   '/_app/w/$workspaceId/entries': typeof AppWWorkspaceIdEntriesRoute
+  '/_app/w/$workspaceId/trash': typeof AppWWorkspaceIdTrashRoute
   '/_app/w/$workspaceId/': typeof AppWWorkspaceIdIndexRoute
   '/_app/w/$workspaceId/accounts_/trash': typeof AppWWorkspaceIdAccountsTrashRoute
   '/_app/w/$workspaceId/cards_/$card': typeof AppWWorkspaceIdCardsCardRoute
@@ -252,6 +261,7 @@ export interface FileRouteTypes {
     | '/w/$workspaceId/cards'
     | '/w/$workspaceId/categories'
     | '/w/$workspaceId/entries'
+    | '/w/$workspaceId/trash'
     | '/w/$workspaceId/'
     | '/w/$workspaceId/accounts/trash'
     | '/w/$workspaceId/cards/$card'
@@ -275,6 +285,7 @@ export interface FileRouteTypes {
     | '/w/$workspaceId/cards'
     | '/w/$workspaceId/categories'
     | '/w/$workspaceId/entries'
+    | '/w/$workspaceId/trash'
     | '/w/$workspaceId'
     | '/w/$workspaceId/accounts/trash'
     | '/w/$workspaceId/cards/$card'
@@ -301,6 +312,7 @@ export interface FileRouteTypes {
     | '/_app/w/$workspaceId/cards'
     | '/_app/w/$workspaceId/categories'
     | '/_app/w/$workspaceId/entries'
+    | '/_app/w/$workspaceId/trash'
     | '/_app/w/$workspaceId/'
     | '/_app/w/$workspaceId/accounts_/trash'
     | '/_app/w/$workspaceId/cards_/$card'
@@ -459,6 +471,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppWWorkspaceIdEntriesRouteImport
       parentRoute: typeof AppWWorkspaceIdRouteRoute
     }
+    '/_app/w/$workspaceId/trash': {
+      id: '/_app/w/$workspaceId/trash'
+      path: '/trash'
+      fullPath: '/w/$workspaceId/trash'
+      preLoaderRoute: typeof AppWWorkspaceIdTrashRouteImport
+      parentRoute: typeof AppWWorkspaceIdRouteRoute
+    }
     '/_app/w/$workspaceId/accounts_/trash': {
       id: '/_app/w/$workspaceId/accounts_/trash'
       path: '/accounts/trash'
@@ -496,6 +515,7 @@ interface AppWWorkspaceIdRouteRouteChildren {
   AppWWorkspaceIdCardsRoute: typeof AppWWorkspaceIdCardsRoute
   AppWWorkspaceIdCategoriesRoute: typeof AppWWorkspaceIdCategoriesRoute
   AppWWorkspaceIdEntriesRoute: typeof AppWWorkspaceIdEntriesRoute
+  AppWWorkspaceIdTrashRoute: typeof AppWWorkspaceIdTrashRoute
   AppWWorkspaceIdIndexRoute: typeof AppWWorkspaceIdIndexRoute
   AppWWorkspaceIdAccountsTrashRoute: typeof AppWWorkspaceIdAccountsTrashRoute
   AppWWorkspaceIdCardsCardRoute: typeof AppWWorkspaceIdCardsCardRoute
@@ -509,6 +529,7 @@ const AppWWorkspaceIdRouteRouteChildren: AppWWorkspaceIdRouteRouteChildren = {
   AppWWorkspaceIdCardsRoute: AppWWorkspaceIdCardsRoute,
   AppWWorkspaceIdCategoriesRoute: AppWWorkspaceIdCategoriesRoute,
   AppWWorkspaceIdEntriesRoute: AppWWorkspaceIdEntriesRoute,
+  AppWWorkspaceIdTrashRoute: AppWWorkspaceIdTrashRoute,
   AppWWorkspaceIdIndexRoute: AppWWorkspaceIdIndexRoute,
   AppWWorkspaceIdAccountsTrashRoute: AppWWorkspaceIdAccountsTrashRoute,
   AppWWorkspaceIdCardsCardRoute: AppWWorkspaceIdCardsCardRoute,

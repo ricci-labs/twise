@@ -1,4 +1,5 @@
 export { EntriesPage } from '@web/features/entries/components/entries-page'
+export { EntriesTrashPage } from '@web/features/entries/components/entries-trash-page'
 export { EntryDetailPage } from '@web/features/entries/components/entry-detail-page'
 export { NewEntry } from '@web/features/entries/components/new-entry'
 export {

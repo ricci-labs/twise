@@ -230,6 +230,9 @@ React Hook Form v7 + `zodResolver` with the **schemas from `@financas/shared`** 
   on the desktop only, puts round ‹ › buttons at its ends ("Ver anteriores" / "Ver próximos"), each
   shown only while there is more on that side; a click scrolls 80% of the visible width. The strip
   passes its own element as `scrollerRef`. Used by `InvoiceMonthStrip` and `RecentEntries`.
+- `TrashTabs` (`components/navigation/trash-tabs`): the two tabs of the one "Lixeira"
+  ("Lançamentos" | "Contas e categorias"), a full-width `SegmentedControl`; the page navigates on
+  `onChange`.
 - `NavItem` (`components/navigation/nav-link`): `{ key, label, icon, render, isCurrent }`. `render`
   is the element that navigates (a router `Link`, or a `button` for "Mais"); `NavLink` draws it
   with the Twise icon (mint fill when current) and forwards any props, so it can be a tooltip
@@ -565,11 +568,13 @@ component here, so the form, and later the account, card and planning forms, sha
   loose drawing, the `lead` sentence ("Nenhuma conta ainda."), the reason or next step, and the
   first action, centred in a white card. The second sentence and the action are optional ("A
   lixeira está vazia.").
-- `TrashRow` (`components/finance/trash-row`): a deleted account, card or category: the drawing
+- `TrashRow` (`components/finance/trash-row`): a deleted entry, account, card or category: the drawing
   (or the initial), the name, the grey lines (kind, "dentro de {mãe}", "Excluída em {data} por
   {nome}"), the reason in ink, and the small secondary "Restaurar" with the restore arrow; the
   button's name says what it restores ("Restaurar Conta antiga"). The name sits 2 px over the
-  first grey line and the grey lines 4 px apart, as the design's `small + small`.
+  first grey line and the grey lines 4 px apart, as the design's `small + small`. `amount` puts a
+  value at the end of the name line (a deleted entry); `isStacked` drops "Restaurar" under the
+  lines, aligned with them, as the entries trash draws it.
 - `CategoryRow` (`components/finance/category-row`, Base UI `Collapsible`): a category in the tree:
   the drawing, the name (and, for income, a small `Badge`: "Fixa" or "Variável"), a grey detail
   line when given, and the "2 subcategorias ⌄" pill that opens its chips below (mint while open;

@@ -337,8 +337,8 @@ updated: 2026-10-15
   11. [x] Web: `ENT-03` for each kind of entry, "Repetir", delete with and without a reason, undo
   12. [x] Web: `ENT-04` (in place or a new version, closed invoice, conflict); "Ver" in the new
       entry's toast
-  13. [ ] API: the reason a restore is refused (G47)
-  14. [ ] Web: the shared "Lixeira" page with `ENT-05` and `ACC-04` as its tabs
+  13. [x] API: the reason a restore is refused (G47)
+  14. [x] Web: the shared "Lixeira" page with `ENT-05` and `ACC-04` as its tabs
   15. [ ] Web: the desktop versions (filter menus, period popover, side panel, row menu, trash table)
   16. [ ] Review of the round against every PNG
 - [ ] Remaining project skills (`new-module`, `db-migration`, `domain-rule`, `pr`) and Claude Code hooks

@@ -59,7 +59,7 @@ describe('ACC-04 accounts trash', () => {
   it('lists what was deleted, newest first, with who, when, why and where it was', async () => {
     await openTrash()
 
-    await expect.element(page.getByRole('heading', { name: 'Lixeira de contas' })).toBeVisible()
+    await expect.element(page.getByRole('heading', { name: 'Lixeira' })).toBeVisible()
     await expect.element(page.getByText('Excluída em 12/10/2026 por Member A')).toBeVisible()
     await expect.element(page.getByText('Motivo: conta encerrada no banco.')).toBeVisible()
     await expect.element(page.getByText('Categoria de despesa · dentro de Saúde')).toBeVisible()
@@ -138,9 +138,7 @@ describe('ACC-04 accounts trash on the desktop', () => {
           .getByRole('link', { name: 'Contas e categorias' }),
       )
       .toHaveAttribute('href', `/w/${WORKSPACE_ID}/accounts`)
-    await expect
-      .element(page.getByRole('heading', { name: 'Lixeira de contas', level: 1 }))
-      .toBeVisible()
+    await expect.element(page.getByRole('heading', { name: 'Lixeira', level: 1 })).toBeVisible()
     await expect.element(page.getByRole('link', { name: /^Voltar/ })).not.toBeInTheDocument()
     await expectNoAccessibilityViolations(page.getByRole('main').element())
   })

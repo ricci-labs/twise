@@ -57,8 +57,8 @@ function EntriesHeader({ workspaceId, permissions, search }: EntriesPageProps) {
       actions={
         hasPermission(permissions, 'entries', 'delete') && (
           <Link
-            to="/w/$workspaceId/$area"
-            params={{ workspaceId, area: 'trash' }}
+            to="/w/$workspaceId/trash"
+            params={{ workspaceId }}
             aria-label={messages.trash}
             className="grid size-touch place-items-center rounded-full text-ink outline-none hover:bg-sunken focus-visible:ring-2 focus-visible:ring-focus-ring"
           >

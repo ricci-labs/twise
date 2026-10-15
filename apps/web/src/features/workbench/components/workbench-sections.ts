@@ -108,6 +108,7 @@ import { bottomTabBarExamples } from '@web/components/navigation/bottom-tab-bar'
 import { breadcrumbExamples } from '@web/components/navigation/breadcrumb'
 import { periodPickerExamples } from '@web/components/navigation/period-picker'
 import { scrollArrowsExamples } from '@web/components/navigation/scroll-arrows'
+import { trashTabsExamples } from '@web/components/navigation/trash-tabs'
 import type { ComponentExamples } from '@web/lib/examples.types'
 
 export const workbenchSections: readonly ComponentExamples[] = [
@@ -185,6 +186,7 @@ export const workbenchSections: readonly ComponentExamples[] = [
   scrollArrowsExamples,
   searchInputExamples,
   textInputExamples,
+  trashTabsExamples,
   entryHeaderExamples,
   detailSectionExamples,
   linkedItemExamples,
