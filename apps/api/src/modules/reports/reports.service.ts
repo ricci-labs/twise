@@ -19,7 +19,7 @@ import {
   readOccurrenceFacts,
   workspaceToday,
 } from '@api/modules/planning'
-import type { PeriodsOfYear, PeriodTimeline } from '@api/modules/reports/reports.types'
+import type { PeriodTimeline } from '@api/modules/reports/reports.types'
 import { currentWorkspaceSettings } from '@api/modules/workspaces'
 import {
   type AccountKind,
@@ -37,6 +37,7 @@ import {
   type PeriodFacts,
   type PeriodOverview,
   type PeriodSettings,
+  type PeriodsOfYear,
   type PeriodsQuery,
   type PurchaseImpact,
   type PurchaseSimulationQuery,

@@ -787,3 +787,14 @@ online with `asChild` are translated to `render`.
   left out, the count always shows (singular for one). A `status`, so a new filter is announced.
 - `ListEnd` (`components/feedback/list-end`): the sentence under the last page ("Isso é tudo de
   out/26.") and, when given, the small secondary "‹ Ver set/26" link to the previous period.
+- `PeriodPicker` (`components/navigation/period-picker`): the period bar of the Home and the entries
+  list: the ‹ › links it is given (`previous`, `next`; none hides that arrow), and the label
+  ("out/26 · 5 out – 4 nov") that opens "Escolher período", a sheet on the phone and a popover under
+  the bar on the desktop: the year between arrows and its twelve periods as 3 × 4 tiles (month and
+  range, from `GET /periods`; the chosen one with the selection outline, future ones dashed;
+  skeletons while loading, "Não foi possível carregar os períodos." with "Tentar de novo"), and the
+  `note` with "Tracejados: períodos futuros.". With `ranges`, "Outros intervalos" adds "Últimos 30
+  dias", "Este ano" (`onPreset`) and "Escolher datas", which turns the sheet into the
+  `RangeCalendar` with "Voltar" and "Ver de 5 a 20 out" ("Escolha o primeiro / último dia",
+  disabled, until both are picked; `onRange`). The caller owns the year, the query and what the
+  choice means.

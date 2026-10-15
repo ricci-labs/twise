@@ -1,6 +1,6 @@
 import type { IsoDate, Period } from '@shared/core/calendar/calendar.types'
 import { addMonths, parseIsoDate } from '@shared/core/calendar/dates'
-import { periodSettingsOf, periodStartingIn } from '@shared/core/calendar/period'
+import { periodOf, periodSettingsOf, periodStartingIn } from '@shared/core/calendar/period'
 import type { RecurringEntryType } from '@shared/planning/recurrence/recurrence.constants'
 import {
   DEMO_ICONS,
@@ -22,7 +22,7 @@ import type {
   FactPosting,
   PeriodFacts,
 } from '@shared/reports/metrics/metrics.types'
-import type { PeriodOverview } from '@shared/reports/reports/reports.types'
+import type { PeriodOverview, PeriodsOfYear } from '@shared/reports/reports/reports.types'
 
 const RECENT_PERIODS = 6
 const UPCOMING_PERIODS = 6
@@ -35,6 +35,16 @@ export function demoOverview(scenario: DemoScenario): PeriodOverview {
 
 export function demoOverviewFor(periodLabel: string, variant: DemoVariant): PeriodOverview {
   return overviewOf(demoFactsFor(periodLabel, variant))
+}
+
+export function demoPeriodsOf(year: number): PeriodsOfYear {
+  return {
+    today: DEMO_TODAY,
+    currentLabel: periodOf(DEMO_TODAY, SETTINGS).label,
+    periods: Array.from({ length: 12 }, (_, index) =>
+      periodStartingIn({ year, month: index + 1 }, SETTINGS),
+    ),
+  }
 }
 
 export function demoDirectory(): DemoDirectory {

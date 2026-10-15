@@ -5,9 +5,12 @@ import {
   type DemoScenario,
   demoFacts,
   demoOverview,
+  demoPeriodsOf,
 } from '@financas/shared'
 import { WORKSPACE_ID } from '@web/testing/fake-api'
 import type { FakeAnswer } from '@web/testing/testing.types'
+
+const DEMO_YEAR = 2026
 
 const PERIOD_SCENARIOS: Readonly<Record<string, DemoScenario>> = {
   '2026-09': 'closed',
@@ -20,6 +23,10 @@ export function demoAnswers(scenario: DemoScenario = 'current'): Record<string, 
     [`GET ${base}/overview`]: (request) => {
       const period = new URL(request.url).searchParams.get('period')
       return Response.json(demoOverview((period && PERIOD_SCENARIOS[period]) || scenario))
+    },
+    [`GET ${base}/periods`]: (request) => {
+      const year = new URL(request.url).searchParams.get('year')
+      return Response.json(demoPeriodsOf(Number(year ?? DEMO_YEAR)))
     },
     [`GET ${base}/accounts`]: () => Response.json(demoAccounts()),
     [`GET ${base}/contacts`]: () => Response.json(demoContacts()),

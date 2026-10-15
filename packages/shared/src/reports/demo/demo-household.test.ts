@@ -1,5 +1,10 @@
 import { DEMO_IDS } from '@shared/reports/demo/demo.constants'
-import { demoDirectory, demoOverview, demoOverviewFor } from '@shared/reports/demo/demo-household'
+import {
+  demoDirectory,
+  demoOverview,
+  demoOverviewFor,
+  demoPeriodsOf,
+} from '@shared/reports/demo/demo-household'
 import { describe, expect, it } from 'vitest'
 
 describe('demo household', () => {
@@ -181,5 +186,15 @@ describe('demo household', () => {
 
     expect(accounts.find((account) => account.id === DEMO_IDS.cardX)?.name).toBe('Cartão X')
     expect(contacts.map((contact) => contact.name)).toEqual(['Member C', 'Member D', 'Member E'])
+  })
+})
+
+describe('demoPeriodsOf', () => {
+  it('lists the twelve periods of a year from day 5, October being the current one', () => {
+    const { currentLabel, periods } = demoPeriodsOf(2026)
+
+    expect(currentLabel).toBe('2026-10')
+    expect(periods).toHaveLength(12)
+    expect(periods[9]).toEqual({ label: '2026-10', start: '2026-10-05', end: '2026-11-04' })
   })
 })

@@ -25,6 +25,7 @@ export const homeMessages = {
     future: 'Período futuro',
     backToCurrent: 'Ir para o período atual',
     range: (start: string, end: string) => `Período de ${start} a ${end}`,
+    startsOn: (day: number) => `O período começa no dia ${day} (configurações do espaço).`,
   },
   kpis: {
     free: {

@@ -1,4 +1,4 @@
-import type { Permission } from '@financas/shared'
+import type { Period, Permission } from '@financas/shared'
 import type { TwiseIconName } from '@web/components/icons/twise-icon'
 import type { fetchOverview } from '@web/features/home/api/home.queries'
 import type { homeSearchSchema } from '@web/features/home/home.schemas'
@@ -51,6 +51,11 @@ export type HomeHeaderProps = HomeSectionProps & {
   displayName: string
   hour: number
   updatedAt: number
+}
+
+export type HomePeriodPickerProps = {
+  workspaceId: string
+  period: Period
 }
 
 export type PeriodStateProps = {
