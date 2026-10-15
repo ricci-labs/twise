@@ -13,17 +13,21 @@ import type {
   EntryDetailRow,
   EntryDetailView,
   EntryInstallment,
+  EntryLockedSummary,
   LedgerAccount,
   ListedEntry,
 } from '@web/features/entries/entries.types'
 import {
+  formatMonthName,
   formatMonthTitle,
   formatShortDate,
   formatShortDateWithYear,
+  formatWeekdayDayMonth,
   formatWeekdayDayMonthYear,
 } from '@web/lib/format/calendar'
 
 const messages = entriesMessages.list.detail
+const locked = messages.locked
 const typeLabels: Readonly<Record<string, string>> = entriesMessages.newEntry.types
 const paymentMethods: Readonly<Record<string, string>> = entriesMessages.paymentMethods
 const sources: Readonly<Record<string, string>> = messages.sources
@@ -74,6 +78,42 @@ export function entryDetailOf(entry: ListedEntry, context: EntryDetailContext): 
     ownCents: entry.ownCents,
     transfer: transferOf(entry, context),
     note: noteOf(entry),
+    locked: lockedOf(entry, cardPostings, context),
+  }
+}
+
+function lockedOf(
+  entry: ListedEntry,
+  cardPostings: ListedEntry['postings'],
+  context: EntryDetailContext,
+): EntryLockedSummary | undefined {
+  const closed = cardPostings.find((posting) => {
+    const state = stateOfInvoice(posting.invoiceId, context)
+    return state !== undefined && CLOSED_STATES.has(state)
+  })
+  const invoice = closed?.invoiceId ? context.invoices.get(closed.invoiceId) : undefined
+  if (!closed || !invoice) {
+    return undefined
+  }
+  const row = entryRowOf(entry, { ...context, currentUserId: '' })
+  const amount = formatBrl(entry.amountCents)
+  const where = accountOf(cardPostings[0]?.accountId, context)?.name
+  const month = formatMonthName(invoice.dueOn.slice(0, 7))
+  const spender = entry.spentByUserId ? context.memberNames.get(entry.spentByUserId) : undefined
+  return {
+    title: [
+      entry.installmentCount > 1 ? locked.installments(amount, entry.installmentCount) : amount,
+      where,
+    ]
+      .filter(Boolean)
+      .join(' · '),
+    detail: [row.art.name, formatWeekdayDayMonth(entry.occurredOn as IsoDate), spender]
+      .filter(Boolean)
+      .join(' · '),
+    reason:
+      entry.entryType === 'card_purchase'
+        ? locked.installmentReason(closed.installmentNo ?? 1, month)
+        : locked.invoiceReason(month),
   }
 }
 

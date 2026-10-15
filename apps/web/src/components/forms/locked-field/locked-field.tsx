@@ -1,15 +1,17 @@
 import type { LockedFieldProps } from '@web/components/forms/locked-field/locked-field.types'
 import {
   lockedFieldBoxVariants,
+  lockedFieldDetailVariants,
   lockedFieldHelpVariants,
   lockedFieldLabelVariants,
+  lockedFieldTextVariants,
   lockedFieldValueVariants,
   lockedFieldVariants,
 } from '@web/components/forms/locked-field/locked-field.variants'
 import { TwiseIcon } from '@web/components/icons/twise-icon'
 import { useId } from 'react'
 
-export function LockedField({ label, value, help }: LockedFieldProps) {
+export function LockedField({ label, value, detail, help }: LockedFieldProps) {
   const labelId = useId()
   const helpId = useId()
   return (
@@ -24,7 +26,10 @@ export function LockedField({ label, value, help }: LockedFieldProps) {
       </span>
       <div className={lockedFieldBoxVariants()}>
         <TwiseIcon name="lock" size="sm" />
-        <span className={lockedFieldValueVariants()}>{value}</span>
+        <span className={lockedFieldTextVariants()}>
+          <span className={lockedFieldValueVariants()}>{value}</span>
+          {detail && <span className={lockedFieldDetailVariants()}>{detail}</span>}
+        </span>
       </div>
       {help && (
         <p id={helpId} className={lockedFieldHelpVariants()}>

@@ -1,27 +1,14 @@
-import { PAYMENT_METHODS } from '@financas/shared'
+import { useNavigate } from '@tanstack/react-router'
 import { ConfirmDialog } from '@web/components/feedback/confirm-dialog'
 import { OfflineBanner } from '@web/components/feedback/offline-banner'
 import { showToast } from '@web/components/feedback/toast'
-import { FormField } from '@web/components/forms/form-field'
-import { Select } from '@web/components/inputs/select'
-import { TextArea } from '@web/components/inputs/text-area'
 import { FormOverlay } from '@web/components/layout/form-overlay'
 import { useRecordEntry } from '@web/features/entries/api/use-record-entry'
-import { AmountField } from '@web/features/entries/components/amount-field'
-import { DateField } from '@web/features/entries/components/date-field'
-import { DescriptionField } from '@web/features/entries/components/description-field'
+import { EntryFormFields } from '@web/features/entries/components/entry-form-fields'
 import { toEntryInput } from '@web/features/entries/components/entry-input'
-import {
-  hasCategory,
-  hasPaymentMethod,
-  isSpending,
-} from '@web/features/entries/components/entry-kind'
+import { isSpending } from '@web/features/entries/components/entry-kind'
+import { changeEntryType } from '@web/features/entries/components/entry-type-change'
 import { FormFooter } from '@web/features/entries/components/form-footer'
-import { MembersField } from '@web/features/entries/components/members-field'
-import { LeadFields, MoneyFields } from '@web/features/entries/components/money-fields'
-import { RecentRow } from '@web/features/entries/components/recent-row'
-import { SharesField } from '@web/features/entries/components/shares-field'
-import { TypePills } from '@web/features/entries/components/type-pills'
 import { entriesMessages } from '@web/features/entries/entries.messages'
 import { entryFormSchema } from '@web/features/entries/entries.schemas'
 import type {
@@ -74,10 +61,6 @@ const CARD_PURCHASE = 'card_purchase'
 const OPENING_BALANCE = 'opening_balance'
 const SETTLEMENT = 'settlement'
 const CREDIT = 'credit'
-const PAYMENT_OPTIONS = PAYMENT_METHODS.map((method) => ({
-  value: method,
-  label: entriesMessages.paymentMethods[method],
-}))
 
 export function EntryForm({
   workspaceId,
@@ -92,6 +75,7 @@ export function EntryForm({
   onClose,
 }: EntryFormProps) {
   const isOnline = useIsOnline()
+  const navigate = useNavigate()
   const recordEntry = useRecordEntry(workspaceId)
   const [problem, setProblem] = useState<string | null>(null)
   const [isDiscarding, setIsDiscarding] = useState(false)
@@ -109,15 +93,9 @@ export function EntryForm({
   const entryType = useWatch({ control: form.control, name: 'entryType' })
   const plan = useCardPlan(form.control, workspaceId, today)
   const isCardPurchase = entryType === CARD_PURCHASE
-  const isOpeningBalance = entryType === OPENING_BALANCE
-  const isDescriptionLast = entryType === 'invoice_payment' || entryType === SETTLEMENT
   const amountWarning = useAmountWarning(form.control, workspaceId)
   const isSpendingEntry = isSpending(entryType)
   const shareTotals = useShareTotals(form.control)
-
-  const descriptionField = (
-    <DescriptionField workspaceId={workspaceId} entryType={entryType} autoFill={autoFill} />
-  )
 
   function requestClose() {
     if (isDirty) {
@@ -130,8 +108,18 @@ export function EntryForm({
   async function save(values: EntryFormValues, event?: BaseSyntheticEvent) {
     setProblem(null)
     try {
-      await recordEntry.mutateAsync(toEntryInput(values))
-      showToast(messages.saved, { tone: 'success' })
+      const { entryId } = await recordEntry.mutateAsync(toEntryInput(values))
+      showToast(messages.saved, {
+        tone: 'success',
+        action: {
+          label: messages.see,
+          onPress: () =>
+            void navigate({
+              to: '/w/$workspaceId/entries/$entry',
+              params: { workspaceId, entry: entryId },
+            }),
+        },
+      })
       if (afterSaveOf(event) === 'another') {
         form.reset(
           {
@@ -158,14 +146,7 @@ export function EntryForm({
 
   function changeType(next: FormEntryType) {
     autoFill.forget()
-    if (categoryKindOf(next) !== categoryKindOf(entryType)) {
-      form.setValue('categoryId', '')
-    }
-    form.setValue('entryType', next, { shouldDirty: true })
-    form.setValue('paymentMethod', paymentMethodFor(next, form.getValues('paymentMethod')))
-    if (next === OPENING_BALANCE && form.getValues('description').trim() === '') {
-      form.setValue('description', messages.openingDescription)
-    }
+    changeEntryType(form, entryType, next)
   }
 
   function fieldOf(error: unknown): keyof EntryFormInput | undefined {
@@ -219,69 +200,23 @@ export function EntryForm({
           />
         }
       >
-        <TypePills value={entryType} canSeeContacts={canSeeContacts} onChange={changeType} />
-        {isNewForm && (
-          <div className="mt-3.5 lg:px-8">
-            <RecentRow workspaceId={workspaceId} entryType={entryType} autoFill={autoFill} />
-          </div>
-        )}
-        <p className="mx-4 mt-3.5 text-note text-ink-muted lg:mx-8">
-          <span aria-hidden="true" className="font-semibold text-danger">
-            {messages.requiredMark}
-          </span>{' '}
-          {messages.requiredLegend}
-        </p>
-        <div className="grid gap-4.5 px-4 pt-2.5 lg:grid-cols-2 lg:gap-x-6 lg:px-8">
-          <LeadFields
-            entryType={entryType}
-            workspaceId={workspaceId}
-            canCreateAccounts={canCreateAccounts}
-          />
-          <AmountField
-            isOpeningBalance={isOpeningBalance}
-            warning={amountWarning}
-            autoFill={autoFill}
-            inputRef={amountInput}
-          />
-          {!isDescriptionLast && descriptionField}
-          <MoneyFields
-            entryType={entryType}
-            workspaceId={workspaceId}
-            canCreateAccounts={canCreateAccounts}
-            canCreateCards={canCreateCards}
-            plan={plan}
-            today={today}
-          />
-          {isDescriptionLast && descriptionField}
-          <DateField today={today} />
-          {hasPaymentMethod(entryType) && (
-            <FormField<EntryFormInput> name="paymentMethod" label={fields.paymentMethod}>
-              {(control) => (
-                <Select
-                  title={fields.paymentMethod}
-                  options={PAYMENT_OPTIONS}
-                  placeholder={fields.paymentMethodPlaceholder}
-                  {...control}
-                />
-              )}
-            </FormField>
-          )}
-          {isSpendingEntry && canSeeMembers && <MembersField workspaceId={workspaceId} />}
-          {isSpendingEntry && canSeeContacts && (
-            <div className="lg:col-span-2">
-              <SharesField
-                workspaceId={workspaceId}
-                yoursName={currentUserName}
-                totals={shareTotals}
-              />
-            </div>
-          )}
-          <div className="lg:col-span-2">
-            <FormField<EntryFormInput> name="notes" label={fields.notes} maxLength={2000}>
-              {(control) => <TextArea {...control} />}
-            </FormField>
-          </div>
-        </div>
+        <EntryFormFields
+          workspaceId={workspaceId}
+          entryType={entryType}
+          canSeeMembers={canSeeMembers}
+          canSeeContacts={canSeeContacts}
+          canCreateAccounts={canCreateAccounts}
+          canCreateCards={canCreateCards}
+          isNewForm={isNewForm}
+          autoFill={autoFill}
+          amountInput={amountInput}
+          amountWarning={amountWarning}
+          plan={plan}
+          today={today}
+          currentUserName={currentUserName}
+          shareTotals={shareTotals}
+          onTypeChange={changeType}
+        />
       </FormOverlay>
       <ConfirmDialog
         title={messages.discard.title}
@@ -358,21 +293,4 @@ function fieldMessageOf(field: keyof EntryFormInput, error: unknown): string {
   return field === 'contactId'
     ? entriesMessages.settlements.gone
     : errorMessageFor(error, { Conta: fields.paidFrom })
-}
-
-function paymentMethodFor(
-  entryType: FormEntryType,
-  current: EntryFormInput['paymentMethod'],
-): EntryFormInput['paymentMethod'] {
-  if (entryType === CARD_PURCHASE) {
-    return current === '' ? CREDIT : current
-  }
-  return current === CREDIT ? '' : current
-}
-
-function categoryKindOf(entryType: FormEntryType): string | undefined {
-  if (!hasCategory(entryType)) {
-    return undefined
-  }
-  return entryType === 'income' ? 'income' : 'expense'
 }

@@ -278,3 +278,141 @@ describe('ENT-03 actions', () => {
       .not.toBeInTheDocument()
   })
 })
+
+describe('ENT-04 edit entry', () => {
+  const NEW_ID = '00000000-0000-4000-8000-000000000302'
+
+  beforeEach(async () => {
+    vi.useFakeTimers({ toFake: ['Date'] })
+    vi.setSystemTime(new Date('2026-10-20T15:00:00.000Z'))
+    await page.viewport(390, 844)
+  })
+
+  afterEach(() => {
+    vi.useRealTimers()
+  })
+
+  function saved(calls: string[], answer: () => Response): FakeAnswer {
+    return async (request) => {
+      calls.push(`${request.method} ${await request.text()}`)
+      return answer()
+    }
+  }
+
+  async function openEdit(entry: unknown, answers: Record<string, FakeAnswer> = {}) {
+    const app = await openDetail(entry, {
+      answers: { [`GET ${BASE}/entries/suggestions`]: () => Response.json([]), ...answers },
+    })
+    await page.getByRole('link', { name: 'Editar' }).click()
+    return { app, form: page.getByRole('dialog', { name: 'Editar lançamento' }) }
+  }
+
+  it('changes only the description in place, with no note, and goes back to the detail', async () => {
+    const calls: string[] = []
+    const { app, form } = await openEdit(TRANSFER, {
+      [`PATCH ${BASE}/entries/${ENTRY_ID}`]: saved(
+        calls,
+        () => new Response(null, { status: 204 }),
+      ),
+    })
+
+    const save = form.getByRole('button', { name: 'Salvar alterações' })
+    await expect.element(save).toHaveAttribute('aria-disabled', 'true')
+    await form.getByLabelText(/^Descrição/).fill('Reserva de outubro')
+    await expect.element(form.getByText(/criamos uma nova versão/)).not.toBeInTheDocument()
+    await save.click()
+
+    await expect
+      .poll(() => calls)
+      .toEqual(['PATCH {"description":"Reserva de outubro","notes":null}'])
+    await expect.element(page.getByText('Lançamento atualizado.')).toBeVisible()
+    await expect.poll(() => app.router.state.location.search).not.toHaveProperty('edit', true)
+  })
+
+  it('names what changed, saves a new version and opens it', async () => {
+    const calls: string[] = []
+    const { app, form } = await openEdit(TRANSFER, {
+      [`PUT ${BASE}/entries/${ENTRY_ID}`]: saved(calls, () =>
+        Response.json({ entryId: NEW_ID }, { status: 201 }),
+      ),
+      [`GET ${BASE}/entries/${NEW_ID}`]: () =>
+        Response.json({ ...TRANSFER, id: NEW_ID, amountCents: 65000 }),
+    })
+
+    await form.getByLabelText(/^Valor/).fill('650,00')
+    await expect
+      .element(
+        form.getByText(
+          'Mudou o valor, então ao salvar criamos uma nova versão do lançamento. A anterior fica no histórico.',
+        ),
+      )
+      .toBeVisible()
+    await expectNoAccessibilityViolations(form.element())
+    await form.getByRole('button', { name: 'Salvar alterações' }).click()
+
+    await expect.poll(() => calls.length).toBe(1)
+    expect(JSON.parse(calls[0]?.slice('PUT '.length) ?? '{}')).toMatchObject({
+      entryType: 'transfer',
+      amountCents: 65000,
+      fromAccountId: CHECKING,
+      toAccountId: SAVINGS,
+    })
+    await expect
+      .poll(() => app.router.state.location.pathname)
+      .toBe(`/w/${WORKSPACE_ID}/entries/${NEW_ID}`)
+  })
+
+  it('on a closed invoice changes only the description and notes, showing what stays', async () => {
+    const calls: string[] = []
+    const { form } = await openEdit(INSTALLMENTS, {
+      [`PATCH ${BASE}/entries/${ENTRY_ID}`]: saved(
+        calls,
+        () => new Response(null, { status: 204 }),
+      ),
+    })
+
+    await expect.element(form.getByRole('group', { name: 'O que não muda' })).toBeVisible()
+    await expect
+      .element(form.getByText(/^A 1ª parcela está na fatura de outubro, que já fechou/))
+      .toBeVisible()
+    await expect.element(form.getByLabelText(/^Valor/)).not.toBeInTheDocument()
+    await form.getByLabelText(/^Observações/).fill('Para a cozinha da casa nova.')
+    await form.getByRole('button', { name: 'Salvar alterações' }).click()
+
+    await expect
+      .poll(() => calls)
+      .toEqual(['PATCH {"description":"Geladeira","notes":"Para a cozinha da casa nova."}'])
+  })
+
+  it('says someone changed it first and keeps what was typed', async () => {
+    const { form } = await openEdit(TRANSFER, {
+      [`PATCH ${BASE}/entries/${ENTRY_ID}`]: () => apiError('ENTRY_ALREADY_DELETED', 409),
+    })
+
+    await form.getByLabelText(/^Descrição/).fill('Reserva nova')
+    await form.getByRole('button', { name: 'Salvar alterações' }).click()
+
+    await expect
+      .element(form.getByText('Este lançamento foi excluído ou já foi editado por outra pessoa.'))
+      .toBeVisible()
+    await expect.element(form.getByRole('link', { name: 'Ver a versão atual' })).toBeVisible()
+    await expect.element(form.getByLabelText(/^Descrição/)).toHaveValue('Reserva nova')
+  })
+
+  it('asks before throwing changes away', async () => {
+    const { form } = await openEdit(TRANSFER)
+
+    await form.getByLabelText(/^Descrição/).fill('Outra coisa')
+    await form.getByRole('button', { name: 'Fechar' }).click()
+    await expect
+      .element(page.getByRole('alertdialog', { name: 'Descartar as alterações?' }))
+      .toBeVisible()
+  })
+
+  it('gives a viewer no pencil', async () => {
+    await openDetail(TRANSFER, { access: () => accessAs('Leitor', VIEWER_PERMISSIONS) })
+
+    await expect.element(page.getByRole('heading', { name: 'Reserva de emergência' })).toBeVisible()
+    await expect.element(page.getByRole('link', { name: 'Editar' })).not.toBeInTheDocument()
+  })
+})

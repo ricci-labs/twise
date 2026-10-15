@@ -144,6 +144,10 @@ describe('entryDetailOf', () => {
     })
     expect(view.shares).toEqual([{ key: 'c', name: 'Member C', amountCents: 8000 }])
     expect(view.isOnClosedInvoice).toBe(true)
+    expect(view.locked?.title.replace(/\s/g, ' ')).toBe('R$ 240,00 · Cartão X')
+    expect(view.locked?.reason).toBe(
+      'A 1ª parcela está na fatura de novembro, que já fechou. Valor, data, cartão e parcelas ficam como estão.',
+    )
   })
 
   it('draws a transfer from one account to the other, with its note', () => {

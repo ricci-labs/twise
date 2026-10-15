@@ -46,6 +46,15 @@ const TRANSFER = 'transfer'
 
 const installmentSchema = z.number().int().min(1).max(MAX_INSTALLMENTS)
 
+export const entryDetailSearchSchema = z.object({
+  edit: z.boolean().optional().catch(undefined),
+})
+
+export const entryDetailsFormSchema = z.object({
+  description: z.string().trim().min(1).max(ENTRY_DESCRIPTION_MAX_LENGTH),
+  notes: z.string().trim().max(ENTRY_NOTES_MAX_LENGTH),
+})
+
 export const entryShareSchema = z.object({ contactId: z.string().min(1), amount: z.string() })
 
 export const entryFormSchema = z

@@ -28,6 +28,7 @@ export const entriesMessages = {
     saveAnother: 'Salvar e registrar outro',
     saving: 'Salvando…',
     saved: 'Lançamento registrado.',
+    see: 'Ver',
     offline: 'Sem conexão. O que você digitou fica aqui; salve quando a conexão voltar.',
     failed: 'Não foi possível registrar o lançamento. Código: {ref}.',
     discard: {
@@ -205,6 +206,45 @@ export const entriesMessages = {
   transfers: {
     sameAccount: 'Escolha uma conta diferente da de origem.',
   },
+  edit: {
+    title: 'Editar lançamento',
+    open: 'Editar',
+    save: 'Salvar alterações',
+    saving: 'Salvando…',
+    cancel: 'Cancelar',
+    close: 'Fechar',
+    saved: 'Lançamento atualizado.',
+    newVersion: (what: string) =>
+      `Mudou ${what}, então ao salvar criamos uma nova versão do lançamento. A anterior fica no histórico.`,
+    and: ' e ',
+    changed: {
+      amount: 'o valor',
+      isNegative: 'o valor',
+      occurredOn: 'a data',
+      accountId: 'a conta',
+      toAccountId: 'a conta de destino',
+      cardAccountId: 'o cartão',
+      invoiceId: 'a fatura',
+      contactId: 'o contato',
+      categoryId: 'a categoria',
+      installmentCount: 'as parcelas',
+      firstInstallment: 'as parcelas',
+      isInProgress: 'as parcelas',
+      entryType: 'o tipo',
+      paymentMethod: 'a forma de pagamento',
+      spentByUserId: 'quem gastou',
+      shares: 'a divisão',
+    },
+    conflict: 'Este lançamento foi excluído ou já foi editado por outra pessoa.',
+    seeCurrent: 'Ver a versão atual',
+    unchanged: 'O que não muda',
+    discard: {
+      title: 'Descartar as alterações?',
+      text: 'O lançamento continua como estava.',
+      keep: 'Continuar editando',
+      confirm: 'Descartar',
+    },
+  },
   list: {
     pageTitle: 'Lançamentos',
     title: 'Lançamentos',
@@ -296,6 +336,13 @@ export const entriesMessages = {
         `Pagou a conta prevista ${description} de ${month}`,
       history: 'Histórico deste lançamento',
       noAttachments: 'Nenhum comprovante.',
+      locked: {
+        installments: (amount: string, count: number) => `${amount} em ${count}×`,
+        installmentReason: (installment: number, month: string) =>
+          `A ${installment}ª parcela está na fatura de ${month}, que já fechou. Valor, data, cartão e parcelas ficam como estão.`,
+        invoiceReason: (month: string) =>
+          `Ele está na fatura de ${month}, que já fechou. Valor, data e contas ficam como estão.`,
+      },
       actions: {
         trigger: 'Ações deste lançamento',
         repeat: 'Repetir',

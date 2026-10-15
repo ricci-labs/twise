@@ -331,11 +331,11 @@ updated: 2026-10-15
   10. [x] Web components: the detail sections (`EntryHeader`, `DetailSection`, `InstallmentRows`,
       `ShareRows`, `TransferFlow`, `LinkedItem`, `AttachArea`), with the API they read: each entry's
       `shares` and `ownCents` and the bill it paid (G51)
-  **Paused here on 2026-10-15 at the user's request; resume with step 11.** Not yet backed by
+  Paused on 2026-10-15 after step 10, resumed the same day with steps 11 and 12 (#309–#311). Not yet backed by
   data: the commission split link of a transfer or income ("Parte 1 da divisão…", "Divisão
   sugerida feita · 4 de 4 partes"), which needs the split to remember its transfers
-  11. [ ] Web: `ENT-03` for each kind of entry, "Repetir", delete with and without a reason, undo
-  12. [ ] Web: `ENT-04` (in place or a new version, closed invoice, conflict); "Ver" in the new
+  11. [x] Web: `ENT-03` for each kind of entry, "Repetir", delete with and without a reason, undo
+  12. [x] Web: `ENT-04` (in place or a new version, closed invoice, conflict); "Ver" in the new
       entry's toast
   13. [ ] API: the reason a restore is refused (G47)
   14. [ ] Web: the shared "Lixeira" page with `ENT-05` and `ACC-04` as its tabs
