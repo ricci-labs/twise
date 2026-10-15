@@ -1,7 +1,7 @@
 ---
 summary: Functional requirements for accounts, categories, balances, cards and invoices — screens ACC-01..04 and CARD-01..04, with fields, actions, states, rules and errors.
 read_when: Designing or building accounts, categories, cards or invoice screens.
-updated: 2026-10-14
+updated: 2026-10-15
 ---
 
 # Accounts and cards
@@ -170,8 +170,9 @@ highlighted for a few seconds. Opened from `ENT-02`'s empty sheet ("Cadastrar co
 there with the new account chosen and nothing typed lost.
 
 ## ACC-04 Accounts trash (MVP)
-Route `/contas/lixeira`, from the trash icon of the area ("Contas e categorias › Lixeira" on the
-desktop). Permission `accounts:delete`. "Lixeira de contas" / "Contas, cartões e categorias
+The "Contas e categorias" tab of the shared "Lixeira" page (route `/lixeira`, decided on
+2026-10-15; the other tab is `ENT-05`), opened on this tab by the trash icon of the area
+("Contas e categorias › Lixeira" on the desktop). Permission `accounts:delete`. "Lixeira de contas" / "Contas, cartões e categorias
 excluídos. Restaurar traz de volta com o histórico." Each row: the drawing, name, kind ("Categoria
 de despesa · dentro de Saúde"), "Excluída em {data} por {nome}", the reason when there is one, and
 "Restaurar" (secondary, small).

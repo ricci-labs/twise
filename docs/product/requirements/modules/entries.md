@@ -1,5 +1,5 @@
 ---
-summary: Functional requirements for entries — list and filters, the new-entry form for every type (expense, card purchase, income, transfer, invoice payment, settlement, opening balance), detail, edit (details or replace), delete, restore and trash.
+summary: Functional requirements for entries — list with search, filters, period and summary, the new-entry form for every type (expense, card purchase, income, transfer, invoice payment, settlement, opening balance), detail, edit (details or replace), delete, restore and trash.
 read_when: Designing or building ENT-01..05, or any shortcut that opens the new-entry form.
 updated: 2026-10-15
 ---
@@ -47,27 +47,78 @@ Standards: `../ui-standards.md`. Messages per code: `../error-messages.md`. Doma
   a closed invoice.
 
 ## ENT-01 Entries list (MVP)
-Route `/lancamentos`. Permission `entries:view`. `GET /entries` (`from`, `to`, `accountId`,
-`limit`, `cursor`).
+Route `/lancamentos`, the "Lançamentos" tab. Permission `entries:view`. Designed in
+`../../../design/entries-list/` (every state, mobile and desktop); where this section and the
+design disagree, the design won (`../../../design/entries-list/decisions.md`). `GET /entries`
+with the filters below (G45) and `GET /entries/summary` (G46).
 
-**RF-ENT-1** Newest first, grouped by day ("Hoje", "Ontem", "sex, 25 set"). Row: description,
-category (or "Transferência", "Pagamento de fatura"), account or card, installments "10×" and
-contact-share icon when present, attachment icon, amount with sign. Day groups show the day's net
-(Later).
-**RF-ENT-2** Filters: period (default the current financial period; custom range), account or card
-(`accountId`), and type (client side). Active filters show as chips with "Limpar".
-**RF-ENT-3** Paging: "Carregar mais" or infinite scroll with `nextCursor`, 100 per page.
-**RF-ENT-4** Search by description (client side over loaded pages; server search Later).
+**Layout.** Phone: the title with the trash icon (only with `entries:delete`); the Home's period
+picker; a row with the search field and the "Filtros" button (the count of active filters on it,
+ink outline when any is on); the active filters as chips with "×" and "Limpar"; the summary line;
+one white card per day, rows split by dividers; "Mostrar mais" at the end; the floating "+".
+Desktop: the page title with "Lixeira" on the right; one bar with the period, the search and one
+button per filter (Tipo, Conta ou cartão, Categoria, Quem gastou), each opening a menu under itself
+as wide as the button (288–480 px), an active one showing its value ("Tipo: Compra no cartão") with
+the ink outline and "Limpar filtros" at the end of the bar; a full-width table (entry, category,
+account or card, who spent, amount, "⋯") with the days as bands, the summary in its header and
+"Mostrar mais" at its bottom. Home margins (`PageFrame`).
+
+**RF-ENT-1** Newest first, grouped by day ("Hoje · ter, 20 out", "Ontem · seg, 19 out", "sáb, 17
+out"). Row: the loose drawing (42 px) of the category, or the system drawing for a transfer,
+settlement, invoice payment or opening balance; the description with its badges ("3×" for
+installments, the contacts icon when shared, a clip when it has a receipt); a second line
+"Categoria › Subcategoria · Conta ou cartão" and "· por {nome}" only when another member spent; it
+wraps instead of being cut. Amounts: money out in ink with "−"; money in in `mint-ink` with "+";
+transfers and invoice payments in `ink-muted` with no sign (they are not spending). Day totals stay
+Later.
+**RF-ENT-2** Filters, all answered by the API (G45), never applied to what is on screen: period
+(default the current financial period), type (one or more of the seven), account or card, category
+(a parent includes its subcategories: the chip reads "Mercado e subcategorias"), who spent (Todos
+or a member) and "Só os divididos com contatos". Phone: one "Filtros" sheet with Tipo (multiple
+chips), Conta ou cartão and Categoria (the app's pickers, most used first, with search), Quem
+gastou and the switch; its footer "Limpar tudo" and "Ver resultados", which applies and closes.
+Desktop: Tipo is a checkbox menu that applies at once, with "Limpar"; the others are the app's
+pickers under their button. The filters live in the URL, so a link keeps them.
+**RF-ENT-2b** Period. The Home's period picker; its sheet (a popover on the desktop) adds "Últimos 30
+dias", "Este ano" and "Escolher datas", which opens the app's calendar picking a range: "De" and
+"Até" on top (the one still to pick outlined), the first and last day with the selection outline,
+the days between on `sunken`, today with its dot, weeks from Sunday; tapping a day before the first
+starts again from it; the button says what happens ("Ver de 5 a 20 out"; "Escolha o último dia",
+disabled, until both are picked). Desktop: the shortcuts on the left (Este período, Período
+anterior, Últimos 30 dias, Este ano, Escolher datas), the month on the right and "Aplicar".
+**RF-ENT-3** Paging: 50 per load and "Mostrar mais" (`nextCursor`), no page numbers and no endless
+scroll; while it loads the button reads "Carregando…" with the spinner in the same place, and the
+new days come in below without moving the scroll; a failure puts "Não foi possível carregar mais."
+and "Tentar de novo" in its place. When nothing is left: "Isso é tudo de {out/26}." with "Ver
+{set/26}" (the previous period); with filters, "Isso é tudo com esses filtros em {out/26}."
+**RF-ENT-4** Search by description in the API (G45), from the 2nd letter, ignoring case and
+accents, inside the chosen period and with the filters; the matching part of each description is
+highlighted; "Buscar em todos os períodos" under the results widens it to every period, keeping
+the text; "×" clears it.
+**RF-ENT-4b** Summary: one muted line with bold numbers, from the API for the period, search and
+filters (G46): "Saiu R$ 6.505,20 · Entrou R$ 9.120,00 · 11 lançamentos". "Saiu" adds expenses and
+card purchases (the whole purchase, as the rows show it), "Entrou" incomes and settlements;
+transfers, invoice payments and opening balances count in neither, but in the count.
+**RF-ENT-4c** Opened from an account, card, category or subcategory (`ACC-01`, `ACC-02`, their
+"Ver lançamentos"): the filter comes ready as a chip ("Mercado e subcategorias" for a parent, only
+the subcategory for a child) and the back arrow returns there; removing the chip shows everything.
 
 | Action | Permission | Rule |
 |---|---|---|
-| "Novo lançamento" (floating) | `entries:create` | opens `ENT-02` |
-| Tap a row | `entries:view` | opens `ENT-03` |
-| "Lixeira" (menu) | `entries:delete` | opens `ENT-05` |
+| "Novo lançamento" (floating; sidebar on the desktop) | `entries:create` | opens `ENT-02` |
+| Tap a row | `entries:view` | opens `ENT-03` (a panel on the desktop) |
+| Row "⋯" (desktop only) | as each item | Editar (`entries:update`), Repetir (`entries:create`), Anexar comprovante (`attachments:create`), Excluir com motivo and Excluir (`entries:delete`); the closed-invoice rule of RF-ENT-10 applies |
+| Trash icon (phone) / "Lixeira" (desktop) | `entries:delete` | opens the "Lixeira" page on its "Lançamentos" tab (`ENT-05`) |
 
-States: skeleton rows; empty for the period "Nenhum lançamento neste período." + "Novo lançamento";
-empty with filters "Nada encontrado com esses filtros." + "Limpar filtros"; error with retry;
-`ENTRY_QUERY_INVALID` resets the filters and says "Os filtros eram inválidos e foram limpos."
+States: skeleton rows grouped as days, the period, search and filters shown at once; empty period
+"Nenhum lançamento neste período." + "Novo lançamento", the period arrows still there; empty with
+filters or search, the loose drawing, "Nada encontrado com esses filtros." + "Limpar filtros", the
+chips still visible; error "Não foi possível carregar os lançamentos.", the code and "Tentar de
+novo", the top still working; viewer: the read-only band, no "+", no trash, no "⋯", a row opens the
+detail to read; `ENTRY_QUERY_INVALID` (an old link with a filter that no longer exists) resets the
+filters and the toast says "Os filtros eram inválidos e foram limpos."; after a delete in the
+detail, back on the list without the row and the toast "Lançamento movido para a lixeira." with
+"Desfazer" for 8 s (the floating "+" moves up while it shows).
 
 ## ENT-02 New entry (MVP)
 `POST /entries`, permission `entries:create`. Designed in `../../../design/entries/` (every type and
@@ -91,7 +142,8 @@ mixes required and optional fields, so it starts with "* obrigatório".
 sideways scroll), the most used first: "Despesa", "Compra no cartão", "Receita", "Transferência",
 then "Mais ▾", which opens a sheet with the other three (invoice payment, settlement, opening
 balance), each with a loose illustration and a one-line description; once one is chosen, the
-"Mais" pill shows its name. The selected pill is `mint` with `on-mint` text. The fields below
+"Mais" pill shows its name. The selected pill has the 2 px `ink` outline and a bold label, like
+every selection (`../ui-standards.md`; it was `mint` until the entries list design). The fields below
 change with the type; values common to all types are kept when switching.
 
 ### Fields common to every type
@@ -259,37 +311,88 @@ Field-mapped codes: `NOT_A_MONEY_ACCOUNT` and `ACCOUNT_NOT_AVAILABLE` → the ac
 
 ## ENT-03 Entry detail (MVP)
 Route `/lancamentos/:entryId`, loaded with `GET /entries/:entryId` (shown at once from the list
-cache when there is one). A deleted or replaced entry answers `404 ENTRY_NOT_FOUND`: the page shows
-its message and a link back to the list.
+cache when there is one, completed when the API answers). Phone: a full page with back, the pencil
+("Editar") and "⋯". Desktop: a 480 px panel on the right over the list, which stays visible behind;
+the route changes, so the link works alone; its header "Lançamento", the "Editar" button, "⋯" and
+close; Esc closes. A deleted or replaced entry answers `404 ENTRY_NOT_FOUND`: the loose drawing, its
+message and "Voltar para Lançamentos".
 
-**RF-ENT-9** Shows type, amount, date, description, notes, payment method, who spent, who recorded
-and from where ("pelo WhatsApp", "pela web"), and a readable breakdown of the lines ("Saiu de Conta
-X", "Categoria Mercado", "Parcela 2/3 na fatura de novembro", "Contact J deve R$ 20,00").
-Attachments section (`ATT-01`). "Histórico" link (`AUD-01` filtered by this entry; `audit:view`).
-**RF-ENT-10** When the entry has a line on a closed invoice: a note "Parte deste lançamento está em
-uma fatura fechada, então ele não pode ser excluído nem ter valores alterados." and the edit and
-delete actions are hidden (description and notes stay editable).
+**RF-ENT-9** Header: the drawing (52 px) and the name on one line, the type in small muted text
+above the name (no badge: it would read as a status), the amount (32 px display, cents raised) on
+the full width, income in `mint-ink` with "+", then "3× de R$ 333,34 · ter, 20 out 2026". Then
+sections, each a white card with a title and label/value rows split by dividers, by kind:
+- **Detalhes:** account or card, category (with the income nature badge), payment method, who
+  spent, the invoice it fell on (a link), who recorded and from where ("pela web", "pelo
+  WhatsApp").
+- **Dividido com contatos** (right after the header when shared): each contact with the dotted
+  leader to their amount, a **solid** line, "Sua parte" with its leader and amount; "Ver cobranças"
+  in the header.
+- **Parcelas:** one row per installment ("1/3", the month and "vence 04/11", the invoice's status
+  badge, the amount, a chevron to that invoice, `CARD-03`); more than 3 show the closed one, the
+  open one and the next, then "Mostrar mais {n} parcelas".
+- **De onde para onde** (transfer): "Saiu de Conta X" → "Entrou em Conta Y" with their drawings and
+  the arrow, and the sentence that a transfer is neither spending nor income; no category, no "Quem
+  gastou".
+- **What it belongs to:** the planned bill it paid ("Pagou a conta prevista Aluguel de outubro"),
+  the commission split step it was (a link to `HOME-03`), the invoice it paid (invoice payment,
+  with the sentence that it is not new spending); a variable income shows the mint card of its
+  split ("Divisão sugerida feita · 4 de 4 partes").
+- **Observações**, **Comprovantes** (the files with their "⋯": Abrir, Baixar, Excluir, from the
+  attachments round; "Anexar comprovante · Foto ou PDF" as a dashed area, `ATT-01`; "Nenhum
+  comprovante." for who can't attach) and **Histórico** (`AUD-01` filtered by this entry, only with
+  `audit:view`; G11).
+**RF-ENT-10** When the entry has a line on a closed invoice: a note with the lock on top, "Parte
+deste lançamento está em uma fatura fechada, então ele não pode ser excluído nem ter valores
+alterados."; the pencil stays (only description and notes change, `ENT-04`) and "⋯" keeps only
+Repetir and Anexar comprovante.
 
 | Action | Permission | Rule |
 |---|---|---|
-| "Editar" | `entries:update` | opens `ENT-04` |
-| "Excluir" | `entries:delete` | no dialog; toast "Lançamento movido para a lixeira." with "Desfazer" (calls restore); optional reason in "Excluir com motivo" |
-| "Anexar comprovante" | `attachments:create` | see `ATT-01` |
+| Pencil "Editar" (desktop: button) | `entries:update` | opens `ENT-04`; one action per destination, so "Editar" is never in "⋯" here |
+| "⋯" › "Repetir" | `entries:create` | opens `ENT-02` with the same type, amount, description, accounts, category, payment method and shares, today's date, the amount selected to change (web only) |
+| "⋯" › "Anexar comprovante" | `attachments:create` | `ATT-01` |
+| "⋯" › "Excluir com motivo" | `entries:delete` | a sheet (dialog on the desktop) "Excluir {nome}": the text, "Motivo" (optional, up to 200, shown in the trash), "Cancelar" and the danger "Excluir lançamento"; then as "Excluir" |
+| "⋯" › "Excluir" | `entries:delete` | no dialog; back to the list without the row and the toast "Lançamento movido para a lixeira." with "Desfazer" for 8 s (calls restore) |
+
+Viewer: no pencil, no "⋯", no "Anexar comprovante", no "Histórico"; "Comprovantes" shows the files
+or "Nenhum comprovante."
 
 ## ENT-04 Edit entry (MVP)
+The `ENT-02` form prefilled, titled "Editar lançamento": a full screen on the phone, the 880 px
+dialog on the desktop. One button, "Salvar alterações" (desktop: "Cancelar" on the left), enabled
+once something changed; no "Salvar e registrar outro" and no "Repetir um recente".
+
 **RF-ENT-11** Two modes, chosen by what changes:
-- only description or notes → `PATCH /entries/:id` in place; toast "Lançamento atualizado.";
-- anything else → the `ENT-02` form prefilled, submitted with `PUT /entries/:id`; a note on top: "Ao
-  salvar, criamos uma nova versão do lançamento e a anterior fica no histórico." The web switches
-  to the new id; attachments and a matched planned bill follow it automatically.
-Errors: `ENTRY_ALREADY_DELETED` ("Este lançamento foi excluído ou já foi editado por outra
-pessoa. Atualize a lista."), `ENTRY_NOT_FOUND`, plus all of `ENT-02`.
+- only description or notes → `PATCH /entries/:id` in place, with no note; back to the detail with
+  the toast "Lançamento atualizado.";
+- anything else (amount, date, accounts, category, installments, shares, type) → `PUT
+  /entries/:id`. Only then a blue note appears on top, naming what changed: "Mudou o valor, então
+  ao salvar criamos uma nova versão do lançamento. A anterior fica no histórico." The installments
+  preview is redone. After saving, the web goes to the new id's detail with "Lançamento
+  atualizado."; attachments and a matched planned bill follow it automatically.
+The toast has no "Desfazer": the old version is in the history.
+**RF-ENT-11b** Closed invoice (RF-ENT-10): the form shows only "Descrição" and "Observações", no
+type pills, and the rest in a locked block "O que não muda" with the lock and the reason.
+**RF-ENT-11c** Closing with changes asks "Descartar as alterações?" as `ENT-02`, with the edit text.
+
+Errors: `ENTRY_ALREADY_DELETED` (someone deleted or edited it first): a danger alert on top, "Este
+lançamento foi excluído ou já foi editado por outra pessoa.", with "Ver a versão atual"; what was
+typed stays on screen to copy. `ENTRY_NOT_FOUND` as `ENT-03`, plus all of `ENT-02`.
 
 ## ENT-05 Entries trash (MVP)
-Route `/lancamentos/lixeira`. Permission `entries:delete`. `GET /entries/trash`, paged. Old
-versions of edited entries don't appear (they are history).
+The "Lançamentos" tab of the shared "Lixeira" page (route `/lixeira`, decided by the product owner
+on 2026-10-15; the other tab, "Contas e categorias", is `ACC-04`). The "Lixeira" item of the menu
+("Mais" on the phone, the sidebar on the desktop) opens the page; the trash icon of each screen
+opens its own tab. Permission `entries:delete` (a tab the person can't open is not shown).
+`GET /entries/trash`, 50 per load with "Mostrar mais". Old versions of edited entries don't appear
+(they are history).
 
-**RF-ENT-12** Rows as in the list, plus "Excluído em {data} por {nome}" and the reason.
-Action "Restaurar" → toast "Lançamento restaurado."; `ENTRY_CANNOT_BE_RESTORED` shows "Não dá para
-restaurar: ele usa uma conta excluída, está numa fatura fechada, ou já foi substituído por outra
-versão." Empty: "A lixeira está vazia."
+**RF-ENT-12** Rows as in the list, plus "Excluído em {data} por {nome}" and the reason, and the
+small secondary "Restaurar" (named "Restaurar {descrição}"). Desktop: a table with entry, when and
+who, reason, amount and "Restaurar".
+"Restaurar" asks nothing: the row leaves and the toast "Lançamento restaurado." offers "Ver" (opens
+`ENT-03`) for 8 s. `ENTRY_CANNOT_BE_RESTORED`: an error toast with the reason the API gives (G47):
+"Não dá para restaurar: ele usa a Conta Y, que está na lixeira." with "Restaurar Conta Y" (restores
+the account, then the entry), "Não dá para restaurar: parte dele está numa fatura fechada." or "Não
+dá para restaurar: ele já tem outra versão." Empty: the loose drawing, "A lixeira está vazia." and
+what happens to deleted entries.

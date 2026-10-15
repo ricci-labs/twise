@@ -1,7 +1,7 @@
 ---
 summary: Phases, MVP scope, current focus and the list of open questions.
 read_when: Deciding what to build next, checking whether something is in scope, or resuming work in a new session.
-updated: 2026-10-14
+updated: 2026-10-15
 ---
 
 # Roadmap
@@ -307,6 +307,31 @@ updated: 2026-10-14
   5. [x] ‹ › arrows on sideways strips on the desktop
   6. [x] At most 5 items in a dialog or sheet list, with "Mostrar mais" and search over 10
   7. [x] "Mostrar mais" and paging for the lines of an invoice
+- [ ] **Entries list round: ENT-01, ENT-03, ENT-04, ENT-05** (design `../design/entries-list/`,
+  exported 2026-10-14; the user asked on 2026-10-15 for the same flow: one PR per step, merged by
+  Claude when CI is green, every screen checked side by side with its PNG; the shared "Lixeira"
+  page approved the same day):
+  1. [x] Design package in `docs/design/entries-list/`; requirements (`requirements/modules/entries.md`,
+     the shared trash in `ACC-04`, `requirements/ui-standards.md`, `requirements/modules/dashboard.md`), API gaps G45–G47
+  2. [ ] API: search and filters on `GET /entries` (G45)
+  3. [ ] API: `GET /entries/summary` (G46)
+  4. [ ] Web: one selection style for the new entry's type pills and the period sheet's month
+  5. [ ] Web components: `SearchInput` (the three search fields built so far use it), `EntryRow`,
+     `EntryDayGroup`
+  6. [ ] Web components: `FilterChips`, `ListSummary`, `ListEnd`
+  7. [ ] Web components: the range calendar and the period sheet's other ranges
+  8. [ ] Web: `ENT-01` on the phone (days, paging, search, summary, every state)
+  9. [ ] Web: `ENT-01` filters, and the list opened ready-filtered by "Ver lançamentos" of
+     `ACC-01`, `ACC-02` and `CARD-01`
+  10. [ ] Web components: the detail sections (`EntryHeader`, `DetailSection`, `InstallmentRows`,
+      `ShareRows`, `TransferFlow`, `LinkedItem`, `AttachArea`)
+  11. [ ] Web: `ENT-03` for each kind of entry, "Repetir", delete with and without a reason, undo
+  12. [ ] Web: `ENT-04` (in place or a new version, closed invoice, conflict); "Ver" in the new
+      entry's toast
+  13. [ ] API: the reason a restore is refused (G47)
+  14. [ ] Web: the shared "Lixeira" page with `ENT-05` and `ACC-04` as its tabs
+  15. [ ] Web: the desktop versions (filter menus, period popover, side panel, row menu, trash table)
+  16. [ ] Review of the round against every PNG
 - [ ] Remaining project skills (`new-module`, `db-migration`, `domain-rule`, `pr`) and Claude Code hooks
 
 ## Phase 1: MVP

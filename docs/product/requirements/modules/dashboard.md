@@ -1,7 +1,7 @@
 ---
 summary: Functional requirements for the home screens — the period overview (four indicators, insights, bills due, balance forecast, pace, budgets, coming months, where income goes, invoices, reserve and goals, commissions, receivables, achievements of a closed period, first run), "posso comprar?" and the commission split suggestion (HOME-01..03).
 read_when: Designing or building HOME-01, HOME-02 or HOME-03, or writing the pt-BR text of an insight.
-updated: 2026-10-14
+updated: 2026-10-15
 ---
 
 # Dashboard
@@ -29,8 +29,8 @@ until a field exists its widget stays hidden.
 
 **RF-HOME-1 Period header.** Greeting "Bom dia / Boa tarde / Boa noite, {nome}" and "Hoje é {data} ·
 faltam {n} dias para o fim do período" (`periodProgress.left`). Period picker (previous /
-next, and the label opens the months of the year with their ranges; the current one in mint,
-future ones dashed); the period goes in the URL (`?period=2026-10`). A past period shows the badge
+next, and the label opens the months of the year with their ranges; the chosen one with the
+2 px ink outline and a bold label, future ones dashed); the period goes in the URL (`?period=2026-10`). A past period shows the badge
 "Período encerrado" and "Ir para o período atual"; a future one "Período futuro".
 
 **RF-HOME-2 Indicators.** Four cards of equal weight, in this order; on mobile a swipeable carousel
