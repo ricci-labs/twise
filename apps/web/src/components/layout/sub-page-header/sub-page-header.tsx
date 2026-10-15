@@ -26,7 +26,7 @@ export function SubPageHeader({
         <h1 className={subPageTitleVariants()}>{title}</h1>
         {description && <p className={subPageDescriptionVariants()}>{description}</p>}
       </div>
-      {actions && <div className="-mr-2 shrink-0">{actions}</div>}
+      {actions && <div className="-mr-2 flex shrink-0 items-center">{actions}</div>}
     </header>
   )
 }

@@ -69,6 +69,11 @@ const TRANSFER = listedEntry(
   { spentByUserId: null, paymentMethod: 'pix' },
 )
 
+function middleOf(element: Element): number {
+  const { top, height } = element.getBoundingClientRect()
+  return top + height / 2
+}
+
 async function openDetail(
   entry: unknown,
   { access = workspaceAccess, answers = {} as Record<string, FakeAnswer>, search = '' } = {},
@@ -130,6 +135,10 @@ describe('ENT-03 entry detail', () => {
       .element(page.getByRole('link', { name: 'Histórico deste lançamento' }))
       .toBeVisible()
     await expectNoAccessibilityViolations(page.getByRole('main').element())
+    expect(
+      middleOf(page.getByRole('link', { name: 'Editar' }).element()) -
+        middleOf(page.getByRole('button', { name: 'Ações deste lançamento' }).element()),
+    ).toBeCloseTo(0, 0)
 
     await installments.getByRole('link', { name: /2\/3/ }).click()
     await expect
