@@ -303,9 +303,9 @@ describe('writes across the modules', () => {
     await expectLatest('recurrence_rules', ruleId, 'create')
     await ok(owner.patch(`${base}/recurrences/${ruleId}`, { description: 'Diarista nova' }))
     await expectLatest('recurrence_rules', ruleId, 'update')
-    const occurrences = (await (
+    const { items: occurrences } = (await (
       await owner.get(`${base}/occurrences?from=${today}&to=${addDays(today, 6)}`)
-    ).json()) as { id: string; ruleId: string }[]
+    ).json()) as { items: { id: string; ruleId: string }[] }
     const occurrenceId = occurrences.find((item) => item.ruleId === ruleId)?.id ?? ''
     const occurrencePath = `${base}/occurrences/${occurrenceId}`
     for (const step of ['skip', 'unskip']) {

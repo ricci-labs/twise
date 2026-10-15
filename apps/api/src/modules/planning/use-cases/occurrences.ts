@@ -16,6 +16,7 @@ import {
 import type {
   LockedOccurrence,
   OccurrenceItem,
+  OccurrenceList,
   OccurrenceRow,
   RecurrenceRuleRow,
 } from '@api/modules/planning/planning.types'
@@ -32,6 +33,7 @@ import {
   type IsoDate,
   OCCURRENCE_HORIZON_MONTHS,
   type OccurrenceListQuery,
+  occurrenceTotals,
   parseIsoDate,
   type RecurrenceSchedule,
   todayIn,
@@ -52,6 +54,16 @@ export async function listOccurrences(
     const occurrences = await selectOccurrencesBetween(tx, from, to)
     return occurrences.map((occurrence) => withOverdueFlag(occurrence, today))
   })
+}
+
+export async function listOccurrencesWithTotals(
+  db: Database,
+  workspaceId: string,
+  query: OccurrenceListQuery,
+  clock: Clock = systemClock,
+): Promise<OccurrenceList> {
+  const items = await listOccurrences(db, workspaceId, query, clock)
+  return { items, totals: occurrenceTotals(items) }
 }
 
 export function findMatchedOccurrence(

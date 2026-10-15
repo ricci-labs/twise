@@ -1,11 +1,16 @@
 import { createApp } from '@api/app'
-import type { OccurrenceItem, RecurrenceRuleItem, RecurrenceRuleList } from '@api/modules/planning'
+import type {
+  OccurrenceItem,
+  OccurrenceList,
+  RecurrenceRuleItem,
+  RecurrenceRuleList,
+} from '@api/modules/planning'
 import { testAppDeps } from '@api/testing/app'
 import { connectTestDatabases } from '@api/testing/database'
 import { createFixtures } from '@api/testing/fixtures'
 import { addMemberWithSystemRole, loggedInUser, requestsAs } from '@api/testing/http'
 import type { SessionRequests } from '@api/testing/testing.types'
-import { addDays, todayIn } from '@financas/shared'
+import { addDays, occurrenceTotals, todayIn } from '@financas/shared'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
 const databases = connectTestDatabases()
@@ -271,15 +276,16 @@ describe('GET /occurrences', () => {
     )
     const response = await viewer.get(`${occurrencesPath}?from=${today}&to=${addDays(today, 20)}`)
     expect(response.status).toBe(200)
-    const planned = ((await response.json()) as OccurrenceItem[]).filter(
-      (occurrence) => occurrence.ruleId === ruleId,
-    )
+    const { items, totals } = (await response.json()) as OccurrenceList
+    const planned = items.filter((occurrence) => occurrence.ruleId === ruleId)
     expect(planned.length).toBeGreaterThanOrEqual(2)
     expect(planned[0]).toMatchObject({
       description: 'Diarista',
       status: 'pending',
       isOverdue: false,
     })
+    expect(totals).toEqual(occurrenceTotals(items))
+    expect(totals.toPay.count).toBeGreaterThanOrEqual(planned.length)
   })
 
   it('refuses a range that is missing, reversed or longer than a year', async () => {
@@ -346,8 +352,8 @@ describe('changing one occurrence over HTTP', () => {
     )
     const listed = (await (
       await viewer.get(`${occurrencesPath}?from=${today}&to=${addDays(today, 30)}`)
-    ).json()) as OccurrenceItem[]
-    const occurrencePath = `${occurrencesPath}/${listed.find((item) => item.ruleId === ruleId)?.id}`
+    ).json()) as OccurrenceList
+    const occurrencePath = `${occurrencesPath}/${listed.items.find((item) => item.ruleId === ruleId)?.id}`
 
     expect((await viewer.post(`${occurrencePath}/skip`)).status).toBe(403)
     expect((await member.post(`${occurrencePath}/skip`)).status).toBe(204)

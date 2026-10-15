@@ -2,6 +2,7 @@ import type { WeekendRule } from '@shared/core/calendar/calendar.constants'
 import type { IsoDate } from '@shared/core/calendar/calendar.types'
 import type { AccountKind, EntryType } from '@shared/ledger/ledger/ledger.constants'
 import type {
+  OccurrenceStatus,
   RecurrenceFrequency,
   RecurringEntryType,
 } from '@shared/planning/recurrence/recurrence.constants'
@@ -65,4 +66,23 @@ export type RecurrenceSummary = {
     leftOutEstimateCount: number
   }
   transfers: { monthlyCents: number; count: number }
+}
+
+export type TotalableOccurrence = {
+  entryType: RecurringEntryType
+  status: OccurrenceStatus
+  isOverdue: boolean
+  amountCents: number
+}
+
+export type PendingTotal = {
+  amountCents: number
+  count: number
+  overdueCount: number
+}
+
+export type OccurrenceTotals = {
+  toPay: PendingTotal
+  toReceive: PendingTotal
+  groups: { overdue: number; upcoming: number; matched: number; skipped: number }
 }
