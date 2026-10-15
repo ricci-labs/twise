@@ -1,7 +1,7 @@
 ---
 summary: Access control inside a workspace — roles (system templates + custom), a module × action permission matrix (view/create/update/delete), owner rules, and where permissions are enforced (routes, agent tools, UI).
 read_when: Adding a route, agent tool or screen; working on roles, members or invitations; any "who can do what" question.
-updated: 2026-10-09
+updated: 2026-10-15
 ---
 
 # Access control
@@ -114,7 +114,8 @@ The permission set is loaded once per request/turn and cached on the context. Ro
 `GET /api/workspaces/:workspaceId` returns the workspace, the caller's membership, role and
 permissions, so the web can hide what the user can't do, and `memberNames` (the display names of
 the active members, to every member, a viewer included): the shell shows who shares the space
-("Dono · 2 pessoas", the avatars on the phone) without `members:view`.
+("Dono · 2 pessoas", the avatars on the phone) without `members:view`. `memberDirectory` gives the
+same people with their `userId` (G50), so a list can say who spent ("por Member B").
 
 ### Members (`access.routes.ts`, use cases in `access/use-cases/members.ts`)
 | Route | Permission | Behavior |

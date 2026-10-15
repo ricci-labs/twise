@@ -104,7 +104,14 @@ describe('GET /api/workspaces/:workspaceId', () => {
     const response = await get(app, `/api/workspaces/${workspaceId}`, viewer.cookie)
 
     expect(response.status).toBe(200)
-    const { memberNames } = (await response.json()) as { memberNames: string[] }
+    const { memberNames, memberDirectory } = (await response.json()) as {
+      memberNames: string[]
+      memberDirectory: { userId: string; displayName: string }[]
+    }
+    expect(memberDirectory).toContainEqual({
+      userId: viewer.userId,
+      displayName: 'Member access-names-viewer',
+    })
     expect(memberNames).toHaveLength(2)
     expect(memberNames).toEqual(
       expect.arrayContaining(['Member access-names-owner', 'Member access-names-viewer']),

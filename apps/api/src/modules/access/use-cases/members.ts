@@ -13,6 +13,7 @@ import type {
   ChangeMemberRoleInput,
   MemberActor,
   MemberItem,
+  MemberName,
   RemoveMemberInput,
   WorkspaceRole,
 } from '@api/modules/access/access.types'
@@ -57,8 +58,11 @@ export async function listMembers(db: Database, workspaceId: string): Promise<Me
   })
 }
 
-export async function listMemberNames(db: Database, workspaceId: string): Promise<string[]> {
-  return (await listMembers(db, workspaceId)).map((member) => member.displayName)
+export async function listMemberNames(db: Database, workspaceId: string): Promise<MemberName[]> {
+  return (await listMembers(db, workspaceId)).map(({ userId, displayName }) => ({
+    userId,
+    displayName,
+  }))
 }
 
 export async function changeMemberRole(

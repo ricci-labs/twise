@@ -38,5 +38,9 @@ export function demoWorkspaceAccess(workspaceId: string) {
       PERMISSION_ACTIONS.map((action) => ({ module, action })),
     ),
     memberNames: [...DEMO_MEMBER_NAMES],
+    memberDirectory: DEMO_MEMBER_NAMES.map((displayName, index) => ({
+      userId: `demo-member-${index + 1}`,
+      displayName,
+    })),
   }
 }

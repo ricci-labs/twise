@@ -19,7 +19,11 @@ import {
   loadWorkspaceAccess,
   removeMember,
 } from '@api/modules/access/access.service'
-import type { AccessRouteDeps, MemberActor } from '@api/modules/access/access.types'
+import type {
+  AccessRouteDeps,
+  MemberActor,
+  WorkspaceAccessDetails,
+} from '@api/modules/access/access.types'
 import { changeMembershipPreferences, getMembershipPreferences } from '@api/modules/members'
 import {
   deletionRequestSchema,
@@ -50,7 +54,13 @@ export function accessRoutes({ db }: AccessRouteDeps) {
       if (!access) {
         throw workspaceNotFound()
       }
-      return c.json({ ...access, memberNames: await listMemberNames(db, workspaceId) })
+      const memberDirectory = await listMemberNames(db, workspaceId)
+      const details: WorkspaceAccessDetails = {
+        ...access,
+        memberNames: memberDirectory.map((member) => member.displayName),
+        memberDirectory,
+      }
+      return c.json(details)
     })
     .get('/members', authorize('members', 'view'), async (c) => {
       return c.json(await listMembers(db, currentWorkspace(c).workspaceId))
