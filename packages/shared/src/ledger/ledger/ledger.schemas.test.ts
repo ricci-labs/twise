@@ -206,9 +206,31 @@ describe('entryListQuerySchema', () => {
     expect(entryListQuerySchema.parse({ from: '2026-10-01', to: '2026-10-31' })).toEqual({
       from: '2026-10-01',
       to: '2026-10-31',
-      limit: 100,
+      limit: 50,
     })
     expect(entryListQuerySchema.parse({ limit: '20' }).limit).toBe(20)
+  })
+
+  it('reads the search, the types one by one or comma separated, and the shared flag', () => {
+    expect(
+      entryListQuerySchema.parse({
+        q: '  merc ',
+        types: 'expense,card_purchase',
+        shared: 'true',
+      }),
+    ).toEqual({ q: 'merc', types: ['expense', 'card_purchase'], shared: true, limit: 50 })
+    expect(entryListQuerySchema.parse({ types: ['income', 'transfer'] }).types).toEqual([
+      'income',
+      'transfer',
+    ])
+  })
+
+  it('refuses a one-letter search, an unknown type and a shared flag other than true', () => {
+    expect(entryListQuerySchema.safeParse({ q: ' a ' }).success).toBe(false)
+    expect(entryListQuerySchema.safeParse({ types: 'expense,gift' }).success).toBe(false)
+    expect(entryListQuerySchema.safeParse({ types: '' }).success).toBe(false)
+    expect(entryListQuerySchema.safeParse({ shared: 'false' }).success).toBe(false)
+    expect(entryListQuerySchema.safeParse({ categoryId: 'mercado' }).success).toBe(false)
   })
 
   it('refuses a period that ends before it starts, a bad date and a limit above 500', () => {

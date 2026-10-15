@@ -22,6 +22,7 @@ import type {
   RecentDescriptionFilter,
 } from '@api/modules/ledger/ledger.types'
 import type {
+  EntryFilter,
   EntryListQuery,
   InvoiceStatus,
   IsoDate,
@@ -429,20 +430,7 @@ export function selectActiveCards(tx: WorkspaceTransaction) {
 }
 
 export function selectEntries(tx: WorkspaceTransaction, query: EntryListQuery) {
-  const conditions = [isNull(journalEntries.deletedAt)]
-  if (query.from) {
-    conditions.push(gte(journalEntries.occurredOn, query.from))
-  }
-  if (query.to) {
-    conditions.push(lte(journalEntries.occurredOn, query.to))
-  }
-  if (query.accountId) {
-    const entriesOfAccount = tx
-      .select({ entryId: postings.entryId })
-      .from(postings)
-      .where(eq(postings.accountId, query.accountId))
-    conditions.push(inArray(journalEntries.id, entriesOfAccount))
-  }
+  const conditions = entryFilterConditions(tx, query)
   if (query.cursor) {
     conditions.push(
       sql`(${journalEntries.occurredOn}, ${journalEntries.id}) < (${query.cursor.key}::date, ${query.cursor.id}::uuid)`,
@@ -454,6 +442,58 @@ export function selectEntries(tx: WorkspaceTransaction, query: EntryListQuery) {
     .where(and(...conditions))
     .orderBy(desc(journalEntries.occurredOn), desc(journalEntries.id))
     .limit(query.limit + 1)
+}
+
+function entryFilterConditions(tx: WorkspaceTransaction, filter: EntryFilter): SQL[] {
+  const conditions = [isNull(journalEntries.deletedAt)]
+  if (filter.from) {
+    conditions.push(gte(journalEntries.occurredOn, filter.from))
+  }
+  if (filter.to) {
+    conditions.push(lte(journalEntries.occurredOn, filter.to))
+  }
+  if (filter.q) {
+    conditions.push(
+      sql`strpos(${foldedForSearch(journalEntries.description)}, ${foldedForSearch(sql`${filter.q}`)}) > 0`,
+    )
+  }
+  if (filter.types) {
+    conditions.push(inArray(journalEntries.entryType, filter.types))
+  }
+  if (filter.spentByUserId) {
+    conditions.push(eq(journalEntries.spentByUserId, filter.spentByUserId))
+  }
+  if (filter.accountId) {
+    conditions.push(
+      inArray(journalEntries.id, entriesTouching(tx, eq(postings.accountId, filter.accountId))),
+    )
+  }
+  if (filter.categoryId) {
+    conditions.push(
+      inArray(
+        journalEntries.id,
+        entriesTouching(
+          tx,
+          inArray(postings.accountId, categoryAndItsChildren(tx, filter.categoryId)),
+        ),
+      ),
+    )
+  }
+  if (filter.shared) {
+    conditions.push(inArray(journalEntries.id, entriesTouching(tx, isNotNull(postings.contactId))))
+  }
+  return conditions
+}
+
+function entriesTouching(tx: WorkspaceTransaction, postingCondition: SQL) {
+  return tx.select({ entryId: postings.entryId }).from(postings).where(postingCondition)
+}
+
+function categoryAndItsChildren(tx: WorkspaceTransaction, categoryId: string) {
+  return tx
+    .select({ id: ledgerAccounts.id })
+    .from(ledgerAccounts)
+    .where(or(eq(ledgerAccounts.id, categoryId), eq(ledgerAccounts.parentId, categoryId)))
 }
 
 export async function selectActiveEntry(tx: WorkspaceTransaction, entryId: string) {
