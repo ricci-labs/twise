@@ -47,8 +47,14 @@ export type NodeBindings = {
   incoming?: { socket?: { remoteAddress?: string } }
 }
 
+export type ErrorDetails = Readonly<Record<string, string>>
+
+export type AppErrorOptions = ErrorOptions & {
+  details?: ErrorDetails
+}
+
 export type ErrorBody = {
-  error: { code: string; message: string; ref: string }
+  error: { code: string; message: string; ref: string; details?: ErrorDetails }
 }
 
 export type Completion = {

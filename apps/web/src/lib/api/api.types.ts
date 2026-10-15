@@ -15,4 +15,5 @@ export type ApiErrorDetails = {
   code: string
   ref: string | null
   retryAfterSeconds: number | null
+  details?: Readonly<Record<string, string>>
 }

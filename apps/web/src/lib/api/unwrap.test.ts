@@ -39,6 +39,21 @@ describe('unwrap', () => {
     expect(error).toMatchObject({ status: 429, code: 'TOO_MANY_ATTEMPTS', retryAfterSeconds: 900 })
   })
 
+  it('keeps the details an error gives', async () => {
+    const error = await errorOf(
+      unwrapEmpty(
+        answer(409, {
+          error: {
+            code: 'ENTRY_CANNOT_BE_RESTORED',
+            message: 'x',
+            details: { reason: 'deleted_account', accountName: 'Conta Y' },
+          },
+        }),
+      ),
+    )
+    expect(error).toMatchObject({ details: { reason: 'deleted_account', accountName: 'Conta Y' } })
+  })
+
   it('keeps the ref of a server error', async () => {
     const body = { error: { code: 'INTERNAL_ERROR', message: 'x', ref: '4f3a9c1b' } }
     const error = await errorOf(unwrap(answer(SERVER_ERROR, body)))

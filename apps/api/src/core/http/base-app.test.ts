@@ -32,6 +32,11 @@ function testApp(level: 'info' | 'debug' = 'info') {
     .get('/api/errors/conflict', () => {
       throw new ConflictError('EMAIL_TAKEN', 'Another user has this email')
     })
+    .get('/api/errors/with-details', () => {
+      throw new ConflictError('ENTRY_CANNOT_BE_RESTORED', 'Cannot restore', {
+        details: { reason: 'closed_invoice' },
+      })
+    })
     .get('/api/errors/unexpected', () => {
       throw new Error(INTERNAL_DETAIL)
     })
@@ -58,6 +63,18 @@ function postJson(app: ReturnType<typeof testApp>['app'], body: string) {
 }
 
 describe('error responses', () => {
+  it('carries the details an error gives, and none when it gives none', async () => {
+    const { app } = testApp()
+
+    const withDetails = await errorOf(await app.request('/api/errors/with-details'))
+    expect(withDetails).toMatchObject({
+      code: 'ENTRY_CANNOT_BE_RESTORED',
+      details: { reason: 'closed_invoice' },
+    })
+    const without = await errorOf(await app.request('/api/errors/conflict'))
+    expect(without).not.toHaveProperty('details')
+  })
+
   it.each([
     ['validation', 400, 'AMOUNT_INVALID'],
     ['unauthorized', 401, 'INVALID_CREDENTIALS'],

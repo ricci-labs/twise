@@ -5,5 +5,6 @@ export const apiErrorBodySchema = z.object({
     code: z.string().min(1),
     message: z.string(),
     ref: z.string().optional(),
+    details: z.record(z.string(), z.string()).optional(),
   }),
 })

@@ -13,10 +13,12 @@ import {
   markEntryDeleted,
   markEntryRestored,
   selectActiveEntry,
+  selectDeletedAccountOfEntry,
   selectEntries,
   selectEntryRow,
   selectEntrySummary,
   selectEntryTouchesClosedInvoice,
+  selectHasReplacement,
   selectPostingsOfEntries,
   selectTrashedEntries,
   updateEntryDetails,
@@ -31,6 +33,7 @@ import type {
   EntrySummary,
   PostingItem,
   RecordedEntry,
+  RestoreRefusal,
   TrashedEntry,
 } from '@api/modules/ledger/ledger.types'
 import { planCardPurchase, planInvoicePayment } from '@api/modules/ledger/use-cases/card-entries'
@@ -59,6 +62,8 @@ import {
 } from '@financas/shared'
 
 const ENTRY_INVALID = 'ENTRY_INVALID'
+
+const CANNOT_BE_RESTORED = 'ENTRY_CANNOT_BE_RESTORED'
 
 const ENTRIES_TABLE = 'journal_entries'
 
@@ -245,7 +250,7 @@ export async function deleteEntry(
 }
 
 export async function restoreEntry(db: Database, { workspaceId, entryId, userId }: EntryChangeRef) {
-  await refusingBrokenRules('ENTRY_CANNOT_BE_RESTORED', () =>
+  await refusingBrokenRules(CANNOT_BE_RESTORED, () =>
     withWorkspace(db, workspaceId, async (tx) => {
       const entry = await lockEntry(tx, entryId)
       if (!entry) {
@@ -254,11 +259,35 @@ export async function restoreEntry(db: Database, { workspaceId, entryId, userId 
       if (!entry.deletedAt) {
         throw new ConflictError('ENTRY_NOT_DELETED', `Entry ${entryId} is not deleted`)
       }
+      const refusal = await restoreRefusalOf(tx, entryId)
+      if (refusal) {
+        throw new ConflictError(
+          CANNOT_BE_RESTORED,
+          `Entry ${entryId} cannot be restored: ${refusal.reason}`,
+          {
+            details: refusal,
+          },
+        )
+      }
       await auditingEntry(tx, { workspaceId, entryId, userId }, 'restore', () =>
         markEntryRestored(tx, entryId),
       )
     }),
   )
+}
+
+async function restoreRefusalOf(
+  tx: WorkspaceTransaction,
+  entryId: string,
+): Promise<RestoreRefusal | undefined> {
+  if (await selectHasReplacement(tx, entryId)) {
+    return { reason: 'replaced' }
+  }
+  if (await selectEntryTouchesClosedInvoice(tx, entryId)) {
+    return { reason: 'closed_invoice' }
+  }
+  const account = await selectDeletedAccountOfEntry(tx, entryId)
+  return account && { reason: 'deleted_account', accountId: account.id, accountName: account.name }
 }
 
 export async function replaceEntry(

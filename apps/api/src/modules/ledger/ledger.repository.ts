@@ -148,6 +148,31 @@ export async function selectEntryTouchesClosedInvoice(
   return line !== undefined
 }
 
+export async function selectHasReplacement(tx: WorkspaceTransaction, entryId: string) {
+  const [replacement] = await tx
+    .select({ id: journalEntries.id })
+    .from(journalEntries)
+    .where(eq(journalEntries.replacesEntryId, entryId))
+    .limit(1)
+  return replacement !== undefined
+}
+
+export async function selectDeletedAccountOfEntry(tx: WorkspaceTransaction, entryId: string) {
+  const [account] = await tx
+    .select({ id: ledgerAccounts.id, name: ledgerAccounts.name })
+    .from(postings)
+    .innerJoin(
+      ledgerAccounts,
+      and(
+        eq(ledgerAccounts.workspaceId, postings.workspaceId),
+        eq(ledgerAccounts.id, postings.accountId),
+      ),
+    )
+    .where(and(eq(postings.entryId, entryId), isNotNull(ledgerAccounts.deletedAt)))
+    .limit(1)
+  return account
+}
+
 export async function lockEntry(tx: WorkspaceTransaction, entryId: string) {
   const [entry] = await tx
     .select({ id: journalEntries.id, deletedAt: journalEntries.deletedAt })
