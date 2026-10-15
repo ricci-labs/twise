@@ -1,6 +1,10 @@
 import { parseIsoDate } from '@shared/core/calendar/dates'
+import { PAGE_MAX_LIMIT } from '@shared/core/paging/paging'
 import { pageCursorSchema, pageLimitSchema } from '@shared/core/paging/paging.schemas'
 import {
+  ENTRIES_PAGE_SIZE,
+  ENTRY_SEARCH_MIN_LENGTH,
+  ENTRY_TYPES,
   ENTRY_TYPES_WITH_CATEGORY,
   INCOME_NATURES,
   MAX_INSTALLMENTS,
@@ -118,20 +122,46 @@ export const entryParamsSchema = z.object({ entryId: z.uuid() })
 
 export type EntryParams = z.infer<typeof entryParamsSchema>
 
+const entryTypesParamSchema = z.preprocess(
+  (value) => (typeof value === 'string' ? value.split(',') : value),
+  z.array(z.enum(ENTRY_TYPES)).min(1),
+)
+
+const entryFilterFields = {
+  from: isoDateSchema.optional(),
+  to: isoDateSchema.optional(),
+  accountId: z.uuid().optional(),
+  q: z.string().trim().min(ENTRY_SEARCH_MIN_LENGTH).max(ENTRY_DESCRIPTION_MAX_LENGTH).optional(),
+  types: entryTypesParamSchema.optional(),
+  categoryId: z.uuid().optional(),
+  spentByUserId: z.uuid().optional(),
+  shared: z
+    .literal('true')
+    .transform(() => true)
+    .optional(),
+}
+
+function periodInOrder(query: { from?: string; to?: string }): boolean {
+  return !query.from || !query.to || query.from <= query.to
+}
+
+const PERIOD_OUT_OF_ORDER = { message: 'from must not be after to', path: ['from'] }
+
 export const entryListQuerySchema = z
   .object({
-    from: isoDateSchema.optional(),
-    to: isoDateSchema.optional(),
-    accountId: z.uuid().optional(),
+    ...entryFilterFields,
     cursor: pageCursorSchema(isoDateSchema).optional(),
-    limit: pageLimitSchema,
+    limit: z.coerce.number().int().min(1).max(PAGE_MAX_LIMIT).default(ENTRIES_PAGE_SIZE),
   })
-  .refine((query) => !query.from || !query.to || query.from <= query.to, {
-    message: 'from must not be after to',
-    path: ['from'],
-  })
+  .refine(periodInOrder, PERIOD_OUT_OF_ORDER)
 
 export type EntryListQuery = z.infer<typeof entryListQuerySchema>
+
+export const entryFilterSchema = z
+  .object(entryFilterFields)
+  .refine(periodInOrder, PERIOD_OUT_OF_ORDER)
+
+export type EntryFilter = z.infer<typeof entryFilterSchema>
 
 export const FREQUENT_ENTRIES_MAX_LIMIT = 8
 
