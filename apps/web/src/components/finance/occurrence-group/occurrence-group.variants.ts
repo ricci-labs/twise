@@ -1,0 +1,30 @@
+import { cva } from 'class-variance-authority'
+
+export const occurrenceGroupVariants = cva('flex flex-col gap-1.5')
+
+export const occurrenceGroupTitleVariants = cva(
+  'flex min-h-7 items-center gap-2 font-display text-section-title',
+  {
+    variants: {
+      tone: {
+        default: 'text-ink',
+        danger: 'text-danger',
+      },
+    },
+    defaultVariants: { tone: 'default' },
+  },
+)
+
+export const occurrenceGroupCountVariants = cva(
+  'font-sans text-row-detail font-medium text-ink-muted',
+)
+
+export const occurrenceGroupListVariants = cva('flex flex-col rounded-xl border bg-surface', {
+  variants: {
+    tone: {
+      default: 'border-border px-3',
+      danger: 'border-danger px-4 py-1.5 inset-ring-1 inset-ring-danger',
+    },
+  },
+  defaultVariants: { tone: 'default' },
+})
