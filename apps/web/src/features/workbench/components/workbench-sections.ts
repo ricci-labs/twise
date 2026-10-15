@@ -98,6 +98,7 @@ import { subPageHeaderExamples } from '@web/components/layout/sub-page-header'
 import { appSidebarExamples } from '@web/components/navigation/app-sidebar'
 import { bottomTabBarExamples } from '@web/components/navigation/bottom-tab-bar'
 import { breadcrumbExamples } from '@web/components/navigation/breadcrumb'
+import { periodPickerExamples } from '@web/components/navigation/period-picker'
 import { scrollArrowsExamples } from '@web/components/navigation/scroll-arrows'
 import type { ComponentExamples } from '@web/lib/examples.types'
 
@@ -122,6 +123,7 @@ export const workbenchSections: readonly ComponentExamples[] = [
   calendarSheetExamples,
   calendarMonthExamples,
   rangeCalendarExamples,
+  periodPickerExamples,
   selectExamples,
   textAreaExamples,
   confirmDialogExamples,

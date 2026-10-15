@@ -1,10 +1,18 @@
-import { Link } from '@tanstack/react-router'
+import { type Period, parseIsoDate } from '@financas/shared'
+import { useQuery } from '@tanstack/react-query'
+import { Link, useNavigate } from '@tanstack/react-router'
 import { Button } from '@web/components/actions/button'
 import { Badge } from '@web/components/display/badge'
 import { TwiseIcon } from '@web/components/icons/twise-icon'
+import { PeriodPicker } from '@web/components/navigation/period-picker'
+import { periodsQueryOptions } from '@web/features/home/api/home.queries'
 import { neighbourPeriod } from '@web/features/home/components/period-stage'
 import { homeMessages as messages } from '@web/features/home/home.messages'
-import type { HomeHeaderProps, PeriodStateProps } from '@web/features/home/home.types'
+import type {
+  HomeHeaderProps,
+  HomePeriodPickerProps,
+  PeriodStateProps,
+} from '@web/features/home/home.types'
 import { useIsOnline } from '@web/hooks/use-is-online'
 import { useMediaQuery } from '@web/hooks/use-media-query'
 import { DESKTOP_QUERY } from '@web/lib/breakpoints'
@@ -14,7 +22,7 @@ import {
   formatMonthLabel,
   formatRange,
 } from '@web/lib/format/calendar'
-import { Calendar, ChevronLeft, ChevronRight } from 'lucide-react'
+import { useState } from 'react'
 
 export function HomeHeader({
   workspaceId,
@@ -27,7 +35,6 @@ export function HomeHeader({
   const isOnline = useIsOnline()
   const isDesktop = useMediaQuery(DESKTOP_QUERY)
   const { today, period, metrics } = overview
-  const step = (direction: -1 | 1) => neighbourPeriod(period.label, direction)
   return (
     <header className="flex flex-col gap-3 lg:mb-1 lg:flex-row lg:flex-wrap lg:items-center lg:justify-between lg:gap-4">
       <div className="flex flex-col gap-1">
@@ -42,34 +49,7 @@ export function HomeHeader({
         </p>
       </div>
       <div className="flex items-center gap-3">
-        <nav
-          aria-label={messages.period.label}
-          className="flex h-12 flex-1 items-center justify-between gap-1 rounded-full border border-border bg-surface px-0.5 lg:w-85 lg:flex-none"
-        >
-          <Link
-            to="."
-            search={(previous) => ({ ...previous, period: step(-1) })}
-            aria-label={messages.period.previous}
-            className="grid size-11 place-items-center rounded-full hover:bg-sunken"
-          >
-            <ChevronLeft className="size-5" aria-hidden="true" />
-          </Link>
-          <p className="flex items-center gap-2 text-choice font-emphasis tabular-nums">
-            <Calendar className="size-4" aria-hidden="true" />
-            <span>{formatMonthLabel(period.label)}</span>
-            <span className="font-medium text-ink-muted">
-              · {formatRange(period.start, period.end)}
-            </span>
-          </p>
-          <Link
-            to="."
-            search={(previous) => ({ ...previous, period: step(1) })}
-            aria-label={messages.period.next}
-            className="grid size-11 place-items-center rounded-full hover:bg-sunken"
-          >
-            <ChevronRight className="size-5" aria-hidden="true" />
-          </Link>
-        </nav>
+        <HomePeriodPicker workspaceId={workspaceId} period={period} />
         {stage !== 'closed' && (
           <Button
             variant="secondary"
@@ -93,6 +73,50 @@ export function HomeHeader({
       )}
     </header>
   )
+}
+
+function HomePeriodPicker({ workspaceId, period }: HomePeriodPickerProps) {
+  const navigate = useNavigate()
+  const [year, setYear] = useState(() => yearOf(period.label))
+  const [yearFor, setYearFor] = useState(period.label)
+  if (yearFor !== period.label) {
+    setYearFor(period.label)
+    setYear(yearOf(period.label))
+  }
+  const periods = useQuery(periodsQueryOptions(workspaceId, year))
+  const step = (direction: -1 | 1) => neighbourPeriod(period.label, direction)
+  return (
+    <PeriodPicker
+      label={messages.period.label}
+      className="flex-1 lg:w-85 lg:flex-none"
+      title={formatMonthLabel(period.label)}
+      detail={formatRange(period.start, period.end)}
+      previous={<Link to="." search={(previous) => ({ ...previous, period: step(-1) })} />}
+      next={<Link to="." search={(previous) => ({ ...previous, period: step(1) })} />}
+      sheet={{
+        year,
+        periods: periods.data?.periods,
+        hasError: periods.isError,
+        chosenLabel: period.label,
+        currentLabel: periods.data?.currentLabel ?? period.label,
+        note: startNoteOf(periods.data?.periods),
+        onYearChange: setYear,
+        onRetry: () => void periods.refetch(),
+        onPick: (label) =>
+          void navigate({ to: '.', search: (previous) => ({ ...previous, period: label }) }),
+      }}
+    />
+  )
+}
+
+function yearOf(label: string): number {
+  return parseIsoDate(`${label}-01`).year
+}
+
+function startNoteOf(periods: readonly Period[] | undefined): string | undefined {
+  const days = new Set(periods?.map((period) => parseIsoDate(period.start).day))
+  const [day] = days
+  return days.size === 1 && day !== undefined ? messages.period.startsOn(day) : undefined
 }
 
 function PeriodState({ stage }: PeriodStateProps) {

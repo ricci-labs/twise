@@ -1,0 +1,23 @@
+export const periodPickerMessages = {
+  label: 'Período',
+  previous: 'Período anterior',
+  next: 'Próximo período',
+  choose: 'Escolher período',
+  close: 'Fechar',
+  previousYear: 'Ano anterior',
+  nextYear: 'Próximo ano',
+  failed: 'Não foi possível carregar os períodos.',
+  retry: 'Tentar de novo',
+  futureNote: 'Tracejados: períodos futuros.',
+  others: 'Outros intervalos',
+  presets: {
+    last30Days: 'Últimos 30 dias',
+    thisYear: 'Este ano',
+  },
+  chooseDates: 'Escolher datas',
+  back: 'Voltar',
+  pickFirst: 'Escolha o primeiro dia',
+  pickLast: 'Escolha o último dia',
+  seeRange: (range: string) => `Ver de ${range}`,
+  rangeJoin: ' a ',
+} as const

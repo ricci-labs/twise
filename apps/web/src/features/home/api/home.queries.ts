@@ -2,6 +2,7 @@ import {
   DEMO_PERIOD_LABELS,
   demoDirectory,
   demoOverviewFor,
+  demoPeriodsOf,
   MONEY_ACCOUNT_KINDS,
 } from '@financas/shared'
 import { queryOptions } from '@tanstack/react-query'
@@ -11,12 +12,22 @@ import { demoFreshness, demoVariantOf } from '@web/lib/demo'
 import { queryKeys } from '@web/lib/query-keys'
 
 const workspaceApi = apiClient.api.workspaces[':workspaceId']
+const PERIODS_FRESH_MS = 60 * 60 * 1000
 
 export function overviewQueryOptions(workspaceId: string, period: string | undefined) {
   return queryOptions({
     queryKey: [...queryKeys.workspace(workspaceId), 'overview', period ?? 'current'] as const,
     queryFn: () => fetchOverview(workspaceId, period),
     placeholderData: (previous) => previous,
+    ...demoFreshness(workspaceId),
+  })
+}
+
+export function periodsQueryOptions(workspaceId: string, year: number) {
+  return queryOptions({
+    queryKey: [...queryKeys.workspace(workspaceId), 'periods', year] as const,
+    queryFn: () => fetchPeriods(workspaceId, year),
+    staleTime: PERIODS_FRESH_MS,
     ...demoFreshness(workspaceId),
   })
 }
@@ -75,6 +86,13 @@ export function fetchOverview(workspaceId: string, period: string | undefined) {
   return unwrap(
     workspaceApi.overview.$get({ param: { workspaceId }, query: period ? { period } : {} }),
   )
+}
+
+function fetchPeriods(workspaceId: string, year: number) {
+  if (demoVariantOf(workspaceId)) {
+    return Promise.resolve(demoPeriodsOf(year))
+  }
+  return unwrap(workspaceApi.periods.$get({ param: { workspaceId }, query: { year } }))
 }
 
 function fetchAccounts(workspaceId: string) {

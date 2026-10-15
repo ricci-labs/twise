@@ -180,6 +180,28 @@ describe('HOME-01 period overview', () => {
     await expect.element(screen.getByText('Período futuro')).toBeVisible()
   })
 
+  it('opens the months of the year with their ranges and goes to the one picked', async () => {
+    await page.viewport(390, 844)
+    const { app, screen } = await openHome()
+
+    await screen.getByRole('button', { name: /out\/26/ }).click()
+    const sheet = page.getByRole('dialog', { name: 'Escolher período' })
+    await expect
+      .element(sheet.getByRole('button', { name: /out\s*5 out – 4 nov/ }))
+      .toHaveAttribute('aria-current', 'true')
+    await expect
+      .element(
+        sheet.getByText(
+          'O período começa no dia 5 (configurações do espaço). Tracejados: períodos futuros.',
+        ),
+      )
+      .toBeVisible()
+    await sheet.getByRole('button', { name: /set\s*5 set – 4 out/ }).click()
+
+    await expect.element(screen.getByText('set/26')).toBeVisible()
+    expect(app.router.state.location.search).toEqual({ period: '2026-09' })
+  })
+
   it('says the overview failed, with its code, and tries again', async () => {
     const answers = demoAnswers()
     const overviewPath = `GET /api/workspaces/${WORKSPACE_ID}/overview`
