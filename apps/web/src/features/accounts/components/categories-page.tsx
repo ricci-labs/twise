@@ -4,7 +4,7 @@ import { EmptyBlock } from '@web/components/feedback/empty-block'
 import { SectionError } from '@web/components/feedback/section-error'
 import { AccountGroup } from '@web/components/finance/account-group'
 import { ChoiceChips } from '@web/components/inputs/choice-chips'
-import { TextInput } from '@web/components/inputs/text-input'
+import { SearchInput } from '@web/components/inputs/search-input'
 import { PageFrame } from '@web/components/layout/page-frame'
 import { accountsMessages } from '@web/features/accounts/accounts.messages'
 import type {
@@ -29,7 +29,6 @@ import { ApiError } from '@web/lib/api/api-error'
 import { DESKTOP_QUERY } from '@web/lib/breakpoints'
 import { CATEGORIES_SEARCH_ABOVE } from '@web/lib/long-lists'
 import { hasPermission } from '@web/lib/permissions'
-import { Search } from 'lucide-react'
 import { useState } from 'react'
 
 const messages = accountsMessages.categories
@@ -125,14 +124,11 @@ function CategoriesLoaded({ accounts, ...body }: CategoriesLoadedProps) {
   return (
     <>
       {hasSearch && (
-        <TextInput
-          type="search"
-          aria-label={messages.search}
-          placeholder={messages.search}
-          startAdornment={<Search aria-hidden="true" />}
-          className="min-h-touch lg:max-w-90"
+        <SearchInput
+          label={messages.search}
+          className="lg:max-w-90"
           value={search}
-          onChange={(event) => setSearch(event.target.value)}
+          onValueChange={setSearch}
         />
       )}
       <CategoriesShown
