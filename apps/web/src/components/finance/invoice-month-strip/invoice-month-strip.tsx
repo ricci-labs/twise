@@ -66,7 +66,7 @@ export function InvoiceMonthStrip({
                 className: invoiceMonthVariants({ size, isCurrent: month.isCurrent }),
               },
               <>
-                <b className={invoiceMonthNameVariants()}>{month.month}</b>
+                <b className={invoiceMonthNameVariants()}>{month.month}</b>{' '}
                 <small className={invoiceMonthStatusVariants()}>{month.status}</small>
               </>,
             )}

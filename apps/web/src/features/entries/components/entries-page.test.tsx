@@ -231,7 +231,7 @@ describe('ENT-01 entries list', () => {
     await page.getByRole('button', { name: 'Filtros' }).click()
     const sheet = page.getByRole('dialog', { name: 'Filtros' })
     await sheet.getByRole('button', { name: 'Compra no cartão' }).click()
-    await sheet.getByRole('button', { name: 'Conta ou cartão' }).click()
+    await sheet.getByRole('button', { name: 'Conta ou cartão: Todas as contas e cartões' }).click()
     await page
       .getByRole('dialog', { name: 'Conta ou cartão' })
       .getByRole('button', { name: /Cartão X/ })

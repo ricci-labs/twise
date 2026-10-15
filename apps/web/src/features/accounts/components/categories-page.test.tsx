@@ -66,7 +66,7 @@ describe('ACC-02 categories', () => {
 
   it('lists the expense categories with their subcategories folded, and remembers the open ones', async () => {
     await openCategories()
-    const toggle = page.getByRole('button', { name: 'Mostrar as subcategorias de Mercado' })
+    const toggle = page.getByRole('button', { name: 'Mostrar 2 subcategorias de Mercado' })
     await expect.element(toggle).toHaveTextContent('2 subcategorias')
     await expect.element(page.getByText('Salário')).not.toBeInTheDocument()
 

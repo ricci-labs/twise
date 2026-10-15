@@ -25,7 +25,11 @@ export function MobileTopBar({ access }: MobileTopBarProps) {
           trigger={
             <button
               type="button"
-              aria-label={workspacesMessages.shell.switchWorkspace(workspace.name)}
+              aria-label={workspacesMessages.shell.switchWorkspace(
+                isReadOnly(access.permissions)
+                  ? `${workspace.name}, ${access.role.name}`
+                  : workspace.name,
+              )}
               className="flex min-h-touch min-w-0 cursor-pointer items-center gap-2 rounded-full pr-2.5 pl-1.5 font-display text-bar-title outline-none focus-visible:ring-2 focus-visible:ring-focus-ring"
             >
               <Logo variant="mark" />

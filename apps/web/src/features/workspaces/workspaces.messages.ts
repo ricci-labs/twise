@@ -31,7 +31,7 @@ export const workspacesMessages = {
     },
     newEntry: 'Novo lançamento',
     workspace: 'Espaço',
-    switchWorkspace: (name: string) => `Trocar de espaço. Atual: ${name}`,
+    switchWorkspace: (current: string) => `Trocar de espaço. Atual: ${current}`,
     roleAndPeople: (role: string, people: number) =>
       people <= 1 ? `${role} · só você` : `${role} · ${people} pessoas`,
     readOnly: 'Você está vendo este espaço sem poder alterar nada.',

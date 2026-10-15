@@ -51,7 +51,7 @@ describe('CARD-02 invoices of a card', () => {
     await expect.element(page.getByRole('heading', { name: 'Fatura de novembro' })).toBeVisible()
     await expect.element(page.getByText('Fecha 25/10 · vence 04/11')).toBeVisible()
     await expect
-      .element(page.getByRole('link', { name: 'Fatura de nov de 2026, Aberta' }))
+      .element(page.getByRole('link', { name: 'Fatura de nov, Aberta, 2026' }))
       .toHaveAttribute('aria-current', 'true')
     await expect.element(page.getByText('R$ 160,00 de terceiros')).toBeVisible()
     await expect.element(page.getByText('1/3')).toBeVisible()

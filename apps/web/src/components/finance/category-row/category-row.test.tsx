@@ -20,7 +20,7 @@ describe('CategoryRow', () => {
         </CategoryRow>
       </ul>,
     )
-    const toggle = screen.getByRole('button', { name: 'Mostrar as subcategorias de Mercado' })
+    const toggle = screen.getByRole('button', { name: 'Mostrar 2 subcategorias de Mercado' })
 
     await expect.element(toggle).toHaveAttribute('aria-expanded', 'false')
     await expect.element(toggle).toHaveTextContent('2 subcategorias')

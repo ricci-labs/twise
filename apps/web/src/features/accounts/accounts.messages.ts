@@ -340,8 +340,7 @@ export const accountsMessages = {
     failed: 'Não foi possível carregar as faturas.',
     cardNotFound: 'Cartão não encontrado.',
     strip: (card: string) => `Faturas do ${card}`,
-    month: (month: string, year: number, state: string) =>
-      `Fatura de ${month} de ${year}, ${state}`,
+    month: (month: string, year: number, state: string) => `Fatura de ${month}, ${state}, ${year}`,
     all: 'Todas',
     yearNote: (since: string) =>
       `Cada fatura leva o mês em que vence. Desde o cadastro do cartão, em ${since}.`,

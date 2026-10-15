@@ -39,6 +39,7 @@ export function CategoryRow({
       </div>
     </div>
   )
+  const count = messages.count(subcategoryCount)
   const actionSlot = actions && <div className={categoryRowActionsVariants()}>{actions}</div>
   if (subcategoryCount === 0 || !onOpenChange) {
     return (
@@ -65,10 +66,10 @@ export function CategoryRow({
       <div className={categoryRowLineVariants()}>
         {main}
         <Collapsible.Trigger
-          aria-label={isOpen ? messages.hide(name) : messages.show(name)}
+          aria-label={isOpen ? messages.hide(count, name) : messages.show(count, name)}
           className={categoryRowToggleVariants()}
         >
-          {messages.count(subcategoryCount)}
+          {count}
           <ChevronDown aria-hidden="true" />
         </Collapsible.Trigger>
         {actionSlot}
