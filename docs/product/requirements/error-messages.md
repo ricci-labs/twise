@@ -176,6 +176,10 @@ message.
 | `ALLOCATION_INVALID` | 400 | Steps invalid | "O passo 'o que sobrar' precisa ser o último." (or per field) | form |
 | `ALLOCATION_ACCOUNT_INVALID` | 400 | A step's account isn't an active money account | "Uma das contas não está ativa. Escolha outra no passo {n}." | step |
 | `ALLOCATION_GOAL_INVALID` | 400 | A step's goal was deleted | "Uma das metas foi excluída. Remova esse passo." | step |
+| `ALLOCATION_PART_INVALID` | 400 | Part body invalid (guard) | "Não foi possível concluir. Código: {ref}." | toast |
+| `ALLOCATION_PART_TAKEN` | 409 | The part is already done in the period (two people at once) | "Essa parte já foi feita neste período." | toast |
+| `ALLOCATION_ENTRY_TAKEN` | 409 | The transfer already marks another part | "Essa transferência já é de outra parte da divisão." | "Já transferi" list |
+| `ALLOCATION_ENTRY_INVALID` | 400 | Not an active transfer into the part's account | "Escolha uma transferência para a conta dessa parte." | "Já transferi" list |
 | `HOLIDAY_QUERY_INVALID` | 400 | Year out of 2000–2100 | "Escolha um ano entre 2000 e 2100." | field year |
 | `HOLIDAY_INVALID` | 400 | Form invalid | per field | fields |
 | `HOLIDAY_ALREADY_NATIONAL` | 409 | Date is a national holiday | "Esse dia já é feriado nacional." | field date |

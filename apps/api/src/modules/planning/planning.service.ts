@@ -4,6 +4,11 @@ export {
   replaceAllocationSteps,
 } from '@api/modules/planning/use-cases/allocation'
 export {
+  listAllocationPartCandidates,
+  listAllocationParts,
+  recordAllocationPart,
+} from '@api/modules/planning/use-cases/allocation-parts'
+export {
   listBudgets,
   readBudgetFacts,
   setBudget,

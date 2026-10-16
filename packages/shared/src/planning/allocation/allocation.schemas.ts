@@ -34,3 +34,18 @@ export const allocationStepsSchema = z
 export const allocationSuggestionQuerySchema = z.object({
   amountCents: z.coerce.number().pipe(centsSchema),
 })
+
+const periodLabelSchema = z.string().regex(/^\d{4}-(0[1-9]|1[0-2])$/)
+
+export const allocationPartSchema = z.strictObject({
+  periodLabel: periodLabelSchema,
+  position: z.number().int().min(1).max(MAX_ALLOCATION_STEPS),
+  toAccountId: z.uuid(),
+  entryId: z.uuid(),
+})
+
+export type AllocationPartInput = z.infer<typeof allocationPartSchema>
+
+export const allocationPartListQuerySchema = z.object({ period: periodLabelSchema })
+
+export const allocationPartCandidateQuerySchema = z.object({ toAccountId: z.uuid() })

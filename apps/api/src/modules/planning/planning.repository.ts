@@ -1,6 +1,7 @@
 import type { WorkspaceTransaction } from '@api/core/db/db.types'
 import type { AuditTarget } from '@api/modules/audit'
 import {
+  allocationParts,
   allocationSteps,
   budgetLines,
   goals,
@@ -9,12 +10,14 @@ import {
   workspaceHolidays,
 } from '@api/modules/planning/planning.table'
 import type {
+  AllocationPartItem,
   AllocationStepItem,
   BudgetItem,
   GoalRow,
   GoalUpdate,
   HolidayDeletion,
   LockedOccurrence,
+  NewAllocationPartRow,
   NewAllocationStepRow,
   NewBudgetLine,
   NewGoalRow,
@@ -397,4 +400,34 @@ export function budgetLineAuditTarget(workspaceId: string, lineId: string): Audi
 
 export function goalAuditTarget(workspaceId: string, goalId: string): AuditTarget {
   return { workspaceId, table: goals, key: goals.id, rowId: goalId }
+}
+
+export function selectAllocationParts(
+  tx: WorkspaceTransaction,
+  periodLabel: string,
+): Promise<AllocationPartItem[]> {
+  return tx
+    .select({
+      position: allocationParts.position,
+      toAccountId: allocationParts.toAccountId,
+      entryId: allocationParts.entryId,
+    })
+    .from(allocationParts)
+    .where(and(eq(allocationParts.periodLabel, periodLabel), isNull(allocationParts.deletedAt)))
+    .orderBy(asc(allocationParts.position))
+}
+
+export async function selectLinkedEntryIds(tx: WorkspaceTransaction): Promise<Set<string>> {
+  const rows = await tx
+    .select({ entryId: allocationParts.entryId })
+    .from(allocationParts)
+    .where(isNull(allocationParts.deletedAt))
+  return new Set(rows.map((row) => row.entryId))
+}
+
+export async function insertAllocationPart(
+  tx: WorkspaceTransaction,
+  part: NewAllocationPartRow,
+): Promise<void> {
+  await tx.insert(allocationParts).values(part)
 }

@@ -36,6 +36,8 @@ export {
 } from '@api/modules/planning/planning.service'
 export type {
   AddedHoliday,
+  AllocationPartCandidates,
+  AllocationPartList,
   AllocationStepItem,
   BudgetItem,
   CreatedGoal,
