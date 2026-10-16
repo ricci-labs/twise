@@ -14,6 +14,8 @@ import {
   deleteRecurrenceRule,
   findMatchedOccurrence,
   getOccurrence,
+  listAllocationPartCandidates,
+  listAllocationParts,
   listAllocationSteps,
   listBudgets,
   listGoals,
@@ -23,6 +25,7 @@ import {
   listRecurrenceRules,
   matchOccurrence,
   previewGoal,
+  recordAllocationPart,
   replaceAllocationSteps,
   setBudget,
   skipOccurrence,
@@ -32,6 +35,9 @@ import {
 } from '@api/modules/planning/planning.service'
 import type { PlanningRouteDeps } from '@api/modules/planning/planning.types'
 import {
+  allocationPartCandidateQuerySchema,
+  allocationPartListQuerySchema,
+  allocationPartSchema,
   allocationStepsSchema,
   budgetChangeSchema,
   budgetListQuerySchema,
@@ -68,6 +74,7 @@ export function planningRoutes(deps: PlanningRouteDeps) {
     .route('/budgets', budgetRoutes(deps))
     .route('/goals', goalRoutes(deps))
     .route('/allocation-steps', allocationStepRoutes(deps))
+    .route('/allocation-parts', allocationPartRoutes(deps))
 }
 
 function holidayRoutes({ db }: PlanningRouteDeps) {
@@ -349,6 +356,41 @@ function allocationStepRoutes({ db }: PlanningRouteDeps) {
         const { userId } = currentSession(c)
         await replaceAllocationSteps(db, { workspaceId, userId }, c.req.valid('json'))
         return c.body(null, NO_CONTENT)
+      },
+    )
+}
+
+function allocationPartRoutes({ db }: PlanningRouteDeps) {
+  return new Hono<AppEnv>()
+    .get(
+      '/',
+      authorize('planning', 'view'),
+      queryParams(allocationPartListQuerySchema, 'ALLOCATION_QUERY_INVALID'),
+      async (c) => {
+        const { workspaceId } = currentWorkspace(c)
+        return c.json(await listAllocationParts(db, workspaceId, c.req.valid('query').period))
+      },
+    )
+    .get(
+      '/candidates',
+      authorize('planning', 'update'),
+      queryParams(allocationPartCandidateQuerySchema, 'ALLOCATION_QUERY_INVALID'),
+      async (c) => {
+        const { workspaceId } = currentWorkspace(c)
+        return c.json(
+          await listAllocationPartCandidates(db, workspaceId, c.req.valid('query').toAccountId),
+        )
+      },
+    )
+    .post(
+      '/',
+      authorize('planning', 'update'),
+      jsonBody(allocationPartSchema, 'ALLOCATION_PART_INVALID'),
+      async (c) => {
+        const { workspaceId } = currentWorkspace(c)
+        const { userId } = currentSession(c)
+        await recordAllocationPart(db, { workspaceId, userId }, c.req.valid('json'))
+        return c.body(null, CREATED)
       },
     )
 }

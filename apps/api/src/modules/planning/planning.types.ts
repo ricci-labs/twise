@@ -1,5 +1,6 @@
 import type { Database } from '@api/core/db/db.types'
 import type {
+  allocationParts,
   allocationSteps,
   goals,
   plannedOccurrences,
@@ -224,6 +225,31 @@ export type CreatedGoal = {
 }
 
 export type NewAllocationStepRow = typeof allocationSteps.$inferInsert
+
+export type AllocationPartRow = typeof allocationParts.$inferSelect
+
+export type NewAllocationPartRow = typeof allocationParts.$inferInsert
+
+export type AllocationPartItem = {
+  position: number
+  toAccountId: string
+  entryId: string
+}
+
+export type AllocationPartList = {
+  items: AllocationPartItem[]
+}
+
+export type AllocationPartCandidate = {
+  entryId: string
+  description: string
+  occurredOn: IsoDate
+  amountCents: number
+}
+
+export type AllocationPartCandidates = {
+  items: AllocationPartCandidate[]
+}
 
 export type AllocationStepItem = AllocationStep & {
   position: number

@@ -8,6 +8,7 @@ import {
   GOAL_NAME_MAX_LENGTH,
   HOLIDAY_NAME_MAX_LENGTH,
   MAX_ALLOCATION_PERCENT,
+  MAX_ALLOCATION_STEPS,
   MAX_RECURRENCE_BUSINESS_DAY,
   MAX_RECURRENCE_INTERVAL,
   MAX_REMIND_DAYS_BEFORE,
@@ -307,5 +308,52 @@ export const allocationSteps = pgTable(
       sql`(${table.kind} = 'fixed_amount') = (${table.amountCents} is not null) and (${table.amountCents} is null or ${table.amountCents} > 0)`,
     ),
     tenantIsolation('allocation_steps', table.workspaceId),
+  ],
+).enableRLS()
+
+export const allocationParts = pgTable(
+  'allocation_parts',
+  {
+    workspaceId: uuid()
+      .notNull()
+      .references(() => workspaces.id, { onDelete: 'cascade' }),
+    id: primaryId(),
+    periodLabel: text().notNull(),
+    position: smallint().notNull(),
+    toAccountId: uuid().notNull(),
+    entryId: uuid().notNull(),
+    recordedByUserId: uuid()
+      .notNull()
+      .references(() => users.id),
+    ...softDelete(() => users.id),
+    ...timestamps(),
+  },
+  (table) => [
+    unique('allocation_parts_workspace_id_id_unique').on(table.workspaceId, table.id),
+    uniqueIndex('allocation_parts_one_per_position')
+      .on(table.workspaceId, table.periodLabel, table.position)
+      .where(sql`${table.deletedAt} is null`),
+    uniqueIndex('allocation_parts_one_per_entry')
+      .on(table.workspaceId, table.entryId)
+      .where(sql`${table.deletedAt} is null`),
+    foreignKey({
+      name: 'allocation_parts_account_fk',
+      columns: [table.workspaceId, table.toAccountId],
+      foreignColumns: [ledgerAccounts.workspaceId, ledgerAccounts.id],
+    }),
+    foreignKey({
+      name: 'allocation_parts_entry_fk',
+      columns: [table.workspaceId, table.entryId],
+      foreignColumns: [journalEntries.workspaceId, journalEntries.id],
+    }),
+    check(
+      'allocation_parts_position',
+      sql`${table.position} between 1 and ${limit(MAX_ALLOCATION_STEPS)}`,
+    ),
+    check(
+      'allocation_parts_period_label',
+      sql`${table.periodLabel} ~ '^[0-9]{4}-(0[1-9]|1[0-2])$'`,
+    ),
+    tenantIsolation('allocation_parts', table.workspaceId),
   ],
 ).enableRLS()

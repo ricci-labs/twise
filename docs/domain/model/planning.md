@@ -260,6 +260,20 @@ take is skipped; what no step takes is `leftoverCents`.
 | `PUT /allocation-steps` | `planning:update` | `replaceAllocationSteps` `{ steps: [...] }` (at most 10; `[]` clears) → `204`. Refused: `ALLOCATION_INVALID`, `ALLOCATION_ACCOUNT_INVALID`, `ALLOCATION_GOAL_INVALID` |
 | `GET /allocation/suggestion?amountCents=` | `reports:view` | `reports.suggestAllocation` → `{ parts: [{ position, kind, toAccountId, amountCents }], leftoverCents }` with today's goals and the current period's overrun |
 
+**Done parts** (`allocation_parts`, `HOME-03`): which transfer did which part of the split in a
+period (`period_label`, `position`, `to_account_id`, `entry_id`, who recorded it), one active row
+per part and per transfer (`ALLOCATION_PART_TAKEN`, `ALLOCATION_ENTRY_TAKEN`). The part follows its
+transfer like a matched occurrence (deferred trigger `allocation_parts_follow_deleted_entry`): an
+edit moves it to the new version, a delete soft-deletes it, and restoring the transfer doesn't mark
+the part again. A part is tied to its position and destination: if the rules change, an old mark
+only counts while it still matches.
+
+| Route | Permission | Does |
+|---|---|---|
+| `GET /allocation-parts?period=` | `planning:view` | `listAllocationParts` → `{ items: [{ position, toAccountId, entryId }] }` |
+| `GET /allocation-parts/candidates?toAccountId=` | `planning:update` | `listAllocationPartCandidates`: transfers into that account in the last 60 days that no part uses yet ("Já transferi") → `{ items: [{ entryId, description, occurredOn, amountCents }] }` |
+| `POST /allocation-parts` | `planning:update` | `recordAllocationPart` `{ periodLabel, position, toAccountId, entryId }` → `201`; the entry must be an active transfer into `toAccountId` (`400 ALLOCATION_ENTRY_INVALID`) |
+
 ### Balance forecast
 Metric `balanceForecast`, per money account (checking, savings, cash, investment), day by day from
 today until the next **fixed** income landing on it, or the end of the period if that comes later:

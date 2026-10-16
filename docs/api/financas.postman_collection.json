@@ -93,6 +93,10 @@
       "value": ""
     },
     {
+      "key": "transferId",
+      "value": ""
+    },
+    {
       "key": "entryId",
       "value": ""
     },
@@ -1412,7 +1416,10 @@
               "listen": "test",
               "script": {
                 "type": "text/javascript",
-                "exec": ["pm.test('answers 201', () => pm.response.to.have.status(201))"]
+                "exec": [
+                  "pm.test('answers 201', () => pm.response.to.have.status(201))",
+                  "if (pm.response.code < 300) { pm.collectionVariables.set('transferId', pm.response.json().entryId) }"
+                ]
               }
             }
           ]
@@ -3036,6 +3043,95 @@
               "script": {
                 "type": "text/javascript",
                 "exec": ["pm.test('answers 204', () => pm.response.to.have.status(204))"]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Allocation parts",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/workspaces/{{workspaceId}}/allocation-parts?period=2026-10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "workspaces", "{{workspaceId}}", "allocation-parts"],
+              "query": [
+                {
+                  "key": "period",
+                  "value": "2026-10"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": ["pm.test('answers 200', () => pm.response.to.have.status(200))"]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Allocation part candidates",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/workspaces/{{workspaceId}}/allocation-parts/candidates?toAccountId={{savingsId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "workspaces", "{{workspaceId}}", "allocation-parts", "candidates"],
+              "query": [
+                {
+                  "key": "toAccountId",
+                  "value": "{{savingsId}}"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": ["pm.test('answers 200', () => pm.response.to.have.status(200))"]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Record allocation part",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/workspaces/{{workspaceId}}/allocation-parts",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "workspaces", "{{workspaceId}}", "allocation-parts"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"periodLabel\": \"2026-10\",\n  \"position\": 1,\n  \"toAccountId\": \"{{savingsId}}\",\n  \"entryId\": \"{{transferId}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": ["pm.test('answers 201', () => pm.response.to.have.status(201))"]
               }
             }
           ]
