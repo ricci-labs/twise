@@ -33,7 +33,7 @@ where it's used.
 | Family | Components (from the brief) |
 |---|---|
 | `actions/` | `Button`, `IconButton`, `SubmitButton`, `FloatingActionButton`, `ActionMenu`, `ItemActions`, `SegmentedControl`, `AddTile`, `ShowMoreButton` |
-| `inputs/` | `TextInput`, `PasswordInput`, `EmailInput`, `PhoneInput`, `SearchInput`, `TextArea`, `MoneyInput`, `ChoiceChips`, `PickerField`, `PickerSheet`, `Stepper`, `RadioCardList`, `DateInput`, `PeriodPicker`, `Select`, `FilterButton`, `CheckboxMenu`, `Combobox`, `Checkbox`, `RadioGroup`, `Switch`, `DayOfMonthPicker`, `FileUpload`, `ColorSwatch` |
+| `inputs/` | `TextInput`, `PasswordInput`, `EmailInput`, `PhoneInput`, `SearchInput`, `TextArea`, `MoneyInput`, `ChoiceChips`, `PickerField`, `PickerSheet`, `Stepper`, `RadioCardList`, `RadioSentenceList`, `DateInput`, `PeriodPicker`, `Select`, `FilterButton`, `CheckboxMenu`, `Combobox`, `Checkbox`, `RadioGroup`, `Switch`, `DayOfMonthPicker`, `FileUpload`, `ColorSwatch` |
 | `forms/` | `Form`, `FormField`, `FieldGroup`, `LockedField`, `FormErrorSummary`, `FormFooter`, `RequiredLegend` |
 | `feedback/` | `Toast`, `InlineAlert`, `AutoFillTip`, `Banner`, `ConfirmDialog`, `EmptyState`, `EmptyBlock`, `Skeleton`, `ListSkeleton`, `KpiSkeleton`, `ErrorState` |
 | `display/` | `Amount`, `StatusBadge`, `Avatar`, `ListItem`, `Card`, `StatCard`, `ThresholdProgress`, `Tabs`, `Accordion`, `DataList` (table on desktop, list on mobile), `LoadMore`, `Tooltip`, `HelpPopover`, `FilterChips`, `CategoryIcon`, `ArchivedToggle` |
@@ -148,7 +148,9 @@ React Hook Form v7 + `zodResolver` with the **schemas from `@financas/shared`** 
   form stays as it was and the person can fix the name or send it again.
 - `FieldGroup` (`components/forms/field-group`): the label, "*", help and error of a field that is
   a group of choices (`ChoiceChips`, the pickers below), as a `fieldset` named by its visible label.
-  The help sits 8 px under the label ("O tipo não pode ser mudado depois.").
+  The help sits 8 px under the label ("O tipo não pode ser mudado depois."); a `note` is the same
+  grey line after the choices ("Se o mês tiver menos dias, vale o último."), and describes the
+  group too.
 - `LockedField` (`components/forms/locked-field`): a value that can't change on this form (an
   account's kind on edit): the label, a grey box with the lock and the value in bold, and the reason
   under it.
@@ -461,11 +463,15 @@ component here, so the form, and later the account, card and planning forms, sha
   `min` and `max` (the ends disable their button), the shown value given by the caller ("À vista"
   for 1), an `output` read when it changes, and an optional line beside it with `**bold**` ("3× de
   **R$ 333,34**", "de 10"). The aria-labels are the screen's ("Menos uma parcela", "Parcela
-  anterior").
+  anterior"). `size="sm"` is the design's base stepper (44 px buttons, a 56 px value) inside a
+  sentence: `lead` is the words before it, the label of the value ("A cada"), and the `aside`
+  after it reads in ink ("mês").
 - `Switch` (`components/inputs/switch`, Base UI `Switch`, the design's `InProgressSwitch`): the
   label beside the switch, which the label also turns; the switch is a native `button`, so a
   bottom sheet's drag doesn't swallow its tap (found with the entries filters); on the desktop the switch sits right after
   its label, not at the far edge (`../product/requirements/ui-standards.md` → Visual rules).
+  `help` puts a grey line under the label that describes the switch ("Ex.: a conta de luz…"); the
+  text may shrink on the desktop, so a long help wraps instead of leaving the dialog.
 - `RadioCardList` (`components/inputs/radio-card-list`, Base UI `RadioGroup`, the design's
   `InvoiceRadioList`): one choice among rows with a radio dot, a title, a detail with `**bold**`
   ("Falta pagar **R$ 1.950,00**", 13 px) and an optional status badge with its dot; the title is
@@ -514,7 +520,9 @@ component here, so the form, and later the account, card and planning forms, sha
   check): a bottom sheet titled `title` on the phone, a menu as wide as the field under it on the
   desktop. Never the browser's `select` (`../product/requirements/ui-standards.md` → Lists,
   pickers and long content). Choosing closes it; `TextArea` (`components/inputs/text-area`):
-  the notes field, two lines to start. Both take the `FormField` control.
+  the notes field, two lines to start. Both take the `FormField` control. `Select`
+  `size="inline"` is the 34 px box with the value and a small chevron that sits inside a sentence
+  ("No [5º ⌄] dia útil"), named by an `aria-label` that holds the value.
 - `FormField` `warning`: an amber line under the control, with the `warn` triangle, for something
   allowed but worth a second look ("O valor é maior que o saldo da fatura."); an error replaces it.
 - `ConfirmDialog` (`components/feedback/confirm-dialog`, Base UI `AlertDialog`): the title
@@ -676,6 +684,16 @@ component here, so the form, and later the account, card and planning forms, sha
   the field on the desktop) with the 31 days as 42 px circles, seven per row (the chosen one with the ink outline and heavy weight;
   29, 30 and 31 with a dot explained below) and, once a day is chosen, the `summary` line ("Fecha
   todo dia **25**"). Tapping a day picks it and closes the sheet. It takes the `FormField` control.
+  `size="inline"` shows only the number in the 34 px box of an inline `Select` ("No dia [10 ⌄] do
+  mês").
+- `DateInput` (`components/inputs/date-input`): a date field drawn like the others (calendar icon,
+  "10/11/2026" or "Escolha a data", chevron) that opens the app's `CalendarSheet` under it; a pick
+  closes it and counts as leaving the field. It takes the `FormField` control.
+- `RadioSentenceList` (`components/inputs/radio-sentence-list`, Base UI `RadioGroup`): one choice
+  among cards whose sentence holds a small picker ("No dia [10] do mês", "No [5º] dia útil"). Each
+  radio is named by the whole sentence (`label`); its card answers a press anywhere but on the
+  picker, which sits above it and keeps its own press. The chosen card gets the ink outline and
+  the 650 weight. The screen owns the pickers and picks their card when they change.
 - `CyclePreview` (`components/finance/cycle-preview`): the sunken box with the calendar drawing
   that says where purchases land ("…vence em **04/11**."), live while the days change.
 
@@ -875,7 +893,8 @@ online with `asChild` are translated to `render`.
 - `OccurrenceGroup` (`components/finance/occurrence-group`): a region named by its heading and
   count ("A vencer 4") over the white card of its rows;
   `tone="danger"` draws the overdue group (red heading, the 1.5 px danger border, the larger inner
-  padding). `action` sits at the end of the heading (an add link); `footer` holds its "Mostrar
+  padding). `add` puts the "+ Nova conta fixa" link at the end of the heading (a `link`
+  element or `onPress`, as `AccountGroup`); `footer` holds its "Mostrar
   mais". The recurrences' groups use it too, so the count reads "4 itens".
 - `PlanSummaryTiles` (`components/finance/plan-summary-tiles`): two tiles ("Falta pagar" / "Falta
   receber", "Contas fixas por mês" / "Receitas fixas por mês") as a description list, each with its

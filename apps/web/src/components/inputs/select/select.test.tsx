@@ -54,6 +54,30 @@ describe('Select', () => {
     await expect.element(field).toHaveTextContent('Dinheiro')
   })
 
+  it('fits inside a sentence in the inline size', async () => {
+    await page.viewport(390, 844)
+    const screen = await render(
+      <p>
+        No
+        <Select
+          size="inline"
+          title="Dia útil"
+          aria-label="Dia útil: 5º"
+          options={[
+            { value: '5', label: '5º' },
+            { value: '6', label: '6º' },
+          ]}
+          value="5"
+          onChange={() => undefined}
+        />
+        dia útil
+      </p>,
+    )
+    const field = screen.getByRole('button', { name: 'Dia útil: 5º' })
+    expect(field.element().getBoundingClientRect().height).toBe(34)
+    await expectNoAccessibilityViolations(screen.container)
+  })
+
   it('opens a menu as wide as the field under it on the desktop, the choice marked', async () => {
     await page.viewport(1440, 900)
     const screen = await render(

@@ -51,4 +51,25 @@ describe('DayField', () => {
 
     await expect.element(screen.getByRole('button')).toHaveTextContent('Escolha')
   })
+
+  it('shows only the number inside a sentence in the inline size', async () => {
+    const screen = await render(
+      <p>
+        No dia
+        <DayField
+          size="inline"
+          aria-label="Dia do mês: 10"
+          title="Dia do mês"
+          summary={(day) => `No dia **${day}** do mês`}
+          value="10"
+          onChange={() => undefined}
+        />
+        do mês
+      </p>,
+    )
+    const field = screen.getByRole('button', { name: 'Dia do mês: 10' })
+    await expect.element(field).toHaveTextContent('10')
+    expect(field.element().getBoundingClientRect().height).toBe(34)
+    await expectNoAccessibilityViolations(screen.container)
+  })
 })

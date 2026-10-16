@@ -89,6 +89,7 @@ import { checkboxMenuExamples } from '@web/components/inputs/checkbox-menu'
 import { choiceChipsExamples } from '@web/components/inputs/choice-chips'
 import { colorPickerExamples } from '@web/components/inputs/color-picker'
 import { colorSwatchExamples } from '@web/components/inputs/color-swatch'
+import { dateInputExamples } from '@web/components/inputs/date-input'
 import { dayFieldExamples } from '@web/components/inputs/day-field'
 import { filterButtonExamples } from '@web/components/inputs/filter-button'
 import { illustrationPickerExamples } from '@web/components/inputs/illustration-picker'
@@ -97,6 +98,7 @@ import { passwordInputExamples } from '@web/components/inputs/password-input'
 import { pickerFieldExamples } from '@web/components/inputs/picker-field'
 import { pickerSheetExamples } from '@web/components/inputs/picker-sheet'
 import { radioCardListExamples } from '@web/components/inputs/radio-card-list'
+import { radioSentenceListExamples } from '@web/components/inputs/radio-sentence-list'
 import { rangeCalendarExamples } from '@web/components/inputs/range-calendar'
 import { searchInputExamples } from '@web/components/inputs/search-input'
 import { selectExamples } from '@web/components/inputs/select'
@@ -136,6 +138,7 @@ export const workbenchSections: readonly ComponentExamples[] = [
   stepperExamples,
   switchExamples,
   radioCardListExamples,
+  radioSentenceListExamples,
   invoicePreviewExamples,
   sharesListExamples,
   recentEntriesExamples,
@@ -144,6 +147,7 @@ export const workbenchSections: readonly ComponentExamples[] = [
   archivedToggleExamples,
   autoFillTipExamples,
   calendarSheetExamples,
+  dateInputExamples,
   calendarMonthExamples,
   rangeCalendarExamples,
   periodPickerExamples,

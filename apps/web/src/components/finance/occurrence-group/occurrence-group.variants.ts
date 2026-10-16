@@ -17,6 +17,10 @@ export const occurrenceGroupTitleVariants = cva(
   },
 )
 
+export const occurrenceGroupAddVariants = cva(
+  'inline-flex shrink-0 items-center gap-1 text-label [&_svg]:size-4 [&_svg]:no-underline',
+)
+
 export const occurrenceGroupCountVariants = cva(
   'font-sans text-row-detail font-medium text-ink-muted',
 )

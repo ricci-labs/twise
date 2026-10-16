@@ -19,10 +19,22 @@ function Example({ error }: { error?: string }) {
   )
 }
 
+function WithNote() {
+  const [value, setValue] = useState('checking')
+  return (
+    <div className="w-full max-w-90">
+      <FieldGroup label="Tipo" note="Se o mês tiver menos dias, vale o último.">
+        <ChoiceChips label="Tipo" options={KINDS} value={value} onSelect={setValue} />
+      </FieldGroup>
+    </div>
+  )
+}
+
 export const fieldGroupExamples: ComponentExamples = {
   component: 'FieldGroup',
   examples: [
     { name: 'Escolha com ajuda', render: () => <Example /> },
     { name: 'Com erro', render: () => <Example error="Escolha um tipo." /> },
+    { name: 'Com nota depois das escolhas', render: () => <WithNote /> },
   ],
 }

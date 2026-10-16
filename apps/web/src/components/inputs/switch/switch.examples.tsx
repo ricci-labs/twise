@@ -11,10 +11,25 @@ function Example({ initial }: { initial: boolean }) {
   )
 }
 
+function WithHelp() {
+  const [isChecked, setIsChecked] = useState(false)
+  return (
+    <div className="w-full max-w-100">
+      <Switch
+        label="O valor muda todo mês (aproximado)"
+        help="Ex.: a conta de luz. O valor aparece com ≈ e a sugestão de pagamento aceita uma diferença maior."
+        isChecked={isChecked}
+        onCheckedChange={setIsChecked}
+      />
+    </div>
+  )
+}
+
 export const switchExamples: ComponentExamples = {
   component: 'Switch',
   examples: [
     { name: 'Desligada', render: () => <Example initial={false} /> },
     { name: 'Ligada', render: () => <Example initial /> },
+    { name: 'Com ajuda', render: () => <WithHelp /> },
   ],
 }

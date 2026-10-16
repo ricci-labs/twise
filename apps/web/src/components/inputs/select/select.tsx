@@ -13,6 +13,7 @@ export function Select({
   value,
   onChange,
   onBlur,
+  size,
   className,
   ref,
   ...props
@@ -33,7 +34,7 @@ export function Select({
         type="button"
         data-slot="select"
         aria-haspopup="dialog"
-        className={cn(selectVariants(), className)}
+        className={cn(selectVariants({ size }), className)}
         onClick={() => setIsOpen(true)}
         {...props}
         ref={keepButton}

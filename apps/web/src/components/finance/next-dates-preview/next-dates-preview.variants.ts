@@ -6,7 +6,7 @@ export const nextDatesPreviewVariants = cva(
 
 export const nextDatesBodyVariants = cva('flex min-w-0 flex-1 flex-col gap-2 pt-0.5')
 
-export const nextDatesTitleVariants = cva('font-emphasis')
+export const nextDatesTitleVariants = cva('font-normal')
 
 export const nextDatesListVariants = cva('flex flex-col')
 

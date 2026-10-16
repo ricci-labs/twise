@@ -18,10 +18,29 @@ function Example({ value: initial }: Pick<DayFieldProps, 'value'>) {
   )
 }
 
+function InSentence() {
+  const [value, setValue] = useState('10')
+  return (
+    <p className="flex items-center gap-1.5 text-choice text-ink">
+      No dia
+      <DayField
+        size="inline"
+        aria-label={`Dia do mês: ${value}`}
+        title="Dia do mês"
+        summary={(day) => `No dia **${day}** do mês`}
+        value={value}
+        onChange={(event) => setValue(event.target.value)}
+      />
+      do mês
+    </p>
+  )
+}
+
 export const dayFieldExamples: ComponentExamples = {
   component: 'DayField',
   examples: [
     { name: 'Sem dia', render: () => <Example value="" /> },
     { name: 'Dia 25', render: () => <Example value="25" /> },
+    { name: 'Dentro de uma frase', render: () => <InSentence /> },
   ],
 }
