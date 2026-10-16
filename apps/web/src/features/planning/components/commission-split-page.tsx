@@ -26,8 +26,8 @@ import { planningMessages } from '@web/features/planning/planning.messages'
 import type {
   CommissionPart,
   CommissionPartRowProps,
+  CommissionSplitPageProps,
   CommissionSplitProps,
-  SplitPageProps,
 } from '@web/features/planning/planning.types'
 import { useDebouncedValue } from '@web/hooks/use-debounced-value'
 import { usePageTitle } from '@web/hooks/use-page-title'
@@ -44,7 +44,11 @@ const MONEY_KINDS: readonly string[] = MONEY_ACCOUNT_KINDS
 const CHECKING = 'checking'
 const AMOUNT_DELAY_MS = 300
 
-export function CommissionSplitPage({ workspaceId, permissions }: SplitPageProps) {
+export function CommissionSplitPage({
+  workspaceId,
+  permissions,
+  amountCents,
+}: CommissionSplitPageProps) {
   usePageTitle(messages.pageTitle)
   const steps = useQuery(allocationStepsQueryOptions(workspaceId))
   const goals = useQuery(goalsQueryOptions(workspaceId))
@@ -75,6 +79,7 @@ export function CommissionSplitPage({ workspaceId, permissions }: SplitPageProps
           accounts={accounts.data}
           overview={overview.data}
           canTransfer={hasPermission(permissions, 'entries', 'create')}
+          initialAmountCents={amountCents ?? overview.data.metrics.variableIncome}
         />
       ) : null}
       {!failed && !(steps.data && goals.data && accounts.data && overview.data) && (
@@ -91,9 +96,10 @@ function CommissionSplit({
   accounts,
   overview,
   canTransfer,
+  initialAmountCents,
 }: CommissionSplitProps) {
   const [amount, setAmount] = useState(() =>
-    overview.metrics.variableIncome > 0 ? formatTypedAmount(overview.metrics.variableIncome) : '',
+    initialAmountCents > 0 ? formatTypedAmount(initialAmountCents) : '',
   )
   const [fromAccountId, setFromAccountId] = useState(() => everydayAccountOf(accounts))
   const amountCents = useDebouncedValue(centsOfTypedAmount(amount) ?? 0, AMOUNT_DELAY_MS)

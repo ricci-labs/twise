@@ -217,4 +217,4 @@ Error `ALLOCATION_QUERY_INVALID` (field amount).
 
 Built on 2026-10-16 from this requirement and the round B split's look (no dedicated design): on
 the phone the fields come first, on the desktop the parts take 3/5 and the fields 2/5. Readers see
-the suggestion without "Transferir". Without steps: the empty block with "Definir divisão".
+the suggestion without "Transferir". Without steps: the empty block with "Definir divisão". Saving a variable income in `ENT-02` turns the toast's "Ver" into "Ver sugestão de divisão", which opens this screen with that income's amount.

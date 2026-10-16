@@ -1,5 +1,9 @@
 export { CommissionSplitPage } from '@web/features/planning/components/commission-split-page'
 export { PlanningPage } from '@web/features/planning/components/planning-page'
 export { SplitPage } from '@web/features/planning/components/split-page'
-export { planningSearchSchema, planningTabSchema } from '@web/features/planning/planning.schemas'
+export {
+  commissionSplitSearchSchema,
+  planningSearchSchema,
+  planningTabSchema,
+} from '@web/features/planning/planning.schemas'
 export type { PlanningSearch, PlanningTab } from '@web/features/planning/planning.types'

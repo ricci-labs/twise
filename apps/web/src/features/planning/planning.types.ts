@@ -179,7 +179,12 @@ export type StepsCardProps = {
   children: ReactNode
 }
 
+export type CommissionSplitPageProps = SplitPageProps & {
+  amountCents?: number
+}
+
 export type CommissionSplitProps = {
+  initialAmountCents: number
   workspaceId: string
   steps: readonly AllocationStepItem[]
   goals: readonly PlanningGoal[]

@@ -667,6 +667,24 @@ describe('ENT-02 income and transfer', () => {
     ])
   })
 
+  it('offers the commission split right after a variable income is saved', async () => {
+    const { app } = await openNewEntry()
+    await page.getByRole('radio', { name: 'Receita' }).click()
+    await page.getByLabelText(/^Valor/).fill('1500')
+    await page.getByLabelText(/^Descrição/).fill('Comissão de outubro')
+    await page.getByRole('button', { name: /^Recebido em/ }).click()
+    await page.getByRole('button', { name: /^Conta X/ }).click()
+    await page.getByRole('button', { name: /^Categoria/ }).click()
+    await page.getByRole('button', { name: /^Comissão/ }).click()
+    await page.getByRole('button', { name: 'Salvar lançamento' }).click()
+
+    await page.getByRole('button', { name: 'Ver sugestão de divisão' }).click()
+    await expect
+      .poll(() => app.router.state.location.pathname)
+      .toBe(`/w/${WORKSPACE_ID}/commission-split`)
+    expect(app.router.state.location.search).toMatchObject({ amount: 150_000 })
+  })
+
   it('moves money between two different accounts', async () => {
     const { recorded } = await openNewEntry()
     await page.getByRole('radio', { name: 'Transferência' }).click()

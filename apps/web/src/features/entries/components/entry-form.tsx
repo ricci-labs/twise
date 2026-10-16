@@ -1,8 +1,10 @@
+import { useQuery } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
 import { ConfirmDialog } from '@web/components/feedback/confirm-dialog'
 import { OfflineBanner } from '@web/components/feedback/offline-banner'
 import { showToast } from '@web/components/feedback/toast'
 import { FormOverlay } from '@web/components/layout/form-overlay'
+import { accountsQueryOptions } from '@web/features/entries/api/entries.queries'
 import { useRecordEntry } from '@web/features/entries/api/use-record-entry'
 import { EntryFormFields } from '@web/features/entries/components/entry-form-fields'
 import { toEntryInput } from '@web/features/entries/components/entry-input'
@@ -38,6 +40,8 @@ import { type BaseSyntheticEvent, useRef, useState } from 'react'
 import { FormProvider, useFormState, useWatch } from 'react-hook-form'
 
 const messages = entriesMessages.newEntry
+const INCOME = 'income'
+const VARIABLE = 'variable'
 const fields = entriesMessages.fields
 const FIELD_OF_CODE: Readonly<Record<string, keyof EntryFormInput>> = {
   NOT_A_MONEY_ACCOUNT: 'accountId',
@@ -100,6 +104,12 @@ export function EntryForm({
   const amountWarning = useAmountWarning(form.control, workspaceId)
   const isSpendingEntry = isSpending(entryType)
   const shareTotals = useShareTotals(form.control)
+  const accounts = useQuery(accountsQueryOptions(workspaceId)).data ?? []
+  const isVariableIncome = (values: EntryFormValues) =>
+    values.entryType === INCOME &&
+    accounts.some(
+      (account) => account.id === values.categoryId && account.incomeNature === VARIABLE,
+    )
 
   function requestClose() {
     if (isDirty) {
@@ -115,14 +125,24 @@ export function EntryForm({
       const { entryId } = await recordEntry.mutateAsync(toEntryInput(values))
       showToast(messages.saved, {
         tone: 'success',
-        action: {
-          label: messages.see,
-          onPress: () =>
-            void navigate({
-              to: '/w/$workspaceId/entries/$entry',
-              params: { workspaceId, entry: entryId },
-            }),
-        },
+        action: isVariableIncome(values)
+          ? {
+              label: messages.seeSplit,
+              onPress: () =>
+                void navigate({
+                  to: '/w/$workspaceId/commission-split',
+                  params: { workspaceId },
+                  search: { amount: centsOfTypedAmount(values.amount) ?? undefined },
+                }),
+            }
+          : {
+              label: messages.see,
+              onPress: () =>
+                void navigate({
+                  to: '/w/$workspaceId/entries/$entry',
+                  params: { workspaceId, entry: entryId },
+                }),
+            },
       })
       if (afterSaveOf(event) === 'another') {
         startAnother(values)
