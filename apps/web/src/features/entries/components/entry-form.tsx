@@ -9,6 +9,7 @@ import { toEntryInput } from '@web/features/entries/components/entry-input'
 import { isSpending } from '@web/features/entries/components/entry-kind'
 import { changeEntryType } from '@web/features/entries/components/entry-type-change'
 import { FormFooter } from '@web/features/entries/components/form-footer'
+import { SplitPartBand } from '@web/features/entries/components/split-part-band'
 import { entriesMessages } from '@web/features/entries/entries.messages'
 import { entryFormSchema } from '@web/features/entries/entries.schemas'
 import type {
@@ -215,6 +216,9 @@ export function EntryForm({
           />
         }
       >
+        {prefill.splitPart && prefill.amountCents && (
+          <SplitPartBand part={prefill.splitPart} amountCents={prefill.amountCents} />
+        )}
         <EntryFormFields
           workspaceId={workspaceId}
           entryType={entryType}
@@ -255,6 +259,13 @@ function isBlankForm(prefill: EntryPrefill): boolean {
   return prefill.entryType === undefined && prefill.values === undefined
 }
 
+function descriptionOf(entryType: string, prefill: EntryPrefill, blank: string): string {
+  if (prefill.splitPart) {
+    return entriesMessages.transfers.splitDescription(prefill.splitPart.label)
+  }
+  return entryType === OPENING_BALANCE ? messages.openingDescription : blank
+}
+
 function prefilled(blank: EntryFormInput, prefill: EntryPrefill): EntryFormInput {
   if (prefill.values) {
     return prefill.values
@@ -263,7 +274,7 @@ function prefilled(blank: EntryFormInput, prefill: EntryPrefill): EntryFormInput
   return {
     ...blank,
     entryType,
-    description: entryType === OPENING_BALANCE ? messages.openingDescription : blank.description,
+    description: descriptionOf(entryType, prefill, blank.description),
     accountId: prefill.accountId ?? blank.accountId,
     toAccountId: prefill.toAccountId ?? blank.toAccountId,
     amount: prefill.amountCents ? formatTypedAmount(prefill.amountCents) : blank.amount,

@@ -396,6 +396,10 @@ updated: 2026-10-16
   12. [x] Review of the round against every PNG (#362). Left open: "Comissões recebidas" (G59);
       a step whose goal was deleted can't show the goal's name (the API lists active goals only);
       "Ver feriados" leaves the recurrence form without asking
+- [x] **Commission split screen (`HOME-03`)**, asked by the user on 2026-10-16 so the Home's "Dividir"
+  and "Ver sugestão" stop at "Em breve": the split rule applied to this commission, "Transferir" per
+  part (a prefilled transfer with the "Parte N da divisão" band), "Feito" kept on the device. Built
+  from the requirement, without a dedicated design; the shared, durable "Feito" waits for G59
 - [ ] Remaining project skills (`new-module`, `db-migration`, `domain-rule`, `pr`) and Claude Code hooks
 
 ## Phase 1: MVP

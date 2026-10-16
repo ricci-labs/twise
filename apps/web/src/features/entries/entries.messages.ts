@@ -224,6 +224,9 @@ export const entriesMessages = {
   },
   transfers: {
     sameAccount: 'Escolha uma conta diferente da de origem.',
+    splitPart: (position: number) => `Parte ${position} da divisão da comissão`,
+    splitDetail: (label: string, amount: string) => `${label} · ${amount}`,
+    splitDescription: (label: string) => `Divisão da comissão: ${label}`,
   },
   edit: {
     title: 'Editar lançamento',

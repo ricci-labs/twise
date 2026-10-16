@@ -693,6 +693,18 @@ describe('ENT-02 income and transfer', () => {
     ])
   })
 
+  it('opens a part of the commission split with its band and description', async () => {
+    await openNewEntry({
+      search: `&entryType=transfer&entryToAccount=${CHECKING}&entryAmount=60000&entrySplitPart=1&entrySplitLabel=Poupan%C3%A7a%20(reserva)`,
+    })
+
+    await expect.element(page.getByText('Parte 1 da divisão da comissão')).toBeVisible()
+    await expect.element(page.getByText(/^Poupança \(reserva\) · R\$.600,00$/)).toBeVisible()
+    await expect
+      .element(page.getByLabelText(/^Descrição/))
+      .toHaveValue('Divisão da comissão: Poupança (reserva)')
+  })
+
   it("opens as a transfer to a goal's account with the amount to save", async () => {
     await openNewEntry({
       search: `&entryType=transfer&entryToAccount=${CHECKING}&entryAmount=113400`,
