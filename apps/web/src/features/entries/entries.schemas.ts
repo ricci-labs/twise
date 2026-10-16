@@ -41,6 +41,7 @@ export const newEntrySearchSchema = z.object({
   entrySplitPart: z.number().int().min(1).max(MAX_ALLOCATION_STEPS).optional().catch(undefined),
   entrySplitLabel: z.string().max(ENTRY_DESCRIPTION_MAX_LENGTH).optional().catch(undefined),
   splitDone: z.number().int().min(1).max(MAX_ALLOCATION_STEPS).optional().catch(undefined),
+  splitEntry: z.uuid().optional().catch(undefined),
   entryCard: z.uuid().optional().catch(undefined),
   entryInvoice: z.uuid().optional().catch(undefined),
   entryRepeat: z.uuid().optional().catch(undefined),

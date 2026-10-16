@@ -136,7 +136,7 @@ export type NewEntryProps = {
   occurrenceId?: string
   onClose: () => void
   onSaved?: (saved: SavedEntry) => void
-  onSplitPartSaved?: (position: number) => void
+  onSplitPartSaved?: (position: number, entryId: string) => void
 }
 
 export type PlannedOccurrence = Awaited<ReturnType<typeof fetchPlannedOccurrence>>

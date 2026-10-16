@@ -84,6 +84,25 @@ export function allocationSuggestionQueryOptions(workspaceId: string, amountCent
   })
 }
 
+export function allocationPartsQueryOptions(workspaceId: string, period: string) {
+  return queryOptions({
+    queryKey: [...queryKeys.workspace(workspaceId), 'allocation-parts', period] as const,
+    queryFn: () => fetchAllocationParts(workspaceId, period),
+  })
+}
+
+export function partCandidatesQueryOptions(workspaceId: string, toAccountId: string) {
+  return queryOptions({
+    queryKey: [
+      ...queryKeys.workspace(workspaceId),
+      'allocation-parts',
+      'candidates',
+      toAccountId,
+    ] as const,
+    queryFn: () => fetchPartCandidates(workspaceId, toAccountId),
+  })
+}
+
 export function allocationStepsQueryOptions(workspaceId: string) {
   return queryOptions({
     queryKey: [...queryKeys.workspace(workspaceId), 'allocation-steps'] as const,
@@ -152,6 +171,21 @@ export function fetchAllocationSuggestion(workspaceId: string, amountCents: numb
     workspaceApi.allocation.suggestion.$get({
       param: { workspaceId },
       query: { amountCents: String(amountCents) },
+    }),
+  )
+}
+
+export function fetchAllocationParts(workspaceId: string, period: string) {
+  return unwrap(
+    workspaceApi['allocation-parts'].$get({ param: { workspaceId }, query: { period } }),
+  )
+}
+
+export function fetchPartCandidates(workspaceId: string, toAccountId: string) {
+  return unwrap(
+    workspaceApi['allocation-parts'].candidates.$get({
+      param: { workspaceId },
+      query: { toAccountId },
     }),
   )
 }

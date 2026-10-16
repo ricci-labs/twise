@@ -53,6 +53,8 @@ function overview() {
   }
 }
 
+const TRANSFER_ID = '00000000-0000-4000-8000-00000000077a'
+
 async function openSplit({
   steps = STEPS,
   access = workspaceAccess,
@@ -62,6 +64,8 @@ async function openSplit({
   access?: FakeAnswer
   path?: string
 } = {}) {
+  const done: object[] = []
+  const recorded: unknown[] = []
   fakeApi({
     'GET /api/auth/me': () =>
       Response.json({ userId: MEMBER_A, email: 'member.a@exemplo.com', displayName: 'Member A' }),
@@ -79,10 +83,32 @@ async function openSplit({
         ],
         leftoverCents: 0,
       }),
+    [`GET ${BASE}/allocation-parts`]: () => Response.json({ items: done }),
+    [`GET ${BASE}/allocation-parts/candidates`]: () =>
+      Response.json({
+        items: [
+          {
+            entryId: TRANSFER_ID,
+            description: 'Guardar na reserva',
+            occurredOn: '2026-10-16',
+            amountCents: 60_000,
+          },
+        ],
+      }),
+    [`POST ${BASE}/allocation-parts`]: async (request) => {
+      const body = (await request.json()) as {
+        position: number
+        toAccountId: string
+        entryId: string
+      }
+      recorded.push(body)
+      done.push({ position: body.position, toAccountId: body.toAccountId, entryId: body.entryId })
+      return new Response(null, { status: 201 })
+    },
   })
   const app = createApp(createMemoryHistory({ initialEntries: [`/w/${WORKSPACE_ID}/${path}`] }))
   await render(<AppProviders app={app} />)
-  return app
+  return { app, recorded }
 }
 
 function parts() {
@@ -92,7 +118,6 @@ function parts() {
 describe('HOME-03 commission split', () => {
   beforeEach(async () => {
     await page.viewport(360, 800)
-    localStorage.clear()
   })
 
   it('applies the split rule to this commission, part by part', async () => {
@@ -109,7 +134,7 @@ describe('HOME-03 commission split', () => {
   })
 
   it('transfers a part from the account where the commission landed and marks it done', async () => {
-    const app = await openSplit()
+    const { app, recorded } = await openSplit()
     await page.getByRole('link', { name: 'Transferir a parte de Poupança (reserva)' }).click()
     await expect
       .poll(() => app.router.state.location.search)
@@ -134,12 +159,28 @@ describe('HOME-03 commission split', () => {
         entrySplitPart: undefined,
         entrySplitLabel: undefined,
         splitDone: 1,
+        splitEntry: TRANSFER_ID,
       }),
     })
     await expect.element(parts().getByText('Feito')).toBeVisible()
+    expect(recorded).toEqual([
+      { periodLabel: '2026-10', position: 1, toAccountId: SAVINGS, entryId: TRANSFER_ID },
+    ])
     await expect
       .element(page.getByRole('link', { name: 'Transferir a parte de Poupança (reserva)' }))
       .not.toBeInTheDocument()
+  })
+
+  it('marks a part done with a transfer made elsewhere ("Já transferi")', async () => {
+    const { recorded } = await openSplit()
+    await page.getByRole('button', { name: 'Já transferi a parte de Poupança (reserva)' }).click()
+    const sheet = page.getByRole('dialog', { name: 'Já transferi' })
+    await sheet.getByRole('radio', { name: /Guardar na reserva/ }).click()
+    await sheet.getByRole('button', { name: 'Marcar como feito' }).click()
+    await expect.element(parts().getByText('Feito')).toBeVisible()
+    expect(recorded).toEqual([
+      { periodLabel: '2026-10', position: 1, toAccountId: SAVINGS, entryId: TRANSFER_ID },
+    ])
   })
 
   it('starts from the amount of the income it was opened from', async () => {
@@ -161,5 +202,6 @@ describe('HOME-03 commission split', () => {
     await openSplit({ access: () => accessAs('Leitor', VIEWER_PERMISSIONS) })
     await expect.element(parts().getByText('Poupança (reserva)')).toBeVisible()
     await expect.element(page.getByRole('link', { name: /Transferir/ })).not.toBeInTheDocument()
+    await expect.element(page.getByRole('button', { name: /Já transferi/ })).not.toBeInTheDocument()
   })
 })

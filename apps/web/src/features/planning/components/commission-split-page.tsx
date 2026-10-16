@@ -9,30 +9,38 @@ import { RichText } from '@web/components/display/rich-text'
 import { EmptyBlock } from '@web/components/feedback/empty-block'
 import { ListSkeleton } from '@web/components/feedback/list-skeleton'
 import { SectionError } from '@web/components/feedback/section-error'
+import { showToast } from '@web/components/feedback/toast'
 import { FieldGroup } from '@web/components/forms/field-group'
 import { MoneyInput } from '@web/components/inputs/money-input'
 import { PageFrame } from '@web/components/layout/page-frame'
 import { SubPageHeader } from '@web/components/layout/sub-page-header'
 import {
   accountsQueryOptions,
+  allocationPartsQueryOptions,
   allocationStepsQueryOptions,
   allocationSuggestionQueryOptions,
   goalsQueryOptions,
   overviewQueryOptions,
 } from '@web/features/planning/api/planning.queries'
+import { useRecordPart } from '@web/features/planning/api/use-record-part'
 import { CommissionFromField } from '@web/features/planning/components/commission-from-field'
 import { stepViewOf } from '@web/features/planning/components/split-views'
+import { TransferPickerSheet } from '@web/features/planning/components/transfer-picker-sheet'
 import { planningMessages } from '@web/features/planning/planning.messages'
 import type {
+  CommissionDonePart,
   CommissionPart,
   CommissionPartRowProps,
   CommissionSplitPageProps,
   CommissionSplitProps,
+  CommissionSuggestedPart,
+  EmptyStepsProps,
+  SplitContext,
 } from '@web/features/planning/planning.types'
 import { useDebouncedValue } from '@web/hooks/use-debounced-value'
 import { usePageTitle } from '@web/hooks/use-page-title'
-import { useRememberedIds } from '@web/hooks/use-remembered-ids'
 import { ApiError } from '@web/lib/api/api-error'
+import { errorMessageFor } from '@web/lib/errors/error-message'
 import { centsOfTypedAmount, formatTypedAmount } from '@web/lib/format/money'
 import { hasPermission } from '@web/lib/permissions'
 import { useEffect, useState } from 'react'
@@ -71,7 +79,13 @@ export function CommissionSplitPage({
           onRetry={() => void failed.refetch()}
         />
       ) : null}
-      {!failed && steps.data && goals.data && accounts.data && overview.data ? (
+      {!failed && steps.data?.length === 0 && <EmptySteps workspaceId={workspaceId} />}
+      {!failed &&
+      steps.data &&
+      steps.data.length > 0 &&
+      goals.data &&
+      accounts.data &&
+      overview.data ? (
         <CommissionSplit
           workspaceId={workspaceId}
           steps={steps.data}
@@ -105,46 +119,20 @@ function CommissionSplit({
   const amountCents = useDebouncedValue(centsOfTypedAmount(amount) ?? 0, AMOUNT_DELAY_MS)
   const suggestion = useQuery({
     ...allocationSuggestionQueryOptions(workspaceId, amountCents),
-    enabled: amountCents > 0 && steps.length > 0,
+    enabled: amountCents > 0,
   })
-  const done = useDoneParts(workspaceId, overview.period.label, amountCents)
+  const periodLabel = overview.period.label
+  const doneParts =
+    useQuery(allocationPartsQueryOptions(workspaceId, periodLabel)).data?.items ?? []
+  const [picking, setPicking] = useState<CommissionPart | null>(null)
   const toSplit = overview.insights.find((insight) => insight.code === TO_SPLIT)
-  if (steps.length === 0) {
-    return (
-      <EmptyBlock
-        icon="together"
-        title={messages.noSteps}
-        text={messages.noStepsText}
-        action={
-          <Button render={<Link to="/w/$workspaceId/planning/split" params={{ workspaceId }} />}>
-            {messages.defineSplit}
-          </Button>
-        }
-      />
-    )
-  }
   const context = {
     goals: new Map(goals.map((goal) => [goal.id, goal])),
     accounts: new Map(accounts.map((account) => [account.id, account])),
     overspentCents: Math.max(-overview.metrics.freeToSpend, 0),
   }
-  const parts: CommissionPart[] = (suggestion.data?.parts ?? []).flatMap((part) => {
-    const step = steps[part.position - 1]
-    if (!step) {
-      return []
-    }
-    const destination = context.accounts.get(part.toAccountId ?? '')
-    return [
-      {
-        position: part.position,
-        label: stepViewOf(step, context).exampleLabel,
-        destinationName: destination?.name ?? null,
-        toAccountId: part.toAccountId,
-        amountCents: part.amountCents,
-        isDone: done.ids.has(String(part.position)),
-      },
-    ]
-  })
+  const parts = partsOf(suggestion.data?.parts ?? [], steps, context, doneParts)
+  useReturnedPart(workspaceId, periodLabel, parts)
   return (
     <div className="grid gap-4 lg:grid-cols-5 lg:items-start lg:gap-5">
       <section
@@ -171,6 +159,7 @@ function CommissionSplit({
                 part={part}
                 fromAccountId={fromAccountId}
                 canTransfer={canTransfer}
+                onAlreadyDone={() => setPicking(part)}
               />
             ))}
             <li className="flex items-baseline gap-2 border-t border-ink pt-2.5 text-body-sm font-semibold">
@@ -181,7 +170,6 @@ function CommissionSplit({
             </li>
           </ol>
         )}
-        <p className="text-note text-ink-muted">{messages.deviceNote}</p>
       </section>
       <section className="order-first flex flex-col gap-4 rounded-xl border border-border bg-surface px-4 py-4 lg:order-none lg:col-span-2 lg:px-6">
         <FieldGroup label={messages.amount}>
@@ -203,11 +191,27 @@ function CommissionSplit({
           {messages.editSplit}
         </TextLink>
       </section>
+      {picking?.toAccountId && (
+        <TransferPickerSheet
+          workspaceId={workspaceId}
+          periodLabel={periodLabel}
+          position={picking.position}
+          toAccountId={picking.toAccountId}
+          destinationName={picking.destinationName ?? ''}
+          isOpen
+          onOpenChange={(isOpen) => !isOpen && setPicking(null)}
+        />
+      )}
     </div>
   )
 }
 
-function CommissionPartRow({ part, fromAccountId, canTransfer }: CommissionPartRowProps) {
+function CommissionPartRow({
+  part,
+  fromAccountId,
+  canTransfer,
+  onAlreadyDone,
+}: CommissionPartRowProps) {
   return (
     <li className="flex items-center gap-3 border-border py-2.5 not-first:border-t">
       <span className="grid size-6 shrink-0 place-items-center rounded-full bg-sunken text-caption font-semibold">
@@ -220,6 +224,16 @@ function CommissionPartRow({ part, fromAccountId, canTransfer }: CommissionPartR
             ? messages.to(part.destinationName)
             : messages.staysHere}
         </span>
+        {isTransferable(part, fromAccountId, canTransfer) && (
+          <TextLink
+            render={<button type="button" />}
+            aria-label={messages.alreadyDoneLabel(part.label)}
+            onClick={onAlreadyDone}
+            className="mt-1 self-start text-body-sm"
+          >
+            {messages.alreadyDone}
+          </TextLink>
+        )}
       </span>
       <Amount cents={part.amountCents} size="inherit" className="shrink-0 text-row font-emphasis" />
       <PartAction part={part} fromAccountId={fromAccountId} canTransfer={canTransfer} />
@@ -235,7 +249,7 @@ function PartAction({ part, fromAccountId, canTransfer }: CommissionPartRowProps
       </Badge>
     )
   }
-  if (!canTransfer || !part.toAccountId || part.toAccountId === fromAccountId) {
+  if (!isTransferable(part, fromAccountId, canTransfer)) {
     return null
   }
   return (
@@ -264,21 +278,72 @@ function PartAction({ part, fromAccountId, canTransfer }: CommissionPartRowProps
   )
 }
 
-function useDoneParts(workspaceId: string, periodLabel: string, amountCents: number) {
-  const navigate = useNavigate()
-  const { splitDone } = useSearch({ strict: false })
-  const done = useRememberedIds(
-    `twise:commission-split:${workspaceId}:${periodLabel}:${amountCents}`,
+function partsOf(
+  suggested: CommissionSuggestedPart[],
+  steps: CommissionSplitProps['steps'],
+  context: SplitContext,
+  doneParts: readonly CommissionDonePart[],
+): CommissionPart[] {
+  return suggested.flatMap((part) => {
+    const step = steps[part.position - 1]
+    if (!step) {
+      return []
+    }
+    return [
+      {
+        position: part.position,
+        label: stepViewOf(step, context).exampleLabel,
+        destinationName: context.accounts.get(part.toAccountId ?? '')?.name ?? null,
+        toAccountId: part.toAccountId,
+        amountCents: part.amountCents,
+        isDone: doneParts.some(
+          (done) => done.position === part.position && done.toAccountId === part.toAccountId,
+        ),
+      },
+    ]
+  })
+}
+
+function EmptySteps({ workspaceId }: EmptyStepsProps) {
+  return (
+    <EmptyBlock
+      icon="together"
+      title={messages.noSteps}
+      text={messages.noStepsText}
+      action={
+        <Button render={<Link to="/w/$workspaceId/planning/split" params={{ workspaceId }} />}>
+          {messages.defineSplit}
+        </Button>
+      }
+    />
   )
-  const remember = done.setRemembered
+}
+
+function useReturnedPart(workspaceId: string, periodLabel: string, parts: CommissionPart[]) {
+  const navigate = useNavigate()
+  const record = useRecordPart(workspaceId)
+  const { splitDone, splitEntry } = useSearch({ strict: false })
+  const part = parts.find((candidate) => candidate.position === splitDone)
+  const recordPart = record.mutate
   useEffect(() => {
-    if (!splitDone) {
+    if (!splitDone || !splitEntry || !part?.toAccountId) {
       return
     }
-    remember(String(splitDone), true)
-    void navigate({ to: '.', search: (previous) => ({ ...previous, splitDone: undefined }) })
-  }, [splitDone, remember, navigate])
-  return done
+    recordPart(
+      { periodLabel, position: part.position, toAccountId: part.toAccountId, entryId: splitEntry },
+      { onError: (error) => showToast(errorMessageFor(error), { tone: 'danger' }) },
+    )
+    void navigate({
+      to: '.',
+      search: (previous) => ({ ...previous, splitDone: undefined, splitEntry: undefined }),
+    })
+  }, [splitDone, splitEntry, part, periodLabel, recordPart, navigate])
+}
+
+function isTransferable(part: CommissionPart, fromAccountId: string, canTransfer: boolean) {
+  return (
+    canTransfer && !part.isDone && part.toAccountId !== null && part.toAccountId !== fromAccountId
+  )
 }
 
 function everydayAccountOf(accounts: CommissionSplitProps['accounts']): string {

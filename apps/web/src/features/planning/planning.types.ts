@@ -13,7 +13,9 @@ import type { FieldControlProps } from '@web/components/forms/form-field'
 import type { PickerEmpty, PickerItem, PickerSheetProps } from '@web/components/inputs/picker-sheet'
 import type {
   fetchAccounts,
+  fetchAllocationParts,
   fetchAllocationSteps,
+  fetchAllocationSuggestion,
   fetchBalances,
   fetchCandidates,
   fetchGoals,
@@ -206,6 +208,27 @@ export type CommissionPartRowProps = {
   part: CommissionPart
   fromAccountId: string
   canTransfer: boolean
+  onAlreadyDone?: () => void
+}
+
+export type CommissionSuggestedPart = Awaited<
+  ReturnType<typeof fetchAllocationSuggestion>
+>['parts'][number]
+
+export type CommissionDonePart = Awaited<ReturnType<typeof fetchAllocationParts>>['items'][number]
+
+export type EmptyStepsProps = {
+  workspaceId: string
+}
+
+export type TransferPickerSheetProps = {
+  workspaceId: string
+  periodLabel: string
+  position: number
+  toAccountId: string
+  destinationName: string
+  isOpen: boolean
+  onOpenChange: (isOpen: boolean) => void
 }
 
 export type CommissionFromFieldProps = {

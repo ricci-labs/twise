@@ -210,9 +210,12 @@ as a transfer prefilled with the amount and destination; the source is the accou
 commission landed ("A comissão caiu em", the everyday checking account by default). A part whose
 destination is that same account, and "cobrir o orçamento", say "Fica na conta". The transfer opens
 with the band "Parte N da divisão da comissão · {destino} · R$ X" and the description "Divisão da
-comissão: {destino}"; saving it marks the part "Feito". "Feito" is kept on the device (per period
-and amount) until the API records which transfers belong to a commission (G59); the server-side
-"Ainda há R$ X de comissão para dividir" on top already counts what reached the destinations.
+comissão: {destino}"; saving it records the part as "Feito" (`POST /allocation-parts`), for
+everyone in the workspace, per period. "Já transferi" under a pending part lists the recent
+transfers into its account that no part uses yet, to mark one as the part. The part follows its
+transfer: an edit keeps it "Feito", a delete undoes it, a restore doesn't mark it again; a mark is
+tied to the part's number and destination. The server-side "Ainda há R$ X de comissão para
+dividir" on top counts what reached the destinations.
 Error `ALLOCATION_QUERY_INVALID` (field amount).
 
 Built on 2026-10-16 from this requirement and the round B split's look (no dedicated design): on
