@@ -14,7 +14,6 @@ import {
 import type {
   AddedHoliday,
   DeleteHolidayInput,
-  HolidaysOfYear,
   PlanningContext,
 } from '@api/modules/planning/planning.types'
 import {
@@ -22,26 +21,7 @@ import {
   type IsoDate,
   nationalHolidays,
   newHolidaySchema,
-  toIsoDate,
 } from '@financas/shared'
-
-const DECEMBER = 12
-const LAST_DAY_OF_DECEMBER = 31
-
-export function listHolidays(
-  db: Database,
-  workspaceId: string,
-  year: number,
-): Promise<HolidaysOfYear> {
-  return withWorkspace(db, workspaceId, async (tx) => ({
-    national: nationalHolidays(year),
-    workspace: await selectHolidaysBetween(
-      tx,
-      toIsoDate(year, 1, 1),
-      toIsoDate(year, DECEMBER, LAST_DAY_OF_DECEMBER),
-    ),
-  }))
-}
 
 export async function addHoliday(
   db: Database,

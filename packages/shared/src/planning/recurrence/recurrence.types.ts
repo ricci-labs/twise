@@ -95,3 +95,16 @@ export type PlannedDate = {
   movedBy: 'weekend' | 'holiday' | null
   isAfterHoliday: boolean
 }
+
+export type HolidayRecurrence = {
+  recurrenceId: string
+  description: string
+  schedule: RecurrenceSchedule
+}
+
+export type HolidayEffect = {
+  recurrenceId: string
+  description: string
+  fromOn: IsoDate
+  toOn: IsoDate
+}

@@ -8,8 +8,10 @@ import type {
 import type {
   AllocationStep,
   GoalNumbers,
+  HolidayEffect,
   IsoDate,
   NationalHoliday,
+  NationalHolidayKey,
   OccurrenceStatus,
   OccurrenceTotals,
   RecurrenceFrequency,
@@ -29,9 +31,28 @@ export type WorkspaceHoliday = {
   name: string
 }
 
+export type ListedNationalHoliday = NationalHoliday & { affects: HolidayEffect[] }
+
+export type ListedWorkspaceHoliday = WorkspaceHoliday & { affects: HolidayEffect[] }
+
+export type NextHoliday = {
+  onDate: IsoDate
+  daysAway: number
+  nationalKey: NationalHolidayKey | null
+  name: string | null
+}
+
+export type HolidaySummary = {
+  total: number
+  national: number
+  workspace: number
+  next: NextHoliday | null
+}
+
 export type HolidaysOfYear = {
-  national: NationalHoliday[]
-  workspace: WorkspaceHoliday[]
+  national: ListedNationalHoliday[]
+  workspace: ListedWorkspaceHoliday[]
+  summary: HolidaySummary
 }
 
 export type AddedHoliday = {

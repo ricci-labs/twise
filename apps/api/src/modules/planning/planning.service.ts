@@ -16,11 +16,11 @@ export {
   previewGoal,
   readGoalFacts,
 } from '@api/modules/planning/use-cases/goals'
+export { listHolidays } from '@api/modules/planning/use-cases/holiday-list'
 export {
   addHoliday,
   deleteHoliday,
   holidayDatesOf,
-  listHolidays,
 } from '@api/modules/planning/use-cases/holidays'
 export {
   listOccurrenceCandidates,
