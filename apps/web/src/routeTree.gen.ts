@@ -35,6 +35,7 @@ import { Route as AppWWorkspaceIdCardsCardRouteImport } from './routes/_app/w/$w
 import { Route as AppWWorkspaceIdEntriesEntryRouteImport } from './routes/_app/w/$workspaceId/entries_/$entry'
 import { Route as AppWWorkspaceIdPlanningIndexRouteImport } from './routes/_app/w/$workspaceId/planning/index'
 import { Route as AppWWorkspaceIdPlanningTabRouteImport } from './routes/_app/w/$workspaceId/planning/$tab'
+import { Route as AppWWorkspaceIdPlanningSplitRouteImport } from './routes/_app/w/$workspaceId/planning/split'
 import { Route as AppWWorkspaceIdCardsCardInvoicesInvoiceRouteImport } from './routes/_app/w/$workspaceId/cards_/$card_/invoices/$invoice'
 
 const AppRoute = AppRouteImport.update({
@@ -171,6 +172,12 @@ const AppWWorkspaceIdPlanningTabRoute =
     path: '/planning/$tab',
     getParentRoute: () => AppWWorkspaceIdRouteRoute,
   } as any)
+const AppWWorkspaceIdPlanningSplitRoute =
+  AppWWorkspaceIdPlanningSplitRouteImport.update({
+    id: '/planning/split',
+    path: '/planning/split',
+    getParentRoute: () => AppWWorkspaceIdRouteRoute,
+  } as any)
 const AppWWorkspaceIdCardsCardInvoicesInvoiceRoute =
   AppWWorkspaceIdCardsCardInvoicesInvoiceRouteImport.update({
     id: '/cards_/$card_/invoices/$invoice',
@@ -202,6 +209,7 @@ export interface FileRoutesByFullPath {
   '/w/$workspaceId/cards/$card': typeof AppWWorkspaceIdCardsCardRoute
   '/w/$workspaceId/entries/$entry': typeof AppWWorkspaceIdEntriesEntryRoute
   '/w/$workspaceId/planning/$tab': typeof AppWWorkspaceIdPlanningTabRoute
+  '/w/$workspaceId/planning/split': typeof AppWWorkspaceIdPlanningSplitRoute
   '/w/$workspaceId/planning/': typeof AppWWorkspaceIdPlanningIndexRoute
   '/w/$workspaceId/cards/$card/invoices/$invoice': typeof AppWWorkspaceIdCardsCardInvoicesInvoiceRoute
 }
@@ -228,6 +236,7 @@ export interface FileRoutesByTo {
   '/w/$workspaceId/cards/$card': typeof AppWWorkspaceIdCardsCardRoute
   '/w/$workspaceId/entries/$entry': typeof AppWWorkspaceIdEntriesEntryRoute
   '/w/$workspaceId/planning/$tab': typeof AppWWorkspaceIdPlanningTabRoute
+  '/w/$workspaceId/planning/split': typeof AppWWorkspaceIdPlanningSplitRoute
   '/w/$workspaceId/planning': typeof AppWWorkspaceIdPlanningIndexRoute
   '/w/$workspaceId/cards/$card/invoices/$invoice': typeof AppWWorkspaceIdCardsCardInvoicesInvoiceRoute
 }
@@ -258,6 +267,7 @@ export interface FileRoutesById {
   '/_app/w/$workspaceId/cards_/$card': typeof AppWWorkspaceIdCardsCardRoute
   '/_app/w/$workspaceId/entries_/$entry': typeof AppWWorkspaceIdEntriesEntryRoute
   '/_app/w/$workspaceId/planning/$tab': typeof AppWWorkspaceIdPlanningTabRoute
+  '/_app/w/$workspaceId/planning/split': typeof AppWWorkspaceIdPlanningSplitRoute
   '/_app/w/$workspaceId/planning/': typeof AppWWorkspaceIdPlanningIndexRoute
   '/_app/w/$workspaceId/cards_/$card_/invoices/$invoice': typeof AppWWorkspaceIdCardsCardInvoicesInvoiceRoute
 }
@@ -287,6 +297,7 @@ export interface FileRouteTypes {
     | '/w/$workspaceId/cards/$card'
     | '/w/$workspaceId/entries/$entry'
     | '/w/$workspaceId/planning/$tab'
+    | '/w/$workspaceId/planning/split'
     | '/w/$workspaceId/planning/'
     | '/w/$workspaceId/cards/$card/invoices/$invoice'
   fileRoutesByTo: FileRoutesByTo
@@ -313,6 +324,7 @@ export interface FileRouteTypes {
     | '/w/$workspaceId/cards/$card'
     | '/w/$workspaceId/entries/$entry'
     | '/w/$workspaceId/planning/$tab'
+    | '/w/$workspaceId/planning/split'
     | '/w/$workspaceId/planning'
     | '/w/$workspaceId/cards/$card/invoices/$invoice'
   id:
@@ -342,6 +354,7 @@ export interface FileRouteTypes {
     | '/_app/w/$workspaceId/cards_/$card'
     | '/_app/w/$workspaceId/entries_/$entry'
     | '/_app/w/$workspaceId/planning/$tab'
+    | '/_app/w/$workspaceId/planning/split'
     | '/_app/w/$workspaceId/planning/'
     | '/_app/w/$workspaceId/cards_/$card_/invoices/$invoice'
   fileRoutesById: FileRoutesById
@@ -539,6 +552,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppWWorkspaceIdPlanningTabRouteImport
       parentRoute: typeof AppWWorkspaceIdRouteRoute
     }
+    '/_app/w/$workspaceId/planning/split': {
+      id: '/_app/w/$workspaceId/planning/split'
+      path: '/planning/split'
+      fullPath: '/w/$workspaceId/planning/split'
+      preLoaderRoute: typeof AppWWorkspaceIdPlanningSplitRouteImport
+      parentRoute: typeof AppWWorkspaceIdRouteRoute
+    }
     '/_app/w/$workspaceId/cards_/$card_/invoices/$invoice': {
       id: '/_app/w/$workspaceId/cards_/$card_/invoices/$invoice'
       path: '/cards/$card/invoices/$invoice'
@@ -561,6 +581,7 @@ interface AppWWorkspaceIdRouteRouteChildren {
   AppWWorkspaceIdCardsCardRoute: typeof AppWWorkspaceIdCardsCardRoute
   AppWWorkspaceIdEntriesEntryRoute: typeof AppWWorkspaceIdEntriesEntryRoute
   AppWWorkspaceIdPlanningTabRoute: typeof AppWWorkspaceIdPlanningTabRoute
+  AppWWorkspaceIdPlanningSplitRoute: typeof AppWWorkspaceIdPlanningSplitRoute
   AppWWorkspaceIdPlanningIndexRoute: typeof AppWWorkspaceIdPlanningIndexRoute
   AppWWorkspaceIdCardsCardInvoicesInvoiceRoute: typeof AppWWorkspaceIdCardsCardInvoicesInvoiceRoute
 }
@@ -577,6 +598,7 @@ const AppWWorkspaceIdRouteRouteChildren: AppWWorkspaceIdRouteRouteChildren = {
   AppWWorkspaceIdCardsCardRoute: AppWWorkspaceIdCardsCardRoute,
   AppWWorkspaceIdEntriesEntryRoute: AppWWorkspaceIdEntriesEntryRoute,
   AppWWorkspaceIdPlanningTabRoute: AppWWorkspaceIdPlanningTabRoute,
+  AppWWorkspaceIdPlanningSplitRoute: AppWWorkspaceIdPlanningSplitRoute,
   AppWWorkspaceIdPlanningIndexRoute: AppWWorkspaceIdPlanningIndexRoute,
   AppWWorkspaceIdCardsCardInvoicesInvoiceRoute:
     AppWWorkspaceIdCardsCardInvoicesInvoiceRoute,
