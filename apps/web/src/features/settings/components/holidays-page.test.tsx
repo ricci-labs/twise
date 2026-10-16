@@ -207,3 +207,90 @@ describe('PLAN-07 holidays under Configurações', () => {
       .toBeVisible()
   })
 })
+
+describe('PLAN-07 the year as a calendar on the desktop', () => {
+  beforeEach(async () => {
+    await page.viewport(1440, 1400)
+  })
+
+  it('shows the next holiday with the bill it moves, the workspace ones, the legend and the 12 months', async () => {
+    await openHolidays()
+    await expect
+      .element(page.getByText(/Os nacionais já vêm no app; os do espaço vocês adicionam/))
+      .toBeVisible()
+    await expect
+      .element(page.getByRole('navigation', { name: 'Ano dos feriados' }))
+      .toHaveTextContent('2026')
+    const next = page.getByRole('region', { name: 'Próximo feriado' })
+    await expect.element(next.getByText('Finados')).toBeVisible()
+    await expect.element(next.getByText(/Segunda-feira · daqui a 13 dias/)).toBeVisible()
+    await expect
+      .element(next.getByText('Muda 1 conta fixa: Vale-alimentação passa para 03/11.'))
+      .toBeVisible()
+    const workspace = page.getByRole('region', { name: 'Do espaço · 2' })
+    await expect.element(workspace.getByText('Domingo · já passou')).toBeVisible()
+    await expect.element(workspace.getByText('08 dez')).toBeVisible()
+    const legend = page.getByRole('region', { name: 'Como ler' })
+    await expect.element(legend.getByText(/Feriado nacional \(bancário\) · 13/)).toBeVisible()
+    await expect.element(legend.getByText(/Feriado do espaço · 2/)).toBeVisible()
+    const months = page.getByRole('region', { name: 'Os meses de 2026' })
+    expect(months.getByRole('heading', { level: 3 }).elements()).toHaveLength(12)
+    const december = months.getByRole('region', { name: 'Dezembro' })
+    await expect.element(december.getByText('Padroeira da cidade')).toBeVisible()
+    await expect.element(december.getByText('espaço', { exact: true })).toBeVisible()
+    await expect
+      .element(months.getByRole('region', { name: 'Março' }).getByText('Sem feriados'))
+      .toBeVisible()
+    await expectNoAccessibilityViolations(page.getByRole('main').element())
+  })
+
+  it('adds a holiday from the button beside the year, in a dialog', async () => {
+    await openHolidays()
+    await page.getByRole('button', { name: 'Adicionar feriado' }).click()
+    const dialog = page.getByRole('dialog', { name: 'Adicionar feriado' })
+    await expect.element(dialog.getByText(/Vale todo ano\? Adicione um por ano/)).toBeVisible()
+  })
+
+  it('deletes a workspace holiday from its card', async () => {
+    const deleted: string[] = []
+    await openHolidays({
+      answers: {
+        [`DELETE ${BASE}/holidays/${CITY_PATRON}`]: () => {
+          deleted.push(CITY_PATRON)
+          return new Response(null, { status: 204 })
+        },
+      },
+    })
+    await page.getByRole('button', { name: 'Ações de Padroeira da cidade' }).click()
+    await page.getByRole('menuitem', { name: 'Excluir' }).click()
+    await page
+      .getByRole('alertdialog', { name: 'Excluir Padroeira da cidade (08/12)?' })
+      .getByRole('button', { name: 'Excluir' })
+      .click()
+    await expect.poll(() => deleted).toEqual([CITY_PATRON])
+  })
+
+  it('shows a reader the calendar with no add and no actions', async () => {
+    await openHolidays({ access: () => accessAs('Leitor', VIEWER_PERMISSIONS) })
+    await expect.element(page.getByRole('region', { name: 'Como ler' })).toBeVisible()
+    await expect
+      .element(page.getByRole('button', { name: 'Adicionar feriado' }))
+      .not.toBeInTheDocument()
+    await expect
+      .element(page.getByRole('button', { name: 'Ações de Padroeira da cidade' }))
+      .not.toBeInTheDocument()
+  })
+
+  it('keeps a long workspace holiday to two lines in its card and in its month', async () => {
+    await openHolidays({
+      answers: holidaysAnswer([
+        { ...WORKSPACE_HOLIDAYS[1], id: CITY_PATRON, onDate: '2026-12-08', name: LONG_NAME },
+      ]),
+    })
+    const workspace = page.getByRole('region', { name: 'Do espaço · 1' })
+    const december = page.getByRole('region', { name: 'Dezembro' })
+    await expect.element(workspace.getByText(LONG_NAME)).toBeVisible()
+    expectClampedToTwoLines(workspace.getByText(LONG_NAME).element())
+    expectClampedToTwoLines(december.getByText(LONG_NAME).element())
+  })
+})

@@ -36,11 +36,11 @@ where it's used.
 | `inputs/` | `TextInput`, `PasswordInput`, `EmailInput`, `PhoneInput`, `SearchInput`, `TextArea`, `MoneyInput`, `ChoiceChips`, `PickerField`, `PickerSheet`, `Stepper`, `RadioCardList`, `RadioSentenceList`, `DateInput`, `PeriodPicker`, `Select`, `FilterButton`, `CheckboxMenu`, `Combobox`, `Checkbox`, `RadioGroup`, `Switch`, `DayOfMonthPicker`, `FileUpload`, `ColorSwatch` |
 | `forms/` | `Form`, `FormField`, `FieldGroup`, `LockedField`, `FormErrorSummary`, `FormFooter`, `RequiredLegend` |
 | `feedback/` | `Toast`, `InlineAlert`, `AutoFillTip`, `Banner`, `ConfirmDialog`, `EmptyState`, `EmptyBlock`, `Skeleton`, `ListSkeleton`, `KpiSkeleton`, `ErrorState` |
-| `display/` | `Amount`, `DateBlock`, `StatusBadge`, `Avatar`, `ListItem`, `Card`, `StatCard`, `ThresholdProgress`, `Tabs`, `Accordion`, `DataList` (table on desktop, list on mobile), `LoadMore`, `Tooltip`, `HelpPopover`, `FilterChips`, `CategoryIcon`, `ArchivedToggle` |
+| `display/` | `Amount`, `DateBlock`, `MiniMonthCalendar`, `StatusBadge`, `Avatar`, `ListItem`, `Card`, `StatCard`, `ThresholdProgress`, `Tabs`, `Accordion`, `DataList` (table on desktop, list on mobile), `LoadMore`, `Tooltip`, `HelpPopover`, `FilterChips`, `CategoryIcon`, `ArchivedToggle` |
 | `charts/` | `BarChart`, `ForecastChart`, `DonutChart`, each with its text alternative |
 | `navigation/` | `BottomBar`, `Sidebar`, `TopBar`, `WorkspaceSwitcher`, `BackLink`, `Breadcrumb`, `ScrollArrows`, `YearStepper`, `SettingsRow` |
 | `layout/` | `AppShell`, `FormOverlay`, `SidePanel`, `Page`, `PageHeader`, `Section`, `Stack`, `Grid` |
-| `finance/` | `StatHero`, `InsightCard`, `InvoiceCard`, `InvoicePreview`, `SharesList`, `RecentEntries`, `AccountRow`, `AccountGroup`, `CardBlock`, `InvoiceSummary`, `InvoiceLine`, `EntryRow`, `OccurrenceRow`, `HolidayRow`, `ContactRow`, `ChargePreview`, `AmountSplitEditor`, `AllocationStepRow`, `SplitExample` |
+| `finance/` | `StatHero`, `InsightCard`, `InvoiceCard`, `InvoicePreview`, `SharesList`, `RecentEntries`, `AccountRow`, `AccountGroup`, `CardBlock`, `InvoiceSummary`, `InvoiceLine`, `EntryRow`, `OccurrenceRow`, `HolidayRow`, `NextHolidayCard`, `ContactRow`, `ChargePreview`, `AmountSplitEditor`, `AllocationStepRow`, `SplitExample` |
 | `brand/` | `Logo`, `OwlScene` (the layered owl scenes and their motion), `AppSplash` |
 | `icons/` | `TwiseIcon` and the icon registries (see Icons) |
 
@@ -892,7 +892,8 @@ online with `asChild` are translated to `render`.
 - `DateBlock` (`components/display/date-block`): the 42 × 46 date block of the planning rows: the
   day in the display face over the month in caps, hidden from screen readers (the row says the
   date). `tone`: `default` (sunken), `overdue` (danger tint), `past` (only a 1 px outline, muted)
-  and `next` (ink fill); `digits="padded"` writes "02" for the holidays.
+  and `next` (ink fill); `digits="padded"` writes "02" for the holidays; `size="lg"` is the 60 × 64
+  block of the next holiday card.
 - `OccurrenceRow` (`components/finance/occurrence-row`): one planned occurrence: the `DateBlock`
   (danger tint when `isOverdue`), the
   description (2 lines at most, then "…"), the second line (2 lines at most) starting with the
@@ -990,3 +991,17 @@ online with `asChild` are translated to `render`.
 - `SettingsRow` (`components/navigation/settings-row`): one row of Configurações (`li`): a link with
   the loose drawing (44 px), the title, one line of state ("15 em 2026 · próximo: Finados, 02/11",
   2 lines at most) and a chevron, inside an `AccountGroup` titled by the group ("Planejamento").
+- `NextHolidayCard` (`components/finance/next-holiday-card`, PLAN-07 desktop): "Próximo feriado",
+  the large ink `DateBlock`, the name in the display face (2 lines), "Segunda-feira · daqui a 18
+  dias" ("amanhã", "hoje"), and at the bottom the amber box with what it moves in the fixed bills
+  (G60 `affects`): "Muda 1 conta fixa: {conta} passa para 03/11." or "Muda n contas fixas: …; …."
+  No box when it moves none; "Nenhum feriado pela frente." with `holiday={null}`. `h-full` so it
+  shares the row's height.
+- `MiniMonthCalendar` (`components/display/mini-month-calendar`, PLAN-07 desktop): one month of the
+  year as a card named by its title: the 7-column grid, Sunday first, 28 px day circles
+  (`MiniMonthDay`, exported for the legend): national in ink, workspace in mint, past holidays in
+  `ink-subtle` or a lighter mint, today with the 2 px ink ring, the next one with the amber outer
+  ring, weekends muted; then a rule and the month's holidays ("02 Finados", the "espaço" tag;
+  names 2 lines at most) or "Sem feriados". The current month is outlined in ink, past months'
+  titles muted, and the list sits at the bottom so cards in a row line up. The grid is hidden from
+  screen readers; the list says the same.

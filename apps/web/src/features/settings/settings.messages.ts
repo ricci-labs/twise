@@ -15,6 +15,8 @@ export const settingsMessages = {
     pageTitle: 'Feriados',
     title: 'Feriados',
     description: 'Os dias que não contam como dia útil.',
+    descriptionDesktop:
+      'Os dias que não contam como dia útil. Os nacionais já vêm no app; os do espaço vocês adicionam.',
     back: 'Voltar para Configurações',
     crumb: 'Caminho',
     yearLabel: 'Ano dos feriados',
@@ -34,6 +36,19 @@ export const settingsMessages = {
     removeText: (day: number) =>
       `As contas fixas que mudaram por causa dele voltam a contar o dia ${day} como útil, a partir dos próximos previstos.`,
     removed: 'Feriado excluído.',
+    months: (year: number) => `Os meses de ${year}`,
+    workspaceCount: (count: number) => `Do espaço · ${count}`,
+    workspaceFoot: 'Os da cidade de vocês. Adicione um por ano.',
+    passed: (weekday: string) => `${weekday} · já passou`,
+    legend: {
+      title: 'Como ler',
+      national: (count: number) => `Feriado nacional (bancário) · ${count}`,
+      workspace: (count: number) => `Feriado do espaço · ${count}`,
+      past: 'Já passou',
+      today: 'Hoje',
+      sampleDays: { national: 2, workspace: 8, past: 7 },
+      note: 'Previstos já planejados não mudam de data; a mudança vale para os próximos.',
+    },
     cancel: 'Cancelar',
   },
   sheet: {

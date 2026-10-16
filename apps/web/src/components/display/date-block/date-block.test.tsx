@@ -31,4 +31,11 @@ describe('DateBlock', () => {
     expect(style(next)?.boxShadow).toBe('none')
     expect(style(past)?.backgroundColor).not.toBe(style(next)?.backgroundColor)
   })
+
+  it('grows to 60 × 64 for the next holiday card', async () => {
+    const screen = await render(<DateBlock date="2026-11-02" tone="next" size="lg" />)
+    const block = screen.container.querySelector('[data-slot=date-block]')
+    expect(block?.getBoundingClientRect().width).toBe(60)
+    expect(block?.getBoundingClientRect().height).toBe(64)
+  })
 })

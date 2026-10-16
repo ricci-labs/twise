@@ -1,7 +1,7 @@
 import { cva } from 'class-variance-authority'
 
 export const dateBlockVariants = cva(
-  'flex h-11.5 w-10.5 shrink-0 flex-col items-center justify-center rounded-md',
+  'flex shrink-0 flex-col items-center justify-center rounded-md',
   {
     variants: {
       tone: {
@@ -10,14 +10,26 @@ export const dateBlockVariants = cva(
         past: 'bg-transparent text-ink-subtle inset-ring-1 inset-ring-border',
         next: 'bg-action-primary text-on-action-primary',
       },
+      size: {
+        md: 'h-11.5 w-10.5',
+        lg: 'h-16 w-15',
+      },
     },
-    defaultVariants: { tone: 'default' },
+    defaultVariants: { tone: 'default', size: 'md' },
   },
 )
 
-export const dateBlockDayVariants = cva('font-display text-card-title font-bold tabular-nums')
+export const dateBlockDayVariants = cva('font-display tabular-nums', {
+  variants: {
+    size: {
+      md: 'text-card-title font-bold',
+      lg: 'text-form-title-lg',
+    },
+  },
+  defaultVariants: { size: 'md' },
+})
 
-export const dateBlockMonthVariants = cva('text-badge-tiny font-semibold tracking-wide uppercase', {
+export const dateBlockMonthVariants = cva('font-semibold tracking-wide uppercase', {
   variants: {
     tone: {
       default: 'text-ink-muted',
@@ -25,6 +37,10 @@ export const dateBlockMonthVariants = cva('text-badge-tiny font-semibold trackin
       past: 'text-ink-muted',
       next: 'text-on-action-primary',
     },
+    size: {
+      md: 'text-badge-tiny',
+      lg: 'text-caption',
+    },
   },
-  defaultVariants: { tone: 'default' },
+  defaultVariants: { tone: 'default', size: 'md' },
 })
