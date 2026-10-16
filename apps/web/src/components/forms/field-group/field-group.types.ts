@@ -4,7 +4,7 @@ export type FieldGroupProps = {
   label: string
   isRequired?: boolean
   help?: string
-  note?: string
+  note?: ReactNode
   error?: string
   children: ReactNode
 }

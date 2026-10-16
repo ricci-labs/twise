@@ -1,0 +1,71 @@
+import type { NationalHolidayKey } from '@financas/shared'
+
+export const settingsMessages = {
+  pageTitle: 'Configurações',
+  title: 'Configurações',
+  groups: {
+    planning: 'Planejamento',
+  },
+  holidaysRow: {
+    title: 'Feriados',
+    summary: (total: number, year: number) => `${total} em ${year}`,
+    next: (summary: string, name: string, date: string) => `${summary} · próximo: ${name}, ${date}`,
+  },
+  holidays: {
+    pageTitle: 'Feriados',
+    title: 'Feriados',
+    description: 'Os dias que não contam como dia útil.',
+    back: 'Voltar para Configurações',
+    crumb: 'Caminho',
+    yearLabel: 'Ano dos feriados',
+    note: 'Feriados mudam os dias úteis das contas fixas. Previstos já planejados não mudam de data; a mudança vale para os próximos.',
+    workspace: 'Do espaço',
+    add: 'Adicionar feriado',
+    empty:
+      'Nenhum feriado do espaço. Adicione os da cidade de vocês (aniversário da cidade, padroeiro).',
+    national: 'Nacionais (bancários)',
+    nationalNote: 'Já vêm no app e não mudam.',
+    failed: 'Não deu para carregar os feriados.',
+    actions: {
+      trigger: (name: string) => `Ações de ${name}`,
+      remove: 'Excluir',
+    },
+    removeTitle: (name: string, date: string) => `Excluir ${name} (${date})?`,
+    removeText: (day: number) =>
+      `As contas fixas que mudaram por causa dele voltam a contar o dia ${day} como útil, a partir dos próximos previstos.`,
+    removed: 'Feriado excluído.',
+    cancel: 'Cancelar',
+  },
+  sheet: {
+    title: 'Adicionar feriado',
+    close: 'Fechar',
+    date: 'Data',
+    name: 'Nome',
+    help: 'Vale todo ano? Adicione um por ano: feriados municipais mudam de data às vezes.',
+    required: {
+      onDate: 'Escolha a data do feriado.',
+      name: 'Informe o nome do feriado (até 80 caracteres).',
+    },
+    nationalDate: 'Esse dia já é feriado nacional.',
+    takenDate: 'Já existe um feriado nesse dia.',
+    cancel: 'Cancelar',
+    submit: 'Adicionar feriado',
+    submitting: 'Adicionando…',
+    added: 'Feriado adicionado. As próximas contas fixas já contam com ele.',
+  },
+  nationalNames: {
+    new_year: 'Confraternização Universal',
+    carnival_monday: 'Carnaval (segunda-feira)',
+    carnival_tuesday: 'Carnaval (terça-feira)',
+    good_friday: 'Sexta-feira Santa',
+    tiradentes: 'Tiradentes',
+    labour_day: 'Dia do Trabalho',
+    corpus_christi: 'Corpus Christi',
+    independence_day: 'Independência do Brasil',
+    our_lady_aparecida: 'Nossa Senhora Aparecida',
+    all_souls_day: 'Finados',
+    republic_day: 'Proclamação da República',
+    black_consciousness_day: 'Dia da Consciência Negra',
+    christmas: 'Natal',
+  } satisfies Record<NationalHolidayKey, string>,
+} as const

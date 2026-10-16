@@ -1,6 +1,7 @@
 import { Button } from '@web/components/actions/button'
 import { Amount } from '@web/components/display/amount'
 import { Badge } from '@web/components/display/badge'
+import { DateBlock } from '@web/components/display/date-block'
 import { occurrenceRowMessages as messages } from '@web/components/finance/occurrence-row/occurrence-row.messages'
 import type {
   OccurrenceBadge,
@@ -8,18 +9,14 @@ import type {
 } from '@web/components/finance/occurrence-row/occurrence-row.types'
 import {
   occurrenceAmountVariants,
-  occurrenceDateVariants,
-  occurrenceDayVariants,
   occurrenceDetailVariants,
   occurrenceEstimateVariants,
-  occurrenceMonthVariants,
   occurrenceQuickVariants,
   occurrenceRowMainVariants,
   occurrenceRowVariants,
   occurrenceTextVariants,
   occurrenceTitleVariants,
 } from '@web/components/finance/occurrence-row/occurrence-row.variants'
-import { dateBlockOf } from '@web/lib/format/calendar'
 import { cloneElement } from 'react'
 
 const BADGE_TONES = {
@@ -44,7 +41,6 @@ export function OccurrenceRow({
   link,
   register,
 }: OccurrenceRowProps) {
-  const block = dateBlockOf(dueOn)
   const amount = (
     <span className={occurrenceAmountVariants({ direction: isDone ? 'done' : direction })}>
       {isEstimate && (
@@ -57,10 +53,7 @@ export function OccurrenceRow({
   )
   const content = (
     <>
-      <span aria-hidden="true" className={occurrenceDateVariants({ isOverdue })}>
-        <span className={occurrenceDayVariants()}>{block.day}</span>
-        <span className={occurrenceMonthVariants({ isOverdue })}>{block.month}</span>
-      </span>
+      <DateBlock date={dueOn} tone={isOverdue ? 'overdue' : 'default'} />
       <span className={occurrenceTextVariants()}>
         <span className={occurrenceTitleVariants()}>{description}</span>
         <span className={occurrenceDetailVariants()}>

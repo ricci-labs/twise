@@ -12,6 +12,8 @@ export type OccurrenceGroupProps = VariantProps<typeof occurrenceGroupListVarian
   title: string
   count: number
   add?: OccurrenceGroupAdd
+  note?: string
+  empty?: string
   footer?: ReactNode
-  children: ReactNode
+  children?: ReactNode
 }

@@ -4,8 +4,10 @@ import type { OccurrenceGroupProps } from '@web/components/finance/occurrence-gr
 import {
   occurrenceGroupAddVariants,
   occurrenceGroupCountVariants,
+  occurrenceGroupEmptyVariants,
   occurrenceGroupHeadVariants,
   occurrenceGroupListVariants,
+  occurrenceGroupNoteVariants,
   occurrenceGroupTitleVariants,
   occurrenceGroupVariants,
 } from '@web/components/finance/occurrence-group/occurrence-group.variants'
@@ -18,6 +20,8 @@ export function OccurrenceGroup({
   tone,
   layout,
   add,
+  note,
+  empty,
   footer,
   children,
 }: OccurrenceGroupProps) {
@@ -47,7 +51,12 @@ export function OccurrenceGroup({
           </TextLink>
         )}
       </div>
-      <ul className={occurrenceGroupListVariants({ tone, layout })}>{children}</ul>
+      {note && <p className={occurrenceGroupNoteVariants()}>{note}</p>}
+      {empty && count === 0 ? (
+        <p className={occurrenceGroupEmptyVariants()}>{empty}</p>
+      ) : (
+        <ul className={occurrenceGroupListVariants({ tone, layout })}>{children}</ul>
+      )}
       {footer}
     </section>
   )

@@ -7,3 +7,9 @@ export type FakePostingExtra = {
 }
 
 export type EntryLine = [accountId: string, amountCents: number, extra?: FakePostingExtra]
+
+export type FakeWorkspaceHoliday = {
+  id: string
+  onDate: string
+  name: string
+}

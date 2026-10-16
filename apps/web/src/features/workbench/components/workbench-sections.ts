@@ -21,6 +21,7 @@ import { avatarExamples } from '@web/components/display/avatar'
 import { cardExamples } from '@web/components/display/card'
 import { categoryArtExamples } from '@web/components/display/category-art'
 import { dataTableExamples } from '@web/components/display/data-table'
+import { dateBlockExamples } from '@web/components/display/date-block'
 import { detailSectionExamples } from '@web/components/display/detail-section'
 import { dividerExamples } from '@web/components/display/divider'
 import { filterChipsExamples } from '@web/components/display/filter-chips'
@@ -59,6 +60,7 @@ import { entryDayGroupExamples } from '@web/components/finance/entry-day-group'
 import { entryHeaderExamples } from '@web/components/finance/entry-header'
 import { entryRowExamples } from '@web/components/finance/entry-row'
 import { goalCardExamples } from '@web/components/finance/goal-card'
+import { holidayRowExamples } from '@web/components/finance/holiday-row'
 import { installmentRowsExamples } from '@web/components/finance/installment-rows'
 import { invoiceFactsExamples } from '@web/components/finance/invoice-facts'
 import { invoiceLineExamples } from '@web/components/finance/invoice-line'
@@ -126,7 +128,9 @@ import { bottomTabBarExamples } from '@web/components/navigation/bottom-tab-bar'
 import { breadcrumbExamples } from '@web/components/navigation/breadcrumb'
 import { periodPickerExamples } from '@web/components/navigation/period-picker'
 import { scrollArrowsExamples } from '@web/components/navigation/scroll-arrows'
+import { settingsRowExamples } from '@web/components/navigation/settings-row'
 import { trashTabsExamples } from '@web/components/navigation/trash-tabs'
+import { yearStepperExamples } from '@web/components/navigation/year-stepper'
 import type { ComponentExamples } from '@web/lib/examples.types'
 
 export const workbenchSections: readonly ComponentExamples[] = [
@@ -201,6 +205,10 @@ export const workbenchSections: readonly ComponentExamples[] = [
   splitShortcutExamples,
   allocationStepRowExamples,
   splitExampleExamples,
+  holidayRowExamples,
+  dateBlockExamples,
+  yearStepperExamples,
+  settingsRowExamples,
   invoiceMonthStripExamples,
   invoiceSummaryExamples,
   invoiceLineExamples,
