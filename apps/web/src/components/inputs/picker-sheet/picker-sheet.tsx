@@ -8,6 +8,7 @@ import { TwiseIcon } from '@web/components/icons/twise-icon'
 import { ChoiceChips } from '@web/components/inputs/choice-chips'
 import { pickerSheetMessages as messages } from '@web/components/inputs/picker-sheet/picker-sheet.messages'
 import type {
+  PickerActionRowProps,
   PickerChildrenProps,
   PickerChoiceProps,
   PickerContentProps,
@@ -54,12 +55,20 @@ export function PickerSheet({
   anchor,
   popupWidth,
   onSelect,
+  action,
   ...content
 }: PickerSheetProps) {
   const isDesktop = useMediaQuery(DESKTOP_QUERY)
   const choose = (value: string) => {
     onSelect(value)
     onOpenChange(false)
+  }
+  const closingAction = action && {
+    ...action,
+    onPress: () => {
+      onOpenChange(false)
+      action.onPress()
+    },
   }
 
   if (isDesktop && anchor) {
@@ -78,7 +87,7 @@ export function PickerSheet({
               className={pickerPopupVariants({ width: popupWidth })}
             >
               <Popover.Title className="sr-only">{title}</Popover.Title>
-              <PickerContent {...content} onSelect={choose} />
+              <PickerContent {...content} action={closingAction} onSelect={choose} />
             </Popover.Popup>
           </Popover.Positioner>
         </Popover.Portal>
@@ -88,7 +97,7 @@ export function PickerSheet({
 
   return (
     <Sheet title={title} closeLabel={messages.close} isOpen={isOpen} onOpenChange={onOpenChange}>
-      <PickerContent {...content} onSelect={choose} />
+      <PickerContent {...content} action={closingAction} onSelect={choose} />
     </Sheet>
   )
 }
@@ -101,6 +110,7 @@ function PickerContent({
   layout = 'list',
   searchLabel,
   empty,
+  action,
 }: PickerContentProps) {
   const [openParent, setOpenParent] = useState(() => parentOf(items, value)?.value ?? null)
   const list = useLongList({
@@ -145,6 +155,7 @@ function PickerContent({
             />
           </li>
         ))}
+        {actionRowOf(action, list.isSearching)}
       </ul>
       {list.hiddenCount > 0 && (
         <ShowMoreButton hiddenCount={list.hiddenCount} onClick={list.showAll} />
@@ -200,6 +211,7 @@ function PickerChoice({ ref, item, layout, isCurrent, onPress }: PickerChoicePro
       ref={ref}
       type="button"
       aria-current={current}
+      disabled={item.isDisabled}
       onClick={() => onPress(item)}
       className={pickerRowVariants()}
     >
@@ -214,6 +226,31 @@ function PickerChoice({ ref, item, layout, isCurrent, onPress }: PickerChoicePro
       </span>
       {item.end && <PickerEnd end={item.end} />}
       {item.hasChevron && <ChevronRight data-slot="picker-chevron" aria-hidden="true" />}
+    </button>
+  )
+}
+
+function actionRowOf(action: PickerContentProps['action'], isSearching: boolean) {
+  if (!action || isSearching) {
+    return null
+  }
+  return (
+    <li>
+      <PickerActionRow action={action} />
+    </li>
+  )
+}
+
+function PickerActionRow({ action }: PickerActionRowProps) {
+  return (
+    <button type="button" onClick={action.onPress} className={pickerRowVariants()}>
+      <span data-slot="category-art" aria-hidden="true" className={pickerPlaceholderArtVariants()}>
+        <Plus />
+      </span>
+      <span className={pickerRowTextVariants()}>
+        {action.label}
+        {action.detail && <span className={pickerRowDetailVariants()}>{action.detail}</span>}
+      </span>
     </button>
   )
 }

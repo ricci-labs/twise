@@ -30,6 +30,7 @@ export const Route = createFileRoute('/_app/w/$workspaceId')({
       entryRepeat,
       entryOccurrence,
       account: accountParam,
+      accountFor,
       category,
       parent,
       kind,
@@ -41,7 +42,10 @@ export const Route = createFileRoute('/_app/w/$workspaceId')({
       <Link to="/w/$workspaceId/$area" params={{ workspaceId, area: 'account' }} />
     )
     const closeAccountForm = () =>
-      navigate({ to: '.', search: (previous) => ({ ...previous, account: undefined }) })
+      navigate({
+        to: '.',
+        search: (previous) => ({ ...previous, account: undefined, accountFor: undefined }),
+      })
     const closeCardForm = () =>
       navigate({
         to: '.',
@@ -97,6 +101,18 @@ export const Route = createFileRoute('/_app/w/$workspaceId')({
           onCreated={(accountId) => {
             if (entry === 'new') {
               closeAccountForm()
+              return
+            }
+            if (accountFor) {
+              navigate({
+                to: '.',
+                search: (previous) => ({
+                  ...previous,
+                  account: undefined,
+                  accountFor: undefined,
+                  createdAccount: accountId,
+                }),
+              })
               return
             }
             navigate({

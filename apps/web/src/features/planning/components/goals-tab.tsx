@@ -1,10 +1,13 @@
 import { useQuery } from '@tanstack/react-query'
+import { Link } from '@tanstack/react-router'
+import { Button } from '@web/components/actions/button'
 import { EmptyBlock } from '@web/components/feedback/empty-block'
 import { ListSkeleton } from '@web/components/feedback/list-skeleton'
 import { SectionError } from '@web/components/feedback/section-error'
 import { GoalCard } from '@web/components/finance/goal-card'
 import { OccurrenceGroup } from '@web/components/finance/occurrence-group'
 import { ReserveCard } from '@web/components/finance/reserve-card'
+import { TwiseIcon } from '@web/components/icons/twise-icon'
 import {
   accountsQueryOptions,
   allocationStepsQueryOptions,
@@ -18,9 +21,11 @@ import {
   reserveFiguresOf,
 } from '@web/features/planning/components/goal-views'
 import { planningMessages } from '@web/features/planning/planning.messages'
+import { NEW_GOAL } from '@web/features/planning/planning.schemas'
 import type { GoalsTabProps, GoalsViewProps } from '@web/features/planning/planning.types'
 import { usePageTitle } from '@web/hooks/use-page-title'
 import { ApiError } from '@web/lib/api/api-error'
+import { hasPermission } from '@web/lib/permissions'
 
 const messages = planningMessages.goals
 const SKELETON_ROWS = 4
@@ -65,6 +70,7 @@ function Goals({
   coverageMonths,
   permissions,
 }: GoalsViewProps) {
+  const canCreate = hasPermission(permissions, 'planning', 'create')
   const reserve = goals.find((goal) => goal.isReserve)
   const others = goals.filter((goal) => !goal.isReserve)
   const actionsOf = (goal: GoalsViewProps['goals'][number]) => (
@@ -81,16 +87,54 @@ function Goals({
       <ReserveCard
         reserve={reserve ? reserveFiguresOf(reserve, accounts, coverageMonths) : null}
         actions={reserve && actionsOf(reserve)}
+        createAction={
+          canCreate && (
+            <Button size="sm" render={newGoalLink(true)}>
+              <TwiseIcon name="plus" size="sm" />
+              {messages.createReserve}
+            </Button>
+          )
+        }
       />
       {others.length === 0 ? (
-        <EmptyBlock icon="piggy-bank" title={messages.empty} text={messages.emptyText} />
+        <EmptyBlock
+          icon="piggy-bank"
+          title={messages.empty}
+          text={messages.emptyText}
+          action={
+            canCreate && (
+              <Button render={newGoalLink(false)}>
+                <TwiseIcon name="plus" size="sm" />
+                {messages.newGoal}
+              </Button>
+            )
+          }
+        />
       ) : (
-        <OccurrenceGroup title={messages.title} count={others.length} layout="cards">
+        <OccurrenceGroup
+          title={messages.title}
+          count={others.length}
+          layout="cards"
+          add={canCreate ? { label: messages.newGoal, link: newGoalLink(false) } : undefined}
+        >
           {others.map((goal) => (
             <GoalCard key={goal.id} {...goalCardOf(goal, accounts)} actions={actionsOf(goal)} />
           ))}
         </OccurrenceGroup>
       )}
     </>
+  )
+}
+
+function newGoalLink(isReserve: boolean) {
+  return (
+    <Link
+      to="."
+      search={(previous) => ({
+        ...previous,
+        goal: NEW_GOAL,
+        goalReserve: isReserve || undefined,
+      })}
+    />
   )
 }

@@ -23,6 +23,7 @@ import type {
 import type {
   budgetFormSchema,
   DAY_RULES,
+  goalFormSchema,
   occurrenceAmountFormSchema,
   PLANNING_TABS,
   planningSearchSchema,
@@ -59,6 +60,53 @@ export type AllocationStepItem = Awaited<ReturnType<typeof fetchAllocationSteps>
 export type GoalDeletion = {
   goalId: string
   remainingSteps?: readonly AllocationStepInput[]
+}
+
+export type GoalFormValues = z.infer<typeof goalFormSchema>
+
+export type GoalEditorProps = {
+  workspaceId: string
+  permissions: readonly Permission[]
+  search: PlanningSearch
+  onClose: () => void
+}
+
+export type GoalFormProps = {
+  workspaceId: string
+  today: IsoDate
+  accounts: readonly PlanningAccount[]
+  goals: readonly PlanningGoal[]
+  defaults: GoalFormValues
+  editingGoalId?: string
+  onClose: () => void
+}
+
+export type GoalFieldsProps = {
+  workspaceId: string
+  today: IsoDate
+  accounts: readonly PlanningAccount[]
+  goals: readonly PlanningGoal[]
+  editingGoalId?: string
+  nameInput: RefObject<HTMLInputElement | null>
+}
+
+export type GoalAccountFieldProps = {
+  workspaceId: string
+  accounts: readonly PlanningAccount[]
+  goals: readonly PlanningGoal[]
+  editingGoalId?: string
+}
+
+export type GoalPreviewProps = {
+  workspaceId: string
+  accounts: readonly PlanningAccount[]
+}
+
+export type GoalFormFooterProps = {
+  isOnline: boolean
+  problem: string | null
+  isEditing: boolean
+  onCancel: () => void
 }
 
 export type GoalsTabProps = {
@@ -393,6 +441,7 @@ export type RecurrencePickerProps = {
   layout?: PickerSheetProps['layout']
   searchLabel?: string
   empty?: PickerEmpty
+  action?: PickerSheetProps['action']
 }
 
 export type ChosenPickerItem = {

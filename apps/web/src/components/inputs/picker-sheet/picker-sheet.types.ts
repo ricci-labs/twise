@@ -19,6 +19,7 @@ export type PickerItem = {
   isDetailStrong?: boolean
   end?: PickerItemEnd
   hasChevron?: boolean
+  isDisabled?: boolean
   children?: readonly PickerItem[]
 }
 
@@ -39,6 +40,16 @@ export type PickerEmpty = {
   onAction?: () => void
 }
 
+export type PickerAction = {
+  label: string
+  detail?: string
+  onPress: () => void
+}
+
+export type PickerActionRowProps = {
+  action: PickerAction
+}
+
 export type PickerPopupWidth = NonNullable<VariantProps<typeof pickerPopupVariants>['width']>
 
 export type PickerLayout = NonNullable<VariantProps<typeof pickerListVariants>['layout']>
@@ -56,6 +67,7 @@ export type PickerSheetProps = {
   popupWidth?: PickerPopupWidth
   searchLabel?: string
   empty?: PickerEmpty
+  action?: PickerAction
 }
 
 export type PickerContentProps = Omit<

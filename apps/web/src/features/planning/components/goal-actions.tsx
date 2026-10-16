@@ -68,6 +68,16 @@ export function GoalActions({
         />
       ),
     },
+    ...(hasPermission(permissions, 'planning', 'update')
+      ? [
+          {
+            key: 'edit',
+            label: messages.edit,
+            icon: 'edit',
+            render: <Link to="." search={(previous) => ({ ...previous, goal: goal.id })} />,
+          } as const,
+        ]
+      : []),
     ...(hasPermission(permissions, 'planning', 'delete')
       ? [
           {
