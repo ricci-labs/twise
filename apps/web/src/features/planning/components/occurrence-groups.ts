@@ -112,7 +112,7 @@ function badgeOf(item: ListedOccurrence, context: OccurrenceContext): Occurrence
 }
 
 function detailOf(item: ListedOccurrence, context: OccurrenceContext): string {
-  const account = accountOf(item, context)
+  const account = occurrenceAccountOf(item, context)
   if (item.status === 'matched') {
     return [account, paidPartOf(item)].filter(Boolean).join(messages.separator)
   }
@@ -126,7 +126,7 @@ function detailOf(item: ListedOccurrence, context: OccurrenceContext): string {
   return [account, pathOf(item.categoryAccountId, context)].filter(Boolean).join(messages.separator)
 }
 
-function accountOf(item: ListedOccurrence, context: OccurrenceContext): string {
+export function occurrenceAccountOf(item: ListedOccurrence, context: OccurrenceContext): string {
   const source = context.accounts.get(item.sourceAccountId)?.name ?? ''
   if (item.entryType !== 'transfer') {
     return source

@@ -25,6 +25,7 @@ export function OccurrenceActions({
   occurrence,
   accounts,
   canRecord,
+  triggerLabel,
   className,
   children,
 }: OccurrenceActionsProps) {
@@ -87,7 +88,7 @@ export function OccurrenceActions({
         actions={actions}
         align="start"
         trigger={
-          <button type="button" className={className}>
+          <button type="button" aria-label={triggerLabel} className={className}>
             {children}
           </button>
         }
