@@ -15,6 +15,7 @@ export const radioCardVariants = cva(
     'flex w-full cursor-pointer gap-3 rounded-md border border-border-control bg-surface px-3 text-left text-ink outline-none',
     'focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-offset-2',
     'data-checked:border-ink data-checked:ring-1 data-checked:ring-ink data-checked:ring-inset',
+    'data-disabled:cursor-default data-disabled:opacity-50',
   ],
   {
     variants: {

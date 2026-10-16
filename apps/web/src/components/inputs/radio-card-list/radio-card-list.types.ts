@@ -6,6 +6,7 @@ export type RadioCard = {
   value: string
   label: string
   detail?: string
+  isDisabled?: boolean
   badge?: { label: string; tone: BadgeProps['tone'] }
 }
 
