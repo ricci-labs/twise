@@ -346,6 +346,6 @@ Business days skip weekends and holidays. They drive `nth_business_day` periods,
 
 | Route | Permission | Does |
 |---|---|---|
-| `GET /holidays?year=` | `planning:view` | `listHolidays` → `{ national: { on, key }[], workspace: { id, onDate, name }[] }` of that year |
+| `GET /holidays?year=` | `planning:view` | `listHolidays` → `{ national: { on, key, affects }[], workspace: { id, onDate, name, affects }[], summary }` of that year. `affects` (G60) lists, for a holiday from today on, the fixed bills it moves: `{ recurrenceId, description, fromOn, toOn }`, from the shared `holidayEffects` (each active recurrence's dates within 45 days of the holiday, with and without it); past holidays have none. `summary` is `{ total, national, workspace, next }`, `next` being the first holiday from today on (this year or the next) with `onDate`, `daysAway` and its `nationalKey` or `name` |
 | `POST /holidays` | `planning:create` | `addHoliday` `{ onDate, name }` → `201 { holidayId }`. A day already taken is `409 HOLIDAY_DATE_TAKEN`; a national holiday is `409 HOLIDAY_ALREADY_NATIONAL` |
 | `DELETE /holidays/:holidayId` | `planning:delete` | `deleteHoliday` (soft, optional `reason`) → `204`; gone or unknown is `404 HOLIDAY_NOT_FOUND` |

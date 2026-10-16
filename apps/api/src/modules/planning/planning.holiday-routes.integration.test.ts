@@ -16,6 +16,7 @@ let owner: SessionRequests
 let member: SessionRequests
 let viewer: SessionRequests
 let holidaysPath: string
+let workspacePath: string
 
 beforeAll(async () => {
   const ownerSession = await loggedInUser(app, databases.app, fixtures.runId, 'holidays-owner')
@@ -31,7 +32,8 @@ beforeAll(async () => {
   owner = requestsAs(app, ownerSession)
   member = requestsAs(app, memberSession)
   viewer = requestsAs(app, viewerSession)
-  holidaysPath = `/api/workspaces/${workspaceId}/holidays`
+  workspacePath = `/api/workspaces/${workspaceId}`
+  holidaysPath = `${workspacePath}/holidays`
 })
 
 afterAll(async () => {
@@ -47,6 +49,15 @@ async function holidaysOf(year: number): Promise<HolidaysOfYear> {
   return (await (await viewer.get(`${holidaysPath}?year=${year}`)).json()) as HolidaysOfYear
 }
 
+async function accountOf(kind: string, name: string, extra: object = {}): Promise<string> {
+  const response = await owner.post(`${workspacePath}/accounts`, { kind, name, ...extra })
+  return ((await response.json()) as { accountId: string }).accountId
+}
+
+function todayInSaoPaulo(): string {
+  return new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Sao_Paulo' }).format(new Date())
+}
+
 async function added(response: Response): Promise<string> {
   return ((await response.json()) as { holidayId: string }).holidayId
 }
@@ -57,10 +68,51 @@ describe('GET /holidays', () => {
     await member.post(holidaysPath, { onDate: '2026-01-25', name: 'Aniversário da cidade' })
 
     const year = await holidaysOf(2027)
-    expect(year.national).toContainEqual({ key: 'good_friday', on: '2027-03-26' })
+    expect(year.national).toContainEqual({ key: 'good_friday', on: '2027-03-26', affects: [] })
     expect(year.workspace).toEqual([
-      { id: expect.any(String), onDate: '2027-01-25', name: 'Aniversário da cidade' },
+      { id: expect.any(String), onDate: '2027-01-25', name: 'Aniversário da cidade', affects: [] },
     ])
+    expect(year.summary).toMatchObject({
+      total: year.national.length + 1,
+      national: year.national.length,
+      workspace: 1,
+    })
+  })
+
+  it('says which fixed bills each upcoming holiday moves, and which holiday comes next', async () => {
+    const checking = await accountOf('checking', 'Conta X')
+    const benefit = await accountOf('income_category', 'Benefícios', { incomeNature: 'fixed' })
+    const created = await member.post(`${workspacePath}/recurrences`, {
+      description: 'Vale-alimentação',
+      entryType: 'income',
+      amountCents: 80_000,
+      sourceAccountId: checking,
+      categoryAccountId: benefit,
+      schedule: { frequency: 'monthly', nthBusinessDay: 1, startsOn: '2030-01-01' },
+    })
+    const { ruleId } = (await created.json()) as { ruleId: string }
+    await member.post(holidaysPath, { onDate: '2031-05-02', name: 'Padroeira' })
+
+    const year = await holidaysOf(2031)
+    const moved = [
+      {
+        recurrenceId: ruleId,
+        description: 'Vale-alimentação',
+        fromOn: '2031-01-01',
+        toOn: '2031-01-02',
+      },
+    ]
+    expect(year.national.find((holiday) => holiday.on === '2031-01-01')?.affects).toEqual(moved)
+    expect(year.national.find((holiday) => holiday.on === '2031-12-25')?.affects).toEqual([])
+    expect(year.workspace).toEqual([
+      expect.objectContaining({
+        name: 'Padroeira',
+        affects: [expect.objectContaining({ fromOn: '2031-05-02', toOn: '2031-05-05' })],
+      }),
+    ])
+    const next = year.summary.next
+    expect((next?.onDate ?? '') >= todayInSaoPaulo()).toBe(true)
+    expect(next?.daysAway).toBeGreaterThanOrEqual(0)
   })
 
   it('refuses a missing or absurd year', async () => {
