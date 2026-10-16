@@ -20,6 +20,7 @@ export function ChoiceChips({
   onSelect,
   onBlur,
   variant,
+  size,
   isDisabled = false,
   className,
 }: ChoiceChipsProps) {
@@ -44,7 +45,7 @@ export function ChoiceChips({
               onSelect(option.value)
             }
           }}
-          className={choiceChipVariants({ variant })}
+          className={cn(choiceChipVariants({ variant, size }))}
         >
           <ChipContent option={option} avatarSize={variant === 'member' ? 'xs' : 'sm'} />
         </Radio.Root>

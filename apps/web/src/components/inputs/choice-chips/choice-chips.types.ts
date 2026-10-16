@@ -1,5 +1,8 @@
 import type { TwiseIconName } from '@web/components/icons/twise-icon'
-import type { choiceChipsVariants } from '@web/components/inputs/choice-chips/choice-chips.variants'
+import type {
+  choiceChipsVariants,
+  choiceChipVariants,
+} from '@web/components/inputs/choice-chips/choice-chips.variants'
 import type { VariantProps } from 'class-variance-authority'
 import type { Ref } from 'react'
 
@@ -15,15 +18,16 @@ export type ChoiceChip = {
   buttonRef?: Ref<HTMLButtonElement>
 }
 
-export type ChoiceChipsProps = VariantProps<typeof choiceChipsVariants> & {
-  label: string
-  options: readonly ChoiceChip[]
-  value: string
-  onSelect: (value: string) => void
-  onBlur?: () => void
-  isDisabled?: boolean
-  className?: string
-}
+export type ChoiceChipsProps = VariantProps<typeof choiceChipsVariants> &
+  Pick<VariantProps<typeof choiceChipVariants>, 'size'> & {
+    label: string
+    options: readonly ChoiceChip[]
+    value: string
+    onSelect: (value: string) => void
+    onBlur?: () => void
+    isDisabled?: boolean
+    className?: string
+  }
 
 export type ChipContentProps = {
   option: ChoiceChip

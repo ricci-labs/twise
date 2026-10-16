@@ -40,7 +40,7 @@ where it's used.
 | `charts/` | `BarChart`, `ForecastChart`, `DonutChart`, each with its text alternative |
 | `navigation/` | `BottomBar`, `Sidebar`, `TopBar`, `WorkspaceSwitcher`, `BackLink`, `Breadcrumb`, `ScrollArrows` |
 | `layout/` | `AppShell`, `FormOverlay`, `SidePanel`, `Page`, `PageHeader`, `Section`, `Stack`, `Grid` |
-| `finance/` | `StatHero`, `InsightCard`, `InvoiceCard`, `InvoicePreview`, `SharesList`, `RecentEntries`, `AccountRow`, `AccountGroup`, `CardBlock`, `InvoiceSummary`, `InvoiceLine`, `EntryRow`, `OccurrenceRow`, `ContactRow`, `ChargePreview`, `AmountSplitEditor` |
+| `finance/` | `StatHero`, `InsightCard`, `InvoiceCard`, `InvoicePreview`, `SharesList`, `RecentEntries`, `AccountRow`, `AccountGroup`, `CardBlock`, `InvoiceSummary`, `InvoiceLine`, `EntryRow`, `OccurrenceRow`, `ContactRow`, `ChargePreview`, `AmountSplitEditor`, `AllocationStepRow`, `SplitExample` |
 | `brand/` | `Logo`, `OwlScene` (the layered owl scenes and their motion), `AppSplash` |
 | `icons/` | `TwiseIcon` and the icon registries (see Icons) |
 
@@ -419,6 +419,8 @@ component here, so the form, and later the account, card and planning forms, sha
   shows that icon on paper instead of the initial, "Da casa"). An option can open a dialog (`opensDialog`,
   `aria-haspopup`) and carry an icon (`calendar` before the label, `chevron` after it); `onSelect`
   fires for every press, even on the chosen option, so "Mais" and "Outra data" reopen their sheet.
+  `size="compact"` (12 px sides, `chip` text) fits three pills on one 360 px line inside a card
+  ("Esta comissão | Média | Outro valor").
 - `ToggleChips` (`components/inputs/toggle-chips`, Base UI `ToggleGroup` with `multiple`): one or
   more choices among a few, all visible, as pressed buttons in a group named by its label: 40 px
   pills that wrap, the pressed ones with the 2 px ink outline and a bold label (the entries' "Tipo"
@@ -738,7 +740,7 @@ component here, so the form, and later the account, card and planning forms, sha
   control around it carries the name. A new design icon is added to its shape map by hand from the
   SVG, keeping the two layers. Drawn icons use a 1.75 stroke; the plain line icons of the action
   sheets and menus (`edit`, `flag`, `archive`, `unarchive`, `calendar`, `subcategory`, `move`,
-  `more`) keep the design's 2 (`weight` in the shape), and the sidebar's `collapse` / `expand`
+  `more`, `grip`) keep the design's 2 (`weight` in the shape), and the sidebar's `collapse` / `expand`
   arrows its 1.5. `install` (a phone with a down arrow, for "Instalar o app") was drawn here in
   the same style, as the design set has none.
 - `lucide-react` only for small utility glyphs (chevrons, close, the period calendar), named
@@ -947,3 +949,25 @@ online with `asChild` are translated to `render`.
 - `SplitShortcut` (`components/finance/split-shortcut`): the link card to the commission split at
   the end of Metas: the "juntos" drawing, "Divisão da comissão", the sentence the screen writes,
   "Editar divisão" when `canEdit`, and a chevron. A viewer still opens the split, read only.
+
+## Planning round B building blocks
+`../design/planning-b/components.md`; the commission split (PLAN-06) uses them.
+- `AllocationStepRow` (`components/finance/allocation-step-row`): one split step as a 72 px card
+  row: the 32 × 44 grip ("Arrastar para mudar a ordem"), the loose drawing of the destination
+  (42 px), "Passo N" (muted caption) above the title, and the detail (2 lines each, then "…"), and
+  the `actions` slot for its "⋯". The row only draws the drag: `gripProps` are spread on the grip
+  button (pointer, keyboard and ARIA props of any drag library) and the rest of the props on the
+  `li` (its `ref`, data attributes); the feature owns the order and "Mover para cima/baixo".
+  `isLifted` scales it to 1.02 with the float shadow and an ink border; `isInvalid` draws the
+  danger border, "Passo N" in danger, the faded drawing and "Meta excluída. Remova este passo para
+  salvar." (`invalidMessage`) under the detail; `isReadOnly` (viewers) drops the grip and the
+  actions and pads the drawing 16 px off the edge.
+- `SplitExample` (`components/finance/split-example`): the "Como ficaria" card: the compact
+  `ChoiceChips` "Esta comissão | Média | Outro valor" (`choices` limits them), a `MoneyInput` under
+  them for "Outro valor" (`customAmount` / `onCustomAmountChange`), "Com **R$ X** (esta
+  comissão):", one row per step "n · destino ······ R$ X" (a skipped step, `amountCents: null`,
+  shows "—", read as "nenhum valor"), a solid line, "Sem destino ······ R$ X" and the footnote.
+  It never computes the split: the feature passes the parts from `splitVariableIncome`. `hasBar`
+  (desktop) adds the stacked bar, one colour per step (`mint`, `warning-fill`, `chart-4`,
+  `ink-subtle`, `chart-1`, repeating from the sixth; what is left in `sunken`), and fills the step
+  numbers with the same colours. The bar is decorative; the rows carry the amounts.
