@@ -261,3 +261,10 @@ export type BudgetSheetViewProps = {
   view: BudgetSheetView
   periodLabel: string
 }
+
+export type BudgetsViewProps = {
+  overview: PlanningOverview
+  lines: BudgetLineView[]
+  unbudgeted: UnbudgetedView[]
+  onOpen?: (categoryAccountId: string) => void
+}

@@ -472,3 +472,31 @@ describe('PLAN-04 budgets', () => {
       .not.toBeInTheDocument()
   })
 })
+
+describe('PLAN-04 budgets on the desktop', () => {
+  beforeEach(async () => {
+    await page.viewport(1280, 900)
+  })
+
+  it('shows three indicators and the budgets in a table, each opening its budget', async () => {
+    await openPlanning({ path: 'planning/budgets', answers: overviewAnswer() })
+    await expect.element(page.getByText('Limite somado')).toBeVisible()
+    await expect.element(page.getByText('68%')).toBeVisible()
+    await expect.element(page.getByText('Mercado está acima do ritmo.')).toBeVisible()
+    const table = page.getByRole('table', { name: 'Com orçamento' })
+    await expect.element(table.getByText('Acima do ritmo')).toBeVisible()
+    await expect.element(table.getByText(/Feira R\$.210,00/)).toBeVisible()
+    await expectNoAccessibilityViolations(page.getByRole('main').element())
+    const tabs = page.getByRole('group', { name: 'Partes do planejamento' }).element()
+    expect(tabs.getBoundingClientRect().height).toBeGreaterThan(36)
+    await table.getByRole('button', { name: 'Orçamento de Mercado' }).click()
+    await expect.element(page.getByRole('dialog', { name: 'Orçamento de Mercado' })).toBeVisible()
+  })
+
+  it('lists the categories without a budget in their own table, with "Definir"', async () => {
+    await openPlanning({ path: 'planning/budgets', answers: overviewAnswer() })
+    const table = page.getByRole('table', { name: 'Sem orçamento' })
+    await table.getByRole('button', { name: 'Definir orçamento de Casa' }).click()
+    await expect.element(page.getByRole('dialog', { name: 'Orçamento de Casa' })).toBeVisible()
+  })
+})
