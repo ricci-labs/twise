@@ -23,4 +23,20 @@ describe('FieldGroup', () => {
       .toHaveAccessibleDescription('O tipo não pode ser mudado depois. Escolha um tipo.')
     await expectNoAccessibilityViolations(screen.container)
   })
+
+  it('puts the note after the choices and describes the group with it', async () => {
+    const screen = await render(
+      <FieldGroup label="Quando" note="Se o mês tiver menos dias, vale o último.">
+        <button type="button">No dia 10 do mês</button>
+      </FieldGroup>,
+    )
+    const group = screen.getByRole('group', { name: 'Quando' })
+    await expect
+      .element(group)
+      .toHaveAccessibleDescription('Se o mês tiver menos dias, vale o último.')
+    const button = screen.getByRole('button').element()
+    const note = screen.getByText('Se o mês tiver menos dias, vale o último.').element()
+    expect(button.compareDocumentPosition(note)).toBe(Node.DOCUMENT_POSITION_FOLLOWING)
+    await expectNoAccessibilityViolations(screen.container)
+  })
 })

@@ -4,7 +4,9 @@ export const switchRowVariants = cva(
   'flex min-h-control items-center gap-3 text-choice text-ink lg:justify-start lg:gap-4',
 )
 
-export const switchLabelVariants = cva('flex-1 lg:flex-none')
+export const switchTextVariants = cva('flex min-w-0 flex-1 flex-col gap-1 lg:flex-initial')
+
+export const switchHelpVariants = cva('text-body-sm text-ink-muted')
 
 export const switchVariants = cva([
   'relative h-8 w-13 shrink-0 cursor-pointer rounded-full bg-border-control p-1 outline-none transition-colors duration-fast',

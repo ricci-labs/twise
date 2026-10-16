@@ -28,6 +28,22 @@ describe('OccurrenceGroup', () => {
     await expectNoAccessibilityViolations(screen.container)
   })
 
+  it('puts the add link with its plus at the end of the heading', async () => {
+    const pressed: string[] = []
+    const screen = await render(
+      <OccurrenceGroup
+        title="Receitas"
+        count={1}
+        add={{ label: 'Nova receita', onPress: () => pressed.push('add') }}
+      >
+        {internet()}
+      </OccurrenceGroup>,
+    )
+    await screen.getByRole('button', { name: 'Nova receita' }).click()
+    expect(pressed).toEqual(['add'])
+    await expectNoAccessibilityViolations(screen.container)
+  })
+
   it('draws the overdue group in danger, with the larger padding', async () => {
     const screen = await render(
       <OccurrenceGroup title="Atrasados" count={1} tone="danger" footer={<p>rodapé</p>}>

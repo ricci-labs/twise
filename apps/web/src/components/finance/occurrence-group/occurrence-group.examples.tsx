@@ -28,6 +28,26 @@ export const occurrenceGroupExamples: ComponentExamples = {
       ),
     },
     {
+      name: 'Com o link de adicionar no cabeçalho',
+      render: () => (
+        <div className="w-full max-w-100">
+          <OccurrenceGroup
+            title="Contas e assinaturas"
+            count={1}
+            add={{ label: 'Nova conta fixa', onPress: noop }}
+          >
+            <OccurrenceRow
+              dueOn="2026-11-05"
+              description="Aluguel"
+              detail="Conta X · Casa › Aluguel"
+              amountCents={210000}
+              direction="out"
+            />
+          </OccurrenceGroup>
+        </div>
+      ),
+    },
+    {
       name: 'A vencer, com "Mostrar mais"',
       render: () => (
         <div className="w-full max-w-100">

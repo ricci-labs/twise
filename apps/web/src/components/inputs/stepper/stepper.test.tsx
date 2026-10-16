@@ -41,4 +41,26 @@ describe('Stepper', () => {
     await expect.element(screen.getByText('R$ 10,00')).toBeVisible()
     await expectNoAccessibilityViolations(screen.container)
   })
+
+  it('names the value by the words before it, in the small size', async () => {
+    const screen = await render(
+      <Stepper
+        size="sm"
+        value={1}
+        min={1}
+        max={52}
+        onChange={() => undefined}
+        valueText="1"
+        decreaseLabel="Menos"
+        increaseLabel="Mais"
+        lead="A cada"
+        aside="mês"
+      />,
+    )
+    await expect.element(screen.getByRole('status', { name: 'A cada' })).toHaveTextContent('1')
+    expect(
+      screen.getByRole('button', { name: 'Mais' }).element().getBoundingClientRect().height,
+    ).toBe(44)
+    await expectNoAccessibilityViolations(screen.container)
+  })
 })

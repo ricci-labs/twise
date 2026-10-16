@@ -29,10 +29,12 @@ export function DayField({
   onBlur,
   title,
   summary,
+  size,
   className,
   ref,
   ...props
 }: DayFieldProps) {
+  const isInline = size === 'inline'
   const [isOpen, setIsOpen] = useState(false)
   const [button, setButton] = useState<HTMLButtonElement | null>(null)
   const keepButton = useCallback(
@@ -49,13 +51,13 @@ export function DayField({
         type="button"
         data-slot="day-field"
         aria-haspopup="dialog"
-        className={cn(dayFieldVariants(), className)}
+        className={cn(dayFieldVariants({ size }), className)}
         onClick={() => setIsOpen(true)}
         {...props}
         ref={keepButton}
       >
-        <TwiseIcon name="calendar" size="sm" />
-        <span className="flex-1">{day ? messages.day(day) : messages.placeholder}</span>
+        {!isInline && <TwiseIcon name="calendar" size="sm" />}
+        <span className="flex-1">{dayText(day, isInline)}</span>
         <ChevronDown aria-hidden="true" />
       </button>
       <DaySheet
@@ -77,6 +79,13 @@ export function DayField({
       />
     </>
   )
+}
+
+function dayText(day: number | null, isInline: boolean): string {
+  if (!day) {
+    return messages.placeholder
+  }
+  return isInline ? String(day) : messages.day(day)
 }
 
 function DaySheet({

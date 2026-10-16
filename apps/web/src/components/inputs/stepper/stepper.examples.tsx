@@ -34,10 +34,29 @@ function FirstInstallment() {
   )
 }
 
+function Interval() {
+  const [interval, setInterval] = useState(1)
+  return (
+    <Stepper
+      size="sm"
+      value={interval}
+      min={1}
+      max={52}
+      onChange={setInterval}
+      valueText={String(interval)}
+      decreaseLabel="Menos um mês entre as datas"
+      increaseLabel="Mais um mês entre as datas"
+      lead="A cada"
+      aside={interval === 1 ? 'mês' : 'meses'}
+    />
+  )
+}
+
 export const stepperExamples: ComponentExamples = {
   component: 'Stepper',
   examples: [
     { name: 'Parcelas', render: () => <Installments /> },
     { name: 'Começar da parcela', render: () => <FirstInstallment /> },
+    { name: 'Pequeno, com a frase em volta', render: () => <Interval /> },
   ],
 }

@@ -1,19 +1,22 @@
+import { TextLink } from '@web/components/actions/text-link'
 import { occurrenceGroupMessages as messages } from '@web/components/finance/occurrence-group/occurrence-group.messages'
 import type { OccurrenceGroupProps } from '@web/components/finance/occurrence-group/occurrence-group.types'
 import {
+  occurrenceGroupAddVariants,
   occurrenceGroupCountVariants,
   occurrenceGroupHeadVariants,
   occurrenceGroupListVariants,
   occurrenceGroupTitleVariants,
   occurrenceGroupVariants,
 } from '@web/components/finance/occurrence-group/occurrence-group.variants'
+import { Plus } from 'lucide-react'
 import { useId } from 'react'
 
 export function OccurrenceGroup({
   title,
   count,
   tone,
-  action,
+  add,
   footer,
   children,
 }: OccurrenceGroupProps) {
@@ -32,7 +35,16 @@ export function OccurrenceGroup({
           </span>
           <span className="sr-only">{messages.count(count)}</span>
         </h2>
-        {action}
+        {add && (
+          <TextLink
+            render={add.link ?? <button type="button" />}
+            onClick={add.onPress}
+            className={occurrenceGroupAddVariants()}
+          >
+            <Plus aria-hidden="true" />
+            {add.label}
+          </TextLink>
+        )}
       </div>
       <ul className={occurrenceGroupListVariants({ tone })}>{children}</ul>
       {footer}

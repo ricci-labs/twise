@@ -17,6 +17,21 @@ describe('Switch', () => {
     await expectNoAccessibilityViolations(screen.container)
   })
 
+  it('puts the help under the label and describes the switch with it', async () => {
+    const screen = await render(
+      <Switch
+        label="O valor muda todo mês (aproximado)"
+        help="Ex.: a conta de luz."
+        isChecked={false}
+        onCheckedChange={vi.fn()}
+      />,
+    )
+    await expect
+      .element(screen.getByRole('switch', { name: 'O valor muda todo mês (aproximado)' }))
+      .toHaveAccessibleDescription('Ex.: a conta de luz.')
+    await expectNoAccessibilityViolations(screen.container)
+  })
+
   it('shows when it is on', async () => {
     const screen = await render(
       <Switch label="Negativo (cheque especial)" isChecked onCheckedChange={vi.fn()} />,
