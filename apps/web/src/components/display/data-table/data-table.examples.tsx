@@ -10,6 +10,41 @@ export const dataTableExamples: ComponentExamples = {
   component: 'DataTable',
   examples: [
     {
+      name: 'Previstos, com os grupos em faixas',
+      render: () => (
+        <div className="w-full max-w-240">
+          <DataTable
+            label="Previstos de out/26"
+            layout="occurrences"
+            columns={[
+              { key: 'due', label: 'Vence' },
+              { key: 'name', label: 'Conta fixa' },
+              { key: 'account', label: 'Conta ou cartão' },
+              { key: 'status', label: 'Situação' },
+              { key: 'amount', label: 'Valor', align: 'end' },
+              { key: 'action', label: 'Ação', isLabelHidden: true, isActions: true },
+              { key: 'more', label: 'Mais ações', isLabelHidden: true, isActions: true },
+            ]}
+            rows={[
+              { key: 'late', band: 'Atrasados 1' },
+              {
+                key: 'internet',
+                cells: [
+                  '18/10',
+                  <DataTableName key="name" name="Internet" icon="house" />,
+                  'Conta X',
+                  'Atrasado',
+                  <DataTableAmount key="amount" cents={12000} />,
+                  null,
+                  null,
+                ],
+              },
+            ]}
+          />
+        </div>
+      ),
+    },
+    {
       name: 'Contas',
       render: () => (
         <div className="w-full max-w-240">
