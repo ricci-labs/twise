@@ -19,11 +19,14 @@ import {
   recurrenceGroupsOf,
   recurrenceTilesOf,
 } from '@web/features/planning/components/recurrence-rows'
+import { RecurrencesDesktop } from '@web/features/planning/components/recurrences-desktop'
 import { planningMessages } from '@web/features/planning/planning.messages'
 import { NEW_RECURRENCE } from '@web/features/planning/planning.schemas'
 import type { RecurrenceGroupKey, RecurrencesTabProps } from '@web/features/planning/planning.types'
+import { useMediaQuery } from '@web/hooks/use-media-query'
 import { usePageTitle } from '@web/hooks/use-page-title'
 import { ApiError } from '@web/lib/api/api-error'
+import { DESKTOP_QUERY } from '@web/lib/breakpoints'
 import { hasPermission } from '@web/lib/permissions'
 
 const messages = planningMessages.recurrences
@@ -35,6 +38,7 @@ const TYPE_OF_GROUP: Record<RecurrenceGroupKey, RecurringEntryType> = {
 }
 
 export function RecurrencesTab({ workspaceId, permissions }: RecurrencesTabProps) {
+  const isDesktop = useMediaQuery(DESKTOP_QUERY)
   usePageTitle(messages.pageTitle)
   const recurrences = useQuery(recurrencesQueryOptions(workspaceId))
   const accounts = useQuery(accountsQueryOptions(workspaceId))
@@ -60,10 +64,24 @@ export function RecurrencesTab({ workspaceId, permissions }: RecurrencesTabProps
   const canUpdate = hasPermission(permissions, 'planning', 'update')
   const canDelete = hasPermission(permissions, 'planning', 'delete')
   const byId = new Map(recurrences.data.items.map((item) => [item.id, item]))
-  const groups = recurrenceGroupsOf(recurrences.data, {
+  const context = {
     today: periods.data.today,
     accounts: new Map(accounts.data.map((account) => [account.id, account])),
-  })
+  }
+  if (isDesktop) {
+    return (
+      <RecurrencesDesktop
+        workspaceId={workspaceId}
+        list={recurrences.data}
+        context={context}
+        canCreate={canCreate}
+        canUpdate={canUpdate}
+        canDelete={canDelete}
+        addLinkOf={(key) => newRecurrenceLink(workspaceId, TYPE_OF_GROUP[key])}
+      />
+    )
+  }
+  const groups = recurrenceGroupsOf(recurrences.data, context)
   return (
     <>
       <PlanSummaryTiles label={messages.summaryLabel} tiles={recurrenceTilesOf(recurrences.data)} />

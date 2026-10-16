@@ -536,3 +536,21 @@ describe('PLAN-03 on the desktop', () => {
     await expect.element(page.getByRole('menuitem', { name: 'Pular este mês' })).toBeVisible()
   })
 })
+
+describe('PLAN-01 on the desktop', () => {
+  beforeEach(async () => {
+    await page.viewport(1280, 900)
+  })
+
+  it('shows three monthly indicators and a table per group, actions in a menu', async () => {
+    await openPlanning({ path: 'planning/recurrences', answers: recurrencesAnswer() })
+    await expect.element(page.getByText('Transferências programadas por mês')).toBeVisible()
+    await expect.element(page.getByText('Reserva, todo dia 5.')).toBeVisible()
+    const bills = page.getByRole('table', { name: 'Contas e assinaturas' })
+    await expect.element(bills.getByText('Todo dia 5').first()).toBeVisible()
+    await expect.element(bills.getByText('Atrasada · 18/10')).toBeVisible()
+    await expectNoAccessibilityViolations(page.getByRole('main').element())
+    await bills.getByRole('button', { name: 'Ações de Aluguel' }).click()
+    await expect.element(page.getByRole('menuitem', { name: 'Editar' })).toBeVisible()
+  })
+})

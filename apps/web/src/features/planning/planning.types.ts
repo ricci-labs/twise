@@ -191,6 +191,7 @@ export type RecurrenceActionsProps = {
   workspaceId: string
   recurrence: ListedRecurrence
   canDelete: boolean
+  triggerLabel?: string
   className?: string
   children?: ReactNode
 }
@@ -372,4 +373,34 @@ export type CategoryKind = 'expense_category' | 'income_category' | 'money'
 
 export type OccurrencesTableProps = OccurrencesProps & {
   periodLabel: string
+}
+
+export type RecurrencesDesktopProps = {
+  workspaceId: string
+  list: RecurrenceList
+  context: RecurrenceContext
+  canCreate: boolean
+  canUpdate: boolean
+  canDelete: boolean
+  addLinkOf: (key: RecurrenceGroupKey) => ReactElement
+}
+
+export type RecurrenceKpisProps = {
+  list: RecurrenceList
+}
+
+export type KpiAmountProps = {
+  cents: number
+  isEstimate?: boolean
+}
+
+export type NextCellProps = {
+  item: ListedRecurrence
+  today: IsoDate
+}
+
+export type RecurrenceCellOptions = {
+  workspaceId: string
+  canUpdate: boolean
+  canDelete: boolean
 }
