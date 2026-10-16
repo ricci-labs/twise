@@ -2,9 +2,11 @@ import {
   formatDayMonth,
   formatDayMonthLong,
   formatFullDate,
+  formatLongWeekday,
   formatMonthLabel,
   formatMonthName,
   formatMonthTitle,
+  formatPaddedDayMonth,
   formatRange,
   formatShortDate,
   formatShortMonthName,
@@ -17,6 +19,7 @@ import { describe, expect, it } from 'vitest'
 describe('calendar formats', () => {
   it('writes calendar days the way the Home design does', () => {
     expect(formatDayMonth('2026-10-20')).toBe('20 out')
+    expect(formatPaddedDayMonth('2026-12-08')).toBe('08 dez')
     expect(formatDayMonthLong('2026-10-20')).toBe('20 de outubro')
     expect(formatShortDate('2026-11-04')).toBe('04/11')
     expect(formatFullDate('2026-10-18')).toBe('18/10/2026')
@@ -29,6 +32,7 @@ describe('calendar formats', () => {
     expect(formatShortMonthName('2026-11')).toBe('nov')
     expect(formatMonthTitle('2027-01')).toBe('Janeiro')
     expect(formatWeekday('2026-10-22')).toBe('Quinta')
+    expect(formatLongWeekday('2026-11-02')).toBe('Segunda-feira')
     expect(formatWeekdayDayMonth('2026-10-17')).toBe('sáb, 17 out')
     expect(formatWeekdayDayMonthYear('2026-10-20')).toBe('ter, 20 out 2026')
   })

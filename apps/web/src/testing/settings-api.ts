@@ -13,6 +13,15 @@ export const WORKSPACE_HOLIDAYS: readonly FakeWorkspaceHoliday[] = [
   { id: CITY_PATRON, onDate: '2026-12-08', name: 'Padroeira da cidade' },
 ]
 
+export const MEAL_VOUCHER_RULE = '00000000-0000-4000-8000-0000000007b1'
+
+const MEAL_VOUCHER_MOVE = {
+  recurrenceId: MEAL_VOUCHER_RULE,
+  description: 'Vale-alimentação',
+  fromOn: '2026-11-02',
+  toOn: '2026-11-03',
+}
+
 const ALL_SOULS_DAY = {
   onDate: '2026-11-02',
   daysAway: 13,
@@ -27,7 +36,10 @@ export function holidaysAnswer(
     [`GET ${BASE}/periods`]: () => Response.json(demoPeriodsOf(2026)),
     [`GET ${BASE}/holidays`]: (request) => {
       const year = Number(new URL(request.url).searchParams.get('year'))
-      const national = nationalHolidays(year).map((holiday) => ({ ...holiday, affects: [] }))
+      const national = nationalHolidays(year).map((holiday) => ({
+        ...holiday,
+        affects: holiday.on === ALL_SOULS_DAY.onDate ? [MEAL_VOUCHER_MOVE] : [],
+      }))
       const ofYear = workspace
         .filter((holiday) => holiday.onDate.startsWith(String(year)))
         .map((holiday) => ({ ...holiday, affects: [] }))

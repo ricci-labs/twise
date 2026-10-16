@@ -1,4 +1,6 @@
 import type { IsoDate, Permission } from '@financas/shared'
+import type { UseQueryResult } from '@tanstack/react-query'
+import type { MiniMonthHoliday } from '@web/components/display/mini-month-calendar'
 import type { HolidayStatus } from '@web/components/finance/holiday-row'
 import type { fetchHolidays } from '@web/features/settings/api/settings.queries'
 import type {
@@ -14,6 +16,13 @@ export type HolidayFormInput = z.input<ReturnType<typeof holidayFormSchemaFor>>
 export type HolidaysOfYear = Awaited<ReturnType<typeof fetchHolidays>>
 
 export type HolidaySummary = HolidaysOfYear['summary']
+
+export type UpcomingHoliday = NonNullable<HolidaySummary['next']>
+
+export type HolidayMonth = {
+  month: string
+  holidays: readonly MiniMonthHoliday[]
+}
 
 export type HolidayView = {
   key: string
@@ -46,8 +55,10 @@ export type HolidaysPageProps = {
 export type HolidaysContentProps = {
   workspaceId: string
   permissions: readonly Permission[]
-  search: HolidaysSearch
-  onYearChange: (year: number) => void
+  today: UseQueryResult<IsoDate>
+  year: number | null
+  isDesktop: boolean
+  onAdd: (() => void) | null
 }
 
 export type HolidaysOfYearProps = {
@@ -55,15 +66,33 @@ export type HolidaysOfYearProps = {
   permissions: readonly Permission[]
   year: number
   today: IsoDate
+  isDesktop: boolean
   onAdd: (() => void) | null
 }
 
-export type HolidaysBodyProps = {
+export type HolidaysCalendarProps = {
   workspaceId: string
   permissions: readonly Permission[]
+  holidays: HolidaysOfYear
   year: number
   today: IsoDate
-  onYearChange: (year: number) => void
+}
+
+export type NextHolidaySlotProps = {
+  workspaceId: string
+  holidays: HolidaysOfYear
+  year: number
+}
+
+export type WorkspaceHolidaysCardProps = {
+  workspaceId: string
+  permissions: readonly Permission[]
+  holidays: readonly HolidayView[]
+}
+
+export type HolidayLegendCardProps = {
+  summary: HolidaySummary
+  today: IsoDate
 }
 
 export type HolidayListsProps = {

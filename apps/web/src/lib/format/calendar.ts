@@ -31,12 +31,26 @@ const LONG_MONTHS = [
 ]
 const WEEKDAYS = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado']
 const SHORT_WEEKDAYS = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sáb']
+const LONG_WEEKDAYS = [
+  'Domingo',
+  'Segunda-feira',
+  'Terça-feira',
+  'Quarta-feira',
+  'Quinta-feira',
+  'Sexta-feira',
+  'Sábado',
+]
 const TWO_DIGITS = 2
 const YEAR_DIGITS = -2
 
 export function formatDayMonth(date: IsoDate): string {
   const { month, day } = parseIsoDate(date)
   return `${day} ${SHORT_MONTHS[month - 1]}`
+}
+
+export function formatPaddedDayMonth(date: IsoDate): string {
+  const { month, day } = parseIsoDate(date)
+  return `${pad(day)} ${SHORT_MONTHS[month - 1]}`
 }
 
 export function formatDayMonthLong(date: IsoDate): string {
@@ -90,6 +104,10 @@ export function formatRange(start: IsoDate, end: IsoDate): string {
 
 export function formatWeekday(date: IsoDate): string {
   return WEEKDAYS[dayOfWeek(date)] ?? ''
+}
+
+export function formatLongWeekday(date: IsoDate): string {
+  return LONG_WEEKDAYS[dayOfWeek(date)] ?? ''
 }
 
 export function formatShortWeekday(date: IsoDate): string {

@@ -28,6 +28,7 @@ import { filterChipsExamples } from '@web/components/display/filter-chips'
 import { kpiCardExamples } from '@web/components/display/kpi-card'
 import { kpiCarouselExamples } from '@web/components/display/kpi-carousel'
 import { listSummaryExamples } from '@web/components/display/list-summary'
+import { miniMonthCalendarExamples } from '@web/components/display/mini-month-calendar'
 import { nextStepCardExamples } from '@web/components/display/next-step-card'
 import { responsiveTextExamples } from '@web/components/display/responsive-text'
 import { richTextExamples } from '@web/components/display/rich-text'
@@ -71,6 +72,7 @@ import { invoiceYearSheetExamples } from '@web/components/finance/invoice-year-s
 import { linkedItemExamples } from '@web/components/finance/linked-item'
 import { matchQuestionExamples } from '@web/components/finance/match-question'
 import { nextDatesPreviewExamples } from '@web/components/finance/next-dates-preview'
+import { nextHolidayCardExamples } from '@web/components/finance/next-holiday-card'
 import { occurrenceGroupExamples } from '@web/components/finance/occurrence-group'
 import { occurrenceRowExamples } from '@web/components/finance/occurrence-row'
 import { planSummaryTilesExamples } from '@web/components/finance/plan-summary-tiles'
@@ -206,6 +208,8 @@ export const workbenchSections: readonly ComponentExamples[] = [
   allocationStepRowExamples,
   splitExampleExamples,
   holidayRowExamples,
+  nextHolidayCardExamples,
+  miniMonthCalendarExamples,
   dateBlockExamples,
   yearStepperExamples,
   settingsRowExamples,

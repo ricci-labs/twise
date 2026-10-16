@@ -15,5 +15,9 @@ export const dateBlockExamples: ComponentExamples = {
         </div>
       ),
     },
+    {
+      name: 'Grande, no cartão do próximo feriado',
+      render: () => <DateBlock date="2026-11-02" tone="next" size="lg" digits="padded" />,
+    },
   ],
 }
