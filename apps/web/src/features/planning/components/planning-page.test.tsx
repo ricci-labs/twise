@@ -2,7 +2,7 @@ import { createMemoryHistory } from '@tanstack/react-router'
 import { AppProviders } from '@web/app/providers'
 import { createApp } from '@web/app/router'
 import { expectNoAccessibilityViolations } from '@web/testing/accessibility'
-import { MEMBER_A } from '@web/testing/accounts-api'
+import { CHECKING, MEMBER_A } from '@web/testing/accounts-api'
 import { entriesListAnswers } from '@web/testing/entries-api'
 import {
   accessAs,
@@ -14,12 +14,16 @@ import {
 } from '@web/testing/fake-api'
 import {
   candidatesAnswer,
+  FILL_TRIP_STEPS,
+  GOALS,
+  goalsAnswer,
   INTERNET_CANDIDATES,
   occurrencesAnswer,
   overviewAnswer,
   plannedOccurrence,
   RENT_RULE,
   recurrencesAnswer,
+  TRIP_GOAL,
 } from '@web/testing/planning-api'
 import type { FakeAnswer } from '@web/testing/testing.types'
 import { beforeEach, describe, expect, it } from 'vitest'
@@ -135,10 +139,10 @@ describe('PLAN-03 planned occurrences', () => {
     await expect.element(page.getByText(/abcd1234/)).toBeVisible()
   })
 
-  it('switches tabs, the ones still to come saying so', async () => {
-    const app = await openPlanning()
+  it('switches tabs', async () => {
+    const app = await openPlanning({ answers: goalsAnswer() })
     await page.getByRole('button', { name: 'Metas' }).click()
-    await expect.element(page.getByText('Ainda não chegou aqui.')).toBeVisible()
+    await expect.element(page.getByRole('heading', { name: 'Reserva de emergência' })).toBeVisible()
     expect(app.router.state.location.pathname).toBe(`/w/${WORKSPACE_ID}/planning/goals`)
   })
 })
@@ -567,5 +571,87 @@ describe('PLAN-01 on the desktop', () => {
     await expectNoAccessibilityViolations(page.getByRole('main').element())
     await bills.getByRole('button', { name: 'Ações de Aluguel' }).click()
     await expect.element(page.getByRole('menuitem', { name: 'Editar' })).toBeVisible()
+  })
+})
+
+describe('PLAN-05 goals', () => {
+  beforeEach(async () => {
+    await page.viewport(360, 800)
+  })
+
+  it('shows the reserve first with its coverage, then each goal with the monthly amount', async () => {
+    await openPlanning({ path: 'planning/goals', answers: goalsAnswer() })
+    const reserve = page.getByRole('region', { name: 'Reserva de emergência' })
+    await expect.element(reserve.getByText('de R$ 18.000,00 · guardado em Poupança')).toBeVisible()
+    await expect.element(reserve.getByText('2,4 meses')).toBeVisible()
+    await expect.element(reserve.getByText('67% · faltam R$ 6.000,00')).toBeVisible()
+    const goals = page.getByRole('region', { name: /Metas/ })
+    await expect.element(goals.getByRole('heading', { name: 'Viagem para o Chile' })).toBeVisible()
+    await expect.element(goals.getByText('R$ 1.134,00 por mês')).toBeVisible()
+    await expectNoAccessibilityViolations(page.getByRole('main').element())
+  })
+
+  it('explains the reserve and the goals when there are none', async () => {
+    await openPlanning({ path: 'planning/goals', answers: goalsAnswer([]) })
+    await expect.element(page.getByText(/guarda alguns meses de gastos/)).toBeVisible()
+    await expect.element(page.getByText('Nenhuma meta ainda.')).toBeVisible()
+  })
+
+  it('saves money for a goal as a transfer to its account with the monthly amount', async () => {
+    const app = await openPlanning({ path: 'planning/goals', answers: goalsAnswer() })
+    await page.getByRole('button', { name: 'Ações de Viagem para o Chile' }).click()
+    await page.getByRole('link', { name: 'Guardar dinheiro' }).click()
+    await expect
+      .poll(() => app.router.state.location.search)
+      .toMatchObject({
+        entry: 'new',
+        entryType: 'transfer',
+        entryToAccount: CHECKING,
+        entryAmount: 113_400,
+      })
+  })
+
+  it('takes a goal out of the split when it is deleted', async () => {
+    const calls: string[] = []
+    await openPlanning({
+      path: 'planning/goals',
+      answers: {
+        ...goalsAnswer(GOALS, FILL_TRIP_STEPS),
+        [`PUT ${BASE}/allocation-steps`]: async (request) => {
+          calls.push(`steps ${await request.text()}`)
+          return new Response(null, { status: 204 })
+        },
+        [`DELETE ${BASE}/goals/${TRIP_GOAL}`]: () => {
+          calls.push('delete')
+          return new Response(null, { status: 204 })
+        },
+      },
+    })
+    await page.getByRole('button', { name: 'Ações de Viagem para o Chile' }).click()
+    await page.getByRole('button', { name: 'Excluir' }).click()
+    const dialog = page.getByRole('alertdialog', { name: 'Excluir Viagem para o Chile?' })
+    await expect.element(dialog.getByText(/Esta meta está na divisão da comissão/)).toBeVisible()
+    await dialog.getByRole('button', { name: 'Excluir e tirar da divisão' }).click()
+    await expect
+      .poll(() => calls)
+      .toEqual([
+        `steps ${JSON.stringify({ steps: [{ kind: 'rest', accountId: CHECKING }] })}`,
+        'delete',
+      ])
+    await expect.element(page.getByText('Meta excluída.')).toBeVisible()
+  })
+
+  it('hides the actions that need a permission from a reader', async () => {
+    await openPlanning({
+      path: 'planning/goals',
+      answers: goalsAnswer(),
+      access: () => accessAs('Leitor', VIEWER_PERMISSIONS),
+    })
+    await page.getByRole('button', { name: 'Ações de Viagem para o Chile' }).click()
+    await expect.element(page.getByRole('link', { name: 'Ver lançamentos da conta' })).toBeVisible()
+    await expect
+      .element(page.getByRole('link', { name: 'Guardar dinheiro' }))
+      .not.toBeInTheDocument()
+    await expect.element(page.getByRole('button', { name: 'Excluir' })).not.toBeInTheDocument()
   })
 })

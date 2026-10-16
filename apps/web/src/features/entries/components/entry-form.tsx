@@ -30,7 +30,7 @@ import { useIsOnline } from '@web/hooks/use-is-online'
 import { ApiError } from '@web/lib/api/api-error'
 import { errorMessageFor } from '@web/lib/errors/error-message'
 import { formatMonthName } from '@web/lib/format/calendar'
-import { centsOfTypedAmount } from '@web/lib/format/money'
+import { centsOfTypedAmount, formatTypedAmount } from '@web/lib/format/money'
 import { fill } from '@web/lib/format/template'
 import { useSchemaForm } from '@web/lib/forms/use-schema-form'
 import { type BaseSyntheticEvent, useRef, useState } from 'react'
@@ -265,6 +265,8 @@ function prefilled(blank: EntryFormInput, prefill: EntryPrefill): EntryFormInput
     entryType,
     description: entryType === OPENING_BALANCE ? messages.openingDescription : blank.description,
     accountId: prefill.accountId ?? blank.accountId,
+    toAccountId: prefill.toAccountId ?? blank.toAccountId,
+    amount: prefill.amountCents ? formatTypedAmount(prefill.amountCents) : blank.amount,
     cardAccountId: prefill.cardAccountId ?? blank.cardAccountId,
     invoiceId: prefill.invoiceId ?? blank.invoiceId,
     ...prefill.planned,

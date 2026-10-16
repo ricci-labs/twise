@@ -1,4 +1,4 @@
-import type { IsoDate, Permission, RecurringEntryType } from '@financas/shared'
+import type { AllocationStepInput, IsoDate, Permission, RecurringEntryType } from '@financas/shared'
 import type { BudgetChild, BudgetStatus } from '@web/components/finance/budget-row'
 import type {
   OccurrenceBadge,
@@ -12,8 +12,10 @@ import type { FieldControlProps } from '@web/components/forms/form-field'
 import type { PickerEmpty, PickerItem, PickerSheetProps } from '@web/components/inputs/picker-sheet'
 import type {
   fetchAccounts,
+  fetchAllocationSteps,
   fetchBalances,
   fetchCandidates,
+  fetchGoals,
   fetchOccurrences,
   fetchOverview,
   fetchRecurrences,
@@ -49,6 +51,37 @@ export type PlanningHeaderActionProps = {
 }
 
 export type PlanningAccount = Awaited<ReturnType<typeof fetchAccounts>>[number]
+
+export type PlanningGoal = Awaited<ReturnType<typeof fetchGoals>>[number]
+
+export type AllocationStepItem = Awaited<ReturnType<typeof fetchAllocationSteps>>[number]
+
+export type GoalDeletion = {
+  goalId: string
+  remainingSteps?: readonly AllocationStepInput[]
+}
+
+export type GoalsTabProps = {
+  workspaceId: string
+  permissions: readonly Permission[]
+}
+
+export type GoalsViewProps = {
+  workspaceId: string
+  goals: readonly PlanningGoal[]
+  accounts: ReadonlyMap<string, PlanningAccount>
+  steps: readonly AllocationStepItem[]
+  coverageMonths: number | null
+  permissions: readonly Permission[]
+}
+
+export type GoalActionsProps = {
+  workspaceId: string
+  goal: PlanningGoal
+  accountName: string
+  steps: readonly AllocationStepItem[]
+  permissions: readonly Permission[]
+}
 
 export type OccurrenceList = Awaited<ReturnType<typeof fetchOccurrences>>
 

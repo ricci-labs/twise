@@ -1,11 +1,11 @@
 import { Link, useNavigate } from '@tanstack/react-router'
 import { Button } from '@web/components/actions/button'
 import { SegmentedControl } from '@web/components/actions/segmented-control'
-import { EmptyBlock } from '@web/components/feedback/empty-block'
 import { TwiseIcon } from '@web/components/icons/twise-icon'
 import { PageFrame } from '@web/components/layout/page-frame'
 import { PageHeader } from '@web/components/layout/page-header'
 import { BudgetsTab } from '@web/features/planning/components/budgets-tab'
+import { GoalsTab } from '@web/features/planning/components/goals-tab'
 import { OccurrencesTab } from '@web/features/planning/components/occurrences-tab'
 import { RecurrenceEditor } from '@web/features/planning/components/recurrence-editor'
 import { RecurrencesTab } from '@web/features/planning/components/recurrences-tab'
@@ -96,5 +96,5 @@ function TabBody({ tab, ...props }: PlanningPageProps) {
   if (tab === 'budgets') {
     return <BudgetsTab {...props} />
   }
-  return <EmptyBlock icon="calendar" title={messages.soon.title} text={messages.soon.text} />
+  return <GoalsTab workspaceId={props.workspaceId} permissions={props.permissions} />
 }

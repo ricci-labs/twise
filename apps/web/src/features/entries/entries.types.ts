@@ -170,6 +170,8 @@ export type EntryPrefill = {
   values?: EntryFormInput
   entryType?: FormEntryType
   accountId?: string
+  toAccountId?: string
+  amountCents?: number
   cardAccountId?: string
   invoiceId?: string
   planned?: Partial<Pick<EntryFormInput, 'amount' | 'description' | 'categoryId' | 'toAccountId'>>

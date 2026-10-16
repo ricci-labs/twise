@@ -249,3 +249,80 @@ export function budgetOverview(overrides: Record<string, unknown> = {}) {
 export function overviewAnswer(overview: object = budgetOverview()): Record<string, FakeAnswer> {
   return { [`GET ${BASE}/overview`]: () => Response.json(overview) }
 }
+
+export const RESERVE_GOAL = '00000000-0000-4000-8000-0000000009c1'
+export const TRIP_GOAL = '00000000-0000-4000-8000-0000000009c2'
+
+export function plannedGoal(id: string, name: string, overrides: Record<string, unknown> = {}) {
+  return {
+    id,
+    name,
+    targetCents: 1_500_000,
+    targetOn: '2027-07-31',
+    accountId: CHECKING,
+    isReserve: false,
+    savedCents: 480_000,
+    percent: 32,
+    remainingCents: 1_020_000,
+    overCents: 0,
+    monthlyToTargetCents: 113_400,
+    ...overrides,
+  }
+}
+
+export const GOALS = [
+  plannedGoal(RESERVE_GOAL, 'Reserva', {
+    accountId: SAVINGS,
+    isReserve: true,
+    targetCents: 1_800_000,
+    targetOn: null,
+    savedCents: 1_200_000,
+    percent: 67,
+    remainingCents: 600_000,
+    monthlyToTargetCents: null,
+  }),
+  plannedGoal(TRIP_GOAL, 'Viagem para o Chile'),
+]
+
+export const FILL_TRIP_STEPS = [
+  {
+    position: 1,
+    kind: 'fill_goal',
+    goalId: TRIP_GOAL,
+    accountId: null,
+    percent: null,
+    amountCents: null,
+  },
+  {
+    position: 2,
+    kind: 'rest',
+    goalId: null,
+    accountId: CHECKING,
+    percent: null,
+    amountCents: null,
+  },
+]
+
+export function goalsAnswer(
+  goals: readonly object[] = GOALS,
+  steps: readonly object[] = [],
+): Record<string, FakeAnswer> {
+  const base = budgetOverview()
+  return {
+    [`GET ${BASE}/goals`]: () => Response.json(goals),
+    [`GET ${BASE}/allocation-steps`]: () => Response.json(steps),
+    ...overviewAnswer({
+      ...base,
+      metrics: {
+        ...base.metrics,
+        reserveCoverage: {
+          savedCents: 1_200_000,
+          targetCents: 1_800_000,
+          percent: 67,
+          monthlySpendingCents: 500_000,
+          months: 2.4,
+        },
+      },
+    }),
+  }
+}

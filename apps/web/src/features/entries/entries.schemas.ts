@@ -35,6 +35,8 @@ export const newEntrySearchSchema = z.object({
   entry: z.literal(NEW_ENTRY).optional().catch(undefined),
   entryType: z.enum(FORM_ENTRY_TYPES).optional().catch(undefined),
   entryAccount: z.uuid().optional().catch(undefined),
+  entryToAccount: z.uuid().optional().catch(undefined),
+  entryAmount: z.number().int().positive().optional().catch(undefined),
   entryCard: z.uuid().optional().catch(undefined),
   entryInvoice: z.uuid().optional().catch(undefined),
   entryRepeat: z.uuid().optional().catch(undefined),

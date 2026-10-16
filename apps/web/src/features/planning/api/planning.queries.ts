@@ -61,6 +61,20 @@ export function occurrencesQueryOptions(workspaceId: string, from: IsoDate, to: 
   })
 }
 
+export function goalsQueryOptions(workspaceId: string) {
+  return queryOptions({
+    queryKey: [...queryKeys.workspace(workspaceId), 'goals'] as const,
+    queryFn: () => fetchGoals(workspaceId),
+  })
+}
+
+export function allocationStepsQueryOptions(workspaceId: string) {
+  return queryOptions({
+    queryKey: [...queryKeys.workspace(workspaceId), 'allocation-steps'] as const,
+    queryFn: () => fetchAllocationSteps(workspaceId),
+  })
+}
+
 export function candidatesQueryOptions(workspaceId: string, occurrenceId: string) {
   return queryOptions({
     queryKey: [
@@ -102,6 +116,14 @@ export function fetchCandidates(workspaceId: string, occurrenceId: string) {
       query: {},
     }),
   )
+}
+
+export function fetchGoals(workspaceId: string) {
+  return unwrap(workspaceApi.goals.$get({ param: { workspaceId } }))
+}
+
+export function fetchAllocationSteps(workspaceId: string) {
+  return unwrap(workspaceApi['allocation-steps'].$get({ param: { workspaceId } }))
 }
 
 export function fetchRecurrences(workspaceId: string) {
