@@ -1,10 +1,14 @@
+import type { RecurringEntryType } from '@financas/shared'
 import { useQuery } from '@tanstack/react-query'
+import { Link } from '@tanstack/react-router'
+import { Button } from '@web/components/actions/button'
 import { EmptyBlock } from '@web/components/feedback/empty-block'
 import { ListSkeleton } from '@web/components/feedback/list-skeleton'
 import { SectionError } from '@web/components/feedback/section-error'
 import { OccurrenceGroup } from '@web/components/finance/occurrence-group'
 import { PlanSummaryTiles } from '@web/components/finance/plan-summary-tiles'
 import { RecurrenceRow } from '@web/components/finance/recurrence-row'
+import { TwiseIcon } from '@web/components/icons/twise-icon'
 import {
   accountsQueryOptions,
   periodsQueryOptions,
@@ -16,13 +20,19 @@ import {
   recurrenceTilesOf,
 } from '@web/features/planning/components/recurrence-rows'
 import { planningMessages } from '@web/features/planning/planning.messages'
-import type { RecurrencesTabProps } from '@web/features/planning/planning.types'
+import { NEW_RECURRENCE } from '@web/features/planning/planning.schemas'
+import type { RecurrenceGroupKey, RecurrencesTabProps } from '@web/features/planning/planning.types'
 import { usePageTitle } from '@web/hooks/use-page-title'
 import { ApiError } from '@web/lib/api/api-error'
 import { hasPermission } from '@web/lib/permissions'
 
 const messages = planningMessages.recurrences
 const SKELETON_ROWS = 5
+const TYPE_OF_GROUP: Record<RecurrenceGroupKey, RecurringEntryType> = {
+  bills: 'expense',
+  income: 'income',
+  transfers: 'transfer',
+}
 
 export function RecurrencesTab({ workspaceId, permissions }: RecurrencesTabProps) {
   usePageTitle(messages.pageTitle)
@@ -43,8 +53,9 @@ export function RecurrencesTab({ workspaceId, permissions }: RecurrencesTabProps
   if (!recurrences.data || !accounts.data || !periods.data) {
     return <ListSkeleton rows={SKELETON_ROWS} />
   }
+  const canCreate = hasPermission(permissions, 'planning', 'create')
   if (recurrences.data.items.length === 0) {
-    return <EmptyBlock icon="calendar" title={messages.empty} text={messages.emptyText} />
+    return <Empty workspaceId={workspaceId} canCreate={canCreate} />
   }
   const canUpdate = hasPermission(permissions, 'planning', 'update')
   const canDelete = hasPermission(permissions, 'planning', 'delete')
@@ -57,7 +68,19 @@ export function RecurrencesTab({ workspaceId, permissions }: RecurrencesTabProps
     <>
       <PlanSummaryTiles label={messages.summaryLabel} tiles={recurrenceTilesOf(recurrences.data)} />
       {groups.map((group) => (
-        <OccurrenceGroup key={group.key} title={group.title} count={group.rows.length}>
+        <OccurrenceGroup
+          key={group.key}
+          title={group.title}
+          count={group.rows.length}
+          add={
+            canCreate
+              ? {
+                  label: messages.add[group.key],
+                  link: newRecurrenceLink(workspaceId, TYPE_OF_GROUP[group.key]),
+                }
+              : undefined
+          }
+        >
           {group.rows.map(({ id, ...row }) => {
             const recurrence = byId.get(id)
             return (
@@ -79,5 +102,39 @@ export function RecurrencesTab({ workspaceId, permissions }: RecurrencesTabProps
         </OccurrenceGroup>
       ))}
     </>
+  )
+}
+
+function Empty({ workspaceId, canCreate }: { workspaceId: string; canCreate: boolean }) {
+  return (
+    <EmptyBlock
+      icon="calendar"
+      title={messages.empty}
+      text={messages.emptyText}
+      action={
+        canCreate && (
+          <div className="flex flex-col items-center gap-4">
+            <Button render={newRecurrenceLink(workspaceId, 'expense')}>
+              <TwiseIcon name="plus" size="sm" />
+              {messages.add.bills}
+            </Button>
+            <Button variant="secondary" render={newRecurrenceLink(workspaceId, 'income')}>
+              <TwiseIcon name="plus" size="sm" />
+              {messages.add.income}
+            </Button>
+          </div>
+        )
+      }
+    />
+  )
+}
+
+function newRecurrenceLink(workspaceId: string, recurrenceType: RecurringEntryType) {
+  return (
+    <Link
+      to="/w/$workspaceId/planning/$tab"
+      params={{ workspaceId, tab: 'recurrences' }}
+      search={(previous) => ({ ...previous, recurrence: NEW_RECURRENCE, recurrenceType })}
+    />
   )
 }

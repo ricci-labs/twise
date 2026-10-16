@@ -6,6 +6,7 @@ import { queryKeys } from '@web/lib/query-keys'
 
 const workspaceApi = apiClient.api.workspaces[':workspaceId']
 const PERIODS_FRESH_MS = 60 * 60 * 1000
+const HOLIDAYS_FRESH_MS = 60 * 60 * 1000
 
 export function periodsQueryOptions(workspaceId: string, year: number | undefined) {
   return queryOptions({
@@ -27,6 +28,21 @@ export function overviewQueryOptions(workspaceId: string, period: string | undef
     queryKey: [...queryKeys.workspace(workspaceId), 'overview', period ?? 'current'] as const,
     queryFn: () => fetchOverview(workspaceId, period),
     placeholderData: (previous) => previous,
+  })
+}
+
+export function balancesQueryOptions(workspaceId: string) {
+  return queryOptions({
+    queryKey: [...queryKeys.workspace(workspaceId), 'balances'] as const,
+    queryFn: () => fetchBalances(workspaceId),
+  })
+}
+
+export function holidaysQueryOptions(workspaceId: string, year: number) {
+  return queryOptions({
+    queryKey: [...queryKeys.workspace(workspaceId), 'holidays', year] as const,
+    queryFn: () => fetchHolidays(workspaceId, year),
+    staleTime: HOLIDAYS_FRESH_MS,
   })
 }
 
@@ -63,6 +79,16 @@ export function fetchPeriods(workspaceId: string, year: number | undefined) {
 
 export function fetchAccounts(workspaceId: string) {
   return unwrap(workspaceApi.accounts.$get({ param: { workspaceId } }))
+}
+
+export function fetchBalances(workspaceId: string) {
+  return unwrap(workspaceApi.balances.$get({ param: { workspaceId } }))
+}
+
+export function fetchHolidays(workspaceId: string, year: number) {
+  return unwrap(
+    workspaceApi.holidays.$get({ param: { workspaceId }, query: { year: String(year) } }),
+  )
 }
 
 export function fetchOccurrences(workspaceId: string, from: IsoDate, to: IsoDate) {

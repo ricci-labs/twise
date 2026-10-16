@@ -163,6 +163,36 @@ export const RULES_SUMMARY = {
   transfers: { monthlyCents: 60000, count: 1 },
 }
 
+export function recurrenceFormAnswers(
+  workspaceHolidays: readonly string[] = [],
+): Record<string, FakeAnswer> {
+  return {
+    [`GET ${BASE}/holidays`]: (request) =>
+      Response.json({
+        national: [],
+        workspace: workspaceHolidays
+          .filter((onDate) =>
+            onDate.startsWith(new URL(request.url).searchParams.get('year') ?? ''),
+          )
+          .map((onDate, position) => ({
+            id: `holiday-${position}`,
+            onDate,
+            name: 'Feriado local',
+          })),
+      }),
+    [`GET ${BASE}/balances`]: () =>
+      Response.json([
+        {
+          accountId: CHECKING,
+          kind: 'checking',
+          class: 'asset',
+          balanceCents: 280000,
+          naturalBalanceCents: 280000,
+        },
+      ]),
+  }
+}
+
 export function recurrencesAnswer(
   items: readonly object[] = RULES,
   summary: object = RULES_SUMMARY,
