@@ -46,8 +46,8 @@ export function RecurrenceFields({
         </span>{' '}
         {messages.requiredLegend}
       </p>
-      <div className="flex flex-col gap-4.5 px-4 pt-2.5 pb-6 lg:px-8">
-        {isTypeLocked ? <LockedTypeField /> : <TypeField />}
+      <div className="grid gap-4.5 px-4 pt-2.5 pb-6 lg:grid-cols-2 lg:items-start lg:gap-x-6 lg:px-8">
+        <div className="lg:col-span-2">{isTypeLocked ? <LockedTypeField /> : <TypeField />}</div>
         <FormField<RecurrenceFormInput>
           name="description"
           label={messages.description}
@@ -73,6 +73,7 @@ export function RecurrenceFields({
           name="amountIsEstimate"
           render={({ field }) => (
             <Switch
+              className="lg:col-span-2"
               label={messages.estimate}
               help={messages.estimateHelp}
               isChecked={field.value}
@@ -82,7 +83,9 @@ export function RecurrenceFields({
         />
         <RecurrenceAccountFields workspaceId={workspaceId} accounts={accounts} />
         <RecurrenceScheduleFields today={today} />
-        <RecurrencePreview workspaceId={workspaceId} today={today} />
+        <div className="lg:col-span-2">
+          <RecurrencePreview workspaceId={workspaceId} today={today} />
+        </div>
       </div>
     </>
   )

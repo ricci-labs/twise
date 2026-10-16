@@ -75,7 +75,7 @@ export function RecurrenceForm({
       <FormOverlay
         title={edit ? messages.editTitle : messages.title}
         closeLabel={messages.close}
-        size="md"
+        size="lg"
         actions="single"
         isOpen
         onRequestClose={requestClose}
