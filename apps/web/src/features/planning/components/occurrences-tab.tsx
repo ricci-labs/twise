@@ -23,6 +23,7 @@ import {
   occurrenceGroupsOf,
   summaryTilesOf,
 } from '@web/features/planning/components/occurrence-groups'
+import { OccurrencesTable } from '@web/features/planning/components/occurrences-table'
 import { PlanningPeriod, yearOf } from '@web/features/planning/components/planning-period'
 import { planningMessages } from '@web/features/planning/planning.messages'
 import { NEW_RECURRENCE } from '@web/features/planning/planning.schemas'
@@ -34,8 +35,10 @@ import type {
   OccurrencesTabProps,
   PlanningSearch,
 } from '@web/features/planning/planning.types'
+import { useMediaQuery } from '@web/hooks/use-media-query'
 import { usePageTitle } from '@web/hooks/use-page-title'
 import { ApiError } from '@web/lib/api/api-error'
+import { DESKTOP_QUERY } from '@web/lib/breakpoints'
 import { hasPermission } from '@web/lib/permissions'
 import { useMemo, useState } from 'react'
 
@@ -66,6 +69,7 @@ export function OccurrencesTab(props: OccurrencesTabProps) {
         today={chosen.today}
         from={chosen.period.start}
         to={chosen.period.end}
+        periodLabel={chosen.period.label}
       />
     </>
   )
@@ -79,7 +83,8 @@ function OccurrencesBody({
   today,
   from,
   to,
-}: OccurrencesTabProps & { today: string; from: string; to: string }) {
+  periodLabel,
+}: OccurrencesTabProps & { today: string; from: string; to: string; periodLabel: string }) {
   const occurrences = useQuery(occurrencesQueryOptions(workspaceId, from, to))
   const accounts = useQuery(accountsQueryOptions(workspaceId))
   const context = useMemo<OccurrenceContext>(
@@ -130,6 +135,7 @@ function OccurrencesBody({
       workspaceId={workspaceId}
       list={occurrences.data}
       context={context}
+      periodLabel={periodLabel}
       accounts={new Map(accounts.data.map((account) => [account.id, account]))}
       canUpdate={hasPermission(permissions, 'planning', 'update')}
       canRecord={
@@ -148,8 +154,10 @@ function Occurrences({
   canUpdate,
   canRecord,
   isFiltered = false,
+  periodLabel,
 }: OccurrencesProps) {
   const navigate = useNavigate()
+  const isDesktop = useMediaQuery(DESKTOP_QUERY)
   const byId = new Map(list.items.map((item) => [item.id, item]))
   const linkOf = (id: string) => {
     const occurrence = byId.get(id)
@@ -178,6 +186,19 @@ function Occurrences({
           search: (previous) => ({ ...previous, entry: 'new', entryOccurrence: occurrence.id }),
         }),
     }
+  }
+  if (isDesktop && !isFiltered) {
+    return (
+      <OccurrencesTable
+        workspaceId={workspaceId}
+        list={list}
+        context={context}
+        accounts={accounts}
+        canUpdate={canUpdate}
+        canRecord={canRecord}
+        periodLabel={periodLabel ?? ''}
+      />
+    )
   }
   return (
     <>

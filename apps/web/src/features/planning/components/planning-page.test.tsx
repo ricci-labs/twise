@@ -500,3 +500,39 @@ describe('PLAN-04 budgets on the desktop', () => {
     await expect.element(page.getByRole('dialog', { name: 'Orçamento de Casa' })).toBeVisible()
   })
 })
+
+describe('PLAN-03 on the desktop', () => {
+  beforeEach(async () => {
+    await page.viewport(1280, 900)
+  })
+
+  it('shows one table with the groups as bands, the main action in each row', async () => {
+    const overdueId = '00000000-0000-4000-8000-0000000009a1'
+    const app = await openPlanning({
+      answers: occurrencesAnswer([
+        plannedOccurrence(overdueId, '2026-10-18', 'Internet', { isOverdue: true }),
+        plannedOccurrence('paid', '2026-10-16', 'Diarista', {
+          status: 'matched',
+          matchedEntryId: '00000000-0000-4000-8000-0000000009b1',
+          paidOn: '2026-10-16',
+          paidCents: 18000,
+        }),
+      ]),
+    })
+    const table = page.getByRole('table', { name: 'Previstos de out/26' })
+    await expect.element(table.getByText('Atrasados 1')).toBeVisible()
+    await expect.element(table.getByRole('link', { name: 'Ver lançamento' })).toBeVisible()
+    await expect.element(page.getByText(/Falta pagar/)).toBeVisible()
+    await expectNoAccessibilityViolations(page.getByRole('main').element())
+    await table.getByRole('link', { name: 'Registrar pagamento de Internet' }).click()
+    await expect
+      .poll(() => app.router.state.location.search)
+      .toMatchObject({ entry: 'new', entryOccurrence: overdueId })
+  })
+
+  it('opens the rest of the actions from "⋯" as a menu', async () => {
+    await openPlanning()
+    await page.getByRole('button', { name: 'Ações de Internet' }).click()
+    await expect.element(page.getByRole('menuitem', { name: 'Pular este mês' })).toBeVisible()
+  })
+})

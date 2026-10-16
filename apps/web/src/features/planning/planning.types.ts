@@ -101,6 +101,7 @@ export type OccurrenceActionsProps = {
   occurrence: ListedOccurrence
   accounts: PlanningAccounts
   canRecord: boolean
+  triggerLabel?: string
   className?: string
   children?: ReactNode
 }
@@ -122,6 +123,7 @@ export type OccurrencesProps = {
   canUpdate: boolean
   canRecord: boolean
   isFiltered?: boolean
+  periodLabel?: string
 }
 
 export type GroupProps = {
@@ -367,3 +369,7 @@ export type RecurrenceAmount = {
 }
 
 export type CategoryKind = 'expense_category' | 'income_category' | 'money'
+
+export type OccurrencesTableProps = OccurrencesProps & {
+  periodLabel: string
+}

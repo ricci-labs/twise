@@ -339,6 +339,29 @@ export const planningMessages = {
     emptyText: 'As contas fixas aparecem aqui todo mês. Cadastre a primeira.',
     newRecurrence: 'Nova conta fixa',
     failed: 'Não deu para carregar os previstos.',
+    table: {
+      title: (period: string) => `Previstos de ${period}`,
+      summary: (toPay: string, overdue: number, toReceive: string) =>
+        `Falta pagar **${toPay}**${overdue > 0 ? ` (${overdue === 1 ? '1 atrasada' : `${overdue} atrasadas`})` : ''} · Falta receber **${toReceive}**`,
+      due: 'Vence',
+      name: 'Conta fixa',
+      account: 'Conta ou cartão',
+      status: 'Situação',
+      amount: 'Valor',
+      action: 'Ação principal',
+      more: 'Mais ações',
+      upcoming: 'A vencer',
+      badges: {
+        overdue: 'Atrasado',
+        today: 'Hoje',
+        paid: 'Pago',
+        received: 'Recebido',
+        done: 'Feita',
+        skipped: 'Pulado',
+      },
+      seeEntry: 'Ver lançamento',
+      showMore: (count: number) => `Mostrar mais (${count})`,
+    },
     actions: {
       trigger: (description: string) => `Ações de ${description}`,
       plannedFor: (date: string, amount: string, account: string) =>
