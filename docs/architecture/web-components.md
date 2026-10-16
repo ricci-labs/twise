@@ -36,11 +36,11 @@ where it's used.
 | `inputs/` | `TextInput`, `PasswordInput`, `EmailInput`, `PhoneInput`, `SearchInput`, `TextArea`, `MoneyInput`, `ChoiceChips`, `PickerField`, `PickerSheet`, `Stepper`, `RadioCardList`, `RadioSentenceList`, `DateInput`, `PeriodPicker`, `Select`, `FilterButton`, `CheckboxMenu`, `Combobox`, `Checkbox`, `RadioGroup`, `Switch`, `DayOfMonthPicker`, `FileUpload`, `ColorSwatch` |
 | `forms/` | `Form`, `FormField`, `FieldGroup`, `LockedField`, `FormErrorSummary`, `FormFooter`, `RequiredLegend` |
 | `feedback/` | `Toast`, `InlineAlert`, `AutoFillTip`, `Banner`, `ConfirmDialog`, `EmptyState`, `EmptyBlock`, `Skeleton`, `ListSkeleton`, `KpiSkeleton`, `ErrorState` |
-| `display/` | `Amount`, `StatusBadge`, `Avatar`, `ListItem`, `Card`, `StatCard`, `ThresholdProgress`, `Tabs`, `Accordion`, `DataList` (table on desktop, list on mobile), `LoadMore`, `Tooltip`, `HelpPopover`, `FilterChips`, `CategoryIcon`, `ArchivedToggle` |
+| `display/` | `Amount`, `DateBlock`, `StatusBadge`, `Avatar`, `ListItem`, `Card`, `StatCard`, `ThresholdProgress`, `Tabs`, `Accordion`, `DataList` (table on desktop, list on mobile), `LoadMore`, `Tooltip`, `HelpPopover`, `FilterChips`, `CategoryIcon`, `ArchivedToggle` |
 | `charts/` | `BarChart`, `ForecastChart`, `DonutChart`, each with its text alternative |
-| `navigation/` | `BottomBar`, `Sidebar`, `TopBar`, `WorkspaceSwitcher`, `BackLink`, `Breadcrumb`, `ScrollArrows` |
+| `navigation/` | `BottomBar`, `Sidebar`, `TopBar`, `WorkspaceSwitcher`, `BackLink`, `Breadcrumb`, `ScrollArrows`, `YearStepper`, `SettingsRow` |
 | `layout/` | `AppShell`, `FormOverlay`, `SidePanel`, `Page`, `PageHeader`, `Section`, `Stack`, `Grid` |
-| `finance/` | `StatHero`, `InsightCard`, `InvoiceCard`, `InvoicePreview`, `SharesList`, `RecentEntries`, `AccountRow`, `AccountGroup`, `CardBlock`, `InvoiceSummary`, `InvoiceLine`, `EntryRow`, `OccurrenceRow`, `ContactRow`, `ChargePreview`, `AmountSplitEditor`, `AllocationStepRow`, `SplitExample` |
+| `finance/` | `StatHero`, `InsightCard`, `InvoiceCard`, `InvoicePreview`, `SharesList`, `RecentEntries`, `AccountRow`, `AccountGroup`, `CardBlock`, `InvoiceSummary`, `InvoiceLine`, `EntryRow`, `OccurrenceRow`, `HolidayRow`, `ContactRow`, `ChargePreview`, `AmountSplitEditor`, `AllocationStepRow`, `SplitExample` |
 | `brand/` | `Logo`, `OwlScene` (the layered owl scenes and their motion), `AppSplash` |
 | `icons/` | `TwiseIcon` and the icon registries (see Icons) |
 
@@ -150,7 +150,7 @@ React Hook Form v7 + `zodResolver` with the **schemas from `@financas/shared`** 
   a group of choices (`ChoiceChips`, the pickers below), as a `fieldset` named by its visible label.
   The help sits 8 px under the label ("O tipo não pode ser mudado depois."); a `note` is the same
   grey line after the choices ("Se o mês tiver menos dias, vale o último."), and describes the
-  group too.
+  group too; it may hold a link ("Ver feriados" after the business-day help).
 - `LockedField` (`components/forms/locked-field`): a value that can't change on this form (an
   account's kind on edit): the label, a grey box with the lock and the value in bold, and the reason
   under it.
@@ -889,8 +889,12 @@ online with `asChild` are translated to `render`.
 
 ## Planning building blocks
 `../design/planning/components.md`; the planned occurrences, the recurrences and the budgets share them.
-- `OccurrenceRow` (`components/finance/occurrence-row`): one planned occurrence: the date block
-  (42 × 46, the day in the display face over the month in caps; danger tint when `isOverdue`), the
+- `DateBlock` (`components/display/date-block`): the 42 × 46 date block of the planning rows: the
+  day in the display face over the month in caps, hidden from screen readers (the row says the
+  date). `tone`: `default` (sunken), `overdue` (danger tint), `past` (only a 1 px outline, muted)
+  and `next` (ink fill); `digits="padded"` writes "02" for the holidays.
+- `OccurrenceRow` (`components/finance/occurrence-row`): one planned occurrence: the `DateBlock`
+  (danger tint when `isOverdue`), the
   description (2 lines at most, then "…"), the second line (2 lines at most) starting with the
   status badge (`overdue` "Atrasado", `today` "Hoje", `paid` "Pago", `received` "Recebido", `done`
   "Feita", `skipped` "Pulado"), and the amount with no sign, which never wraps: `out` in ink, `in`
@@ -902,7 +906,9 @@ online with `asChild` are translated to `render`.
   `tone="danger"` draws the overdue group (red heading, the 1.5 px danger border, the larger inner
   padding). `add` puts the "+ Nova conta fixa" link at the end of the heading (a `link`
   element or `onPress`, as `AccountGroup`); `footer` holds its "Mostrar
-  mais". The recurrences' groups use it too, so the count reads "4 itens".
+  mais". The recurrences' groups use it too, so the count reads "4 itens". `note` puts a grey line
+  under the heading ("Já vêm no app e não mudam."); `empty` is the sentence in a dashed card that
+  takes the list's place when `count` is 0.
 - `PlanSummaryTiles` (`components/finance/plan-summary-tiles`): two tiles ("Falta pagar" / "Falta
   receber", "Contas fixas por mês" / "Receitas fixas por mês") as a description list, each with its
   amount (income in `mint-ink`, "≈" for an estimate) and a muted note. Side by side while both
@@ -953,7 +959,7 @@ online with `asChild` are translated to `render`.
   "Editar divisão" when `canEdit`, and a chevron. A viewer still opens the split, read only.
 
 ## Planning round B building blocks
-`../design/planning-b/components.md`; the commission split (PLAN-06) uses them.
+`../design/planning-b/components.md`; the commission split (PLAN-06) and the holidays (PLAN-07) use them.
 - `AllocationStepRow` (`components/finance/allocation-step-row`): one split step as a 72 px card
   row: the 32 × 44 grip ("Arrastar para mudar a ordem"), the loose drawing of the destination
   (42 px), "Passo N" (muted caption) above the title, and the detail (2 lines each, then "…"), and
@@ -973,3 +979,14 @@ online with `asChild` are translated to `render`.
   (desktop) adds the stacked bar, one colour per step (`mint`, `warning-fill`, `chart-4`,
   `ink-subtle`, `chart-1`, repeating from the sixth; what is left in `sunken`), and fills the step
   numbers with the same colours. The bar is decorative; the rows carry the amounts.
+- `HolidayRow` (`components/finance/holiday-row`, PLAN-07): one holiday (`li`): the `DateBlock`
+  with the padded day (`past` outlined and muted, `next` in ink), the name (2 lines, muted when
+  past), and the second line with the warning "Próximo" badge first, the short weekday and " · cai
+  no fim de semana" on a Saturday or Sunday. The full date is read before the name. `actions`
+  takes the "⋯" of a workspace holiday; the national ones have none.
+- `YearStepper` (`components/navigation/year-stepper`): the centred pill "‹ 2026 ›" that moves one
+  year at a time between `min` and `max` (the arrow at the limit is disabled), a `nav` named by
+  `label`; the year is announced as it changes.
+- `SettingsRow` (`components/navigation/settings-row`): one row of Configurações (`li`): a link with
+  the loose drawing (44 px), the title, one line of state ("15 em 2026 · próximo: Finados, 02/11",
+  2 lines at most) and a chevron, inside an `AccountGroup` titled by the group ("Planejamento").

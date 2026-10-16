@@ -25,6 +25,12 @@ export const occurrenceGroupCountVariants = cva(
   'font-sans text-row-detail font-medium text-ink-muted',
 )
 
+export const occurrenceGroupNoteVariants = cva('mx-0.5 -mt-0.5 mb-1 text-group-note text-ink-muted')
+
+export const occurrenceGroupEmptyVariants = cva(
+  'rounded-xl border border-dashed border-border-control bg-surface p-4 text-body-sm text-ink-muted',
+)
+
 export const occurrenceGroupListVariants = cva('flex flex-col', {
   variants: {
     tone: {

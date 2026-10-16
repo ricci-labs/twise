@@ -16,6 +16,8 @@ const TRASH_PAGE = 'trash'
 const PLANNING_AREA = 'planning'
 const SPLIT_PAGE = 'split'
 
+const SETTINGS_AREA = 'settings'
+
 const AREA_OF_PAGE: Readonly<Record<string, string>> = { categories: 'accounts' }
 
 const TAB_OF_AREA: Readonly<Record<string, string>> = { [TRASH_PAGE]: ENTRIES_AREA }
@@ -68,7 +70,7 @@ export function workspaceNavigation(
 
 export function hasNewEntryButton(pathname: string): boolean {
   const [, , , area, item] = pathname.split('/')
-  if (area === TRASH_PAGE || item === TRASH_PAGE) {
+  if (area === TRASH_PAGE || item === TRASH_PAGE || area === SETTINGS_AREA) {
     return false
   }
   if (area === PLANNING_AREA && item === SPLIT_PAGE) {

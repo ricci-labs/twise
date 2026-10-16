@@ -82,7 +82,7 @@ export function RecurrenceFields({
           )}
         />
         <RecurrenceAccountFields workspaceId={workspaceId} accounts={accounts} />
-        <RecurrenceScheduleFields today={today} />
+        <RecurrenceScheduleFields workspaceId={workspaceId} today={today} />
         <div className="lg:col-span-2">
           <RecurrencePreview workspaceId={workspaceId} today={today} />
         </div>

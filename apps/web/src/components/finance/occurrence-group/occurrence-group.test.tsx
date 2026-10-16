@@ -55,4 +55,19 @@ describe('OccurrenceGroup', () => {
     await expect.element(screen.getByText('rodapé')).toBeVisible()
     await expectNoAccessibilityViolations(screen.container)
   })
+
+  it('puts the note under the heading and the empty sentence in place of the list', async () => {
+    const screen = await render(
+      <OccurrenceGroup
+        title="Do espaço"
+        count={0}
+        note="Só os do espaço."
+        empty="Nenhum feriado do espaço."
+      />,
+    )
+    await expect.element(screen.getByText('Só os do espaço.')).toBeVisible()
+    await expect.element(screen.getByText('Nenhum feriado do espaço.')).toBeVisible()
+    await expect.element(screen.getByRole('list')).not.toBeInTheDocument()
+    await expectNoAccessibilityViolations(screen.container)
+  })
 })

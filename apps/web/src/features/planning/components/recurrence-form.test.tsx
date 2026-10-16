@@ -142,6 +142,9 @@ describe('PLAN-02 new recurrence', () => {
     await expect
       .element(page.getByText(/^Dia útil: de segunda a sexta, fora feriados bancários/))
       .toBeVisible()
+    await expect
+      .element(page.getByRole('link', { name: 'Ver feriados' }))
+      .toHaveAttribute('href', `/w/${WORKSPACE_ID}/settings/holidays`)
   })
 
   it('previews the next three dates and why one moved', async () => {

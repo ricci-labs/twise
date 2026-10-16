@@ -75,5 +75,19 @@ export const occurrenceGroupExamples: ComponentExamples = {
         </div>
       ),
     },
+    {
+      name: 'Com nota no cabeçalho e vazio',
+      render: () => (
+        <div className="w-full max-w-100">
+          <OccurrenceGroup
+            title="Do espaço"
+            count={0}
+            note="Os feriados da cidade de vocês."
+            add={{ label: 'Adicionar feriado', onPress: noop }}
+            empty="Nenhum feriado do espaço. Adicione os da cidade de vocês (aniversário da cidade, padroeiro)."
+          />
+        </div>
+      ),
+    },
   ],
 }

@@ -480,6 +480,7 @@ export const planningMessages = {
     shortMonths: 'Se o mês tiver menos dias, vale o último.',
     businessDayHelp:
       'Dia útil: de segunda a sexta, fora feriados bancários e os feriados do espaço.',
+    seeHolidays: 'Ver feriados',
     weekend: 'Se cair em fim de semana ou feriado',
     weekendRules: {
       keep: 'Manter a data',

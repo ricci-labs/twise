@@ -546,7 +546,12 @@ export type RecurrenceAccountFieldsProps = {
 }
 
 export type RecurrenceScheduleFieldsProps = {
+  workspaceId: string
   today: IsoDate
+}
+
+export type BusinessDayHelpProps = {
+  workspaceId: string
 }
 
 export type RecurrencePreviewProps = {

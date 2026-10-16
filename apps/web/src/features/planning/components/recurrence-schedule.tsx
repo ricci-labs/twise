@@ -5,6 +5,8 @@ import {
   RECURRENCE_FREQUENCIES,
   WEEKEND_RULES,
 } from '@financas/shared'
+import { Link } from '@tanstack/react-router'
+import { TextLink } from '@web/components/actions/text-link'
 import { FieldGroup } from '@web/components/forms/field-group'
 import { FormField } from '@web/components/forms/form-field'
 import { ChoiceChips } from '@web/components/inputs/choice-chips'
@@ -17,6 +19,7 @@ import { Switch } from '@web/components/inputs/switch'
 import { planningMessages } from '@web/features/planning/planning.messages'
 import { DAY_RULES } from '@web/features/planning/planning.schemas'
 import type {
+  BusinessDayHelpProps,
   DayRule,
   RecurrenceFormInput,
   RecurrenceScheduleFieldsProps,
@@ -40,7 +43,7 @@ const BUSINESS_DAY_OPTIONS = Array.from({ length: MAX_RECURRENCE_BUSINESS_DAY },
   label: rules.businessDay.option(index + 1),
 }))
 
-export function RecurrenceScheduleFields({ today }: RecurrenceScheduleFieldsProps) {
+export function RecurrenceScheduleFields({ workspaceId, today }: RecurrenceScheduleFieldsProps) {
   const [frequency, dayRule, hasEnd] = useWatch<
     RecurrenceFormInput,
     ['frequency', 'dayRule', 'hasEnd']
@@ -50,13 +53,13 @@ export function RecurrenceScheduleFields({ today }: RecurrenceScheduleFieldsProp
   return (
     <>
       <FrequencyField />
-      {!isWeekly && <DayRuleField />}
+      {!isWeekly && <DayRuleField workspaceId={workspaceId} />}
       {!usesBusinessDay && (
         <FormField<RecurrenceFormInput> name="weekendRule" label={messages.weekend} isRequired>
           {(control) => <Select title={messages.weekend} options={WEEKEND_OPTIONS} {...control} />}
         </FormField>
       )}
-      <StartsOnField today={today} />
+      <StartsOnField workspaceId={workspaceId} today={today} />
       <div className="flex flex-col gap-3 lg:col-span-2">
         <Controller<RecurrenceFormInput, 'hasEnd'>
           name="hasEnd"
@@ -124,7 +127,7 @@ function IntervalStepper() {
   )
 }
 
-function DayRuleField() {
+function DayRuleField({ workspaceId }: BusinessDayHelpProps) {
   const { setValue } = useFormContext<RecurrenceFormInput>()
   const [dayRule, dayOfMonth, nthBusinessDay] = useWatch<
     RecurrenceFormInput,
@@ -135,7 +138,13 @@ function DayRuleField() {
     <FieldGroup
       label={messages.when}
       isRequired
-      note={dayRule === BUSINESS_DAY ? messages.businessDayHelp : messages.shortMonths}
+      note={
+        dayRule === BUSINESS_DAY ? (
+          <BusinessDayHelp workspaceId={workspaceId} />
+        ) : (
+          messages.shortMonths
+        )
+      }
     >
       <RadioSentenceList
         label={messages.when}
@@ -184,6 +193,17 @@ function DayRuleField() {
         ]}
       />
     </FieldGroup>
+  )
+}
+
+function BusinessDayHelp({ workspaceId }: BusinessDayHelpProps) {
+  return (
+    <>
+      {messages.businessDayHelp}{' '}
+      <TextLink render={<Link to="/w/$workspaceId/settings/holidays" params={{ workspaceId }} />}>
+        {messages.seeHolidays}
+      </TextLink>
+    </>
   )
 }
 
