@@ -13,6 +13,7 @@ export {
   createGoal,
   deleteGoal,
   listGoals,
+  previewGoal,
   readGoalFacts,
 } from '@api/modules/planning/use-cases/goals'
 export {

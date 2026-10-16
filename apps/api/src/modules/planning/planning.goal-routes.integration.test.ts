@@ -5,6 +5,7 @@ import { connectTestDatabases } from '@api/testing/database'
 import { createFixtures } from '@api/testing/fixtures'
 import { addMemberWithSystemRole, loggedInUser, requestsAs } from '@api/testing/http'
 import type { SessionRequests } from '@api/testing/testing.types'
+import { monthsUntil } from '@financas/shared'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
 const databases = connectTestDatabases()
@@ -57,6 +58,10 @@ async function account(kind: string, name: string): Promise<string> {
   return created(owner.post(`${workspacePath}/accounts`, { kind, name }))
 }
 
+function todayInSaoPaulo(): string {
+  return new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Sao_Paulo' }).format(new Date())
+}
+
 async function goals(): Promise<GoalItem[]> {
   return (await (await viewer.get(goalsPath)).json()) as GoalItem[]
 }
@@ -100,6 +105,10 @@ describe('goals', () => {
         accountId: reserve,
         isReserve: true,
         savedCents: 100_000,
+        percent: 3,
+        remainingCents: 2_900_000,
+        overCents: 0,
+        monthlyToTargetCents: null,
       },
       expect.objectContaining({ name: 'Carro novo', targetOn: '2027-07-01', savedCents: 0 }),
     ])
@@ -171,5 +180,74 @@ describe('goals', () => {
     ).toBe(201)
     const gone = await owner.patch(`${goalsPath}/${goalId}`, { name: 'Nope' })
     expect([gone.status, await codeOf(gone)]).toEqual([404, 'GOAL_NOT_FOUND'])
+  })
+})
+
+describe('goal numbers', () => {
+  it('say how much is left or over and what to save per month until the deadline', async () => {
+    const bike = await account('savings', 'Bicicleta')
+    const done = await account('savings', 'Notebook')
+    const checking = await account('checking', 'Conta Y')
+    const targetOn = '2030-06-15'
+    await created(
+      member.post(goalsPath, {
+        name: 'Bicicleta',
+        targetCents: 500_000,
+        targetOn,
+        accountId: bike,
+      }),
+    )
+    await created(
+      member.post(goalsPath, { name: 'Notebook', targetCents: 100_000, accountId: done }),
+    )
+    for (const [toAccountId, amountCents] of [
+      [bike, 160_000],
+      [done, 120_000],
+    ] as const) {
+      await owner.post(`${workspacePath}/entries`, {
+        entryType: 'transfer',
+        occurredOn: '2026-10-05',
+        description: 'Guardar',
+        amountCents,
+        fromAccountId: checking,
+        toAccountId,
+      })
+    }
+
+    const all = await goals()
+    expect(all.find((goal) => goal.name === 'Bicicleta')).toMatchObject({
+      savedCents: 160_000,
+      percent: 32,
+      remainingCents: 340_000,
+      overCents: 0,
+      monthlyToTargetCents: Math.ceil(340_000 / monthsUntil(targetOn, todayInSaoPaulo())),
+    })
+    expect(all.find((goal) => goal.name === 'Notebook')).toMatchObject({
+      percent: 100,
+      remainingCents: 0,
+      overCents: 20_000,
+      monthlyToTargetCents: null,
+    })
+
+    const preview = await viewer.get(
+      `${goalsPath}/preview?targetCents=200000&accountId=${bike}&targetOn=${targetOn}`,
+    )
+    expect(await preview.json()).toEqual({
+      savedCents: 160_000,
+      monthlyToTargetCents: Math.ceil(40_000 / monthsUntil(targetOn, todayInSaoPaulo())),
+    })
+  })
+
+  it('refuse a preview on an account that holds no money or without a deadline', async () => {
+    const category = await account('expense_category', 'Mercado')
+    const onCategory = await viewer.get(
+      `${goalsPath}/preview?targetCents=1000&accountId=${category}&targetOn=2030-01-01`,
+    )
+    expect([onCategory.status, await codeOf(onCategory)]).toEqual([400, 'GOAL_ACCOUNT_INVALID'])
+
+    const noDeadline = await viewer.get(
+      `${goalsPath}/preview?targetCents=1000&accountId=${category}`,
+    )
+    expect([noDeadline.status, await codeOf(noDeadline)]).toEqual([400, 'GOAL_QUERY_INVALID'])
   })
 })

@@ -27,3 +27,11 @@ export const goalChangeSchema = z
 export type GoalChange = z.infer<typeof goalChangeSchema>
 
 export const goalParamsSchema = z.object({ goalId: z.uuid() })
+
+export const goalPreviewQuerySchema = z.object({
+  targetCents: z.coerce.number().pipe(goalFields.targetCents),
+  accountId: z.uuid(),
+  targetOn: isoDateSchema,
+})
+
+export type GoalPreviewQuery = z.infer<typeof goalPreviewQuerySchema>

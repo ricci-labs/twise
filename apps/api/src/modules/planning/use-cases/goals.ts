@@ -21,14 +21,19 @@ import type {
   CreatedGoal,
   DeleteGoalInput,
   GoalItem,
+  GoalPreview,
   GoalRef,
   GoalRow,
   PlanningContext,
 } from '@api/modules/planning/planning.types'
+import { workspaceToday } from '@api/modules/planning/use-cases/occurrences'
 import {
   type AccountKind,
   type FactGoal,
+  type GoalPreviewQuery,
   goalChangeSchema,
+  goalNumbers,
+  type IsoDate,
   MONEY_ACCOUNT_KINDS,
   newGoalSchema,
 } from '@financas/shared'
@@ -40,27 +45,37 @@ const CONFLICT_OF_CONSTRAINT: Record<string, [string, string]> = {
   goals_one_reserve: ['RESERVE_ALREADY_SET', 'The workspace already has a reserve'],
 }
 
-export function listGoals(db: Database, workspaceId: string): Promise<GoalItem[]> {
+export function listGoals(
+  db: Database,
+  workspaceId: string,
+  clock: Clock = systemClock,
+): Promise<GoalItem[]> {
   return withWorkspace(db, workspaceId, async (tx) => {
-    const balances = new Map(
-      (await readAccountBalances(tx)).map((balance) => [
-        balance.accountId,
-        balance.naturalBalanceCents,
-      ]),
-    )
+    const balances = await balancesByAccount(tx)
+    const today = await workspaceToday(tx, clock)
     return (await selectActiveGoals(tx)).map((goal) =>
-      itemOf(goal, balances.get(goal.accountId) ?? 0),
+      itemOf(goal, balances.get(goal.accountId) ?? 0, today),
     )
   })
 }
 
+export function previewGoal(
+  db: Database,
+  workspaceId: string,
+  { targetCents, accountId, targetOn }: GoalPreviewQuery,
+  clock: Clock = systemClock,
+): Promise<GoalPreview> {
+  return withWorkspace(db, workspaceId, async (tx) => {
+    await assertMoneyAccount(tx, accountId)
+    const savedCents = (await balancesByAccount(tx)).get(accountId) ?? 0
+    const today = await workspaceToday(tx, clock)
+    const { monthlyToTargetCents } = goalNumbers({ savedCents, targetCents, targetOn }, today)
+    return { savedCents, monthlyToTargetCents: monthlyToTargetCents ?? 0 }
+  })
+}
+
 export async function readGoalFacts(tx: WorkspaceTransaction): Promise<FactGoal[]> {
-  const balances = new Map(
-    (await readAccountBalances(tx)).map((balance) => [
-      balance.accountId,
-      balance.naturalBalanceCents,
-    ]),
-  )
+  const balances = await balancesByAccount(tx)
   return (await selectActiveGoals(tx)).map((goal) => ({
     goalId: goal.id,
     name: goal.name,
@@ -151,7 +166,16 @@ async function refusingSharedGoals<T>(work: () => Promise<T>): Promise<T> {
   }
 }
 
-function itemOf(goal: GoalRow, savedCents: number): GoalItem {
+async function balancesByAccount(tx: WorkspaceTransaction): Promise<Map<string, number>> {
+  return new Map(
+    (await readAccountBalances(tx)).map((balance) => [
+      balance.accountId,
+      balance.naturalBalanceCents,
+    ]),
+  )
+}
+
+function itemOf(goal: GoalRow, savedCents: number, today: IsoDate): GoalItem {
   return {
     id: goal.id,
     name: goal.name,
@@ -160,5 +184,6 @@ function itemOf(goal: GoalRow, savedCents: number): GoalItem {
     accountId: goal.accountId,
     isReserve: goal.isReserve,
     savedCents,
+    ...goalNumbers({ savedCents, targetCents: goal.targetCents, targetOn: goal.targetOn }, today),
   }
 }
