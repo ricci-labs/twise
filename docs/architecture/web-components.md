@@ -1,7 +1,7 @@
 ---
 summary: How web components are layered and built — shadcn primitives, design-system components with one folder each (variants, types, copy, tests, examples), the props contract, forms, icons, copy, the workbench, tests and lint.
 read_when: Creating, changing or using any component in apps/web; adding a shadcn component; building a form; reviewing a web PR.
-updated: 2026-10-15
+updated: 2026-10-16
 ---
 
 # Web components
@@ -296,8 +296,9 @@ piggy bank once. `prefers-reduced-motion` zeroes all of it (`globals.css`).
 ## Menus, sheets and avatars
 - `ActionMenu` (`components/actions/action-menu`, Base UI `Menu`): a `trigger` element and `groups`
   of items (separators between groups), each a link (`render`) or an action (`onSelect`), with an
-  optional Twise icon (18 px, muted), a `detail` line, `isCurrent` (check mark) and `tone: 'danger'`
-  for the destructive item. The accounts design's dropdown: 240 px, 40 px items in 14 px medium,
+  optional Twise icon (18 px, muted), a `detail` line, `isCurrent` (the one selection style: the
+  2 px `ink` outline and a bold label, no check mark; exposed as `aria-current`) and
+  `tone: 'danger'` for the destructive item. The accounts design's dropdown: 240 px, 40 px items in 14 px medium,
   the highlighted one on `page`. `align` (`start`, or `end` for a row's "⋯") and `onOpenChange`.
   Keyboard and Escape come from Base UI. Desktop popovers of the shell: the account menu and the
   workspace switcher.
@@ -441,10 +442,11 @@ component here, so the form, and later the account, card and planning forms, sha
   with "Fechar" on the phone; from 1024 px a popover anchored to the field (`anchor`), above a
   dialog, as wide as the field, at least 288 and at most 480 px (`popupWidth="wide"`: 384 px, for
   a popover opened from a small button, as "Outros tipos" under the "Mais" pill, which `ChoiceChips` anchors through the option's `buttonRef`). `layout` `options` (plain rows, for a `Select`), `list` (rows with the drawing and the detail, 8 px from the sheet's sides, the
-  current one on `mint-soft` with a check) or `grid` (the category tiles on paper; the current one keeps its paper and gets a 2 px
+  current one with the 2 px `ink` outline and a bold label, no mint and no check) or `grid` (the category tiles on paper; the current one keeps its paper and gets a 2 px
   sketch-ink outline and a bold label, no mint and no check). An item with `isPerson` shows the
   `lg` `Avatar` of its label instead of a drawing (the contact picker); one with `hasChevron` ends
-  in a 16 px muted chevron instead of the check (a choice that leads on, as "Outros tipos").
+  in a 16 px muted chevron (a choice that leads on, as "Outros tipos"). The current item carries
+  `aria-current` in every layout.
   A row's detail is 13 px (`isDetailStrong`: ink semibold, what a contact owes); `end` puts a
   muted note ("Vence 25/10") or, with a tone, a status `Badge` with its dot ("R$ 200,00 em
   atraso") at the end; `fieldDetail` is what the `PickerField` shows under the chosen one. An item with `children` shows "N sub";
@@ -517,8 +519,8 @@ component here, so the form, and later the account, card and planning forms, sha
   of a form footer.
 - `Select` (`components/inputs/select`): a field drawn like the others (the chosen label, or the
   `placeholder` in `ink-subtle`, and a chevron) that opens the app's `PickerSheet` in its
-  `options` layout (a 44 px row per option, the current one on `mint-soft`, semibold, with a
-  check): a bottom sheet titled `title` on the phone, a menu as wide as the field under it on the
+  `options` layout (a 44 px row per option, the current one with the 2 px `ink` outline and a
+  bold label): a bottom sheet titled `title` on the phone, a menu as wide as the field under it on the
   desktop. Never the browser's `select` (`../product/requirements/ui-standards.md` → Lists,
   pickers and long content). Choosing closes it; `TextArea` (`components/inputs/text-area`):
   the notes field, two lines to start. Both take the `FormField` control. `Select`

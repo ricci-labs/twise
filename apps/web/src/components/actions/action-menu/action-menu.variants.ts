@@ -6,7 +6,7 @@ export const actionMenuPopupVariants = cva(
 
 export const actionMenuItemVariants = cva(
   [
-    'flex min-h-10 cursor-pointer items-center gap-2.5 rounded-sm px-2.5 py-1.5 text-body-sm font-medium outline-none select-none data-highlighted:bg-page aria-[current=true]:font-semibold',
+    'flex min-h-10 cursor-pointer items-center gap-2.5 rounded-sm px-2.5 py-1.5 text-body-sm font-medium outline-none select-none data-highlighted:bg-page aria-current:font-emphasis aria-current:inset-ring-2 aria-current:inset-ring-ink',
     '[&_[data-slot=icon]]:size-4.5',
   ],
   {
@@ -23,3 +23,5 @@ export const actionMenuItemVariants = cva(
 export const actionMenuSeparatorVariants = cva('my-1 h-px bg-border')
 
 export const actionMenuHeaderVariants = cva('px-3 pt-1.5 pb-1 text-caption text-ink-muted')
+
+export const actionMenuDetailVariants = cva('text-caption font-medium text-ink-muted')

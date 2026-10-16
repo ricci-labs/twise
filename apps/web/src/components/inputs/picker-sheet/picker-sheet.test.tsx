@@ -97,6 +97,37 @@ describe('PickerSheet', () => {
     await expectNoAccessibilityViolations(document.body)
   })
 
+  it('marks the current row with the ink outline and a bold label, with no fill or check', async () => {
+    renderSheet()
+
+    await expect.element(page.getByRole('button', { name: 'Saúde' })).toBeVisible()
+    const chosen = page.getByRole('button', { name: 'Saúde' }).element()
+    const other = page.getByRole('button', { name: 'Transporte' }).element()
+    expect(getComputedStyle(chosen).boxShadow).toContain('inset')
+    expect(getComputedStyle(chosen).backgroundColor).toBe(getComputedStyle(other).backgroundColor)
+    expect(Number(getComputedStyle(page.getByText('Saúde').element()).fontWeight)).toBeGreaterThan(
+      Number(getComputedStyle(page.getByText('Transporte').element()).fontWeight),
+    )
+    expect(chosen.querySelectorAll('svg')).toHaveLength(other.querySelectorAll('svg').length)
+  })
+
+  it('marks the current option the same way in the options layout', async () => {
+    renderSheet({ layout: 'options' })
+
+    await expect
+      .element(page.getByRole('button', { name: 'Saúde' }))
+      .toHaveAttribute('aria-current', 'true')
+    const chosen = page.getByRole('button', { name: 'Saúde' }).element()
+    const other = page.getByRole('button', { name: 'Transporte' }).element()
+    expect(getComputedStyle(chosen).boxShadow).toContain('inset')
+    expect(getComputedStyle(chosen).backgroundColor).toBe(getComputedStyle(other).backgroundColor)
+    expect(Number(getComputedStyle(chosen).fontWeight)).toBeGreaterThan(
+      Number(getComputedStyle(other).fontWeight),
+    )
+    expect(chosen.querySelector('svg')).toBeNull()
+    await expectNoAccessibilityViolations(document.body)
+  })
+
   it('is as wide as its field on the desktop, between 288 and 480 px', async () => {
     await page.viewport(1440, 900)
     const { rerender } = await render(<AnchoredPicker className="w-100" />)

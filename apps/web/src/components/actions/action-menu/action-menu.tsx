@@ -4,13 +4,13 @@ import type {
   ActionMenuProps,
 } from '@web/components/actions/action-menu/action-menu.types'
 import {
+  actionMenuDetailVariants,
   actionMenuHeaderVariants,
   actionMenuItemVariants,
   actionMenuPopupVariants,
   actionMenuSeparatorVariants,
 } from '@web/components/actions/action-menu/action-menu.variants'
 import { TwiseIcon } from '@web/components/icons/twise-icon'
-import { Check } from 'lucide-react'
 import { Fragment } from 'react'
 
 export function ActionMenu({
@@ -54,9 +54,8 @@ function MenuEntry({ item }: ActionMenuEntryProps) {
       {item.icon && <TwiseIcon name={item.icon} />}
       <span className="flex min-w-0 flex-1 flex-col">
         <span className="truncate">{item.label}</span>
-        {item.detail && <span className="text-caption text-ink-muted">{item.detail}</span>}
+        {item.detail && <span className={actionMenuDetailVariants()}>{item.detail}</span>}
       </span>
-      {item.isCurrent && <Check className="size-4 text-mint-ink" aria-hidden="true" />}
     </Menu.Item>
   )
 }

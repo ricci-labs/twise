@@ -36,6 +36,12 @@ const CATEGORIES = [
   { value: 'bills', label: 'Contas da casa', icon: 'receipt' },
 ]
 
+const REPEATS = [
+  { value: 'monthly', label: 'Todo mês' },
+  { value: 'weekly', label: 'Toda semana' },
+  { value: 'yearly', label: 'Todo ano' },
+]
+
 function Example(props: Omit<PickerSheetProps, 'isOpen' | 'onOpenChange' | 'value' | 'onSelect'>) {
   const [isOpen, setIsOpen] = useState(false)
   const [value, setValue] = useState<string | null>(props.items[0]?.value ?? null)
@@ -77,6 +83,10 @@ export const pickerSheetExamples: ComponentExamples = {
           items={CATEGORIES}
         />
       ),
+    },
+    {
+      name: 'Opções simples',
+      render: () => <Example title="Repetir" layout="options" items={REPEATS} />,
     },
     {
       name: 'Ainda sem conta',

@@ -33,24 +33,26 @@ export const pickerListVariants = cva('', {
 export const pickerOptionVariants = cva([
   'flex min-h-touch w-full cursor-pointer items-center gap-3 rounded-md px-3 text-left text-body text-ink outline-none',
   'hover:bg-sunken focus-visible:ring-2 focus-visible:ring-focus-ring',
-  'aria-current:bg-mint-soft aria-current:font-emphasis [&>[data-slot=picker-check]]:size-5 [&>[data-slot=picker-check]]:text-mint-ink',
+  'aria-current:font-emphasis aria-current:inset-ring-2 aria-current:inset-ring-ink',
 ])
 
 export const pickerRowVariants = cva([
   'flex min-h-13 w-full cursor-pointer items-center gap-3.5 rounded-md px-3 text-left text-body text-ink outline-none',
   'hover:bg-sunken focus-visible:ring-2 focus-visible:ring-focus-ring',
   '[&>[data-slot=category-art]]:-m-0.75',
-  'aria-current:bg-mint-soft [&>[data-slot=picker-check]]:size-5 [&>[data-slot=picker-check]]:text-mint-ink',
+  'aria-current:inset-ring-2 aria-current:inset-ring-ink',
   '[&>[data-slot=picker-chevron]]:size-4 [&>[data-slot=picker-chevron]]:shrink-0 [&>[data-slot=picker-chevron]]:text-ink-muted',
 ])
 
-export const pickerRowTextVariants = cva('flex min-w-0 flex-1 flex-col font-medium')
+export const pickerRowTextVariants = cva(
+  'flex min-w-0 flex-1 flex-col font-medium in-aria-current:font-emphasis',
+)
 
 export const pickerRowDetailVariants = cva('truncate text-note', {
   variants: {
     isStrong: {
       true: 'font-semibold text-ink',
-      false: 'text-ink-muted',
+      false: 'font-medium text-ink-muted',
     },
   },
   defaultVariants: { isStrong: false },

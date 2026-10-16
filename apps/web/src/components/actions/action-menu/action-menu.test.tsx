@@ -42,6 +42,32 @@ describe('ActionMenu', () => {
     expect(onLeave).toHaveBeenCalledOnce()
   })
 
+  it('marks the current item with the ink outline and a bold label, with no check', async () => {
+    const screen = await render(
+      <ActionMenu
+        trigger={<Button variant="outline">Espaço</Button>}
+        groups={[
+          [
+            { key: 'home', label: 'Casa', detail: 'Dono', isCurrent: true },
+            { key: 'trip', label: 'Viagem', detail: 'Membro' },
+          ],
+        ]}
+      />,
+    )
+
+    await screen.getByRole('button', { name: 'Espaço' }).click()
+    const chosen = screen.getByRole('menuitem', { name: /Casa/ })
+    const other = screen.getByRole('menuitem', { name: /Viagem/ })
+    await expect.element(chosen).toHaveAttribute('aria-current', 'true')
+    await expect.element(other).not.toHaveAttribute('aria-current')
+    expect(getComputedStyle(chosen.element()).boxShadow).toContain('inset')
+    expect(Number(getComputedStyle(chosen.getByText('Casa').element()).fontWeight)).toBeGreaterThan(
+      Number(getComputedStyle(other.getByText('Viagem').element()).fontWeight),
+    )
+    expect(chosen.element().querySelector('svg')).toBeNull()
+    await expectNoAccessibilityViolations(screen.getByRole('menu').element())
+  })
+
   it('works from the keyboard and closes with Escape', async () => {
     const screen = await renderMenu()
     const trigger = screen.getByRole('button', { name: 'Member A' })

@@ -1,7 +1,7 @@
 ---
 summary: The components behind ENT-02, in build order, each mapped to its shadcn/ui piece.
 read_when: Creating or changing a component used by the new-entry form (and later by the accounts, cards and planning forms).
-updated: 2026-10-14
+updated: 2026-10-16
 ---
 
 # Components (ENT-02)
@@ -11,7 +11,7 @@ Reused from the design system: Button, TextField, MoneyInput, Alert, Badge, Amou
 | # | Component | shadcn/ui base | Notes |
 |---|---|---|---|
 | 1 | `MoneyField` | `Input` | Label + "R$" prefix + the amount in the display font (32 px), 64 px tall; the only field taller than the rest. Negative variant (opening balance): "−" and the value in `--danger`. Error below with icon; amber warning variant that does not block (`f-warn`: invoice overpay) |
-| 2 | `PickerField` + `PickerSheet` | `Button` + `Drawer` (mobile) / `Popover` + `Command` (desktop) | 56 px on mobile, 48 px on desktop. Loose illustration (42 px, no circle, no paper), name and a grey second line (balance, closing/due dates, "Renda variável"). Empty: dashed rounded square with "+" and grey placeholder ("Escolha uma categoria"). Sheet: title, optional search, rows with loose illustration (46 px), current one on `--mint-soft` with a check. Empty sheet: big loose illustration, the sentence and a primary "Cadastrar conta" |
+| 2 | `PickerField` + `PickerSheet` | `Button` + `Drawer` (mobile) / `Popover` + `Command` (desktop) | 56 px on mobile, 48 px on desktop. Loose illustration (42 px, no circle, no paper), name and a grey second line (balance, closing/due dates, "Renda variável"). Empty: dashed rounded square with "+" and grey placeholder ("Escolha uma categoria"). Sheet: title, optional search, rows with loose illustration (46 px), current one with a 2 px `--ink` outline and a bold label, no mint fill and no check mark. Empty sheet: big loose illustration, the sentence and a primary "Cadastrar conta" |
 | 3 | `CategoryGrid` | `ToggleGroup` in the sheet | 3 columns of tiles on the paper colour with the illustration (64 px, loose); selected = same paper tile with a 2 px `--ink` outline and bold label, no check mark. A category with subcategories shows "N sub" under its name; tapping it opens, right below the grid, the row "Em {mãe}" with "Só {mãe}" and its subcategories as chips (choosing one closes the sheet). A category without children closes the sheet at once. Search also finds subcategories, shown with their parent ("Feira · em Mercado"). The field then reads "Mercado › Feira" with the parent's illustration. Most used first; search on top |
 | 4 | `TypeChips` | `ToggleGroup` (single) | Wrapping pill buttons, all visible (no horizontal scroll): Despesa, Compra no cartão, Receita, Transferência, "Mais ▾". Selected: `--mint` background, `--on-mint` text (now the 2 px `--ink` outline and a bold label, `../entries-list/decisions.md`). "Mais" opens a sheet with the three other types (loose illustration + one-line description) and then shows the chosen type's name |
 | 5 | `DateShortcuts` | `ToggleGroup` + `Popover`/`Calendar` | "Hoje, 20 out" · "Ontem" · "Outra data" (calendar icon; shows the picked date, e.g. "20 set"). Selected: 1.5 px ink outline, bold |

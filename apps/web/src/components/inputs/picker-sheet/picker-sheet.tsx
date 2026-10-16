@@ -44,7 +44,7 @@ import { useLongList } from '@web/hooks/use-long-list'
 import { useMediaQuery } from '@web/hooks/use-media-query'
 import { DESKTOP_QUERY } from '@web/lib/breakpoints'
 import { CATEGORIES_SEARCH_ABOVE, LIST_SEARCH_ABOVE, matchesSearch } from '@web/lib/long-lists'
-import { Check, ChevronRight, Plus } from 'lucide-react'
+import { ChevronRight, Plus } from 'lucide-react'
 import { useState } from 'react'
 
 export function PickerSheet({
@@ -178,7 +178,6 @@ function PickerChoice({ ref, item, layout, isCurrent, onPress }: PickerChoicePro
         className={pickerOptionVariants()}
       >
         <span className="flex-1">{item.label}</span>
-        {isCurrent && <Check data-slot="picker-check" aria-hidden="true" />}
       </button>
     )
   }
@@ -215,7 +214,6 @@ function PickerChoice({ ref, item, layout, isCurrent, onPress }: PickerChoicePro
       </span>
       {item.end && <PickerEnd end={item.end} />}
       {item.hasChevron && <ChevronRight data-slot="picker-chevron" aria-hidden="true" />}
-      {isCurrent && !item.hasChevron && <Check data-slot="picker-check" aria-hidden="true" />}
     </button>
   )
 }

@@ -1,7 +1,7 @@
 ---
 summary: Functional requirements for entries — list with search, filters, period and summary, the new-entry form for every type (expense, card purchase, income, transfer, invoice payment, settlement, opening balance), detail, edit (details or replace), delete, restore and trash.
 read_when: Designing or building ENT-01..05, or any shortcut that opens the new-entry form.
-updated: 2026-10-15
+updated: 2026-10-16
 ---
 
 # Entries
@@ -160,10 +160,10 @@ The account, card, category and contact fields are **pickers**: 56 px on mobile,
 showing the loose illustration, the name and a grey second line ("Saldo de hoje: R$ 4.200,00",
 "Fecha 25/10 · vence 04/11", "Renda variável"); empty, a dashed "+" square with a grey placeholder
 ("Escolha uma categoria"). They open a bottom sheet on mobile and a popover with search on desktop;
-the current item is on `mint-soft` with a check. Categories open as a grid of tiles (three columns,
-the parents, most used first — counted over the workspace's 50 latest entries, a child counting for
-its parent — search on top); the selected tile keeps its paper colour and gets a
-2 px `ink` outline and a bold label, with no check mark.
+the current item gets the 2 px `ink` outline and a bold label (no mint fill, no check mark).
+Categories open as a grid of tiles (three columns, the parents, most used first — counted over the
+workspace's 50 latest entries, a child counting for its parent — search on top); the selected tile
+keeps its paper colour and gets a 2 px `ink` outline and a bold label, with no check mark.
 **Subcategories:** a category with children shows "{N} sub" under its name. Tapping it marks the
 tile and opens, right below the grid, the row "Em {mãe}" with "Só {mãe}" and its children as
 chips; choosing one closes the sheet. A category without children closes the sheet at once.

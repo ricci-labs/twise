@@ -145,7 +145,9 @@ Decided with the new-entry design (2026-10-10, version 2 on 2026-10-14,
 - **One selection style:** a 2 px `ink` outline and a bold label for every selected or pressed item
   (tiles, chips, month pills, days, member buttons, the tapped chip while its menu is open). No mint
   fill and no check mark. Since the entries list design (2026-10-14) this also holds for the new
-  entry's type pills and the chosen month of the period sheet. Only the pills that pick a list
+  entry's type pills and the chosen month of the period sheet. Picker sheets and menus too: the
+  current item gets the 2 px `ink` outline and a bold label, with no mint fill and no check mark
+  (2026-10-16). Only the pills that pick a list
   ("Despesas | Receitas") and the sidebar's current item keep their mint fill.
 - **System illustrations:** entries and actions made by the system use drawings in the same hand
   drawn style, never line icons: `fatura-paga`, `transferencia`, `saldo-inicial`, `recebimento`
