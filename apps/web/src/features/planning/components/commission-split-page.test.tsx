@@ -56,9 +56,11 @@ function overview() {
 async function openSplit({
   steps = STEPS,
   access = workspaceAccess,
+  path = 'commission-split',
 }: {
   steps?: readonly object[]
   access?: FakeAnswer
+  path?: string
 } = {}) {
   fakeApi({
     'GET /api/auth/me': () =>
@@ -78,9 +80,7 @@ async function openSplit({
         leftoverCents: 0,
       }),
   })
-  const app = createApp(
-    createMemoryHistory({ initialEntries: [`/w/${WORKSPACE_ID}/commission-split`] }),
-  )
+  const app = createApp(createMemoryHistory({ initialEntries: [`/w/${WORKSPACE_ID}/${path}`] }))
   await render(<AppProviders app={app} />)
   return app
 }
@@ -140,6 +140,13 @@ describe('HOME-03 commission split', () => {
     await expect
       .element(page.getByRole('link', { name: 'Transferir a parte de Poupança (reserva)' }))
       .not.toBeInTheDocument()
+  })
+
+  it('starts from the amount of the income it was opened from', async () => {
+    await openSplit({ path: 'commission-split?amount=200000' })
+    await expect
+      .element(page.getByRole('textbox', { name: 'Valor da comissão' }))
+      .toHaveValue('2.000,00')
   })
 
   it('sends to the split rules when there are none yet', async () => {

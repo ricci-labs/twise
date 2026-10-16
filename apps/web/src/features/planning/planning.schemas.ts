@@ -152,3 +152,7 @@ export const stepFormSchema = z
     (values) => values.kind !== 'fixed_amount' || (centsOfTypedAmount(values.amount) ?? 0) > 0,
     { path: ['amount'], message: stepSheet.amountInvalid, when: () => true },
   )
+
+export const commissionSplitSearchSchema = z.object({
+  amount: z.number().int().positive().optional().catch(undefined),
+})

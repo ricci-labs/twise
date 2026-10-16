@@ -48,6 +48,7 @@ export const entriesMessages = {
     saving: 'Salvando…',
     saved: 'Lançamento registrado.',
     see: 'Ver',
+    seeSplit: 'Ver sugestão de divisão',
     offline: 'Sem conexão. O que você digitou fica aqui; salve quando a conexão voltar.',
     failed: 'Não foi possível registrar o lançamento. Código: {ref}.',
     discard: {
