@@ -574,6 +574,25 @@ describe('PLAN-01 on the desktop', () => {
   })
 })
 
+describe('PLAN-05 goals on the desktop', () => {
+  it('offers "Nova meta" once, in the page header, with the goals three per row', async () => {
+    await page.viewport(1440, 900)
+    await openPlanning({
+      path: 'planning/goals',
+      answers: goalsAnswer([
+        ...GOALS,
+        { ...GOALS[1], id: 'g3', name: 'Troca do carro' },
+        { ...GOALS[1], id: 'g4', name: 'Reforma da cozinha' },
+      ]),
+    })
+    await expect.element(page.getByRole('heading', { name: 'Reforma da cozinha' })).toBeVisible()
+    expect(page.getByRole('link', { name: 'Nova meta' }).elements()).toHaveLength(1)
+    const cards = page.getByRole('region', { name: /Metas/ }).getByRole('listitem').elements()
+    const tops = cards.map((card) => card.getBoundingClientRect().top)
+    expect(new Set(tops).size).toBe(1)
+  })
+})
+
 describe('PLAN-05 goals', () => {
   beforeEach(async () => {
     await page.viewport(360, 800)

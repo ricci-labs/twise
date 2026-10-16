@@ -53,7 +53,7 @@ export const planningMessages = {
       remove: 'Remover passo',
     },
     steps: {
-      fillGoal: (goal: string) => `Completar ${goal}`,
+      fillGoal: (goal: string) => `Completar a meta ${goal}`,
       fillReserve: 'Completar a reserva de emergência',
       fillGoalDetail: (left: string, account: string) => `Faltam ${left} · guardado em ${account}`,
       deletedGoal: 'Meta excluída',

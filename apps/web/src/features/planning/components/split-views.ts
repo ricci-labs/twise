@@ -31,48 +31,53 @@ export function isInvalidStep(step: AllocationStepItem, context: SplitContext): 
 }
 
 export function stepViewOf(step: AllocationStepItem, context: SplitContext): StepView {
+  return VIEW_OF[step.kind](step, context)
+}
+
+const VIEW_OF: Record<
+  AllocationStepItem['kind'],
+  (step: AllocationStepItem, context: SplitContext) => StepView
+> = {
+  fill_goal: (step, context) => goalStepView(step, context),
+  cover_overspent: (_, context) => ({
+    title: messages.steps.cover,
+    detail:
+      context.overspentCents > 0
+        ? messages.steps.coverDetail(formatBrl(context.overspentCents))
+        : messages.steps.coverNothing,
+    art: { name: messages.steps.cover, icon: COVER_ART },
+    isInvalid: false,
+    exampleLabel: messages.example.cover,
+  }),
+  percent: (step, context) => ({
+    ...accountView(step, context),
+    title: messages.steps.percent(step.percent ?? 0, accountNameOf(step, context)),
+    detail: messages.steps.percentDetail + goalNoteOf(step.accountId, context),
+    exampleLabel: messages.example.percent(accountNameOf(step, context), step.percent ?? 0),
+  }),
+  fixed_amount: (step, context) => ({
+    ...accountView(step, context),
+    title: messages.steps.fixed(formatBrl(step.amountCents ?? 0), accountNameOf(step, context)),
+    detail: messages.steps.fixedDetail + goalNoteOf(step.accountId, context),
+    exampleLabel: isReserveAccount(step.accountId, context)
+      ? messages.example.reserve(accountNameOf(step, context))
+      : messages.example.fixed(accountNameOf(step, context)),
+  }),
+  rest: (step, context) => ({
+    ...accountView(step, context),
+    title: messages.steps.rest(accountNameOf(step, context)),
+    detail: messages.steps.restDetail,
+    exampleLabel: messages.example.rest(accountNameOf(step, context)),
+  }),
+}
+
+function accountNameOf(step: AllocationStepItem, context: SplitContext): string {
+  return context.accounts.get(step.accountId ?? '')?.name ?? ''
+}
+
+function accountView(step: AllocationStepItem, context: SplitContext) {
   const account = context.accounts.get(step.accountId ?? '')
-  const accountName = account?.name ?? ''
-  const art = { name: accountName, icon: account?.icon ?? null }
-  switch (step.kind) {
-    case 'fill_goal':
-      return goalStepView(step, context)
-    case 'cover_overspent':
-      return {
-        title: messages.steps.cover,
-        detail:
-          context.overspentCents > 0
-            ? messages.steps.coverDetail(formatBrl(context.overspentCents))
-            : messages.steps.coverNothing,
-        art: { name: messages.steps.cover, icon: COVER_ART },
-        isInvalid: false,
-        exampleLabel: messages.example.cover,
-      }
-    case 'percent':
-      return {
-        title: messages.steps.percent(step.percent ?? 0, accountName),
-        detail: messages.steps.percentDetail + goalNoteOf(step.accountId, context),
-        art,
-        isInvalid: false,
-        exampleLabel: messages.example.percent(accountName, step.percent ?? 0),
-      }
-    case 'fixed_amount':
-      return {
-        title: messages.steps.fixed(formatBrl(step.amountCents ?? 0), accountName),
-        detail: messages.steps.fixedDetail + goalNoteOf(step.accountId, context),
-        art,
-        isInvalid: false,
-        exampleLabel: messages.example.fixed(accountName),
-      }
-    case 'rest':
-      return {
-        title: messages.steps.rest(accountName),
-        detail: messages.steps.restDetail,
-        art,
-        isInvalid: false,
-        exampleLabel: messages.example.rest(accountName),
-      }
-  }
+  return { art: { name: account?.name ?? '', icon: account?.icon ?? null }, isInvalid: false }
 }
 
 function goalStepView(step: AllocationStepItem, context: SplitContext): StepView {
@@ -203,4 +208,8 @@ function destinationOf(step: AllocationStepItem, context: SplitContext): string 
       : (goal?.name ?? messages.steps.deletedGoal)
   }
   return context.accounts.get(step.accountId ?? '')?.name ?? ''
+}
+
+function isReserveAccount(accountId: string | null, context: SplitContext): boolean {
+  return [...context.goals.values()].some((goal) => goal.isReserve && goal.accountId === accountId)
 }
