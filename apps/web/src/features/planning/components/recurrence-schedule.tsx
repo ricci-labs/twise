@@ -57,7 +57,7 @@ export function RecurrenceScheduleFields({ today }: RecurrenceScheduleFieldsProp
         </FormField>
       )}
       <StartsOnField today={today} />
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-3 lg:col-span-2">
         <Controller<RecurrenceFormInput, 'hasEnd'>
           name="hasEnd"
           render={({ field }) => (

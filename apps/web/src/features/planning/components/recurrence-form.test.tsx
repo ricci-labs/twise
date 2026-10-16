@@ -305,6 +305,26 @@ describe('PLAN-02 new recurrence', () => {
   })
 })
 
+describe('PLAN-02 new recurrence on the desktop', () => {
+  beforeEach(async () => {
+    await page.viewport(1440, 900)
+  })
+
+  it('opens the large dialog with description and amount side by side', async () => {
+    await openNewRecurrence()
+    const dialog = form().element().getBoundingClientRect()
+    const description = form()
+      .getByRole('textbox', { name: /Descrição/ })
+      .element()
+      .getBoundingClientRect()
+    const amount = form().getByRole('textbox', { name: /Valor/ }).element().getBoundingClientRect()
+    expect(dialog.width).toBe(880)
+    expect(amount.left).toBeGreaterThan(description.right)
+    expect(amount.top).toBeLessThan(description.bottom)
+    await expectNoAccessibilityViolations(form().element())
+  })
+})
+
 describe('PLAN-02 editing a recurrence', () => {
   const RENT = '00000000-0000-4000-8000-0000000008a1'
 
