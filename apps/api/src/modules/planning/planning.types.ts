@@ -7,6 +7,7 @@ import type {
 } from '@api/modules/planning/planning.table'
 import type {
   AllocationStep,
+  GoalNumbers,
   IsoDate,
   NationalHoliday,
   OccurrenceStatus,
@@ -172,7 +173,7 @@ export type NewGoalRow = typeof goals.$inferInsert
 
 export type GoalUpdate = Partial<Omit<NewGoalRow, 'workspaceId' | 'id' | 'createdAt' | 'updatedAt'>>
 
-export type GoalItem = {
+export type GoalItem = GoalNumbers & {
   id: string
   name: string
   targetCents: number
@@ -180,6 +181,11 @@ export type GoalItem = {
   accountId: string
   isReserve: boolean
   savedCents: number
+}
+
+export type GoalPreview = {
+  savedCents: number
+  monthlyToTargetCents: number
 }
 
 export type GoalRef = {

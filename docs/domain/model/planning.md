@@ -1,7 +1,7 @@
 ---
 summary: Planning tables — recurrence rules and planned occurrences (forecast, reminders, matching to real entries), financial period calculation, budgets, goals, holidays — and the dashboard metrics, insights, commission split, balance forecast and purchase simulation built on them.
 read_when: Working on projections, fixed bills, salaries/commission forecasts, reminders, budgets, goals, or the financial period.
-updated: 2026-10-15
+updated: 2026-10-16
 ---
 
 # Planning: forecast, periods, budgets, goals
@@ -320,7 +320,8 @@ period again replaces its limit.
 
 | Route | Permission | Does |
 |---|---|---|
-| `GET /goals` | `planning:view` | `listGoals`: active goals, the reserve first, each with `savedCents` (the account's balance) |
+| `GET /goals` | `planning:view` | `listGoals`: active goals, the reserve first, each with `savedCents` (the account's balance) and `goalNumbers` (`packages/shared/src/planning/goals/`): `percent` (capped at 100), `remainingCents`, `overCents`, and `monthlyToTargetCents` = what is left ÷ the months from this one to the deadline's (at least 1), rounded up, `null` without a deadline (G58). The reserve's coverage stays in the overview (`reserve_coverage`) |
+| `GET /goals/preview?targetCents=&accountId=&targetOn=` | `planning:view` | `previewGoal`: the goal form's monthly preview, `{ savedCents, monthlyToTargetCents }` for that account's balance today. Refused: not a usable money account (`400 GOAL_ACCOUNT_INVALID`), a query without the three (`400 GOAL_QUERY_INVALID`) |
 | `POST /goals` | `planning:create` | `createGoal` `{ name, targetCents, targetOn?, accountId, isReserve? }` → `201 { goalId }`. Refused: not a usable money account (`400 GOAL_ACCOUNT_INVALID`), account already holding a goal (`409 GOAL_ACCOUNT_TAKEN`), a second reserve (`409 RESERVE_ALREADY_SET`) |
 | `PATCH /goals/:goalId` | `planning:update` | `changeGoal`: only the fields sent, same refusals → `204` |
 | `DELETE /goals/:goalId` | `planning:delete` | `deleteGoal` (soft, optional `reason`) → `204`; frees the account |

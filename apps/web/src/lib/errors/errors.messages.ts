@@ -146,6 +146,7 @@ export const errorMessages: Readonly<Record<string, string>> = {
   BUDGET_CATEGORY_INVALID: 'Orçamentos só valem para categorias de despesa ativas.',
   GOAL_INVALID: 'Não foi possível concluir. Código: {ref}.',
   GOAL_NOT_FOUND: 'Esta meta não existe mais.',
+  GOAL_QUERY_INVALID: 'Não foi possível concluir. Código: {ref}.',
   GOAL_ACCOUNT_INVALID: 'Escolha uma conta ativa de dinheiro.',
   GOAL_ACCOUNT_TAKEN: 'Essa conta já é de outra meta.',
   RESERVE_ALREADY_SET: 'Já existe uma reserva de emergência.',

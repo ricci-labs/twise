@@ -1,7 +1,7 @@
 ---
 summary: Catalog of every API error code — HTTP status, when it happens, the pt-BR message the user sees, and where it shows (field, form, page, toast).
 read_when: Showing any API error in the web, writing a screen spec, or adding an error code to the API (add it here in the same PR).
-updated: 2026-10-15
+updated: 2026-10-16
 ---
 
 # Error messages
@@ -169,6 +169,7 @@ message.
 | `BUDGET_CATEGORY_INVALID` | 400 | Not an active expense category | "Orçamentos só valem para categorias de despesa ativas." | form |
 | `GOAL_INVALID` | 400 | Goal form invalid | per field | fields |
 | `GOAL_NOT_FOUND` | 404 | Goal deleted | "Esta meta não existe mais." | toast |
+| `GOAL_QUERY_INVALID` | 400 | The monthly preview asked without an amount, account or deadline (guard) | "Não foi possível concluir. Código: {ref}." | the preview hides |
 | `GOAL_ACCOUNT_INVALID` | 400 | Not an active money account | "Escolha uma conta ativa de dinheiro." | field account |
 | `GOAL_ACCOUNT_TAKEN` | 409 | Account used by another goal | "Essa conta já é de outra meta." | field account |
 | `RESERVE_ALREADY_SET` | 409 | A second reserve | "Já existe uma reserva de emergência." | field reserve |

@@ -22,6 +22,7 @@ import {
   listOccurrencesWithTotals,
   listRecurrenceRules,
   matchOccurrence,
+  previewGoal,
   replaceAllocationSteps,
   setBudget,
   skipOccurrence,
@@ -38,6 +39,7 @@ import {
   deletionRequestSchema,
   goalChangeSchema,
   goalParamsSchema,
+  goalPreviewQuerySchema,
   holidayListQuerySchema,
   holidayParamsSchema,
   matchedOccurrenceQuerySchema,
@@ -284,6 +286,15 @@ function goalRoutes({ db }: PlanningRouteDeps) {
     .get('/', authorize('planning', 'view'), async (c) => {
       return c.json(await listGoals(db, currentWorkspace(c).workspaceId))
     })
+    .get(
+      '/preview',
+      authorize('planning', 'view'),
+      queryParams(goalPreviewQuerySchema, 'GOAL_QUERY_INVALID'),
+      async (c) => {
+        const { workspaceId } = currentWorkspace(c)
+        return c.json(await previewGoal(db, workspaceId, c.req.valid('query')))
+      },
+    )
     .post(
       '/',
       authorize('planning', 'create'),

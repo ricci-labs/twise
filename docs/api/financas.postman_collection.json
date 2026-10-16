@@ -2880,6 +2880,41 @@
           ]
         },
         {
+          "name": "Goal preview",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/workspaces/{{workspaceId}}/goals/preview?targetCents=500000&accountId={{savingsId}}&targetOn=2030-06-15",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "workspaces", "{{workspaceId}}", "goals", "preview"],
+              "query": [
+                {
+                  "key": "targetCents",
+                  "value": "500000"
+                },
+                {
+                  "key": "accountId",
+                  "value": "{{savingsId}}"
+                },
+                {
+                  "key": "targetOn",
+                  "value": "2030-06-15"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": ["pm.test('answers 200', () => pm.response.to.have.status(200))"]
+              }
+            }
+          ]
+        },
+        {
           "name": "Change goal",
           "request": {
             "method": "PATCH",
