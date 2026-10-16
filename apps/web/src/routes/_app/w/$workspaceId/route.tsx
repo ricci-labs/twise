@@ -80,8 +80,11 @@ export const Route = createFileRoute('/_app/w/$workspaceId')({
             cardAccountId: entryCard,
             invoiceId: entryInvoice,
           }}
-          onSplitPartSaved={(position) =>
-            navigate({ to: '.', search: (previous) => ({ ...previous, splitDone: position }) })
+          onSplitPartSaved={(position, entryId) =>
+            navigate({
+              to: '.',
+              search: (previous) => ({ ...previous, splitDone: position, splitEntry: entryId }),
+            })
           }
           onClose={() =>
             navigate({

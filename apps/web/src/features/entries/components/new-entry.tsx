@@ -52,7 +52,7 @@ function NewEntryFlow(props: NewEntryProps) {
     ...props,
     onSaved: (entry: SavedEntry) => {
       if (splitPart) {
-        props.onSplitPartSaved?.(splitPart.position)
+        props.onSplitPartSaved?.(splitPart.position, entry.entryId)
       }
       if (canMatch) {
         setSaved(entry)

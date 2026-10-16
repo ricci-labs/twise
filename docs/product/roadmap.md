@@ -398,8 +398,10 @@ updated: 2026-10-16
       "Ver feriados" leaves the recurrence form without asking
 - [x] **Commission split screen (`HOME-03`)**, asked by the user on 2026-10-16 so the Home's "Dividir"
   and "Ver sugestão" stop at "Em breve": the split rule applied to this commission, "Transferir" per
-  part (a prefilled transfer with the "Parte N da divisão" band), "Feito" kept on the device. Built
-  from the requirement, without a dedicated design; the shared, durable "Feito" waits for G59
+  part (a prefilled transfer with the "Parte N da divisão" band), "Ver sugestão de divisão" after
+  saving a commission, and a shared "Feito" (`allocation_parts`, rules approved by the user) with
+  "Já transferi" for transfers made elsewhere. Built from the requirement, without a dedicated
+  design
 - [ ] Remaining project skills (`new-module`, `db-migration`, `domain-rule`, `pr`) and Claude Code hooks
 
 ## Phase 1: MVP
