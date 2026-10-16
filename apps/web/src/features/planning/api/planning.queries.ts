@@ -22,6 +22,14 @@ export function accountsQueryOptions(workspaceId: string) {
   })
 }
 
+export function overviewQueryOptions(workspaceId: string, period: string | undefined) {
+  return queryOptions({
+    queryKey: [...queryKeys.workspace(workspaceId), 'overview', period ?? 'current'] as const,
+    queryFn: () => fetchOverview(workspaceId, period),
+    placeholderData: (previous) => previous,
+  })
+}
+
 export function recurrencesQueryOptions(workspaceId: string) {
   return queryOptions({
     queryKey: [...queryKeys.workspace(workspaceId), 'recurrences'] as const,
@@ -72,4 +80,10 @@ export function fetchCandidates(workspaceId: string, occurrenceId: string) {
 
 export function fetchRecurrences(workspaceId: string) {
   return unwrap(workspaceApi.recurrences.$get({ param: { workspaceId } }))
+}
+
+export function fetchOverview(workspaceId: string, period: string | undefined) {
+  return unwrap(
+    workspaceApi.overview.$get({ param: { workspaceId }, query: period ? { period } : {} }),
+  )
 }

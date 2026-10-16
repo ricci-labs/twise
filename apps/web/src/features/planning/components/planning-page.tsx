@@ -3,6 +3,7 @@ import { SegmentedControl } from '@web/components/actions/segmented-control'
 import { EmptyBlock } from '@web/components/feedback/empty-block'
 import { PageFrame } from '@web/components/layout/page-frame'
 import { PageHeader } from '@web/components/layout/page-header'
+import { BudgetsTab } from '@web/features/planning/components/budgets-tab'
 import { OccurrencesTab } from '@web/features/planning/components/occurrences-tab'
 import { RecurrencesTab } from '@web/features/planning/components/recurrences-tab'
 import { planningMessages as messages } from '@web/features/planning/planning.messages'
@@ -42,6 +43,9 @@ function TabBody({ tab, ...props }: PlanningPageProps) {
   }
   if (tab === 'recurrences') {
     return <RecurrencesTab {...props} />
+  }
+  if (tab === 'budgets') {
+    return <BudgetsTab {...props} />
   }
   return <EmptyBlock icon="calendar" title={messages.soon.title} text={messages.soon.text} />
 }

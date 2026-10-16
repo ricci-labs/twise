@@ -16,6 +16,7 @@ import {
   candidatesAnswer,
   INTERNET_CANDIDATES,
   occurrencesAnswer,
+  overviewAnswer,
   plannedOccurrence,
   RENT_RULE,
   recurrencesAnswer,
@@ -26,6 +27,8 @@ import { page } from 'vitest/browser'
 import { render } from 'vitest-browser-react'
 
 const BASE = `/api/workspaces/${WORKSPACE_ID}`
+const GROCERIES_ID = '00000000-0000-4000-8000-0000000000e1'
+const HOUSE_ID = '00000000-0000-4000-8000-0000000000e4'
 
 async function openPlanning({
   path = 'planning',
@@ -134,9 +137,9 @@ describe('PLAN-03 planned occurrences', () => {
 
   it('switches tabs, the ones still to come saying so', async () => {
     const app = await openPlanning()
-    await page.getByRole('button', { name: 'Orçamentos' }).click()
+    await page.getByRole('button', { name: 'Metas' }).click()
     await expect.element(page.getByText('Ainda não chegou aqui.')).toBeVisible()
-    expect(app.router.state.location.pathname).toBe(`/w/${WORKSPACE_ID}/planning/budgets`)
+    expect(app.router.state.location.pathname).toBe(`/w/${WORKSPACE_ID}/planning/goals`)
   })
 })
 
@@ -378,5 +381,94 @@ describe('PLAN-01 recurring bills and incomes', () => {
     })
     await expect.element(page.getByText('Aluguel')).toBeVisible()
     await expect.element(page.getByRole('button', { name: /^Aluguel/ })).not.toBeInTheDocument()
+  })
+})
+
+describe('PLAN-04 budgets', () => {
+  beforeEach(async () => {
+    await page.viewport(360, 800)
+  })
+
+  function budgetCalls(calls: string[]): Record<string, FakeAnswer> {
+    return Object.fromEntries(
+      [GROCERIES_ID, HOUSE_ID].map((id) => [
+        `PUT ${BASE}/budgets/${id}`,
+        async (request: Request) => {
+          calls.push(`${id} ${await request.text()}`)
+          return new Response(null, { status: 204 })
+        },
+      ]),
+    )
+  }
+
+  it('shows the summary with the pace, each budget in words and the categories without one', async () => {
+    await openPlanning({ path: 'planning/budgets', answers: overviewAnswer() })
+    await expect.element(page.getByText('Gasto nas categorias com orçamento')).toBeVisible()
+    await expect.element(page.getByText(/dia 16 de 31/)).toBeVisible()
+    await expect.element(page.getByText('Acima do ritmo: 16 pontos à frente')).toBeVisible()
+    await expect.element(page.getByText(/Feira/)).toBeVisible()
+    await expect.element(page.getByRole('region', { name: /Sem orçamento/ })).toBeVisible()
+    await expect.element(page.getByText('Gasto no período: R$ 145,00')).toBeVisible()
+    await expectNoAccessibilityViolations(page.getByRole('main').element())
+  })
+
+  it('opens a budget with its spending by subcategory and the average, and saves it', async () => {
+    const calls: string[] = []
+    await openPlanning({
+      path: 'planning/budgets',
+      answers: { ...overviewAnswer(), ...budgetCalls(calls) },
+    })
+    await page.getByRole('button', { name: '+1 subcategorias de Mercado' }).click()
+    const sheet = page.getByRole('dialog', { name: 'Orçamento de Mercado' })
+    await expect.element(sheet.getByText('Direto em Mercado')).toBeVisible()
+    await expect
+      .element(sheet.getByText(/Nos últimos 3 meses vocês gastaram em média/))
+      .toBeVisible()
+    await expectNoAccessibilityViolations(sheet.element())
+    await sheet.getByRole('textbox', { name: /Limite por mês/ }).fill('1.300,00')
+    await sheet.getByRole('button', { name: 'Salvar orçamento' }).click()
+    await expect
+      .poll(() => calls)
+      .toEqual([`${GROCERIES_ID} {"limitCents":130000,"fromPeriod":"2026-10"}`])
+  })
+
+  it('removes a budget from the period after asking', async () => {
+    const calls: string[] = []
+    await openPlanning({
+      path: 'planning/budgets',
+      answers: { ...overviewAnswer(), ...budgetCalls(calls) },
+    })
+    await page.getByRole('button', { name: 'Orçamento de Mercado' }).click()
+    await page.getByRole('button', { name: 'Remover orçamento' }).click()
+    const confirm = page.getByRole('alertdialog', {
+      name: /Remover o orçamento de Mercado a partir de/,
+    })
+    await confirm.getByRole('button', { name: 'Remover' }).click()
+    await expect
+      .poll(() => calls)
+      .toEqual([`${GROCERIES_ID} {"limitCents":null,"fromPeriod":"2026-10"}`])
+  })
+
+  it('defines a budget for a category without one', async () => {
+    await openPlanning({ path: 'planning/budgets', answers: overviewAnswer() })
+    await page.getByRole('button', { name: 'Definir orçamento de Casa' }).click()
+    const sheet = page.getByRole('dialog', { name: 'Orçamento de Casa' })
+    await expect.element(sheet.getByText('Categoria de despesa')).toBeVisible()
+    await expect
+      .element(sheet.getByRole('button', { name: 'Remover orçamento' }))
+      .not.toBeInTheDocument()
+  })
+
+  it('lets someone without budgets:update only look', async () => {
+    await openPlanning({
+      path: 'planning/budgets',
+      answers: overviewAnswer(),
+      access: () => accessAs('Leitor', VIEWER_PERMISSIONS),
+    })
+    await expect.element(page.getByText('Acima do ritmo: 16 pontos à frente')).toBeVisible()
+    await expect.element(page.getByRole('button', { name: /Definir/ })).not.toBeInTheDocument()
+    await expect
+      .element(page.getByRole('button', { name: 'Orçamento de Mercado' }))
+      .not.toBeInTheDocument()
   })
 })

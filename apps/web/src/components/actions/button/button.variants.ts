@@ -17,6 +17,8 @@ export const buttonVariants = cva(
         subtle: 'bg-surface text-ink inset-ring-1 inset-ring-border-control hover:bg-sunken',
         tertiary: 'bg-transparent px-3 text-mint-ink underline underline-stroke underline-offset-3',
         danger: 'bg-danger-soft text-danger hover:inset-ring-2 hover:inset-ring-danger',
+        dangerText:
+          'bg-transparent px-3 text-danger underline underline-stroke underline-offset-3 hover:bg-danger-soft',
         quiet: 'bg-transparent text-ink hover:bg-sunken aria-disabled:bg-transparent',
       },
       size: {
@@ -38,6 +40,7 @@ export const buttonVariants = cva(
     compoundVariants: [
       { variant: 'tertiary', size: 'md', class: 'px-3' },
       { variant: 'quiet', size: 'md', class: 'px-3' },
+      { variant: 'dangerText', size: 'md', class: 'px-3' },
     ],
     defaultVariants: { variant: 'primary', size: 'md', width: 'auto', surface: 'page' },
   },
