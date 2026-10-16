@@ -214,7 +214,7 @@ what is left or over, the monthly amount and the coverage come from the API.
 | name | "Nome da meta" | yes | 1–80 |
 | targetCents | "Valor da meta" | yes | money > 0 |
 | accountId | "Guardado em" | yes | active money account not used by another goal. The picker shows "Saldo de hoje", dims the accounts of other goals saying which ("É da meta {nome}"), and ends with "Criar uma conta para a meta" (opens `ACC-02` and comes back with it chosen). `GOAL_ACCOUNT_TAKEN` "Essa conta já é de outra meta." stays for a race on save, on the field |
-| targetOn | "Até quando" | no | date (the app's calendar); empty = "Sem prazo". With a deadline, a preview of the monthly amount counting what is already in the account (G58) |
+| targetOn | "Até quando" | no | date (the app's calendar); empty = "Sem prazo"; "Tirar o prazo" under the field clears it. With a deadline, a preview of the monthly amount counting what is already in the account (G58) |
 | isReserve | "É a reserva de emergência" | no | only one: when another goal is the reserve the switch is disabled with "Já existe uma: a da {conta}. Só pode haver uma."; `RESERVE_ALREADY_SET` "Já existe uma reserva de emergência." stays for a race, on the switch |
 Help (an info alert on top): "O progresso é o saldo da conta escolhida. Use uma conta só para esta
 meta." Full screen on the phone, a 720 px dialog in two columns on the desktop.

@@ -1,4 +1,5 @@
 import {
+  GOAL_NAME_MAX_LENGTH,
   isoDateSchema,
   MAX_RECURRENCE_INTERVAL,
   RECURRENCE_DESCRIPTION_MAX_LENGTH,
@@ -24,6 +25,8 @@ const form = planningMessages.form
 
 export const planningTabSchema = z.enum(PLANNING_TABS)
 
+export const NEW_GOAL = 'new'
+
 export const planningSearchSchema = z.object({
   rule: z.uuid().optional().catch(undefined),
   period: z
@@ -36,6 +39,11 @@ export const planningSearchSchema = z.object({
     .optional()
     .catch(undefined),
   recurrenceType: z.enum(RECURRING_ENTRY_TYPES).optional().catch(undefined),
+  goal: z
+    .union([z.literal(NEW_GOAL), z.uuid()])
+    .optional()
+    .catch(undefined),
+  goalReserve: z.boolean().optional().catch(undefined),
 })
 
 export const occurrenceAmountFormSchema = z.object({
@@ -108,3 +116,13 @@ export const recurrenceFormSchema = z
     message: form.endsBeforeStart,
     when: () => true,
   })
+
+const goalForm = planningMessages.goals.form
+
+export const goalFormSchema = z.object({
+  name: z.string().trim().min(1).max(GOAL_NAME_MAX_LENGTH),
+  target: z.string().refine((text) => (centsOfTypedAmount(text) ?? 0) > 0, goalForm.targetInvalid),
+  accountId: z.string().min(1, goalForm.chooseAccount),
+  targetOn: z.string(),
+  isReserve: z.boolean(),
+})

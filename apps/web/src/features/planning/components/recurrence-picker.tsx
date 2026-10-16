@@ -13,6 +13,7 @@ export function RecurrencePicker({
   layout,
   searchLabel,
   empty,
+  action,
 }: RecurrencePickerProps) {
   const [isOpen, setIsOpen] = useState(false)
   const anchor = useRef<HTMLButtonElement>(null)
@@ -53,6 +54,7 @@ export function RecurrencePicker({
         }}
         onSelect={(value) => control.onChange({ target: { value } })}
         empty={empty}
+        action={action}
       />
     </>
   )

@@ -448,7 +448,9 @@ component here, so the form, and later the account, card and planning forms, sha
   sketch-ink outline and a bold label, no mint and no check). An item with `isPerson` shows the
   `lg` `Avatar` of its label instead of a drawing (the contact picker); one with `hasChevron` ends
   in a 16 px muted chevron (a choice that leads on, as "Outros tipos"). The current item carries
-  `aria-current` in every layout.
+  `aria-current` in every layout. An item with `isDisabled` stays in the list, dimmed and not
+  choosable, its detail saying why ("É da meta Troca do carro"). `action` ends a `list` with a
+  dashed "+" row ("Criar uma conta para a meta") that closes the picker before it runs.
   A row's detail is 13 px (`isDetailStrong`: ink semibold, what a contact owes); `end` puts a
   muted note ("Vence 25/10") or, with a tone, a status `Badge` with its dot ("R$ 200,00 em
   atraso") at the end; `fieldDetail` is what the `PickerField` shows under the chosen one. An item with `children` shows "N sub";

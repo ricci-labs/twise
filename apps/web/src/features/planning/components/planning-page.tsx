@@ -5,12 +5,14 @@ import { TwiseIcon } from '@web/components/icons/twise-icon'
 import { PageFrame } from '@web/components/layout/page-frame'
 import { PageHeader } from '@web/components/layout/page-header'
 import { BudgetsTab } from '@web/features/planning/components/budgets-tab'
+import { GoalEditor } from '@web/features/planning/components/goal-editor'
 import { GoalsTab } from '@web/features/planning/components/goals-tab'
 import { OccurrencesTab } from '@web/features/planning/components/occurrences-tab'
 import { RecurrenceEditor } from '@web/features/planning/components/recurrence-editor'
 import { RecurrencesTab } from '@web/features/planning/components/recurrences-tab'
 import { planningMessages as messages } from '@web/features/planning/planning.messages'
 import {
+  NEW_GOAL,
   NEW_RECURRENCE,
   PLANNING_TABS,
   planningTabSchema,
@@ -24,7 +26,6 @@ import { DESKTOP_QUERY } from '@web/lib/breakpoints'
 import { hasPermission } from '@web/lib/permissions'
 
 const TAB_OPTIONS = PLANNING_TABS.map((tab) => ({ value: tab, label: messages.tabs[tab] }))
-const TABS_WITH_NEW_RECURRENCE = new Set(['occurrences', 'recurrences'])
 
 export function PlanningPage({ tab, ...props }: PlanningPageProps) {
   const navigate = useNavigate()
@@ -51,6 +52,17 @@ export function PlanningPage({ tab, ...props }: PlanningPageProps) {
         className="shrink-0 lg:max-w-120"
       />
       <TabBody tab={tab} {...props} />
+      <GoalEditor
+        workspaceId={props.workspaceId}
+        permissions={props.permissions}
+        search={props.search}
+        onClose={() =>
+          void navigate({
+            to: '.',
+            search: (previous) => ({ ...previous, goal: undefined, goalReserve: undefined }),
+          })
+        }
+      />
       <RecurrenceEditor
         workspaceId={props.workspaceId}
         permissions={props.permissions}
@@ -73,8 +85,16 @@ export function PlanningPage({ tab, ...props }: PlanningPageProps) {
 function HeaderAction({ tab, permissions }: PlanningHeaderActionProps) {
   const isDesktop = useMediaQuery(DESKTOP_QUERY)
   const canCreate = hasPermission(permissions, 'planning', 'create')
-  if (!isDesktop || !canCreate || !TABS_WITH_NEW_RECURRENCE.has(tab)) {
+  if (!isDesktop || !canCreate || tab === 'budgets') {
     return null
+  }
+  if (tab === 'goals') {
+    return (
+      <Button render={<Link to="." search={(previous) => ({ ...previous, goal: NEW_GOAL })} />}>
+        <TwiseIcon name="plus" size="sm" />
+        {messages.goals.newGoal}
+      </Button>
+    )
   }
   return (
     <Button

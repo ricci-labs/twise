@@ -1,4 +1,4 @@
-import type { IsoDate } from '@financas/shared'
+import type { GoalPreviewQuery, IsoDate } from '@financas/shared'
 import { queryOptions } from '@tanstack/react-query'
 import { unwrap } from '@web/lib/api/unwrap'
 import { apiClient } from '@web/lib/api-client'
@@ -68,6 +68,14 @@ export function goalsQueryOptions(workspaceId: string) {
   })
 }
 
+export function goalPreviewQueryOptions(workspaceId: string, query: GoalPreviewQuery) {
+  return queryOptions({
+    queryKey: [...queryKeys.workspace(workspaceId), 'goals', 'preview', query] as const,
+    queryFn: () => fetchGoalPreview(workspaceId, query),
+    placeholderData: (previous) => previous,
+  })
+}
+
 export function allocationStepsQueryOptions(workspaceId: string) {
   return queryOptions({
     queryKey: [...queryKeys.workspace(workspaceId), 'allocation-steps'] as const,
@@ -120,6 +128,15 @@ export function fetchCandidates(workspaceId: string, occurrenceId: string) {
 
 export function fetchGoals(workspaceId: string) {
   return unwrap(workspaceApi.goals.$get({ param: { workspaceId } }))
+}
+
+export function fetchGoalPreview(workspaceId: string, query: GoalPreviewQuery) {
+  return unwrap(
+    workspaceApi.goals.preview.$get({
+      param: { workspaceId },
+      query: { ...query, targetCents: String(query.targetCents) },
+    }),
+  )
 }
 
 export function fetchAllocationSteps(workspaceId: string) {

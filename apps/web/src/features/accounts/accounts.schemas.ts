@@ -5,11 +5,15 @@ import { z } from 'zod'
 
 const NEW_ACCOUNT = 'new'
 
+export const ACCOUNT_FOR_FORM = 'form'
+
 export const accountSearchSchema = z.object({
   account: z
     .union([z.literal(NEW_ACCOUNT), z.uuid()])
     .optional()
     .catch(undefined),
+  accountFor: z.literal(ACCOUNT_FOR_FORM).optional().catch(undefined),
+  createdAccount: z.uuid().optional().catch(undefined),
 })
 
 export const accountsPageSearchSchema = z.object({

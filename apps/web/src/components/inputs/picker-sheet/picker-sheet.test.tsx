@@ -80,6 +80,37 @@ function renderSheet(props: Partial<PickerSheetProps> = {}) {
 }
 
 describe('PickerSheet', () => {
+  it('dims an item that cannot be chosen and says why', async () => {
+    const { onSelect } = renderSheet({
+      value: 'checking',
+      items: [
+        { value: 'checking', label: 'Conta X', detail: 'Saldo de hoje: R$ 4.200,00' },
+        {
+          value: 'savings',
+          label: 'Poupança',
+          detail: 'É da Reserva de emergência',
+          isDisabled: true,
+        },
+      ],
+    })
+    const taken = page.getByRole('button', { name: /Poupança/ })
+    await expect.element(taken).toBeDisabled()
+    await expect.element(taken.getByText('É da Reserva de emergência')).toBeVisible()
+    await taken.click({ force: true })
+    expect(onSelect).not.toHaveBeenCalled()
+    await expectNoAccessibilityViolations(document.body)
+  })
+
+  it('ends the list with an action that closes the picker first', async () => {
+    const onPress = vi.fn()
+    const { onOpenChange } = renderSheet({
+      action: { label: 'Criar uma conta para a meta', detail: 'Uma conta só dela', onPress },
+    })
+    await page.getByRole('button', { name: /Criar uma conta para a meta/ }).click()
+    expect(onOpenChange).toHaveBeenCalledWith(false)
+    expect(onPress).toHaveBeenCalledOnce()
+  })
+
   afterEach(async () => {
     await page.viewport(414, 896)
   })
