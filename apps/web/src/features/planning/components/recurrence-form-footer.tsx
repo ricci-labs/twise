@@ -12,7 +12,12 @@ import { useWatch } from 'react-hook-form'
 
 const messages = planningMessages.form
 
-export function RecurrenceFormFooter({ isOnline, problem, onCancel }: RecurrenceFormFooterProps) {
+export function RecurrenceFormFooter({
+  isOnline,
+  problem,
+  isEditing,
+  onCancel,
+}: RecurrenceFormFooterProps) {
   const isDesktop = useMediaQuery(DESKTOP_QUERY)
   const entryType = useWatch<RecurrenceFormInput, 'entryType'>({ name: 'entryType' })
   return (
@@ -25,11 +30,11 @@ export function RecurrenceFormFooter({ isOnline, problem, onCancel }: Recurrence
       <div className="flex flex-col lg:flex-row-reverse lg:items-center lg:justify-between">
         <SubmitButton
           width="full"
-          loadingLabel={messages.creating}
+          loadingLabel={isEditing ? messages.saving : messages.creating}
           isBlocked={!isOnline}
           className="lg:w-auto"
         >
-          {messages.create[entryType]}
+          {isEditing ? messages.save : messages.create[entryType]}
         </SubmitButton>
         {isDesktop && (
           <Button variant="quiet" onClick={onCancel}>

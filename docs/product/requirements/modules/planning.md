@@ -102,6 +102,8 @@ em", "De"/"Para"); the type is locked on edit.
 the amount, computed with the shared rules and holidays (the web never computes dates by itself).
 A date moved by a weekend or a holiday says why on its own line under it ("dia 10 é domingo, foi
 para segunda"), never over the amount.
+Edit opens from the recurrence's actions ("Editar", `planning:update`), titled "Editar conta fixa",
+the type locked with "O tipo não muda depois de criar.", and saves with "Salvar".
 **RF-PLAN-4** Editing a rule with pending future occurrences whose amount was changed shows a
 warning alert on top that names the occurrence with its own amount: "Ao salvar, os próximos
 previstos voltam para o valor desta conta fixa." Saving re-plans the pending occurrences.

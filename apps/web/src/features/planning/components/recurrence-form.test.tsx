@@ -304,3 +304,86 @@ describe('PLAN-02 new recurrence', () => {
     await expect.element(form()).not.toBeInTheDocument()
   })
 })
+
+describe('PLAN-02 editing a recurrence', () => {
+  const RENT = '00000000-0000-4000-8000-0000000008a1'
+
+  beforeEach(async () => {
+    await page.viewport(360, 800)
+  })
+
+  it('opens from the row, with the type locked and the rule filled in, and saves it', async () => {
+    const sent: unknown[] = []
+    await openPlanning({
+      answers: {
+        [`PATCH ${BASE}/recurrences/${RENT}`]: async (request) => {
+          sent.push(await request.json())
+          return new Response(null, { status: 204 })
+        },
+      },
+    })
+    await page.getByRole('button', { name: /^Aluguel/ }).click()
+    await page.getByRole('link', { name: 'Editar' }).click()
+    const dialog = page.getByRole('dialog', { name: 'Editar conta fixa' })
+    await expect.element(dialog.getByText('O tipo não muda depois de criar.')).toBeVisible()
+    await expect.element(dialog.getByRole('textbox', { name: /^Descrição/ })).toHaveValue('Aluguel')
+    await expectNoAccessibilityViolations(dialog.element())
+    await dialog.getByRole('textbox', { name: /^Valor/ }).fill('2.200,00')
+    await dialog.getByRole('button', { name: 'Salvar' }).click()
+    await expect.element(page.getByText('Aluguel salva.')).toBeVisible()
+    expect(sent).toEqual([
+      expect.objectContaining({
+        description: 'Aluguel',
+        amountCents: 220_000,
+        schedule: expect.objectContaining({ frequency: 'monthly', dayOfMonth: 5 }),
+      }),
+    ])
+    expect(sent[0]).not.toHaveProperty('entryType')
+  })
+
+  it("warns that an occurrence with its own amount goes back to the rule's", async () => {
+    await openPlanning({
+      path: `planning/recurrences?recurrence=${RENT}`,
+      answers: occurrencesAnswer([
+        {
+          id: 'own',
+          ruleId: RENT,
+          description: 'Aluguel',
+          entryType: 'expense',
+          sourceAccountId: CHECKING,
+          categoryAccountId: HOUSE,
+          dueOn: '2026-11-05',
+          amountCents: 21_437,
+          amountIsEstimate: false,
+          status: 'pending',
+          matchedEntryId: null,
+          skippedByUserId: null,
+          frequency: 'monthly',
+          interval: 1,
+          isOverdue: false,
+          paidOn: null,
+          paidCents: null,
+        },
+      ]),
+    })
+    const dialog = page.getByRole('dialog', { name: 'Editar conta fixa' })
+    await expect
+      .element(
+        dialog.getByText(
+          /os próximos previstos voltam para o valor desta conta fixa\. Aluguel de 05\/11 tinha valor próprio/,
+        ),
+      )
+      .toBeVisible()
+  })
+
+  it('does not let a viewer edit', async () => {
+    await openPlanning({
+      path: `planning/recurrences?recurrence=${RENT}`,
+      access: () => accessAs('Leitor', VIEWER_PERMISSIONS),
+    })
+    await expect.element(page.getByText('Aluguel')).toBeVisible()
+    await expect
+      .element(page.getByRole('dialog', { name: 'Editar conta fixa' }))
+      .not.toBeInTheDocument()
+  })
+})
