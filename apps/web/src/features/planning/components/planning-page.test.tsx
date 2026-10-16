@@ -530,6 +530,21 @@ describe('PLAN-03 on the desktop', () => {
       .toMatchObject({ entry: 'new', entryOccurrence: overdueId })
   })
 
+  it('offers a new recurrence in the page header, only to who can create', async () => {
+    const app = await openPlanning()
+    await page.getByRole('link', { name: 'Nova conta fixa' }).click()
+    await expect.element(page.getByRole('dialog', { name: 'Nova conta fixa' })).toBeVisible()
+    expect(app.router.state.location.search).toMatchObject({ recurrence: 'new' })
+  })
+
+  it('hides the page header action from a reader', async () => {
+    await openPlanning({ access: () => accessAs('Leitor', VIEWER_PERMISSIONS) })
+    await expect.element(page.getByRole('table', { name: 'Previstos de out/26' })).toBeVisible()
+    await expect
+      .element(page.getByRole('link', { name: 'Nova conta fixa' }))
+      .not.toBeInTheDocument()
+  })
+
   it('opens the rest of the actions from "⋯" as a menu', async () => {
     await openPlanning()
     await page.getByRole('button', { name: 'Ações de Internet' }).click()

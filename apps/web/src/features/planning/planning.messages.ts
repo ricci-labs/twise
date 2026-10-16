@@ -2,6 +2,7 @@ export const planningMessages = {
   title: 'Planejamento',
   description: 'O que entra e sai todo mês, o que está previsto e os limites de gasto.',
   tabsLabel: 'Partes do planejamento',
+  newRecurrence: 'Nova conta fixa',
   tabs: {
     occurrences: 'Previstos',
     recurrences: 'Contas fixas',
