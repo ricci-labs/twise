@@ -14,6 +14,7 @@ export function RecurrenceActions({
   workspaceId,
   recurrence,
   canDelete,
+  triggerLabel,
   className,
   children,
 }: RecurrenceActionsProps) {
@@ -69,7 +70,7 @@ export function RecurrenceActions({
         actions={actions}
         align="start"
         trigger={
-          <button type="button" className={className}>
+          <button type="button" aria-label={triggerLabel} className={className}>
             {children}
           </button>
         }

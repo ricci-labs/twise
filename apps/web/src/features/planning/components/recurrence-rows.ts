@@ -136,7 +136,7 @@ function detailOf(item: ListedRecurrence, context: RecurrenceContext): string {
     .join(SEPARATOR)
 }
 
-function pathOf(accountId: string, context: RecurrenceContext): string | undefined {
+export function pathOf(accountId: string, context: RecurrenceContext): string | undefined {
   const category = context.accounts.get(accountId)
   if (!category) {
     return undefined
@@ -145,7 +145,7 @@ function pathOf(accountId: string, context: RecurrenceContext): string | undefin
   return parent ? `${parent.name}${PATH}${category.name}` : category.name
 }
 
-function nextOf(item: ListedRecurrence, today: IsoDate): RecurrenceRowView['next'] {
+export function nextOf(item: ListedRecurrence, today: IsoDate): RecurrenceRowView['next'] {
   if (!item.nextOn) {
     return undefined
   }
@@ -160,7 +160,10 @@ function nextOf(item: ListedRecurrence, today: IsoDate): RecurrenceRowView['next
   return { label: messages.next(date), tone: 'neutral' }
 }
 
-function artOf(item: ListedRecurrence, context: RecurrenceContext): RecurrenceRowView['art'] {
+export function artOf(
+  item: ListedRecurrence,
+  context: RecurrenceContext,
+): RecurrenceRowView['art'] {
   if (item.entryType === 'transfer') {
     return { name: item.description, icon: 'transfer' }
   }
@@ -178,4 +181,13 @@ function leftOutNoteOf(items: readonly ListedRecurrence[], count: number): strin
   }
   const [only] = items.filter((item) => item.entryType === 'income' && item.amountIsEstimate)
   return count === 1 && only ? messages.leftOut(only.description) : messages.leftOutMany
+}
+
+export function accountPartOf(item: ListedRecurrence, context: RecurrenceContext): string {
+  const source = context.accounts.get(item.sourceAccountId)?.name ?? ''
+  if (item.entryType !== 'transfer') {
+    return source
+  }
+  const target = context.accounts.get(item.categoryAccountId)?.name ?? ''
+  return `${source}${ARROW}${target}`
 }
