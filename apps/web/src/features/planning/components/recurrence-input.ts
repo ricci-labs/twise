@@ -2,15 +2,17 @@ import {
   type IsoDate,
   type NewRecurrenceRule,
   parseIsoDate,
+  type RecurrenceRuleChange,
   type RecurrenceSchedule,
   type RecurringEntryType,
 } from '@financas/shared'
 import type {
   CategoryKind,
+  ListedRecurrence,
   RecurrenceFormInput,
   RecurrenceFormValues,
 } from '@web/features/planning/planning.types'
-import { centsOfTypedAmount } from '@web/lib/format/money'
+import { centsOfTypedAmount, formatTypedAmount } from '@web/lib/format/money'
 
 const WEEKLY = 'weekly'
 const BUSINESS_DAY = 'businessDay'
@@ -59,6 +61,45 @@ export function newRuleOf(values: RecurrenceFormValues): NewRecurrenceRule {
     remindDaysBefore: null,
     autoRecord: false,
   }
+}
+
+export function recurrenceInputOf(rule: ListedRecurrence): RecurrenceFormInput {
+  const { schedule } = rule
+  return {
+    entryType: rule.entryType,
+    description: rule.description,
+    amount: formatTypedAmount(rule.amountCents),
+    amountIsEstimate: rule.amountIsEstimate,
+    sourceAccountId: rule.sourceAccountId,
+    categoryAccountId: rule.categoryAccountId,
+    frequency: schedule.frequency,
+    interval: schedule.interval,
+    dayRule: dayRuleOf(schedule),
+    dayOfMonth: String(schedule.dayOfMonth ?? parseIsoDate(schedule.startsOn).day),
+    nthBusinessDay: String(schedule.nthBusinessDay ?? FIRST_BUSINESS_DAY_SHOWN),
+    weekendRule: schedule.weekendRule,
+    startsOn: schedule.startsOn,
+    hasEnd: schedule.endsOn !== null,
+    endsOn: schedule.endsOn ?? '',
+  }
+}
+
+export function ruleChangeOf(values: RecurrenceFormValues): RecurrenceRuleChange {
+  return {
+    description: values.description,
+    amountCents: centsOfTypedAmount(values.amount) ?? 0,
+    amountIsEstimate: values.amountIsEstimate,
+    sourceAccountId: values.sourceAccountId,
+    categoryAccountId: values.categoryAccountId,
+    schedule: scheduleOf(values),
+  }
+}
+
+function dayRuleOf(schedule: ListedRecurrence['schedule']): RecurrenceFormInput['dayRule'] {
+  if (schedule.nthBusinessDay !== null) {
+    return BUSINESS_DAY
+  }
+  return schedule.dayOfMonth === null ? 'sameDay' : 'day'
 }
 
 export function scheduleOf(values: RecurrenceFormInput): RecurrenceSchedule {

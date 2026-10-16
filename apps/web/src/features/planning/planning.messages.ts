@@ -137,6 +137,7 @@ export const planningMessages = {
     actions: {
       trigger: (description: string) => `Ações de ${description}`,
       seeOccurrences: 'Ver previstos',
+      edit: 'Editar',
       remove: 'Excluir',
     },
     removeTitle: (description: string) => `Excluir ${description}?`,
@@ -154,6 +155,17 @@ export const planningMessages = {
   },
   form: {
     title: 'Nova conta fixa',
+    editTitle: 'Editar conta fixa',
+    typeLocked: 'O tipo não muda depois de criar.',
+    save: 'Salvar',
+    saving: 'Salvando…',
+    saved: (description: string) => `${description} salva.`,
+    ownAmount: (description: string, date: string, amount: string, others: number) =>
+      `Ao salvar, os próximos previstos voltam para o valor desta conta fixa. ${
+        others > 0
+          ? `${description} de ${date} (${amount}) e mais ${others} tinham valor próprio.`
+          : `${description} de ${date} tinha valor próprio (${amount}).`
+      }`,
     close: 'Cancelar',
     requiredMark: '*',
     requiredLegend: 'obrigatório',

@@ -31,7 +31,10 @@ export const planningSearchSchema = z.object({
     .regex(/^\d{4}-(0[1-9]|1[0-2])$/)
     .optional()
     .catch(undefined),
-  recurrence: z.literal(NEW_RECURRENCE).optional().catch(undefined),
+  recurrence: z
+    .union([z.literal(NEW_RECURRENCE), z.uuid()])
+    .optional()
+    .catch(undefined),
   recurrenceType: z.enum(RECURRING_ENTRY_TYPES).optional().catch(undefined),
 })
 

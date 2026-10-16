@@ -32,6 +32,12 @@ export function RecurrenceActions({
 
   const actions: ItemAction[] = [
     {
+      key: 'edit',
+      label: messages.actions.edit,
+      icon: 'edit',
+      render: <Link to="." search={(previous) => ({ ...previous, recurrence: recurrence.id })} />,
+    },
+    {
       key: 'occurrences',
       label: messages.actions.seeOccurrences,
       icon: 'list',

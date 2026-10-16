@@ -5,6 +5,7 @@ import {
 } from '@financas/shared'
 import { FieldGroup } from '@web/components/forms/field-group'
 import { FormField } from '@web/components/forms/form-field'
+import { LockedField } from '@web/components/forms/locked-field'
 import { ChoiceChips } from '@web/components/inputs/choice-chips'
 import { MoneyInput } from '@web/components/inputs/money-input'
 import { Switch } from '@web/components/inputs/switch'
@@ -21,7 +22,7 @@ import type {
   RecurrenceFieldsProps,
   RecurrenceFormInput,
 } from '@web/features/planning/planning.types'
-import { Controller, useFormContext } from 'react-hook-form'
+import { Controller, useFormContext, useWatch } from 'react-hook-form'
 
 const messages = planningMessages.form
 const TYPE_ORDER: readonly RecurringEntryType[] = ['expense', 'card_purchase', 'income', 'transfer']
@@ -35,6 +36,7 @@ export function RecurrenceFields({
   today,
   accounts,
   descriptionInput,
+  isTypeLocked,
 }: RecurrenceFieldsProps) {
   return (
     <>
@@ -45,7 +47,7 @@ export function RecurrenceFields({
         {messages.requiredLegend}
       </p>
       <div className="flex flex-col gap-4.5 px-4 pt-2.5 pb-6 lg:px-8">
-        <TypeField />
+        {isTypeLocked ? <LockedTypeField /> : <TypeField />}
         <FormField<RecurrenceFormInput>
           name="description"
           label={messages.description}
@@ -83,6 +85,17 @@ export function RecurrenceFields({
         <RecurrencePreview workspaceId={workspaceId} today={today} />
       </div>
     </>
+  )
+}
+
+function LockedTypeField() {
+  const entryType = useWatch<RecurrenceFormInput, 'entryType'>({ name: 'entryType' })
+  return (
+    <LockedField
+      label={messages.type}
+      value={messages.types[entryType]}
+      help={messages.typeLocked}
+    />
   )
 }
 

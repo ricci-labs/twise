@@ -294,17 +294,24 @@ export type NewRecurrenceProps = {
   onClose: () => void
 }
 
+export type RecurrenceEdit = {
+  ruleId: string
+  warning?: string
+}
+
 export type RecurrenceFormProps = {
   workspaceId: string
   today: IsoDate
   accounts: readonly PlanningAccount[]
   defaults: RecurrenceFormInput
+  edit?: RecurrenceEdit
   onClose: () => void
 }
 
 export type RecurrenceFormFooterProps = {
   isOnline: boolean
   problem: string | null
+  isEditing: boolean
   onCancel: () => void
 }
 
@@ -313,6 +320,13 @@ export type RecurrenceFieldsProps = {
   today: IsoDate
   accounts: readonly PlanningAccount[]
   descriptionInput: RefObject<HTMLInputElement | null>
+  isTypeLocked: boolean
+}
+
+export type EditRecurrenceProps = {
+  workspaceId: string
+  ruleId: string
+  onClose: () => void
 }
 
 export type RecurrenceAccountFieldsProps = {
