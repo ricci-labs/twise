@@ -25,12 +25,24 @@ export const occurrenceGroupCountVariants = cva(
   'font-sans text-row-detail font-medium text-ink-muted',
 )
 
-export const occurrenceGroupListVariants = cva('flex flex-col rounded-xl border bg-surface', {
+export const occurrenceGroupListVariants = cva('flex flex-col', {
   variants: {
     tone: {
-      default: 'border-border px-3',
-      danger: 'border-danger px-4 py-1.5 inset-ring-1 inset-ring-danger',
+      default: '',
+      danger: '',
+    },
+    layout: {
+      list: 'rounded-xl border bg-surface',
+      cards: 'gap-2.5 lg:grid lg:grid-cols-3 lg:gap-4',
     },
   },
-  defaultVariants: { tone: 'default' },
+  compoundVariants: [
+    { layout: 'list', tone: 'default', class: 'border-border px-3' },
+    {
+      layout: 'list',
+      tone: 'danger',
+      class: 'border-danger px-4 py-1.5 inset-ring-1 inset-ring-danger',
+    },
+  ],
+  defaultVariants: { tone: 'default', layout: 'list' },
 })

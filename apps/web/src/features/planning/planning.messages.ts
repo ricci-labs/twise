@@ -9,11 +9,29 @@ export const planningMessages = {
     budgets: 'Orçamentos',
     goals: 'Metas',
   },
-  soon: {
-    title: 'Ainda não chegou aqui.',
-    text: 'Esta parte do planejamento vem nas próximas versões.',
-  },
   period: { label: 'Período' },
+  goals: {
+    pageTitle: 'Metas',
+    failed: 'Não deu para carregar as metas.',
+    title: 'Metas',
+    empty: 'Nenhuma meta ainda.',
+    emptyText:
+      'Uma viagem, a troca do carro, a reforma: cada meta guarda o dinheiro numa conta só dela.',
+    actions: {
+      trigger: (name: string) => `Ações de ${name}`,
+      save: 'Guardar dinheiro',
+      entries: 'Ver lançamentos da conta',
+      remove: 'Excluir',
+    },
+    reserveName: 'Reserva de emergência',
+    removeTitle: (name: string) => `Excluir ${name}?`,
+    removeText: (account: string) => `O dinheiro continua em ${account}.`,
+    removeInSplit: (account: string) =>
+      `Esta meta está na divisão da comissão. Ela sai de lá também. O dinheiro continua em ${account}.`,
+    removeAndSplit: 'Excluir e tirar da divisão',
+    cancel: 'Cancelar',
+    removed: 'Meta excluída.',
+  },
   budgets: {
     pageTitle: 'Orçamentos',
     summary: 'Gasto nas categorias com orçamento',

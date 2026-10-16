@@ -692,6 +692,16 @@ describe('ENT-02 income and transfer', () => {
       }),
     ])
   })
+
+  it("opens as a transfer to a goal's account with the amount to save", async () => {
+    await openNewEntry({
+      search: `&entryType=transfer&entryToAccount=${CHECKING}&entryAmount=113400`,
+    })
+
+    await expect.element(page.getByRole('radio', { name: 'Transferência' })).toBeChecked()
+    await expect.element(page.getByLabelText(/^Valor/)).toHaveValue('1.134,00')
+    await expectText(page.getByRole('button', { name: /^Para/ }), /Conta X/)
+  })
 })
 
 describe('ENT-02 opening balance', () => {

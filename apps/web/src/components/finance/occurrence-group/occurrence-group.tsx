@@ -16,6 +16,7 @@ export function OccurrenceGroup({
   title,
   count,
   tone,
+  layout,
   add,
   footer,
   children,
@@ -46,7 +47,7 @@ export function OccurrenceGroup({
           </TextLink>
         )}
       </div>
-      <ul className={occurrenceGroupListVariants({ tone })}>{children}</ul>
+      <ul className={occurrenceGroupListVariants({ tone, layout })}>{children}</ul>
       {footer}
     </section>
   )

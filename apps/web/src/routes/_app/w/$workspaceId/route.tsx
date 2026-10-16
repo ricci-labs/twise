@@ -23,6 +23,8 @@ export const Route = createFileRoute('/_app/w/$workspaceId')({
       entry,
       entryType,
       entryAccount,
+      entryToAccount,
+      entryAmount,
       entryCard,
       entryInvoice,
       entryRepeat,
@@ -63,6 +65,8 @@ export const Route = createFileRoute('/_app/w/$workspaceId')({
           prefill={{
             entryType,
             accountId: entryAccount,
+            toAccountId: entryToAccount,
+            amountCents: entryAmount,
             cardAccountId: entryCard,
             invoiceId: entryInvoice,
           }}
@@ -74,6 +78,8 @@ export const Route = createFileRoute('/_app/w/$workspaceId')({
                 entry: undefined,
                 entryType: undefined,
                 entryAccount: undefined,
+                entryToAccount: undefined,
+                entryAmount: undefined,
                 entryCard: undefined,
                 entryInvoice: undefined,
                 entryRepeat: undefined,
