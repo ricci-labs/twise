@@ -16,6 +16,16 @@ export const planningMessages = {
     back: 'Metas',
     intro:
       'Quando entra uma renda variável (a comissão), o app sugere para onde vai cada parte, nesta ordem. Os passos de cima vêm primeiro.',
+    introDesktop:
+      'Quando entra uma renda variável, o app sugere para onde vai cada parte, nesta ordem.',
+    crumb: 'Caminho',
+    stepsTitle: 'Passos, nesta ordem',
+    stepsHint: 'Arraste pela alça ou use o ⋯ para mudar a ordem. Até 10 passos.',
+    rules: {
+      order: 'Os passos de cima recebem primeiro; se a comissão acabar, os de baixo ficam sem.',
+      percent: 'Porcentagem é sempre da comissão inteira, não do que sobra.',
+      rest: '"O que sobrar" é sempre o último e só pode haver um.',
+    },
     failed: 'Não deu para carregar a divisão.',
     stepsLabel: 'Passos da divisão',
     add: 'Adicionar passo',

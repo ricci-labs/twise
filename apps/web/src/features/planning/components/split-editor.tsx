@@ -8,6 +8,7 @@ import { SplitExample, type SplitExampleChoice } from '@web/components/finance/s
 import { TwiseIcon } from '@web/components/icons/twise-icon'
 import { useSaveSplit } from '@web/features/planning/api/use-save-split'
 import { stepInputOf } from '@web/features/planning/components/allocation-steps'
+import { SplitHeader } from '@web/features/planning/components/split-header'
 import {
   draftOf,
   exampleOf,
@@ -22,13 +23,16 @@ import { StepActions } from '@web/features/planning/components/step-actions'
 import { StepSheet } from '@web/features/planning/components/step-sheet'
 import { planningMessages } from '@web/features/planning/planning.messages'
 import type {
+  AddStepButtonProps,
   DraftStep,
   EmptySplitProps,
+  SaveBarProps,
   SplitContext,
   SplitEditorProps,
   StepListProps,
   StepShape,
   StepSheetState,
+  StepsCardProps,
 } from '@web/features/planning/planning.types'
 import { moved, useDragReorder } from '@web/hooks/use-drag-reorder'
 import { useMediaQuery } from '@web/hooks/use-media-query'
@@ -40,6 +44,11 @@ import { useState } from 'react'
 const messages = planningMessages.split
 const DEFAULT_EXAMPLE_CENTS = 100_000
 const ALL_CHOICES: readonly SplitExampleChoice[] = ['current', 'average', 'custom']
+const RULES = [
+  { key: 'order', icon: 'collapse' },
+  { key: 'percent', icon: 'info' },
+  { key: 'rest', icon: 'expand' },
+] as const
 const WITHOUT_AVERAGE: readonly SplitExampleChoice[] = ['current', 'custom']
 
 export function SplitEditor({
@@ -51,9 +60,7 @@ export function SplitEditor({
   canEdit,
 }: SplitEditorProps) {
   const isDesktop = useMediaQuery(DESKTOP_QUERY)
-  const save = useSaveSplit(workspaceId)
   const [steps, setSteps] = useState<DraftStep[]>(() => draftOf(initial))
-  const [isConfirming, setIsConfirming] = useState(false)
   const [sheet, setSheet] = useState<StepSheetState | null>(null)
   const reorder = useDragReorder({
     count: steps.length,
@@ -78,70 +85,52 @@ export function SplitEditor({
     setSteps(withSavedStep(steps, step, sheet?.index))
   }
 
-  const editing = sheet?.index === undefined ? null : (steps[sheet.index] ?? null)
+  const editing = editingOf(sheet, steps)
+  const saving = useConfirmedSave(workspaceId, steps)
   const canAdd = canEdit && steps.length < MAX_ALLOCATION_STEPS
 
-  async function confirmSave() {
-    try {
-      await save.mutateAsync(
-        steps.map(stepInputOf).filter((step): step is AllocationStepInput => step !== null),
-      )
-      setIsConfirming(false)
-      showToast(messages.saved, { tone: 'success' })
-    } catch (error) {
-      setIsConfirming(false)
-      showToast(errorMessageFor(error), { tone: 'danger' })
-    }
-  }
+  const saveButton = canEdit && (
+    <Button
+      width="full"
+      className="lg:w-auto"
+      isDisabled={!canSave}
+      onClick={() => saving.setIsConfirming(true)}
+    >
+      {messages.save}
+    </Button>
+  )
 
   return (
     <>
-      <div className="grid gap-4 lg:grid-cols-2 lg:items-stretch lg:gap-6">
-        {shown.length === 0 ? (
-          <EmptySplit
-            hasReserve={goals.some((goal) => goal.isReserve)}
-            canEdit={canEdit}
-            onSuggest={() => setSteps(suggestedSteps(goals, accounts))}
-            onAdd={() => setSheet({})}
-          />
-        ) : (
-          <div className="flex flex-col gap-2.5">
-            <StepList
-              steps={steps}
-              shown={shown}
-              context={context}
+      <SplitHeader workspaceId={workspaceId} actions={isDesktop ? saveButton : undefined} />
+      <div className="grid gap-4 lg:grid-cols-5 lg:items-start lg:gap-5">
+        <StepsCard isDesktop={isDesktop}>
+          {shown.length === 0 ? (
+            <EmptySplit
+              hasReserve={goals.some((goal) => goal.isReserve)}
               canEdit={canEdit}
-              reorder={reorder}
-              onChange={setSteps}
-              onRemove={remove}
-              onEdit={(index) => setSheet({ index })}
+              onSuggest={() => setSteps(suggestedSteps(goals, accounts))}
+              onAdd={() => setSheet({})}
             />
-            {canAdd && (
-              <button
-                type="button"
-                onClick={() => setSheet({})}
-                className="flex min-h-13 cursor-pointer items-center justify-center gap-2 rounded-xl border border-dashed border-border-control text-label font-semibold text-ink outline-none hover:bg-sunken focus-visible:ring-2 focus-visible:ring-focus-ring"
-              >
-                <TwiseIcon name="plus" size="sm" />
-                {messages.add}
-              </button>
-            )}
-          </div>
-        )}
-        <SplitExample {...example} hasBar={isDesktop} />
+          ) : (
+            <div className="flex flex-col gap-2.5">
+              <StepList
+                steps={steps}
+                shown={shown}
+                context={context}
+                canEdit={canEdit}
+                reorder={reorder}
+                onChange={setSteps}
+                onRemove={remove}
+                onEdit={(index) => setSheet({ index })}
+              />
+              {canAdd && <AddStepButton onPress={() => setSheet({})} />}
+            </div>
+          )}
+        </StepsCard>
+        <SplitExample {...example} hasBar={isDesktop} className="lg:col-span-2" />
       </div>
-      {canEdit && (
-        <div className="sticky bottom-0 -mx-4 border-t border-border bg-page px-4 py-3 lg:static lg:mx-0 lg:flex lg:justify-end lg:border-0 lg:bg-transparent lg:p-0">
-          <Button
-            width="full"
-            className="lg:w-auto"
-            isDisabled={!canSave}
-            onClick={() => setIsConfirming(true)}
-          >
-            {messages.save}
-          </Button>
-        </div>
-      )}
+      {isDesktop || <SaveBar>{saveButton}</SaveBar>}
       {sheet && (
         <StepSheet
           isOpen
@@ -159,9 +148,9 @@ export function SplitEditor({
         description={messages.replace.text}
         cancelLabel={messages.replace.cancel}
         confirmLabel={messages.replace.confirm}
-        isOpen={isConfirming}
-        onOpenChange={setIsConfirming}
-        onConfirm={() => void confirmSave()}
+        isOpen={saving.isConfirming}
+        onOpenChange={saving.setIsConfirming}
+        onConfirm={() => void saving.confirm()}
       />
     </>
   )
@@ -319,4 +308,81 @@ function withNewStep(steps: readonly DraftStep[], step: StepShape): DraftStep[] 
     return [...steps, added]
   }
   return [...steps.slice(0, restIndex), added, ...steps.slice(restIndex)]
+}
+
+function StepsCard({ isDesktop, children }: StepsCardProps) {
+  if (!isDesktop) {
+    return <div className="flex flex-col gap-2.5">{children}</div>
+  }
+  return (
+    <section
+      aria-labelledby="split-steps-title"
+      className="flex flex-col gap-3 rounded-xl border border-border bg-surface px-6 pt-5 pb-4 lg:col-span-3"
+    >
+      <div>
+        <h2 id="split-steps-title" className="font-display text-section-title">
+          {messages.stepsTitle}
+        </h2>
+        <p className="text-note text-ink-muted">{messages.stepsHint}</p>
+      </div>
+      {children}
+      <ul className="mt-2 flex flex-col gap-2 border-t border-border pt-3 text-note text-ink-muted">
+        {RULES.map(({ key, icon }) => (
+          <li key={key} className="flex items-start gap-2">
+            <TwiseIcon name={icon} size="sm" />
+            {messages.rules[key]}
+          </li>
+        ))}
+      </ul>
+    </section>
+  )
+}
+
+function AddStepButton({ onPress }: AddStepButtonProps) {
+  return (
+    <button
+      type="button"
+      onClick={onPress}
+      className="flex min-h-13 cursor-pointer items-center justify-center gap-2 rounded-xl border border-dashed border-border-control text-label font-semibold text-ink outline-none hover:bg-sunken focus-visible:ring-2 focus-visible:ring-focus-ring"
+    >
+      <TwiseIcon name="plus" size="sm" />
+      {messages.add}
+    </button>
+  )
+}
+
+function SaveBar({ children }: SaveBarProps) {
+  if (!children) {
+    return null
+  }
+  return (
+    <div className="sticky bottom-0 -mx-4 border-t border-border bg-page px-4 py-3">{children}</div>
+  )
+}
+
+function useConfirmedSave(workspaceId: string, steps: readonly DraftStep[]) {
+  const save = useSaveSplit(workspaceId)
+  const [isConfirming, setIsConfirming] = useState(false)
+
+  async function confirm() {
+    try {
+      await save.mutateAsync(
+        steps.map(stepInputOf).filter((step): step is AllocationStepInput => step !== null),
+      )
+      setIsConfirming(false)
+      showToast(messages.saved, { tone: 'success' })
+    } catch (error) {
+      setIsConfirming(false)
+      showToast(errorMessageFor(error), { tone: 'danger' })
+    }
+  }
+
+  return { isConfirming, setIsConfirming, confirm }
+}
+
+function editingOf(sheet: StepSheetState | null, steps: readonly DraftStep[]): DraftStep | null {
+  if (sheet?.index === undefined) {
+    return null
+  }
+  return steps[sheet.index] ?? null
 }
