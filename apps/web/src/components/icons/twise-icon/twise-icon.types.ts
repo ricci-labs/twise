@@ -12,6 +12,7 @@ export type TwiseIconName =
   | 'edit'
   | 'expand'
   | 'flag'
+  | 'grip'
   | 'history'
   | 'home'
   | 'info'

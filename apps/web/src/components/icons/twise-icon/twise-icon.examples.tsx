@@ -26,6 +26,7 @@ const INTERFACE_ICONS: readonly TwiseIconName[] = [
   'subcategory',
   'move',
   'more',
+  'grip',
   'install',
 ]
 

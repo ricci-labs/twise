@@ -48,6 +48,7 @@ import { tipExamples } from '@web/components/feedback/tip'
 import { toastExamples } from '@web/components/feedback/toast'
 import { accountGroupExamples } from '@web/components/finance/account-group'
 import { accountRowExamples } from '@web/components/finance/account-row'
+import { allocationStepRowExamples } from '@web/components/finance/allocation-step-row'
 import { attachAreaExamples } from '@web/components/finance/attach-area'
 import { budgetRowExamples } from '@web/components/finance/budget-row'
 import { budgetSummaryExamples } from '@web/components/finance/budget-summary'
@@ -76,6 +77,7 @@ import { recurrenceRowExamples } from '@web/components/finance/recurrence-row'
 import { reserveCardExamples } from '@web/components/finance/reserve-card'
 import { shareRowsExamples } from '@web/components/finance/share-rows'
 import { sharesListExamples } from '@web/components/finance/shares-list'
+import { splitExampleExamples } from '@web/components/finance/split-example'
 import { splitShortcutExamples } from '@web/components/finance/split-shortcut'
 import { subcategoryAddChipExamples } from '@web/components/finance/subcategory-add-chip'
 import { subcategoryChipExamples } from '@web/components/finance/subcategory-chip'
@@ -197,6 +199,8 @@ export const workbenchSections: readonly ComponentExamples[] = [
   reserveCardExamples,
   goalCardExamples,
   splitShortcutExamples,
+  allocationStepRowExamples,
+  splitExampleExamples,
   invoiceMonthStripExamples,
   invoiceSummaryExamples,
   invoiceLineExamples,

@@ -45,8 +45,12 @@ export const choiceChipVariants = cva(
           'data-checked:border-ink data-checked:font-emphasis data-checked:ring-1 data-checked:ring-ink data-checked:ring-inset',
         ],
       },
+      size: {
+        md: '',
+        compact: 'px-3 text-chip',
+      },
     },
-    defaultVariants: { variant: 'pill' },
+    defaultVariants: { variant: 'pill', size: 'md' },
   },
 )
 

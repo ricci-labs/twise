@@ -51,6 +51,22 @@ export const choiceChipsExamples: ComponentExamples = {
       ),
     },
     {
+      name: 'Compactas (três numa linha de 360 px)',
+      render: () => (
+        <Example
+          label="Valor do exemplo"
+          variant="pillOutline"
+          size="compact"
+          options={[
+            { value: 'current', label: 'Esta comissão' },
+            { value: 'average', label: 'Média' },
+            { value: 'custom', label: 'Outro valor' },
+          ]}
+          initial="current"
+        />
+      ),
+    },
+    {
       name: 'Listas (pílulas menta)',
       render: () => (
         <Example
