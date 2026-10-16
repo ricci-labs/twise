@@ -161,6 +161,24 @@ export type PercentFieldProps = {
   exampleCents: number
 }
 
+export type SplitHeaderProps = {
+  workspaceId: string
+  actions?: ReactNode
+}
+
+export type AddStepButtonProps = {
+  onPress: () => void
+}
+
+export type SaveBarProps = {
+  children: ReactNode
+}
+
+export type StepsCardProps = {
+  isDesktop: boolean
+  children: ReactNode
+}
+
 export type GoalDeletion = {
   goalId: string
   remainingSteps?: readonly AllocationStepInput[]

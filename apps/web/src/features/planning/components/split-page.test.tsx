@@ -237,6 +237,29 @@ describe('PLAN-06 commission split', () => {
   })
 })
 
+describe('PLAN-06 on the desktop', () => {
+  beforeEach(async () => {
+    await page.viewport(1440, 900)
+  })
+
+  it('puts the steps in a card with the rules, the example beside it and the save in the header', async () => {
+    await openSplit()
+    await expect.element(page.getByRole('navigation', { name: 'Caminho' })).toBeVisible()
+    const card = page.getByRole('region', { name: 'Passos, nesta ordem' })
+    await expect.element(card.getByText(/Porcentagem é sempre da comissão inteira/)).toBeVisible()
+    const header = page.getByRole('heading', { name: 'Divisão da comissão', level: 1 })
+    const save = page.getByRole('button', { name: 'Salvar divisão' })
+    expect(save.element().getBoundingClientRect().top).toBeLessThan(
+      card.element().getBoundingClientRect().top,
+    )
+    await expect.element(header).toBeVisible()
+    expect(example().element().getBoundingClientRect().left).toBeGreaterThan(
+      card.element().getBoundingClientRect().right,
+    )
+    await expectNoAccessibilityViolations(page.getByRole('main').element())
+  })
+})
+
 describe('PLAN-05 split shortcut', () => {
   it('says how many steps there are and where the next commission goes first', async () => {
     fakeApi({
