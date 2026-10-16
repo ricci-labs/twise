@@ -1,7 +1,7 @@
 ---
 summary: Phases, MVP scope, current focus and the list of open questions.
 read_when: Deciding what to build next, checking whether something is in scope, or resuming work in a new session.
-updated: 2026-10-15
+updated: 2026-10-16
 ---
 
 # Roadmap
@@ -369,6 +369,26 @@ updated: 2026-10-15
       Previstos table actions and bands, the recurrence actions' order (#348). Left open: a
       "Definir orçamento" header button on the desktop, which needs a category picker the design
       doesn't show ("Definir" in the "Sem orçamento" table covers it)
+- [ ] **Planning round B: PLAN-05..07** (design `../design/planning-b/`, exported 2026-10-15; the
+  user asked on 2026-10-16 for the same flow: one PR per step, merged by Claude when CI is green,
+  every screen checked side by side with its PNG):
+  1. [ ] Design package in `docs/design/planning-b/`; requirements (`requirements/modules/planning.md`
+     PLAN-05..07, holidays under Configurações, `requirements/ui-standards.md` → desktop density and read-only
+     cards), API gaps G58–G60 (G59 deferred: the split doesn't record its transfers yet)
+  2. [ ] Web: one selection style in `PickerSheet` and `ActionMenu` (outline, no check mark)
+  3. [ ] API: each goal's numbers, the reserve's coverage and the monthly preview (G58)
+  4. [ ] API: what each upcoming holiday changes in the fixed bills, and the year's summary (G60)
+  5. [ ] Web components: `ReserveCard`, `GoalCard`, `SplitShortcut`
+  6. [ ] Web: `PLAN-05` on the phone (every state, the goal actions, delete with the split)
+  7. [ ] Web: the goal form (`GoalForm`, `GoalAccountPicker`)
+  8. [ ] Web components: `AllocationStepRow`, `SplitExample`
+  9. [ ] Web: `PLAN-06` on the phone (reorder by grip and by "⋯", add a step, the live example, save)
+  10. [ ] Web: Configurações with its "Planejamento" group (the other settings, `SET-01`/`SET-02`,
+      come later) and `PLAN-07` on the phone (`HolidayRow`, `HolidaySheet`), the old route
+      redirecting, "Ver feriados" in the recurrence form
+  11. [ ] Web: the desktop versions (goals 3 per row, the goal dialog, the split's two columns, the
+      year as a calendar)
+  12. [ ] Review of the round against every PNG
 - [ ] Remaining project skills (`new-module`, `db-migration`, `domain-rule`, `pr`) and Claude Code hooks
 
 ## Phase 1: MVP

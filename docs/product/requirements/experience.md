@@ -1,7 +1,7 @@
 ---
 summary: The idea of the web app — promise, people, design principles, key journeys, navigation and the screen inventory with IDs used by every module requirement.
 read_when: Starting the design system or any screen, deciding where a feature lives in the navigation, or looking up a screen ID.
-updated: 2026-10-09
+updated: 2026-10-16
 ---
 
 # Experience
@@ -75,7 +75,7 @@ the screens where recording makes sense.
 | 1 | "Início" | `HOME-01` |
 | 2 | "Lançamentos" | `ENT-01` |
 | 3 | "Cartões" | `CARD-01` |
-| 4 | "Planejamento" | `PLAN-01` |
+| 4 | "Planejamento" | `PLAN-03` (tabs to `PLAN-01`, `PLAN-04`, `PLAN-05`) |
 | 5 | "Mais" | A menu: contacts and charges, accounts and categories, members, settings, history, trash, my account, log out |
 
 **Desktop (≥ 1024 px):** a left sidebar with the same sections, collapsible to icons; "Novo
@@ -157,7 +157,7 @@ Priority MVP unless marked Later. Module files hold the full spec of each screen
 | `PLAN-04` | Budgets |
 | `PLAN-05` | Goals and emergency reserve |
 | `PLAN-06` | Commission split steps |
-| `PLAN-07` | Holidays (national and local) |
+| `PLAN-07` | Holidays (national and local), under "Mais › Configurações › Feriados" and linked from the recurrence form, not in the Planning tabs |
 
 **Account, history and support** — `modules/auth-and-account.md`, `modules/attachments-and-audit.md`
 | ID | Screen |

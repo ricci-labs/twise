@@ -1,7 +1,7 @@
 ---
 summary: Functional requirements for planning — recurring bills and incomes, planned occurrences and matching them to payments, budgets, goals and the emergency reserve, the commission split steps, and holidays (screens PLAN-01..07).
 read_when: Designing or building any planning screen, or a shortcut that pays a planned bill.
-updated: 2026-10-15
+updated: 2026-10-16
 ---
 
 # Planning
@@ -9,14 +9,16 @@ updated: 2026-10-15
 Standards: `../ui-standards.md`. Messages per code: `../error-messages.md`. Domain:
 `../../../domain/model/planning.md`, `../../household-finances.md`. API:
 `/api/workspaces/:id/{recurrences,occurrences,budgets,goals,allocation-steps,holidays}`.
-Designed in `../../../design/planning/` (round A: PLAN-01..04; read `../../../design/planning/decisions.md`). Round B
-(PLAN-05..07) is not designed yet.
+Designed in `../../../design/planning/` (round A: PLAN-01..04; read `../../../design/planning/decisions.md`) and
+`../../../design/planning-b/` (round B: PLAN-05..07; read `../../../design/planning-b/decisions.md`).
 
 ## Navigation
 The "Planejamento" tab opens on **Previstos** (`PLAN-03`): it is what is used every day. Under the
 title, a segmented control "Previstos | Contas fixas | Orçamentos | Metas" switches between
-`PLAN-03`, `PLAN-01`, `PLAN-04` and `PLAN-05` (Metas comes with round B). On the desktop the same
-tabs sit under the title. Viewers and members without the permission see no "+", no "Registrar",
+`PLAN-03`, `PLAN-01`, `PLAN-04` and `PLAN-05`. On the desktop the same tabs sit under the title.
+The commission split (`PLAN-06`) opens from a link card at the end of Metas (and from "Editar
+divisão" on the Home). Holidays (`PLAN-07`) are a workspace setting: they live under Configurações,
+not in the Planning tabs. Viewers and members without the permission see no "+", no "Registrar",
 no "⋯" and no "Definir". Skipping and unmatching never ask: a toast with "Desfazer" for 8 s.
 Deleting a recurrence asks (there is no trash for recurrences).
 
@@ -190,53 +192,99 @@ limite que tinham."). Errors `BUDGET_INVALID`,
 `BUDGET_QUERY_INVALID`.
 
 ## PLAN-05 Goals and emergency reserve (MVP)
-Route `/planejamento/metas`. `GET /goals` (`planning:view`).
+Route `/planejamento/metas`. `GET /goals` (`planning:view`) with each goal's numbers (G58).
 
-**RF-PLAN-9** The reserve first, as a highlighted card: saved, target, progress, and "Cobre {n}
-meses de gastos" (from `HOME-01` → reserve coverage). Other goals: name, account, saved of target
-(e.g. "R$ 1.200 de R$ 5.000 · 24%"), deadline and "faltam R$ X"; a goal over its target shows
-"Meta atingida".
+**RF-PLAN-9** The reserve first, as a highlighted card (mint-soft surface): label, saved (large,
+never wraps), "de R$ {alvo} · guardado na {conta}", the bar, a pill "Cobre {n} meses de gastos"
+(the API's coverage, G58) and "{p}% · faltam R$ X". Without a reserve its place stays on top,
+explaining what it is for, with "Criar a reserva" (opens the goal form with the reserve switch on).
+Then "Metas ({n})" with "+ Nova meta" and one card per goal: drawing, name (2 lines), "Guardado em
+{conta}" (badge "Meta atingida" first when reached), "R$ X de R$ Y" (moves whole to the next line),
+the bar (mint when reached), "{p}% · até {mês}" or "· sem prazo", "faltam R$ X" or "Passou R$ X". With
+a deadline, the hint "Para chegar em {mês}: R$ X por mês" (G58); reached: "Chegou lá. Pode concluir a
+meta ou aumentar o valor.". No goals: "Nenhuma meta ainda." with examples and "Nova meta". Last, a
+link card to the commission split: "{n} passos. A próxima comissão vai primeiro para {destino do
+passo 1}." with "Editar divisão" (hidden for viewers, who open it read only).
+Goal actions ("⋯"; a sheet on the phone, a menu on the desktop): "Guardar dinheiro" (opens
+`ENT-02` as a transfer to the goal's account, the amount being the monthly suggestion),
+"Ver lançamentos da conta", "Editar", "Excluir". The web computes none of the numbers: percent,
+what is left or over, the monthly amount and the coverage come from the API.
 | Field | Label | Required | Rules |
 |---|---|---|---|
 | name | "Nome da meta" | yes | 1–80 |
 | targetCents | "Valor da meta" | yes | money > 0 |
-| accountId | "Guardado em" | yes | active money account not used by another goal: `GOAL_ACCOUNT_TAKEN` "Essa conta já é de outra meta." |
-| targetOn | "Até quando" | no | date |
-| isReserve | "É a reserva de emergência" | no | only one: `RESERVE_ALREADY_SET` "Já existe uma reserva de emergência." |
-Help: "O progresso é o saldo da conta escolhida. Use uma conta só para esta meta."
+| accountId | "Guardado em" | yes | active money account not used by another goal. The picker shows "Saldo de hoje", dims the accounts of other goals saying which ("É da meta {nome}"), and ends with "Criar uma conta para a meta" (opens `ACC-02` and comes back with it chosen). `GOAL_ACCOUNT_TAKEN` "Essa conta já é de outra meta." stays for a race on save, on the field |
+| targetOn | "Até quando" | no | date (the app's calendar); empty = "Sem prazo". With a deadline, a preview of the monthly amount counting what is already in the account (G58) |
+| isReserve | "É a reserva de emergência" | no | only one: when another goal is the reserve the switch is disabled with "Já existe uma: a da {conta}. Só pode haver uma."; `RESERVE_ALREADY_SET` "Já existe uma reserva de emergência." stays for a race, on the switch |
+Help (an info alert on top): "O progresso é o saldo da conta escolhida. Use uma conta só para esta
+meta." Full screen on the phone, a 720 px dialog in two columns on the desktop.
 Actions: "Nova meta" (`planning:create`), "Salvar" (`planning:update`), "Excluir"
-(`planning:delete`, dialog; when a commission step uses it: "Esta meta está na divisão da comissão.
-Tire ela de lá também."). Errors `GOAL_INVALID`, `GOAL_ACCOUNT_INVALID`, `GOAL_NOT_FOUND`.
+(`planning:delete`, dialog "Excluir {nome}? O dinheiro continua na conta."; when a commission step
+uses it the dialog says so and its button "Excluir e tirar da divisão" removes the step and saves the
+split in the same action). Errors `GOAL_INVALID`, `GOAL_ACCOUNT_INVALID`, `GOAL_NOT_FOUND`.
 
 ## PLAN-06 Commission split steps (MVP)
 Route `/planejamento/divisao-da-comissao`. Read `planning:view`; save `planning:update`.
 `GET/PUT /allocation-steps`.
 
-**RF-PLAN-10** An ordered list (drag to reorder), up to 10 steps, each one of:
+**RF-PLAN-10** A sentence on what it is, then an ordered list, up to 10 numbered steps ("Passo N"
+above the title): a grip to drag, the destination's drawing, what it does, a detail line, "⋯".
+Reordering never depends on dragging: each step's "⋯" has "Mover para cima" (not on the first),
+"Mover para baixo" (not on the one before "o que sobrar"), "Editar" and "Remover passo" (danger).
+"O que sobrar" never moves and has only "Editar". Removing needs no dialog: the step leaves at once
+with the toast "Passo removido." + "Desfazer"; nothing is saved until "Salvar divisão".
+"Adicionar passo" has two steps: the type (5 radio cards, one sentence each; "O que sobrar" disabled
+when it exists: "Só pode ser o último. Já existe um: a {conta}."), then its fields:
 | Step | Label | Fields |
 |---|---|---|
 | `fill_goal` | "Completar uma meta" | goal (picker) |
 | `cover_overspent` | "Cobrir o que passou do orçamento no período" | — |
-| `percent` | "Porcentagem para uma conta" | account, percent 1–100 ("da comissão inteira") |
+| `percent` | "Porcentagem para uma conta" | account, percent 1–100 (help "Da comissão inteira, não do que sobra."; shows the value for the example amount: "Com R$ 1.500,00, dá R$ 300,00") |
 | `fixed_amount` | "Valor fixo para uma conta" | account, amount |
 | `rest` | "O que sobrar para uma conta" | account; only as the last step |
-**RF-PLAN-11** A live example with R$ 1.000 (or the average commission) shows where each real
-would go, using the shared `splitVariableIncome`.
-A step pointing to a deleted goal is flagged "Meta excluída" and must be removed before saving.
-Action "Salvar divisão" replaces the whole list: dialog "Substituir a divisão atual?". Errors
-`ALLOCATION_INVALID` ("O passo 'o que sobrar' precisa ser o último."), `ALLOCATION_ACCOUNT_INVALID`,
-`ALLOCATION_GOAL_INVALID` ("Uma das metas foi excluída. Remova esse passo.").
+No steps: an empty block with "Usar a sugestão" (step 1 fills the reserve goal, step 2 sends the
+rest to the account that receives the commission; without a reserve, the rest only) and "Adicionar
+passo".
+
+**RF-PLAN-11** "Como ficaria": chips "Esta comissão" (default: the period's commission, as
+`HOME-03`), "Média" (the average of the last 3) and "Outro valor" (opens a money field); "Com R$
+{valor} ({escolha}):", one row per step "{n} · {destino} ······ R$ X" (a skipped step shows "—"), a
+solid line, "Sem destino ······ R$ X" and a footnote that nothing moves by itself. It is recomputed
+live, while editing, with the shared `splitVariableIncome` (the same function the API uses for
+`HOME-03`). The desktop adds a stacked bar, one colour per step, with the step numbers in the same
+colours.
+A step pointing to a deleted goal is a danger card with "Meta excluída. Remova este passo para
+salvar."; the example skips it and "Salvar divisão" stays disabled until it is removed.
+"Salvar divisão" (sticky; disabled until something changes) replaces the whole list: dialog
+"Substituir a divisão atual?" with "A próxima comissão já segue a ordem nova. As divisões que vocês
+já fizeram não mudam."; then the toast "Divisão salva.". Errors `ALLOCATION_INVALID` ("O passo 'o
+que sobrar' precisa ser o último."), `ALLOCATION_ACCOUNT_INVALID`, `ALLOCATION_GOAL_INVALID` ("Uma
+das metas foi excluída. Remova esse passo."). Desktop: two columns of the same height, the steps
+with three short rules at the bottom on the left, the example on the right. Viewers see the order
+and the example, with no grip, no "⋯", no "Adicionar passo" and no "Salvar divisão".
 
 ## PLAN-07 Holidays (MVP)
-Route `/planejamento/feriados`. `GET /holidays?year=` (2000–2100).
+Route `/configuracoes/feriados` (`/planejamento/feriados` redirects to it). `GET /holidays?year=`
+(2000–2100) with what each upcoming holiday changes in the fixed bills and a summary (G60).
+Holidays are a workspace setting rarely changed: Configurações has a group "Planejamento" with the
+row "Feriados" ("{n} em {ano} · próximo: {nome}, {dd/mm}"). The recurrence form's business-day help
+links to it ("Ver feriados"). On the phone the "Mais" tab stays active, on the desktop
+"Configurações".
 
-**RF-PLAN-12** A year picker; national bank holidays with their pt-BR names ("Carnaval
-(segunda-feira)", "Sexta-feira Santa", "Corpus Christi", "Dia da Consciência Negra" from 2024…),
-read only; local holidays with "Excluir" (`planning:delete`, dialog).
+**RF-PLAN-12** A year with arrows; the note "Previstos já planejados não mudam de data; a mudança
+vale para os próximos."; "Do espaço" with "Adicionar feriado" in its header and "⋯ Excluir" on each
+one (no local holidays: a sentence with examples); "Nacionais (bancários)" with their pt-BR names
+("Carnaval (segunda-feira)", "Sexta-feira Santa", "Corpus Christi", "Dia da Consciência Negra" from
+2024…), read only. Past holidays are muted, the next one is marked "Próximo", and one on a weekend
+says "cai no fim de semana". Desktop: the year as a calendar, three cards on top (the next holiday
+with what it changes in the fixed bills, G60; the workspace's holidays; the legend and the note) and
+12 mini months below (Sunday first, 4 per row), each with its holidays' names.
 | Field | Label | Required | Rules |
 |---|---|---|---|
-| onDate | "Data" | yes | valid date; not a national holiday (`HOLIDAY_ALREADY_NATIONAL` "Esse dia já é feriado nacional."); one per day (`HOLIDAY_DATE_TAKEN` "Já existe um feriado nesse dia.") |
+| onDate | "Data" | yes | valid date (the app's calendar); not a national holiday (`HOLIDAY_ALREADY_NATIONAL` "Esse dia já é feriado nacional."); one per day (`HOLIDAY_DATE_TAKEN` "Já existe um feriado nesse dia."); errors on the field, on blur |
 | name | "Nome" | yes | 1–80 |
-Action "Adicionar feriado" (`planning:create`). Note: "Previstos já planejados não mudam de data;
-a mudança vale para os próximos." Errors `HOLIDAY_INVALID`, `HOLIDAY_QUERY_INVALID`,
-`HOLIDAY_NOT_FOUND`.
+Help: "Vale todo ano? Adicione um por ano." Action "Adicionar feriado" (`planning:create`; toast
+"Feriado adicionado. As próximas contas fixas já contam com ele."). "Excluir" (`planning:delete`,
+dialog "Excluir {nome} ({dd/mm})?" with "As contas fixas que mudaram por causa dele voltam a contar o
+dia {d} como útil, a partir dos próximos previstos."). Errors `HOLIDAY_INVALID`,
+`HOLIDAY_QUERY_INVALID`, `HOLIDAY_NOT_FOUND`.

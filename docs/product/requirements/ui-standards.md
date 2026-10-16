@@ -1,7 +1,7 @@
 ---
 summary: Rules every web screen follows — field and form validation, the button contract, feedback, loading/empty/error states, money and date inputs, permissions in the UI, destructive actions and how API errors become messages.
 read_when: Designing or building any form, button, list or screen, or reviewing one before merge.
-updated: 2026-10-15
+updated: 2026-10-16
 ---
 
 # UI standards
@@ -156,6 +156,11 @@ Decided with the new-entry design (2026-10-10, version 2 on 2026-10-14,
 - **Desktop forms:** fields side by side share one height (48 px, the `control` size); only money
   fields are taller. A switch sits beside its label, not at the far edge of the row.
 - **Desktop grids:** cards in a row have the same height, their footer at the bottom.
+- **Desktop density** (planning round B, 2026-10-15): no large empty areas. Columns in one row share
+  their height, and the shorter column gets support content (short rules, history, a summary),
+  never filler.
+- **Read-only cards:** when a viewer's card loses its grip and "⋯", its inner padding grows to
+  16 px, so the drawing never touches the edge.
 - **Page margins follow the Home** (decided by the user, 2026-10-14, for every screen, old and
   new): on the phone 16 px at the sides; on the desktop 32 px at the sides, 32 px above the title
   and 48 px under the last block, the content filling the width next to the sidebar up to 1600 px
