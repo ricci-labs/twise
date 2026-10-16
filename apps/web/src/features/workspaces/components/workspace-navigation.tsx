@@ -15,6 +15,7 @@ const NEW_ENTRY = 'new'
 const TRASH_PAGE = 'trash'
 const PLANNING_AREA = 'planning'
 const SPLIT_PAGE = 'split'
+const COMMISSION_SPLIT_PAGE = 'commission-split'
 
 const SETTINGS_AREA = 'settings'
 
@@ -73,7 +74,7 @@ export function hasNewEntryButton(pathname: string): boolean {
   if (area === TRASH_PAGE || item === TRASH_PAGE || area === SETTINGS_AREA) {
     return false
   }
-  if (area === PLANNING_AREA && item === SPLIT_PAGE) {
+  if (area === COMMISSION_SPLIT_PAGE || (area === PLANNING_AREA && item === SPLIT_PAGE)) {
     return false
   }
   return !(area === ENTRIES_AREA && item !== undefined && item !== '')

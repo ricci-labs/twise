@@ -1,7 +1,7 @@
 ---
 summary: Functional requirements for the home screens — the period overview (four indicators, insights, bills due, balance forecast, pace, budgets, coming months, where income goes, invoices, reserve and goals, commissions, receivables, achievements of a closed period, first run), "posso comprar?" and the commission split suggestion (HOME-01..03).
 read_when: Designing or building HOME-01, HOME-02 or HOME-03, or writing the pt-BR text of an insight.
-updated: 2026-10-15
+updated: 2026-10-16
 ---
 
 # Dashboard
@@ -207,5 +207,14 @@ na conta)"; what is left over. Without steps: "Você ainda não definiu como div
 "Definir divisão" → `PLAN-06`.
 **RF-HOME-13** Each part with a destination has "Transferir" (`entries:create`), opening `ENT-02`
 as a transfer prefilled with the amount and destination; the source is the account where the
-commission landed (asked once, then remembered for the screen). Recorded parts show "Feito".
+commission landed ("A comissão caiu em", the everyday checking account by default). A part whose
+destination is that same account, and "cobrir o orçamento", say "Fica na conta". The transfer opens
+with the band "Parte N da divisão da comissão · {destino} · R$ X" and the description "Divisão da
+comissão: {destino}"; saving it marks the part "Feito". "Feito" is kept on the device (per period
+and amount) until the API records which transfers belong to a commission (G59); the server-side
+"Ainda há R$ X de comissão para dividir" on top already counts what reached the destinations.
 Error `ALLOCATION_QUERY_INVALID` (field amount).
+
+Built on 2026-10-16 from this requirement and the round B split's look (no dedicated design): on
+the phone the fields come first, on the desktop the parts take 3/5 and the fields 2/5. Readers see
+the suggestion without "Transferir". Without steps: the empty block with "Definir divisão".

@@ -28,6 +28,7 @@ import { Route as AppWWorkspaceIdAreaRouteImport } from './routes/_app/w/$worksp
 import { Route as AppWWorkspaceIdAccountsRouteImport } from './routes/_app/w/$workspaceId/accounts'
 import { Route as AppWWorkspaceIdCardsRouteImport } from './routes/_app/w/$workspaceId/cards'
 import { Route as AppWWorkspaceIdCategoriesRouteImport } from './routes/_app/w/$workspaceId/categories'
+import { Route as AppWWorkspaceIdCommissionSplitRouteImport } from './routes/_app/w/$workspaceId/commission-split'
 import { Route as AppWWorkspaceIdEntriesRouteImport } from './routes/_app/w/$workspaceId/entries'
 import { Route as AppWWorkspaceIdTrashRouteImport } from './routes/_app/w/$workspaceId/trash'
 import { Route as AppWWorkspaceIdAccountsTrashRouteImport } from './routes/_app/w/$workspaceId/accounts_.trash'
@@ -135,6 +136,12 @@ const AppWWorkspaceIdCategoriesRoute =
     path: '/categories',
     getParentRoute: () => AppWWorkspaceIdRouteRoute,
   } as any)
+const AppWWorkspaceIdCommissionSplitRoute =
+  AppWWorkspaceIdCommissionSplitRouteImport.update({
+    id: '/commission-split',
+    path: '/commission-split',
+    getParentRoute: () => AppWWorkspaceIdRouteRoute,
+  } as any)
 const AppWWorkspaceIdEntriesRoute = AppWWorkspaceIdEntriesRouteImport.update({
   id: '/entries',
   path: '/entries',
@@ -223,6 +230,7 @@ export interface FileRoutesByFullPath {
   '/w/$workspaceId/accounts': typeof AppWWorkspaceIdAccountsRoute
   '/w/$workspaceId/cards': typeof AppWWorkspaceIdCardsRoute
   '/w/$workspaceId/categories': typeof AppWWorkspaceIdCategoriesRoute
+  '/w/$workspaceId/commission-split': typeof AppWWorkspaceIdCommissionSplitRoute
   '/w/$workspaceId/entries': typeof AppWWorkspaceIdEntriesRoute
   '/w/$workspaceId/trash': typeof AppWWorkspaceIdTrashRoute
   '/w/$workspaceId/': typeof AppWWorkspaceIdIndexRoute
@@ -253,6 +261,7 @@ export interface FileRoutesByTo {
   '/w/$workspaceId/accounts': typeof AppWWorkspaceIdAccountsRoute
   '/w/$workspaceId/cards': typeof AppWWorkspaceIdCardsRoute
   '/w/$workspaceId/categories': typeof AppWWorkspaceIdCategoriesRoute
+  '/w/$workspaceId/commission-split': typeof AppWWorkspaceIdCommissionSplitRoute
   '/w/$workspaceId/entries': typeof AppWWorkspaceIdEntriesRoute
   '/w/$workspaceId/trash': typeof AppWWorkspaceIdTrashRoute
   '/w/$workspaceId': typeof AppWWorkspaceIdIndexRoute
@@ -287,6 +296,7 @@ export interface FileRoutesById {
   '/_app/w/$workspaceId/accounts': typeof AppWWorkspaceIdAccountsRoute
   '/_app/w/$workspaceId/cards': typeof AppWWorkspaceIdCardsRoute
   '/_app/w/$workspaceId/categories': typeof AppWWorkspaceIdCategoriesRoute
+  '/_app/w/$workspaceId/commission-split': typeof AppWWorkspaceIdCommissionSplitRoute
   '/_app/w/$workspaceId/entries': typeof AppWWorkspaceIdEntriesRoute
   '/_app/w/$workspaceId/trash': typeof AppWWorkspaceIdTrashRoute
   '/_app/w/$workspaceId/': typeof AppWWorkspaceIdIndexRoute
@@ -320,6 +330,7 @@ export interface FileRouteTypes {
     | '/w/$workspaceId/accounts'
     | '/w/$workspaceId/cards'
     | '/w/$workspaceId/categories'
+    | '/w/$workspaceId/commission-split'
     | '/w/$workspaceId/entries'
     | '/w/$workspaceId/trash'
     | '/w/$workspaceId/'
@@ -350,6 +361,7 @@ export interface FileRouteTypes {
     | '/w/$workspaceId/accounts'
     | '/w/$workspaceId/cards'
     | '/w/$workspaceId/categories'
+    | '/w/$workspaceId/commission-split'
     | '/w/$workspaceId/entries'
     | '/w/$workspaceId/trash'
     | '/w/$workspaceId'
@@ -383,6 +395,7 @@ export interface FileRouteTypes {
     | '/_app/w/$workspaceId/accounts'
     | '/_app/w/$workspaceId/cards'
     | '/_app/w/$workspaceId/categories'
+    | '/_app/w/$workspaceId/commission-split'
     | '/_app/w/$workspaceId/entries'
     | '/_app/w/$workspaceId/trash'
     | '/_app/w/$workspaceId/'
@@ -542,6 +555,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppWWorkspaceIdCategoriesRouteImport
       parentRoute: typeof AppWWorkspaceIdRouteRoute
     }
+    '/_app/w/$workspaceId/commission-split': {
+      id: '/_app/w/$workspaceId/commission-split'
+      path: '/commission-split'
+      fullPath: '/w/$workspaceId/commission-split'
+      preLoaderRoute: typeof AppWWorkspaceIdCommissionSplitRouteImport
+      parentRoute: typeof AppWWorkspaceIdRouteRoute
+    }
     '/_app/w/$workspaceId/entries': {
       id: '/_app/w/$workspaceId/entries'
       path: '/entries'
@@ -634,6 +654,7 @@ interface AppWWorkspaceIdRouteRouteChildren {
   AppWWorkspaceIdAccountsRoute: typeof AppWWorkspaceIdAccountsRoute
   AppWWorkspaceIdCardsRoute: typeof AppWWorkspaceIdCardsRoute
   AppWWorkspaceIdCategoriesRoute: typeof AppWWorkspaceIdCategoriesRoute
+  AppWWorkspaceIdCommissionSplitRoute: typeof AppWWorkspaceIdCommissionSplitRoute
   AppWWorkspaceIdEntriesRoute: typeof AppWWorkspaceIdEntriesRoute
   AppWWorkspaceIdTrashRoute: typeof AppWWorkspaceIdTrashRoute
   AppWWorkspaceIdIndexRoute: typeof AppWWorkspaceIdIndexRoute
@@ -654,6 +675,7 @@ const AppWWorkspaceIdRouteRouteChildren: AppWWorkspaceIdRouteRouteChildren = {
   AppWWorkspaceIdAccountsRoute: AppWWorkspaceIdAccountsRoute,
   AppWWorkspaceIdCardsRoute: AppWWorkspaceIdCardsRoute,
   AppWWorkspaceIdCategoriesRoute: AppWWorkspaceIdCategoriesRoute,
+  AppWWorkspaceIdCommissionSplitRoute: AppWWorkspaceIdCommissionSplitRoute,
   AppWWorkspaceIdEntriesRoute: AppWWorkspaceIdEntriesRoute,
   AppWWorkspaceIdTrashRoute: AppWWorkspaceIdTrashRoute,
   AppWWorkspaceIdIndexRoute: AppWWorkspaceIdIndexRoute,

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 export function useRememberedIds(storageKey: string) {
   const [ids, setIds] = useState(() => readIds(storageKey))
@@ -11,7 +11,7 @@ export function useRememberedIds(storageKey: string) {
     }
   }, [storageKey, ids])
 
-  function setRemembered(id: string, isRemembered: boolean) {
+  const setRemembered = useCallback((id: string, isRemembered: boolean) => {
     setIds((current) => {
       const next = new Set(current)
       if (isRemembered) {
@@ -21,7 +21,7 @@ export function useRememberedIds(storageKey: string) {
       }
       return next
     })
-  }
+  }, [])
 
   return { ids, setRemembered }
 }

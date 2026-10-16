@@ -76,6 +76,14 @@ export function goalPreviewQueryOptions(workspaceId: string, query: GoalPreviewQ
   })
 }
 
+export function allocationSuggestionQueryOptions(workspaceId: string, amountCents: number) {
+  return queryOptions({
+    queryKey: [...queryKeys.workspace(workspaceId), 'allocation-suggestion', amountCents] as const,
+    queryFn: () => fetchAllocationSuggestion(workspaceId, amountCents),
+    placeholderData: (previous) => previous,
+  })
+}
+
 export function allocationStepsQueryOptions(workspaceId: string) {
   return queryOptions({
     queryKey: [...queryKeys.workspace(workspaceId), 'allocation-steps'] as const,
@@ -135,6 +143,15 @@ export function fetchGoalPreview(workspaceId: string, query: GoalPreviewQuery) {
     workspaceApi.goals.preview.$get({
       param: { workspaceId },
       query: { ...query, targetCents: String(query.targetCents) },
+    }),
+  )
+}
+
+export function fetchAllocationSuggestion(workspaceId: string, amountCents: number) {
+  return unwrap(
+    workspaceApi.allocation.suggestion.$get({
+      param: { workspaceId },
+      query: { amountCents: String(amountCents) },
     }),
   )
 }

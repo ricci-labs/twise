@@ -179,6 +179,36 @@ export type StepsCardProps = {
   children: ReactNode
 }
 
+export type CommissionSplitProps = {
+  workspaceId: string
+  steps: readonly AllocationStepItem[]
+  goals: readonly PlanningGoal[]
+  accounts: readonly PlanningAccount[]
+  overview: PlanningOverview
+  canTransfer: boolean
+}
+
+export type CommissionPart = {
+  position: number
+  label: string
+  destinationName: string | null
+  toAccountId: string | null
+  amountCents: number
+  isDone: boolean
+}
+
+export type CommissionPartRowProps = {
+  part: CommissionPart
+  fromAccountId: string
+  canTransfer: boolean
+}
+
+export type CommissionFromFieldProps = {
+  accounts: readonly PlanningAccount[]
+  value: string
+  onChange: (accountId: string) => void
+}
+
 export type GoalDeletion = {
   goalId: string
   remainingSteps?: readonly AllocationStepInput[]

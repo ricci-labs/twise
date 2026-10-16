@@ -136,6 +136,7 @@ export type NewEntryProps = {
   occurrenceId?: string
   onClose: () => void
   onSaved?: (saved: SavedEntry) => void
+  onSplitPartSaved?: (position: number) => void
 }
 
 export type PlannedOccurrence = Awaited<ReturnType<typeof fetchPlannedOccurrence>>
@@ -166,12 +167,23 @@ export type MatchableOccurrenceView = Pick<
   'id' | 'description' | 'dueOn' | 'amountCents' | 'amountIsEstimate' | 'isOverdue'
 >
 
+export type SplitPartPrefill = {
+  position: number
+  label: string
+}
+
+export type SplitPartBandProps = {
+  part: SplitPartPrefill
+  amountCents: number
+}
+
 export type EntryPrefill = {
   values?: EntryFormInput
   entryType?: FormEntryType
   accountId?: string
   toAccountId?: string
   amountCents?: number
+  splitPart?: SplitPartPrefill
   cardAccountId?: string
   invoiceId?: string
   planned?: Partial<Pick<EntryFormInput, 'amount' | 'description' | 'categoryId' | 'toAccountId'>>

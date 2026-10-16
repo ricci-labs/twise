@@ -25,6 +25,8 @@ export const Route = createFileRoute('/_app/w/$workspaceId')({
       entryAccount,
       entryToAccount,
       entryAmount,
+      entrySplitPart,
+      entrySplitLabel,
       entryCard,
       entryInvoice,
       entryRepeat,
@@ -71,9 +73,16 @@ export const Route = createFileRoute('/_app/w/$workspaceId')({
             accountId: entryAccount,
             toAccountId: entryToAccount,
             amountCents: entryAmount,
+            splitPart:
+              entrySplitPart && entrySplitLabel
+                ? { position: entrySplitPart, label: entrySplitLabel }
+                : undefined,
             cardAccountId: entryCard,
             invoiceId: entryInvoice,
           }}
+          onSplitPartSaved={(position) =>
+            navigate({ to: '.', search: (previous) => ({ ...previous, splitDone: position }) })
+          }
           onClose={() =>
             navigate({
               to: '.',
@@ -84,6 +93,8 @@ export const Route = createFileRoute('/_app/w/$workspaceId')({
                 entryAccount: undefined,
                 entryToAccount: undefined,
                 entryAmount: undefined,
+                entrySplitPart: undefined,
+                entrySplitLabel: undefined,
                 entryCard: undefined,
                 entryInvoice: undefined,
                 entryRepeat: undefined,

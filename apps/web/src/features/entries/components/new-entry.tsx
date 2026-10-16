@@ -46,9 +46,20 @@ function NewEntryFlow(props: NewEntryProps) {
       />
     )
   }
+  const splitPart = props.prefill?.splitPart
+  const canMatch = hasPermission(props.permissions, 'planning', 'update')
   const flow = {
     ...props,
-    onSaved: hasPermission(props.permissions, 'planning', 'update') ? setSaved : undefined,
+    onSaved: (entry: SavedEntry) => {
+      if (splitPart) {
+        props.onSplitPartSaved?.(splitPart.position)
+      }
+      if (canMatch) {
+        setSaved(entry)
+        return
+      }
+      props.onClose()
+    },
   }
   if (props.repeatEntryId) {
     return <RepeatedEntry {...flow} repeatEntryId={props.repeatEntryId} />
