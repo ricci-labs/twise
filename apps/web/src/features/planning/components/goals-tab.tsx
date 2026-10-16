@@ -25,8 +25,10 @@ import { shortcutTextOf } from '@web/features/planning/components/split-views'
 import { planningMessages } from '@web/features/planning/planning.messages'
 import { NEW_GOAL } from '@web/features/planning/planning.schemas'
 import type { GoalsTabProps, GoalsViewProps } from '@web/features/planning/planning.types'
+import { useMediaQuery } from '@web/hooks/use-media-query'
 import { usePageTitle } from '@web/hooks/use-page-title'
 import { ApiError } from '@web/lib/api/api-error'
+import { DESKTOP_QUERY } from '@web/lib/breakpoints'
 import { hasPermission } from '@web/lib/permissions'
 
 const messages = planningMessages.goals
@@ -72,6 +74,7 @@ function Goals({
   coverageMonths,
   permissions,
 }: GoalsViewProps) {
+  const isDesktop = useMediaQuery(DESKTOP_QUERY)
   const canCreate = hasPermission(permissions, 'planning', 'create')
   const reserve = goals.find((goal) => goal.isReserve)
   const others = goals.filter((goal) => !goal.isReserve)
@@ -117,7 +120,11 @@ function Goals({
           title={messages.title}
           count={others.length}
           layout="cards"
-          add={canCreate ? { label: messages.newGoal, link: newGoalLink(false) } : undefined}
+          add={
+            canCreate && !isDesktop
+              ? { label: messages.newGoal, link: newGoalLink(false) }
+              : undefined
+          }
         >
           {others.map((goal) => (
             <GoalCard key={goal.id} {...goalCardOf(goal, accounts)} actions={actionsOf(goal)} />
