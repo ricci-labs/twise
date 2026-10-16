@@ -931,3 +931,19 @@ online with `asChild` are translated to `render`.
   spending in the display face, "de R$ 3.200,00", the thick bar with the pace mark and its legend.
 - `Button` `variant="dangerText"`: a destructive action written as text ("Remover orçamento"), red
   and underlined like the tertiary one.
+- `ReserveCard` (`components/finance/reserve-card`, planning round B): the emergency reserve on a
+  mint-soft surface: the label, the saved amount in the display face (raised cents, never wraps),
+  "de R$ Y · guardado em {conta}" (2 lines), the loose piggy bank at 56 px (`CategoryArt`
+  `size="hero"`), the bar (`ProgressBar` `tone="reserve"`: mint on a light track), the coverage
+  pill "Cobre **n meses** de gastos" (hidden without history) and "{p}% · faltam R$ X". With
+  `reserve={null}` it turns into the dashed card that explains the reserve, with `createAction`.
+  `actions` takes the "⋯". Every number comes from the API.
+- `GoalCard` (`components/finance/goal-card`): one goal as a card (`li`): the account's drawing, the
+  name (2 lines), "Guardado em {conta}" with the "Meta atingida" badge first when reached, "R$ X de
+  R$ Y" (the target moves whole to the next line), a blue bar (mint when reached), "{p}% · até
+  {mês}" or "· sem prazo", "faltam R$ X" or "Passou R$ X", and the hint at the bottom: "Para chegar
+  em {mês}: **R$ X por mês**", or "Chegou lá…" when reached. `h-full` so cards in a row share
+  their height.
+- `SplitShortcut` (`components/finance/split-shortcut`): the link card to the commission split at
+  the end of Metas: the "juntos" drawing, "Divisão da comissão", the sentence the screen writes,
+  "Editar divisão" when `canEdit`, and a chevron. A viewer still opens the split, read only.
