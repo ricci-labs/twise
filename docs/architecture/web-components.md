@@ -340,7 +340,8 @@ passes the overview's numbers.
 - `DataTable` + `DataTableName` + `DataTableAmount` (`components/display/data-table`): the desktop
   tables of the design (`tb`): a `table` whose rows are grids on one of the column templates
   (`layout`: `accounts`, `cards`, `invoices`, `lines`, `categories`, `incomes`, `entries`, `trash`, and
-  planning's `occurrences` (`otb`), `recurrences` (`ptb`) and `budgets` (`btb`, 68 px rows), from
+  planning's `occurrences` (`otb`), `recurrences` (`ptb`), `budgets` (`btb`, 68 px rows) and
+  `unbudgeted` (category, spending, "Definir"), from
   `--grid-template-columns-table-*`), 14 px muted cells, a divider per row, the name cell (40 px
   drawing, name, an optional `detail` line, colour dot, an optional link) and the bold amount. The
   money layouts have 60 px rows, a 12 px gap and a 14 px header (the accounts page's names sit 2 px

@@ -20,15 +20,19 @@ import {
   budgetSheetOf,
   unbudgetedOf,
 } from '@web/features/planning/components/budget-views'
+import { BudgetsDesktop } from '@web/features/planning/components/budgets-desktop'
 import { PlanningPeriod } from '@web/features/planning/components/planning-period'
 import { planningMessages } from '@web/features/planning/planning.messages'
 import type {
   BudgetsProps,
   BudgetsTabProps,
+  BudgetsViewProps,
   UnbudgetedRowProps,
 } from '@web/features/planning/planning.types'
+import { useMediaQuery } from '@web/hooks/use-media-query'
 import { usePageTitle } from '@web/hooks/use-page-title'
 import { ApiError } from '@web/lib/api/api-error'
+import { DESKTOP_QUERY } from '@web/lib/breakpoints'
 import { formatMonthLabel } from '@web/lib/format/calendar'
 import { hasPermission } from '@web/lib/permissions'
 import { useState } from 'react'
@@ -76,11 +80,38 @@ export function BudgetsTab({ workspaceId, permissions, search }: BudgetsTabProps
 }
 
 function Budgets({ workspaceId, overview, accounts, canChange }: BudgetsProps) {
+  const isDesktop = useMediaQuery(DESKTOP_QUERY)
   const [openFor, setOpenFor] = useState<string | null>(null)
-  const lines = budgetLinesOf(overview, accounts)
-  const unbudgeted = unbudgetedOf(overview, accounts)
-  const { budgetTotals, periodProgress } = overview.metrics
+  const view = {
+    overview,
+    lines: budgetLinesOf(overview, accounts),
+    unbudgeted: unbudgetedOf(overview, accounts),
+    onOpen: canChange ? setOpenFor : undefined,
+  }
   const label = overview.period.label
+  return (
+    <>
+      {isDesktop ? <BudgetsDesktop {...view} /> : <BudgetsPhone {...view} />}
+      {openFor && (
+        <BudgetSheet
+          workspaceId={workspaceId}
+          view={budgetSheetOf(openFor, overview, accounts)}
+          periodLabel={label}
+          periodOptions={periodOptionsFrom(label)}
+          isOpen
+          onOpenChange={(isOpen) => {
+            if (!isOpen) {
+              setOpenFor(null)
+            }
+          }}
+        />
+      )}
+    </>
+  )
+}
+
+function BudgetsPhone({ overview, lines, unbudgeted, onOpen }: BudgetsViewProps) {
+  const { budgetTotals, periodProgress } = overview.metrics
   return (
     <>
       {lines.length === 0 ? (
@@ -101,13 +132,13 @@ function Budgets({ workspaceId, overview, accounts, canChange }: BudgetsProps) {
                 {...line}
                 markPercent={periodProgress.elapsedPercent}
                 moreHint={messages.moreHint(line.name)}
-                onMore={() => setOpenFor(line.categoryAccountId)}
+                onMore={() => onOpen?.(line.categoryAccountId)}
                 actions={
-                  canChange ? (
+                  onOpen ? (
                     <button
                       type="button"
                       aria-label={messages.actions(line.name)}
-                      onClick={() => setOpenFor(line.categoryAccountId)}
+                      onClick={() => onOpen(line.categoryAccountId)}
                       className="grid size-9 shrink-0 cursor-pointer place-items-center rounded-full text-ink-muted outline-none hover:bg-sunken focus-visible:ring-2 focus-visible:ring-focus-ring"
                     >
                       <TwiseIcon name="more" />
@@ -125,24 +156,10 @@ function Budgets({ workspaceId, overview, accounts, canChange }: BudgetsProps) {
             <UnbudgetedRow
               key={category.categoryAccountId}
               category={category}
-              onDefine={canChange ? () => setOpenFor(category.categoryAccountId) : undefined}
+              onDefine={onOpen ? () => onOpen(category.categoryAccountId) : undefined}
             />
           ))}
         </OccurrenceGroup>
-      )}
-      {openFor && (
-        <BudgetSheet
-          workspaceId={workspaceId}
-          view={budgetSheetOf(openFor, overview, accounts)}
-          periodLabel={label}
-          periodOptions={periodOptionsFrom(label)}
-          isOpen
-          onOpenChange={(isOpen) => {
-            if (!isOpen) {
-              setOpenFor(null)
-            }
-          }}
-        />
       )}
     </>
   )

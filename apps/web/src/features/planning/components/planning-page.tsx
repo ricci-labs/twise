@@ -30,7 +30,7 @@ export function PlanningPage({ tab, ...props }: PlanningPageProps) {
             search: (previous) => previous,
           })
         }
-        className="lg:max-w-120"
+        className="shrink-0 lg:max-w-120"
       />
       <TabBody tab={tab} {...props} />
     </PageFrame>
