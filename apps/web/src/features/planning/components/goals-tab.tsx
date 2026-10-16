@@ -7,6 +7,7 @@ import { SectionError } from '@web/components/feedback/section-error'
 import { GoalCard } from '@web/components/finance/goal-card'
 import { OccurrenceGroup } from '@web/components/finance/occurrence-group'
 import { ReserveCard } from '@web/components/finance/reserve-card'
+import { SplitShortcut } from '@web/components/finance/split-shortcut'
 import { TwiseIcon } from '@web/components/icons/twise-icon'
 import {
   accountsQueryOptions,
@@ -20,6 +21,7 @@ import {
   goalCardOf,
   reserveFiguresOf,
 } from '@web/features/planning/components/goal-views'
+import { shortcutTextOf } from '@web/features/planning/components/split-views'
 import { planningMessages } from '@web/features/planning/planning.messages'
 import { NEW_GOAL } from '@web/features/planning/planning.schemas'
 import type { GoalsTabProps, GoalsViewProps } from '@web/features/planning/planning.types'
@@ -122,6 +124,15 @@ function Goals({
           ))}
         </OccurrenceGroup>
       )}
+      <SplitShortcut
+        text={shortcutTextOf(steps, {
+          goals: new Map(goals.map((goal) => [goal.id, goal])),
+          accounts,
+          overspentCents: 0,
+        })}
+        canEdit={hasPermission(permissions, 'planning', 'update')}
+        link={<Link to="/w/$workspaceId/planning/split" params={{ workspaceId }} />}
+      />
     </>
   )
 }

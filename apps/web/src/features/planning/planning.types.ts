@@ -8,6 +8,7 @@ import type {
 } from '@web/components/finance/occurrence-row'
 import type { PlanSummaryTile } from '@web/components/finance/plan-summary-tiles'
 import type { RecurrenceDirection, RecurrenceNext } from '@web/components/finance/recurrence-row'
+import type { SplitExamplePart } from '@web/components/finance/split-example'
 import type { FieldControlProps } from '@web/components/forms/form-field'
 import type { PickerEmpty, PickerItem, PickerSheetProps } from '@web/components/inputs/picker-sheet'
 import type {
@@ -29,6 +30,7 @@ import type {
   planningSearchSchema,
   recurrenceFormSchema,
 } from '@web/features/planning/planning.schemas'
+import type { useDragReorder } from '@web/hooks/use-drag-reorder'
 import type { ReactElement, ReactNode, RefObject } from 'react'
 import type { z } from 'zod'
 
@@ -56,6 +58,68 @@ export type PlanningAccount = Awaited<ReturnType<typeof fetchAccounts>>[number]
 export type PlanningGoal = Awaited<ReturnType<typeof fetchGoals>>[number]
 
 export type AllocationStepItem = Awaited<ReturnType<typeof fetchAllocationSteps>>[number]
+
+export type DraftStep = AllocationStepItem & { key: string }
+
+export type SplitContext = {
+  goals: ReadonlyMap<string, PlanningGoal>
+  accounts: ReadonlyMap<string, PlanningAccount>
+  overspentCents: number
+}
+
+export type StepView = {
+  title: string
+  detail: string | undefined
+  art: { name: string; icon: string | null }
+  isInvalid: boolean
+  exampleLabel: string
+}
+
+export type SplitExampleFigures = {
+  parts: SplitExamplePart[]
+  leftoverCents: number
+}
+
+export type StepActionsProps = {
+  position: number
+  title: string
+  canMoveUp: boolean
+  canMoveDown: boolean
+  isRest: boolean
+  onMove: (direction: -1 | 1) => void
+  onEdit?: () => void
+  onRemove: () => void
+}
+
+export type SplitPageProps = {
+  workspaceId: string
+  permissions: readonly Permission[]
+}
+
+export type SplitEditorProps = {
+  workspaceId: string
+  initial: readonly AllocationStepItem[]
+  goals: readonly PlanningGoal[]
+  accounts: readonly PlanningAccount[]
+  overview: PlanningOverview | undefined
+  canEdit: boolean
+}
+
+export type EmptySplitProps = {
+  hasReserve: boolean
+  canEdit: boolean
+  onSuggest: () => void
+}
+
+export type StepListProps = {
+  steps: readonly DraftStep[]
+  shown: readonly DraftStep[]
+  context: SplitContext
+  canEdit: boolean
+  reorder: ReturnType<typeof useDragReorder>
+  onChange: (steps: DraftStep[]) => void
+  onRemove: (index: number) => void
+}
 
 export type GoalDeletion = {
   goalId: string

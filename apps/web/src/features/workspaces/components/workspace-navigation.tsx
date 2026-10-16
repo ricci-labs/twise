@@ -13,6 +13,8 @@ const labels = workspacesMessages.shell.nav
 const NEW_ENTRY = 'new'
 
 const TRASH_PAGE = 'trash'
+const PLANNING_AREA = 'planning'
+const SPLIT_PAGE = 'split'
 
 const AREA_OF_PAGE: Readonly<Record<string, string>> = { categories: 'accounts' }
 
@@ -67,6 +69,9 @@ export function workspaceNavigation(
 export function hasNewEntryButton(pathname: string): boolean {
   const [, , , area, item] = pathname.split('/')
   if (area === TRASH_PAGE || item === TRASH_PAGE) {
+    return false
+  }
+  if (area === PLANNING_AREA && item === SPLIT_PAGE) {
     return false
   }
   return !(area === ENTRIES_AREA && item !== undefined && item !== '')
