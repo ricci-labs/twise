@@ -343,25 +343,32 @@ updated: 2026-10-15
      (#315–#319)
   16. [x] Review of the round against every PNG: the phone's search row and the detail's header
      actions fixed, the desktop tables cut long cells with "…" as the design does
-- [ ] **Planning round A: PLAN-01..04** (design `../design/planning/`, exported 2026-10-15; the
+- [x] **Planning round A: PLAN-01..04** (design `../design/planning/`, exported 2026-10-15; the
   user asked on 2026-10-15 for the same flow: one PR per step, merged by Claude when CI is green,
   every screen checked side by side with its PNG):
-  1. [ ] Design package in `docs/design/planning/`; requirements (`requirements/modules/planning.md`
-     opens on Previstos, `requirements/ui-standards.md` → Long text), API gaps G52–G54
-  2. [ ] Web: the long-text rule on the screens already built (entries, invoice lines, accounts,
-     cards, categories, the Home lists)
-  3. [ ] API: each recurrence's next date and monthly equivalent, and the monthly totals (G52)
-  4. [ ] API: the totals of the planned occurrences (G53)
-  5. [ ] API: the budgets' totals, spending by subcategory, unbudgeted spending, 3-month average (G54)
-  6. [ ] Web components: `OccurrenceRow`, `OccurrenceGroup`, `PlanSummaryTiles`
-  7. [ ] Web: the "Planejamento" tabs and `PLAN-03` on the phone (groups, every state)
-  8. [ ] Web: `PLAN-03` actions, "Já registrei", "Mudar o valor deste", skip and undo, and both match
-     questions (RF-PLAN-6, RF-PLAN-7)
-  9. [ ] Web: `RecurrenceRow` and `PLAN-01` on the phone
-  10. [ ] Web: `PLAN-02` (`RecurrenceForm`, `NextDatesPreview` with the reason for a moved date)
-  11. [ ] Web: `PLAN-04` (`BudgetRow`, `BudgetSummary`, `BudgetSheet`)
-  12. [ ] Web: the desktop versions
-  13. [ ] Review of the round against every PNG
+  1. [x] Design package in `docs/design/planning/`; requirements (`requirements/modules/planning.md`
+     opens on Previstos, `requirements/ui-standards.md` → Long text), API gaps G52–G54 (#321)
+  2. [x] Web: the long-text rule on the screens already built (entries, invoice lines, accounts,
+     cards, categories, the Home lists) (#328)
+  3. [x] API: each recurrence's next date and monthly equivalent, and the monthly totals (G52) (#322)
+  4. [x] API: the totals of the planned occurrences (G53) (#323)
+  5. [x] API: the budgets' totals, spending by subcategory, unbudgeted spending, 3-month average
+     (G54) (#325)
+  6. [x] Web components: `OccurrenceRow`, `OccurrenceGroup`, `PlanSummaryTiles` (#324)
+  7. [x] Web: the "Planejamento" tabs and `PLAN-03` on the phone (groups, every state), with when
+     and how much was paid and who skipped (G55) (#326, #329)
+  8. [x] Web: `PLAN-03` actions, "Já registrei", "Mudar o valor deste", skip and undo, and both match
+     questions (RF-PLAN-6, RF-PLAN-7), with the match candidates (G56) and one occurrence by id
+     (G57) (#330, #332–#335)
+  9. [x] Web: `RecurrenceRow` and `PLAN-01` on the phone (#336)
+  10. [x] Web: `PLAN-02` (`RecurrenceForm`, `NextDatesPreview` with the reason for a moved date)
+      (#337, #342–#344)
+  11. [x] Web: `PLAN-04` (`BudgetRow`, `BudgetSummary`, `BudgetSheet`) (#338, #339)
+  12. [x] Web: the desktop versions (#340, #341, #345–#347)
+  13. [x] Review of the round against every PNG: the desktop header's "Nova conta fixa", the
+      Previstos table actions and bands, the recurrence actions' order (#348). Left open: a
+      "Definir orçamento" header button on the desktop, which needs a category picker the design
+      doesn't show ("Definir" in the "Sem orçamento" table covers it)
 - [ ] Remaining project skills (`new-module`, `db-migration`, `domain-rule`, `pr`) and Claude Code hooks
 
 ## Phase 1: MVP
