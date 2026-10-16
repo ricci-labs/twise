@@ -53,7 +53,15 @@ export function OccurrencesTable({
     ? 0
     : groups.reduce((sum, group) => sum + Math.max(0, group.rows.length - SHOWN_PER_GROUP), 0)
   const rows = groups.flatMap((group) => [
-    { key: `band-${group.key}`, band: `${group.title} ${group.count}` },
+    {
+      key: `band-${group.key}`,
+      band: (
+        <>
+          <span className={group.key === 'overdue' ? 'text-danger' : undefined}>{group.title}</span>{' '}
+          <span className="font-normal text-ink-muted">{group.count}</span>
+        </>
+      ),
+    },
     ...(isOpen ? group.rows : group.rows.slice(0, SHOWN_PER_GROUP)).map((row) => {
       const item = byId.get(row.id)
       return {
@@ -147,8 +155,8 @@ function mainActionOf(
     return (
       <Button
         key="action"
-        variant="outline"
-        size="xs"
+        variant="tertiary"
+        size="sm"
         render={
           <Link
             to="/w/$workspaceId/entries/$entry"
@@ -166,8 +174,8 @@ function mainActionOf(
   return (
     <Button
       key="action"
-      variant="outline"
-      size="xs"
+      variant="secondary"
+      size="sm"
       aria-label={recordLabelOf(item)}
       render={
         <Link

@@ -43,6 +43,11 @@ export type PlanningPageProps = {
   memberDirectory: MemberDirectory
 }
 
+export type PlanningHeaderActionProps = {
+  tab: PlanningTab
+  permissions: readonly Permission[]
+}
+
 export type PlanningAccount = Awaited<ReturnType<typeof fetchAccounts>>[number]
 
 export type OccurrenceList = Awaited<ReturnType<typeof fetchOccurrences>>
