@@ -1,4 +1,4 @@
-import type { IsoDate, Permission } from '@financas/shared'
+import type { IsoDate, Permission, RecurringEntryType } from '@financas/shared'
 import type { BudgetChild, BudgetStatus } from '@web/components/finance/budget-row'
 import type {
   OccurrenceBadge,
@@ -8,8 +8,11 @@ import type {
 } from '@web/components/finance/occurrence-row'
 import type { PlanSummaryTile } from '@web/components/finance/plan-summary-tiles'
 import type { RecurrenceDirection, RecurrenceNext } from '@web/components/finance/recurrence-row'
+import type { FieldControlProps } from '@web/components/forms/form-field'
+import type { PickerEmpty, PickerItem, PickerSheetProps } from '@web/components/inputs/picker-sheet'
 import type {
   fetchAccounts,
+  fetchBalances,
   fetchCandidates,
   fetchOccurrences,
   fetchOverview,
@@ -17,11 +20,13 @@ import type {
 } from '@web/features/planning/api/planning.queries'
 import type {
   budgetFormSchema,
+  DAY_RULES,
   occurrenceAmountFormSchema,
   PLANNING_TABS,
   planningSearchSchema,
+  recurrenceFormSchema,
 } from '@web/features/planning/planning.schemas'
-import type { ReactElement, ReactNode } from 'react'
+import type { ReactElement, ReactNode, RefObject } from 'react'
 import type { z } from 'zod'
 
 export type PlanningTab = (typeof PLANNING_TABS)[number]
@@ -268,3 +273,83 @@ export type BudgetsViewProps = {
   unbudgeted: UnbudgetedView[]
   onOpen?: (categoryAccountId: string) => void
 }
+export type RecurrenceFormInput = z.input<typeof recurrenceFormSchema>
+
+export type RecurrenceFormValues = z.output<typeof recurrenceFormSchema>
+
+export type DayRule = (typeof DAY_RULES)[number]
+
+export type PlanningBalance = Awaited<ReturnType<typeof fetchBalances>>[number]
+
+export type RecurrenceEditorProps = {
+  workspaceId: string
+  permissions: readonly Permission[]
+  search: PlanningSearch
+  onClose: () => void
+}
+
+export type NewRecurrenceProps = {
+  workspaceId: string
+  entryType: RecurringEntryType
+  onClose: () => void
+}
+
+export type RecurrenceFormProps = {
+  workspaceId: string
+  today: IsoDate
+  accounts: readonly PlanningAccount[]
+  defaults: RecurrenceFormInput
+  onClose: () => void
+}
+
+export type RecurrenceFormFooterProps = {
+  isOnline: boolean
+  problem: string | null
+  onCancel: () => void
+}
+
+export type RecurrenceFieldsProps = {
+  workspaceId: string
+  today: IsoDate
+  accounts: readonly PlanningAccount[]
+  descriptionInput: RefObject<HTMLInputElement | null>
+}
+
+export type RecurrenceAccountFieldsProps = {
+  workspaceId: string
+  accounts: readonly PlanningAccount[]
+}
+
+export type RecurrenceScheduleFieldsProps = {
+  today: IsoDate
+}
+
+export type RecurrencePreviewProps = {
+  workspaceId: string
+  today: IsoDate
+}
+
+export type RecurrencePickerProps = {
+  control: FieldControlProps
+  title: string
+  subtitle?: string
+  placeholder: string
+  items: readonly PickerItem[]
+  layout?: PickerSheetProps['layout']
+  searchLabel?: string
+  empty?: PickerEmpty
+}
+
+export type ChosenPickerItem = {
+  item: PickerItem
+  label: string
+  icon: string | null | undefined
+  parent: PickerItem | undefined
+}
+
+export type RecurrenceAmount = {
+  amountCents: number
+  isEstimate: boolean
+}
+
+export type CategoryKind = 'expense_category' | 'income_category' | 'money'

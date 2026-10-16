@@ -5,6 +5,7 @@ import { PageFrame } from '@web/components/layout/page-frame'
 import { PageHeader } from '@web/components/layout/page-header'
 import { BudgetsTab } from '@web/features/planning/components/budgets-tab'
 import { OccurrencesTab } from '@web/features/planning/components/occurrences-tab'
+import { RecurrenceEditor } from '@web/features/planning/components/recurrence-editor'
 import { RecurrencesTab } from '@web/features/planning/components/recurrences-tab'
 import { planningMessages as messages } from '@web/features/planning/planning.messages'
 import { PLANNING_TABS, planningTabSchema } from '@web/features/planning/planning.schemas'
@@ -33,6 +34,21 @@ export function PlanningPage({ tab, ...props }: PlanningPageProps) {
         className="shrink-0 lg:max-w-120"
       />
       <TabBody tab={tab} {...props} />
+      <RecurrenceEditor
+        workspaceId={props.workspaceId}
+        permissions={props.permissions}
+        search={props.search}
+        onClose={() =>
+          void navigate({
+            to: '.',
+            search: (previous) => ({
+              ...previous,
+              recurrence: undefined,
+              recurrenceType: undefined,
+            }),
+          })
+        }
+      />
     </PageFrame>
   )
 }

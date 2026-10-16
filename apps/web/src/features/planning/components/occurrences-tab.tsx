@@ -25,6 +25,7 @@ import {
 } from '@web/features/planning/components/occurrence-groups'
 import { PlanningPeriod, yearOf } from '@web/features/planning/components/planning-period'
 import { planningMessages } from '@web/features/planning/planning.messages'
+import { NEW_RECURRENCE } from '@web/features/planning/planning.schemas'
 import type {
   GroupProps,
   OccurrenceContext,
@@ -230,6 +231,11 @@ function Empty({ workspaceId, canCreate }: { workspaceId: string; canCreate: boo
               <Link
                 to="/w/$workspaceId/planning/$tab"
                 params={{ workspaceId, tab: 'recurrences' }}
+                search={(previous) => ({
+                  ...previous,
+                  recurrence: NEW_RECURRENCE,
+                  recurrenceType: 'expense',
+                })}
               />
             }
           >

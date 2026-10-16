@@ -76,7 +76,10 @@ comprometido." + actions.
 ## PLAN-02 New or edit recurrence (MVP)
 Full screen on the phone, like the other forms; the large dialog (880 px) in two columns on the
 desktop. Create `POST /recurrences` (`planning:create`); edit `PATCH /recurrences/:id` (`planning:update`,
-always sending the whole schedule).
+always sending the whole schedule). It opens over Planning with `?recurrence=new&recurrenceType=`
+(`expense`, `income`, `transfer` from the group links and the empty states), so the title stays
+"Nova conta fixa" and the button names the type ("Criar conta fixa", "Criar receita", "Criar
+transferência").
 
 | Field | Label | Input | Required | Rules |
 |---|---|---|---|---|
@@ -88,7 +91,7 @@ always sending the whole schedule).
 | categoryAccountId | "Categoria" / "Para" (transfer) | picker | yes | expense and card: expense category; income: income category; transfer: another money account, different from "De" |
 | frequency | "Repete" | "Semanal", "Mensal", "Anual" | yes | |
 | interval | "A cada" | number + unit ("semanas", "meses", "anos") | yes, default 1 | 1–52 |
-| day rule | "Quando" | radio cards (monthly/yearly) with the number picker inside the sentence: "No dia [10] do mês", "No [5º] dia útil", "No mesmo dia da primeira data" | yes | day 1–31 ("Se o mês tiver menos dias, vale o último.") or business day 1–10 (the help says what a business day is); hidden for weekly, whose sentence becomes "Toda sexta" / "A cada 2 semanas, na sexta" |
+| day rule | "Quando" | radio cards (monthly/yearly) with the number picker inside the sentence: "No dia [10] do mês", "No [5º] dia útil", "No mesmo dia da primeira data" | yes | day 1–31 ("Se o mês tiver menos dias, vale o último.") or business day 1–10 (the help says what a business day is); hidden for weekly, which repeats the weekday of the first date (the list words it "Toda sexta" / "A cada 2 semanas, na sexta"; the form shows the weekday in the preview). Until a day is picked, the day follows the first date |
 | weekendRule | "Se cair em fim de semana ou feriado" | select: "Manter a data", "Antecipar para o dia útil anterior", "Adiar para o próximo dia útil" | yes, default keep | hidden when "N-th business day" is chosen |
 | startsOn | "Primeira data" | date | yes | valid date; help "Só planejamos a partir de hoje." |
 | endsOn | "Termina em" | date, with "Sem data para terminar" (default) | no | not before the first date: "A data final não pode ser antes da primeira." |
@@ -102,9 +105,11 @@ para segunda"), never over the amount.
 **RF-PLAN-4** Editing a rule with pending future occurrences whose amount was changed shows a
 warning alert on top that names the occurrence with its own amount: "Ao salvar, os próximos
 previstos voltam para o valor desta conta fixa." Saving re-plans the pending occurrences.
-Actions "Criar" / "Salvar". Errors: `RECURRENCE_INVALID` (under each field),
-`RECURRENCE_ACCOUNTS_INVALID` (a form alert: "Confira as contas: elas precisam estar ativas e
-combinar com o tipo."), `RECURRENCE_NOT_FOUND`.
+Actions "Criar" / "Salvar". Errors: `RECURRENCE_INVALID` (the form checks the same rules under
+each field before sending; the API names no field, so one that still comes back is the form alert
+with its code), `RECURRENCE_ACCOUNTS_INVALID` (a form alert: "Confira as contas: elas precisam
+estar ativas e combinar com o tipo."; above the button, as every form alert, where the board draws
+it on top), `RECURRENCE_NOT_FOUND`.
 
 Not in the form: "Lembrar X dias antes" (stored per rule but unused: reminders follow each member's
 lead time, `ME-01`) and "Registrar sozinho" (phase 2). See `../api-gaps.md`.
