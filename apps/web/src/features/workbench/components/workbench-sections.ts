@@ -57,6 +57,7 @@ import { cyclePreviewExamples } from '@web/components/finance/cycle-preview'
 import { entryDayGroupExamples } from '@web/components/finance/entry-day-group'
 import { entryHeaderExamples } from '@web/components/finance/entry-header'
 import { entryRowExamples } from '@web/components/finance/entry-row'
+import { goalCardExamples } from '@web/components/finance/goal-card'
 import { installmentRowsExamples } from '@web/components/finance/installment-rows'
 import { invoiceFactsExamples } from '@web/components/finance/invoice-facts'
 import { invoiceLineExamples } from '@web/components/finance/invoice-line'
@@ -72,8 +73,10 @@ import { occurrenceRowExamples } from '@web/components/finance/occurrence-row'
 import { planSummaryTilesExamples } from '@web/components/finance/plan-summary-tiles'
 import { recentEntriesExamples } from '@web/components/finance/recent-entries'
 import { recurrenceRowExamples } from '@web/components/finance/recurrence-row'
+import { reserveCardExamples } from '@web/components/finance/reserve-card'
 import { shareRowsExamples } from '@web/components/finance/share-rows'
 import { sharesListExamples } from '@web/components/finance/shares-list'
+import { splitShortcutExamples } from '@web/components/finance/split-shortcut'
 import { subcategoryAddChipExamples } from '@web/components/finance/subcategory-add-chip'
 import { subcategoryChipExamples } from '@web/components/finance/subcategory-chip'
 import { subcategoryChipsExamples } from '@web/components/finance/subcategory-chips'
@@ -191,6 +194,9 @@ export const workbenchSections: readonly ComponentExamples[] = [
   budgetRowExamples,
   budgetSummaryExamples,
   recurrenceRowExamples,
+  reserveCardExamples,
+  goalCardExamples,
+  splitShortcutExamples,
   invoiceMonthStripExamples,
   invoiceSummaryExamples,
   invoiceLineExamples,

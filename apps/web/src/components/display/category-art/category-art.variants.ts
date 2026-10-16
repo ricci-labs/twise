@@ -14,6 +14,7 @@ export const categoryArtVariants = cva(
         md: 'size-10.5 text-letter',
         list: 'size-11 text-letter',
         lg: 'size-11.5 text-label font-bold',
+        hero: 'size-14 text-title',
         xl: 'size-16 text-title',
         '2xl': 'size-22 text-title',
         empty: 'size-24 text-title',
