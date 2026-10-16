@@ -85,4 +85,37 @@ describe('DataTable', () => {
     expect(owner.scrollWidth).toBeGreaterThan(owner.clientWidth)
     expectWholeAmount(row.querySelector('[data-slot=amount]') as HTMLElement, row)
   })
+
+  it.each(['occurrences', 'recurrences', 'budgets'] as const)(
+    'lays the %s table out with its own columns, groups as bands',
+    async (layout) => {
+      const screen = await render(
+        <div className="w-240">
+          <DataTable
+            label={layout}
+            layout={layout}
+            columns={[
+              { key: 'name', label: 'Nome' },
+              { key: 'amount', label: 'Valor', align: 'end' },
+            ]}
+            rows={[
+              { key: 'band', band: 'Atrasados 1' },
+              {
+                key: 'row',
+                cells: [
+                  <DataTableName key="name" name="Internet" icon="house" />,
+                  <DataTableAmount key="amount" cents={12000} />,
+                ],
+              },
+            ]}
+          />
+        </div>,
+      )
+      const rows = [...screen.container.querySelectorAll('tr')]
+      const row = rows[rows.length - 1] as HTMLElement
+      expect(getComputedStyle(row).gridTemplateColumns.split(' ').length).toBeGreaterThan(4)
+      await expect.element(screen.getByText('Atrasados 1')).toBeVisible()
+      await expectNoAccessibilityViolations(screen.container)
+    },
+  )
 })
