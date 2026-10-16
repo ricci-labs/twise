@@ -1,6 +1,8 @@
 import {
+  ALLOCATION_STEP_KINDS,
   GOAL_NAME_MAX_LENGTH,
   isoDateSchema,
+  MAX_ALLOCATION_PERCENT,
   MAX_RECURRENCE_INTERVAL,
   RECURRENCE_DESCRIPTION_MAX_LENGTH,
   RECURRENCE_FREQUENCIES,
@@ -126,3 +128,27 @@ export const goalFormSchema = z.object({
   targetOn: z.string(),
   isReserve: z.boolean(),
 })
+
+const stepSheet = planningMessages.split.sheet
+
+export const stepFormSchema = z
+  .object({
+    kind: z.enum(ALLOCATION_STEP_KINDS),
+    goalId: z.string(),
+    accountId: z.string(),
+    percent: z.number().int().min(1).max(MAX_ALLOCATION_PERCENT),
+    amount: z.string(),
+  })
+  .refine((values) => values.kind !== 'fill_goal' || values.goalId !== '', {
+    path: ['goalId'],
+    message: stepSheet.required.goalId,
+    when: () => true,
+  })
+  .refine(
+    (values) => ['fill_goal', 'cover_overspent'].includes(values.kind) || values.accountId !== '',
+    { path: ['accountId'], message: stepSheet.required.accountId, when: () => true },
+  )
+  .refine(
+    (values) => values.kind !== 'fixed_amount' || (centsOfTypedAmount(values.amount) ?? 0) > 0,
+    { path: ['amount'], message: stepSheet.amountInvalid, when: () => true },
+  )

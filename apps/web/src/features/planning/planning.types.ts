@@ -29,6 +29,7 @@ import type {
   PLANNING_TABS,
   planningSearchSchema,
   recurrenceFormSchema,
+  stepFormSchema,
 } from '@web/features/planning/planning.schemas'
 import type { useDragReorder } from '@web/hooks/use-drag-reorder'
 import type { ReactElement, ReactNode, RefObject } from 'react'
@@ -109,6 +110,11 @@ export type EmptySplitProps = {
   hasReserve: boolean
   canEdit: boolean
   onSuggest: () => void
+  onAdd: () => void
+}
+
+export type StepSheetState = {
+  index?: number
 }
 
 export type StepListProps = {
@@ -119,6 +125,40 @@ export type StepListProps = {
   reorder: ReturnType<typeof useDragReorder>
   onChange: (steps: DraftStep[]) => void
   onRemove: (index: number) => void
+  onEdit: (index: number) => void
+}
+
+export type StepKind = AllocationStepItem['kind']
+
+export type StepFormValues = z.infer<typeof stepFormSchema>
+
+export type StepShape = Omit<AllocationStepItem, 'position'>
+
+export type StepSheetProps = {
+  isOpen: boolean
+  onOpenChange: (isOpen: boolean) => void
+  editing: DraftStep | null
+  restAccountName: string | null
+  goals: readonly PlanningGoal[]
+  accounts: readonly PlanningAccount[]
+  exampleCents: number
+  onSave: (step: StepShape) => void
+}
+
+export type StepTypeStageProps = {
+  kind: StepKind | null
+  restAccountName: string | null
+  onCancel: () => void
+  onContinue: (kind: StepKind) => void
+}
+
+export type StepFieldsProps = StepSheetProps & {
+  kind: StepKind
+  onBack: () => void
+}
+
+export type PercentFieldProps = {
+  exampleCents: number
 }
 
 export type GoalDeletion = {

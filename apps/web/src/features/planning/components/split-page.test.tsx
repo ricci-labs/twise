@@ -136,9 +136,15 @@ describe('PLAN-06 commission split', () => {
   it('keeps "o que sobrar" last and removes a step at once, with undo', async () => {
     await openSplit()
     await expect.element(steps().getByText('O que sobrar para Conta X')).toBeVisible()
+    await page.getByRole('button', { name: 'Ações do passo 3' }).click()
+    await expect.element(page.getByRole('button', { name: 'Editar' })).toBeVisible()
     await expect
-      .element(page.getByRole('button', { name: 'Ações do passo 3' }))
+      .element(page.getByRole('button', { name: 'Mover para cima' }))
       .not.toBeInTheDocument()
+    await expect
+      .element(page.getByRole('button', { name: 'Remover passo' }))
+      .not.toBeInTheDocument()
+    await userEvent.keyboard('{Escape}')
     await page.getByRole('button', { name: 'Ações do passo 2' }).click()
     await expect
       .element(page.getByRole('button', { name: 'Mover para baixo' }))
@@ -149,6 +155,49 @@ describe('PLAN-06 commission split', () => {
     await expect.element(steps().getByText('R$ 600,00 para Poupança')).not.toBeInTheDocument()
     await page.getByRole('button', { name: 'Desfazer' }).click()
     await expect.element(steps().getByText('R$ 600,00 para Poupança')).toBeVisible()
+  })
+
+  it('adds a percent step before "o que sobrar", showing what it gives with the example', async () => {
+    await openSplit()
+    await page.getByRole('button', { name: 'Adicionar passo' }).click()
+    const sheet = page.getByRole('dialog', { name: 'Adicionar passo' })
+    const rest = sheet.getByRole('radio', { name: /O que sobrar para uma conta/ })
+    await expect.element(rest).toBeDisabled()
+    await expect
+      .element(sheet.getByText('Só pode ser o último. Já existe um: Conta X.'))
+      .toBeVisible()
+    await sheet.getByRole('radio', { name: /Porcentagem para uma conta/ }).click()
+    await sheet.getByRole('button', { name: 'Continuar' }).click()
+    const fields = page.getByRole('dialog', { name: 'Porcentagem para uma conta' })
+    await fields.getByRole('button', { name: /^Para qual conta/ }).click()
+    await page.getByRole('button', { name: /^Poupança/ }).click()
+    await expect.poll(() => fields.element().textContent).toMatch(/dá R\$.100,00/)
+    await fields.getByRole('button', { name: 'Adicionar passo' }).click()
+    await expect
+      .poll(() => steps().getByRole('listitem').nth(2).element().textContent)
+      .toContain('10% para Poupança')
+    await expect
+      .poll(() => steps().getByRole('listitem').nth(3).element().textContent)
+      .toContain('O que sobrar para Conta X')
+  })
+
+  it('edits a fixed amount from the step menu', async () => {
+    await openSplit()
+    await page.getByRole('button', { name: 'Ações do passo 1' }).click()
+    await page.getByRole('button', { name: 'Editar' }).click()
+    const fields = page.getByRole('dialog', { name: 'Valor fixo para uma conta' })
+    await fields.getByLabelText(/^Valor/).fill('700,00')
+    await fields.getByRole('button', { name: 'Salvar passo' }).click()
+    await expect.element(steps().getByText('R$ 700,00 para Poupança')).toBeVisible()
+    await expect.element(page.getByRole('button', { name: 'Salvar divisão' })).toBeEnabled()
+  })
+
+  it('adds "cobrir o orçamento" right away, with no fields to fill', async () => {
+    await openSplit()
+    await page.getByRole('button', { name: 'Adicionar passo' }).click()
+    await page.getByRole('radio', { name: /Cobrir o que passou do orçamento/ }).click()
+    await page.getByRole('button', { name: 'Continuar' }).click()
+    await expect.element(steps().getByText('Cobrir o que passou do orçamento')).toBeVisible()
   })
 
   it('marks a step whose goal was deleted and holds the save until it is removed', async () => {

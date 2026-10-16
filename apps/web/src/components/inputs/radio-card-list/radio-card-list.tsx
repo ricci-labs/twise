@@ -60,6 +60,7 @@ export function RadioCardList({
             key={option.value}
             ref={list.refAt(position)}
             value={option.value}
+            disabled={option.isDisabled}
             nativeButton
             render={<button type="button" onBlur={onBlur} />}
             className={radioCardVariants({ layout })}
