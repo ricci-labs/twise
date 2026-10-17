@@ -210,10 +210,12 @@ export const contactsMessages = {
     failed: 'Não foi possível criar a cobrança.',
   },
   payment: {
+    balance: (amount: string) => `Saldo de hoje: ${amount}`,
     title: 'Registrar pagamento',
     close: 'Cancelar',
     submit: 'Registrar pagamento',
     chargeTitle: (date: string, name: string) => `Cobrança de ${date} · ${name}`,
+    chargeArt: 'Cobrança',
     nothingYet: (amount: string, left: string) => `${amount} · nada recebido ainda · falta ${left}`,
     someReceived: (amount: string, received: string, left: string) =>
       `${amount} · ${received} recebidos · falta ${left}`,
@@ -230,6 +232,13 @@ export const contactsMessages = {
   optOut: {
     pageTitle: 'Cobranças por e-mail',
     confirming: 'Só um instante…',
+    art: 'Juntos',
+    footer: 'Twise · app de finanças da casa',
+    doneBy: {
+      title: (name: string) => `Pronto, você não vai mais receber cobranças por e-mail de ${name}.`,
+      text: (name: string) =>
+        `${name} vai ver no app que você pediu isso. Se mudar de ideia, é só falar com ${name}.`,
+    },
     retry: 'Tentar de novo',
     views: {
       done: {

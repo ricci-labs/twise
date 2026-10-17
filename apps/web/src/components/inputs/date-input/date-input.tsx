@@ -1,3 +1,4 @@
+import type { IsoDate } from '@financas/shared'
 import { TwiseIcon } from '@web/components/icons/twise-icon'
 import { CalendarSheet } from '@web/components/inputs/calendar-sheet'
 import { dateInputMessages as messages } from '@web/components/inputs/date-input/date-input.messages'
@@ -7,7 +8,7 @@ import {
   dateInputVariants,
 } from '@web/components/inputs/date-input/date-input.variants'
 import { cn } from '@web/lib/cn'
-import { formatFullDate } from '@web/lib/format/calendar'
+import { formatFullDate, formatShortDate } from '@web/lib/format/calendar'
 import { assignRef } from '@web/lib/refs'
 import { ChevronDown } from 'lucide-react'
 import { useCallback, useState } from 'react'
@@ -45,7 +46,7 @@ export function DateInput({
       >
         <TwiseIcon name="calendar" size="sm" />
         <span className={dateInputValueVariants({ isEmpty: !value })}>
-          {value ? formatFullDate(value) : placeholder}
+          {value ? dateLabelOf(value, today) : placeholder}
         </span>
         <ChevronDown aria-hidden="true" />
       </button>
@@ -69,4 +70,8 @@ export function DateInput({
       />
     </>
   )
+}
+
+function dateLabelOf(value: string, today: IsoDate): string {
+  return value === today ? messages.today(formatShortDate(today)) : formatFullDate(value)
 }

@@ -300,7 +300,7 @@ function UpcomingBody({ upcoming }: UpcomingBodyProps) {
           key={`${item.postingId}-${item.dueOn}`}
           className="flex items-center gap-3 border-border py-3 not-first:border-t"
         >
-          <DateBlock date={item.dueOn as IsoDate} />
+          <DateBlock date={item.dueOn as IsoDate} digits="padded" />
           <span className="flex min-w-0 flex-1 flex-col">
             <span className="line-clamp-2 font-semibold text-body-sm text-ink">
               {item.contactName}

@@ -16,6 +16,7 @@ import { NothingToCharge } from '@web/components/finance/nothing-to-charge'
 import { PixBox } from '@web/components/finance/pix-box'
 import { SendOptions } from '@web/components/finance/send-options'
 import { UntilChips } from '@web/components/finance/until-chips'
+import { TwiseIcon } from '@web/components/icons/twise-icon'
 import { FormOverlay } from '@web/components/layout/form-overlay'
 import { Sheet } from '@web/components/layout/sheet'
 import {
@@ -41,6 +42,7 @@ import { contactsMessages } from '@web/features/contacts/contacts.messages'
 import type {
   ChargeComposeFieldsProps,
   ChargeComposeProps,
+  ChargeDialogProps,
   ChargeEmailSendProps,
   ChargeMessagePreviewProps,
   ChargePixProps,
@@ -75,10 +77,9 @@ function ChargeCompose(props: ChargeComposeProps) {
   const [until, setUntil] = useState(() => defaultUntilOf(balance, today))
   const hasItems = chargeableBy(openItems, until, today).length > 0
   return (
-    <FormOverlay
+    <ChargeDialog
       title={messages.title}
       closeLabel={messages.close}
-      size="split"
       isOpen={isOpen}
       onRequestClose={onClose}
       onSubmit={(event) => {
@@ -89,15 +90,20 @@ function ChargeCompose(props: ChargeComposeProps) {
         })
       }}
       footer={
-        <div className="flex flex-col gap-2 lg:flex-row lg:items-center lg:justify-between">
+        <div className="flex items-center justify-between gap-3">
           <DialogDismiss label={messages.close} onPress={onClose} />
-          <Button type="submit" isLoading={create.isPending} disabled={!hasItems}>
+          <Button
+            type="submit"
+            isLoading={create.isPending}
+            disabled={!hasItems}
+            className="max-w-62 flex-1 lg:max-w-none lg:flex-none"
+          >
             {messages.create}
           </Button>
         </div>
       }
     >
-      <div className="flex flex-col gap-4 px-4 lg:grid lg:grid-cols-2 lg:items-start lg:gap-6 lg:px-8">
+      <div className="flex flex-col gap-4 lg:grid lg:grid-cols-2 lg:items-start lg:gap-6 lg:px-8">
         <ChargeComposeFields {...props} until={until} onUntilChange={setUntil} />
         {isDesktop && hasItems && (
           <ChargeMessagePreviewPanel
@@ -109,7 +115,7 @@ function ChargeCompose(props: ChargeComposeProps) {
           />
         )}
       </div>
-    </FormOverlay>
+    </ChargeDialog>
   )
 }
 
@@ -212,14 +218,13 @@ function CreatedCharge({
   const toast = (text: string) => () => showToast(text)
   const email = contact.email
   return (
-    <FormOverlay
+    <ChargeDialog
       title={isResend ? messages.resendTitle : messages.createdTitle}
       closeLabel={messages.done}
-      size="split"
       isOpen={isOpen}
       onRequestClose={onClose}
       footer={
-        <div className="flex flex-col lg:flex-row lg:justify-end">
+        <div className="flex justify-end">
           <DialogDismiss label={messages.done} onPress={onClose} />
         </div>
       }
@@ -276,11 +281,12 @@ function CreatedCharge({
               />
               {hasPermission(permissions, 'settings', 'update') && (
                 <TextLink
-                  className="self-start"
+                  className="inline-flex items-center gap-1.5 self-start"
                   render={
                     <Link to="/w/$workspaceId/settings/charge-text" params={{ workspaceId }} />
                   }
                 >
+                  <TwiseIcon name="edit" size="sm" />
                   {messages.changeText}
                 </TextLink>
               )}
@@ -296,7 +302,7 @@ function CreatedCharge({
           }
         />
       ) : (
-        <div className="px-4 lg:px-8">
+        <div className="lg:px-8">
           <ListSkeleton rows={3} />
         </div>
       )}
@@ -335,7 +341,58 @@ function CreatedCharge({
           )
         }}
       />
-    </FormOverlay>
+    </ChargeDialog>
+  )
+}
+
+function ChargeDialog({
+  title,
+  closeLabel,
+  isOpen,
+  onRequestClose,
+  onSubmit,
+  footer,
+  children,
+}: ChargeDialogProps) {
+  const isDesktop = useMediaQuery(DESKTOP_QUERY)
+  if (isDesktop) {
+    return (
+      <FormOverlay
+        title={title}
+        closeLabel={closeLabel}
+        size="split"
+        isOpen={isOpen}
+        onRequestClose={onRequestClose}
+        onSubmit={onSubmit}
+        footer={footer}
+      >
+        {children}
+      </FormOverlay>
+    )
+  }
+  const body = (
+    <>
+      {children}
+      <div className="sticky -bottom-safe-roomy -mx-4 mt-2 border-t border-border bg-surface px-4 pt-3 pb-safe-roomy">
+        {footer}
+      </div>
+    </>
+  )
+  return (
+    <Sheet
+      title={title}
+      closeLabel={closeLabel}
+      isOpen={isOpen}
+      onOpenChange={(open) => !open && onRequestClose()}
+    >
+      {onSubmit ? (
+        <form onSubmit={onSubmit} className="flex flex-col gap-2">
+          {body}
+        </form>
+      ) : (
+        <div className="flex flex-col gap-2">{body}</div>
+      )}
+    </Sheet>
   )
 }
 
@@ -354,7 +411,7 @@ function CreatedChargeLayout({ alert, send, message, pix }: CreatedChargeLayoutP
   const isDesktop = useMediaQuery(DESKTOP_QUERY)
   if (!isDesktop) {
     return (
-      <div className="flex flex-col gap-4 px-4">
+      <div className="flex flex-col gap-4">
         {alert}
         {send}
         {message}

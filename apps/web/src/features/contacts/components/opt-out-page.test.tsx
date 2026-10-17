@@ -11,7 +11,8 @@ import { render } from 'vitest-browser-react'
 
 const TOKEN = 'opt-out-token-123'
 const OPT_OUT = 'POST /api/public/contacts/opt-out'
-const NO_CONTENT = () => new Response(null, { status: 204 })
+const NO_CONTENT = () => Response.json({ requesterName: 'Member A' })
+const NO_NAME = () => Response.json({ requesterName: null })
 
 async function openLink(answer: FakeAnswer = NO_CONTENT, path = `/opt-out#token=${TOKEN}`) {
   const sent: unknown[] = []
@@ -41,12 +42,29 @@ describe('charge e-mail opt-out page', () => {
 
     await expect
       .element(
-        page.getByRole('heading', { name: /você não vai mais receber cobranças por e-mail/ }),
+        page.getByRole('heading', {
+          name: 'Pronto, você não vai mais receber cobranças por e-mail de Member A.',
+        }),
       )
       .toBeVisible()
+    await expect
+      .element(page.getByText('Member A vai ver no app que você pediu isso.', { exact: false }))
+      .toBeVisible()
+    await expect.element(page.getByText('Twise · app de finanças da casa')).toBeVisible()
     expect(sent).toEqual([{ token: TOKEN }])
     expect(app.router.state.location.hash).toBe('')
     await expectNoAccessibilityViolations(document.body)
+  })
+
+  it('confirms without a name when no charge e-mail went out', async () => {
+    await openLink(NO_NAME)
+    await expect
+      .element(
+        page.getByRole('heading', {
+          name: 'Pronto, você não vai mais receber cobranças por e-mail.',
+        }),
+      )
+      .toBeVisible()
   })
 
   it('says the link no longer works, without a token or when the API refuses it', async () => {

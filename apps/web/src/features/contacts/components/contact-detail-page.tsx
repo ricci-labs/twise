@@ -243,6 +243,7 @@ function ContactDetailActions({
       )}
       {canRecordReceipt && (
         <TextLink
+          className="text-body-sm"
           render={
             <Link
               to="."

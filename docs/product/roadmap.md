@@ -402,32 +402,33 @@ updated: 2026-10-17
   saving a commission, and a shared "Feito" (`allocation_parts`, rules approved by the user) with
   "Já transferi" for transfers made elsewhere. Built from the requirement, without a dedicated
   design
-- [ ] **Contacts and charges round: CON-01..05, SET-02, SET-03** (design `../design/contacts/`,
+- [x] **Contacts and charges round: CON-01..05, SET-02, SET-03** (design `../design/contacts/`,
   exported 2026-10-16, with the e-mail on contacts and charges sent by e-mail asked by the user; the
   user asked on 2026-10-16 for the same flow: one PR per step, merged by Claude when CI is green,
   every screen checked side by side with its PNG):
-  1. [ ] Design package in `docs/design/contacts/`; requirements (`requirements/modules/contacts-and-charges.md`,
+  1. [x] Design package in `docs/design/contacts/`; requirements (`requirements/modules/contacts-and-charges.md`,
      `requirements/modules/workspace-and-members.md` SET-02 and the new SET-03,
      `../domain/model/third-parties.md`, the new error codes, four app-wide rules in
      `requirements/ui-standards.md`), API gaps G61–G64
-  2. [ ] Web: the four app-wide rules on the screens already built (summary tiles wrap, button
+  2. [x] Web: the four app-wide rules on the screens already built (summary tiles wrap, button
      groups as grids, dense rows without drawing, side-by-side fields with matching help)
-  3. [ ] API: the contact's e-mail (G61)
-  4. [ ] API: what is already charged, future items, the next due items across contacts (G63)
-  5. [ ] API: the workspace's charge text, and `chargeMessage` taking it (G64)
-  6. [ ] API: sending a charge by e-mail (outbox, the e-mail template with the QR code), the channel
+  3. [x] API: the contact's e-mail (G61)
+  4. [x] API: what is already charged, future items, the next due items across contacts (G63)
+  5. [x] API: the workspace's charge text, and `chargeMessage` taking it (G64)
+  6. [x] API: sending a charge by e-mail (outbox, the e-mail template with the QR code), the channel
      of `sent`, the public opt-out by link (G62)
-  7. [ ] Web components: `ContactRow`, `ContactHeader`, `OpenItemRow`, `ChargeRow`, `ChargeBody`,
+  7. [x] Web components: `ContactRow`, `ContactHeader`, `OpenItemRow`, `ChargeRow`, `ChargeBody`,
      `ActionGrid`, `MessageBubble`, `PixBox`
-  8. [ ] Web: `CON-01` on the phone (every state)
-  9. [ ] Web: `CON-02` on the phone (open items, charges in place, the contact's actions and dialogs)
-  10. [ ] Web: `CON-03` new charge, the created charge and sending (WhatsApp, e-mail, copy), the
+  8. [x] Web: `CON-01` on the phone (every state)
+  9. [x] Web: `CON-02` on the phone (open items, charges in place, the contact's actions and dialogs)
+  10. [x] Web: `CON-03` new charge, the created charge and sending (WhatsApp, e-mail, copy), the
       failed e-mail, and the public opt-out page
-  11. [ ] Web: `CON-04` payment and `CON-05` the contact form (also "Novo contato" in the entry's
+  11. [x] Web: `CON-04` payment and `CON-05` the contact form (also "Novo contato" in the entry's
       contact picker)
-  12. [ ] Web: `SET-02` Recebimento por Pix and `SET-03` Mensagem das cobranças under Configurações
-  13. [ ] Web: the desktop versions
-  14. [ ] Review of the round against every PNG
+  12. [x] Web: `SET-02` Recebimento por Pix and `SET-03` Mensagem das cobranças under Configurações
+  13. [x] Web: the desktop versions
+  14. [x] Review of the round against every PNG (#369–#404; G65–G68 added on the way; the
+      open items' card and share detail is left to discuss with the user)
 - [ ] Remaining project skills (`new-module`, `db-migration`, `domain-rule`, `pr`) and Claude Code hooks
 
 ## Phase 1: MVP

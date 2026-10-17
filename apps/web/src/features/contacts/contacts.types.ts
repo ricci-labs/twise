@@ -16,7 +16,7 @@ import type {
   contactFormSchema,
   paymentFormSchema,
 } from '@web/features/contacts/contacts.schemas'
-import type { ReactNode } from 'react'
+import type { FormEventHandler, ReactNode } from 'react'
 import type { z } from 'zod'
 
 export type Contact = Awaited<ReturnType<typeof fetchContacts>>[number]
@@ -290,6 +290,7 @@ export type ChargePaymentFormProps = Omit<ChargePaymentSheetProps, 'charge'> & {
 
 export type PaymentAccountFieldProps = FieldControlProps & {
   accounts: readonly { id: string; name: string; icon: string | null }[]
+  balances: ReadonlyMap<string, number>
 }
 
 export type ChargeEmailPreviewInput = {
@@ -438,4 +439,19 @@ export type CreatedChargeLayoutProps = {
 export type DialogDismissProps = {
   label: string
   onPress: () => void
+}
+
+export type ChargeDialogProps = {
+  title: string
+  closeLabel: string
+  isOpen: boolean
+  onRequestClose: () => void
+  onSubmit?: FormEventHandler<HTMLFormElement>
+  footer: ReactNode
+  children: ReactNode
+}
+
+export type OptOutFrameProps = {
+  title: string
+  children: ReactNode
 }

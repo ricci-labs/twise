@@ -711,7 +711,7 @@ component here, so the form, and later the account, card and planning forms, sha
   `size="inline"` shows only the number in the 34 px box of an inline `Select` ("No dia [10 ⌄] do
   mês").
 - `DateInput` (`components/inputs/date-input`): a date field drawn like the others (calendar icon,
-  "10/11/2026" or "Escolha a data", chevron) that opens the app's `CalendarSheet` under it; a pick
+  "10/11/2026", "Hoje, 20/10" when it is today, or "Escolha a data", chevron) that opens the app's `CalendarSheet` under it; a pick
   closes it and counts as leaving the field. It takes the `FormField` control.
 - `RadioSentenceList` (`components/inputs/radio-sentence-list`, Base UI `RadioGroup`): one choice
   among cards whose sentence holds a small picker ("No dia [10] do mês", "No [5º] dia útil"). Each

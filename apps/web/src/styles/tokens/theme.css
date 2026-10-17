@@ -484,6 +484,10 @@
   padding-bottom: max(--spacing(5), env(safe-area-inset-bottom));
 }
 
+@utility -bottom-safe-roomy {
+  bottom: calc(-1 * max(--spacing(5), env(safe-area-inset-bottom)));
+}
+
 @utility max-h-sheet {
   max-height: 85dvh;
 }

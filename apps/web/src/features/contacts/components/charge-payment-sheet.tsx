@@ -13,7 +13,10 @@ import { MoneyInput } from '@web/components/inputs/money-input'
 import { PickerField } from '@web/components/inputs/picker-field'
 import { PickerSheet } from '@web/components/inputs/picker-sheet'
 import { Sheet } from '@web/components/layout/sheet'
-import { moneyAccountsQueryOptions } from '@web/features/contacts/api/contacts.queries'
+import {
+  accountBalancesQueryOptions,
+  moneyAccountsQueryOptions,
+} from '@web/features/contacts/api/contacts.queries'
 import { usePayCharge } from '@web/features/contacts/api/use-charge-actions'
 import { contactsMessages } from '@web/features/contacts/contacts.messages'
 import { paymentFormSchema } from '@web/features/contacts/contacts.schemas'
@@ -32,6 +35,7 @@ import { useWatch } from 'react-hook-form'
 
 const messages = contactsMessages.payment
 const WALLET_ICON = 'wallet'
+const RECEIPT_ICON = 'receipt'
 
 export function ChargePaymentSheet(props: ChargePaymentSheetProps) {
   return (
@@ -54,6 +58,12 @@ function ChargePaymentForm({
   onOpenChange,
 }: ChargePaymentFormProps) {
   const accounts = useQuery(moneyAccountsQueryOptions(workspaceId)).data ?? []
+  const balances = new Map(
+    (useQuery(accountBalancesQueryOptions(workspaceId)).data ?? []).map((balance) => [
+      balance.accountId,
+      balance.naturalBalanceCents,
+    ]),
+  )
   const pay = usePayCharge(workspaceId)
   const navigate = useNavigate()
   const [problem, setProblem] = useState<string | null>(null)
@@ -106,26 +116,29 @@ function ChargePaymentForm({
 
   return (
     <Form form={form} onSubmit={save} className="flex flex-col gap-4 pt-2">
-      <div className="flex flex-col gap-0.5 rounded-md bg-sunken p-3">
-        <span className="font-semibold text-body">
-          {messages.chargeTitle(formatShortDate(charge.createdOn), contactName)}
-        </span>
-        <span className="text-body-sm text-ink-muted">
-          {charge.paidCents > 0
-            ? messages.someReceived(
-                formatBrl(charge.amountCents),
-                formatBrl(charge.paidCents),
-                formatBrl(leftCents),
-              )
-            : messages.nothingYet(formatBrl(charge.amountCents), formatBrl(leftCents))}
-        </span>
+      <div className="flex items-center gap-3 rounded-md bg-sunken p-3">
+        <CategoryArt name={messages.chargeArt} icon={RECEIPT_ICON} size="md" />
+        <div className="flex min-w-0 flex-col gap-0.5">
+          <span className="font-semibold text-body">
+            {messages.chargeTitle(formatShortDate(charge.createdOn), contactName)}
+          </span>
+          <span className="text-body-sm text-ink-muted">
+            {charge.paidCents > 0
+              ? messages.someReceived(
+                  formatBrl(charge.amountCents),
+                  formatBrl(charge.paidCents),
+                  formatBrl(leftCents),
+                )
+              : messages.nothingYet(formatBrl(charge.amountCents), formatBrl(leftCents))}
+          </span>
+        </div>
       </div>
       <FormField<PaymentFormInput> name="amount" label={messages.amount} isRequired>
         {(control) => <MoneyInput inputMode="decimal" {...control} />}
       </FormField>
       {isOver && <Alert tone="warning">{messages.overLeft}</Alert>}
       <FormField<PaymentFormInput> name="accountId" label={messages.account} isRequired>
-        {(control) => <PaymentAccountField accounts={accounts} {...control} />}
+        {(control) => <PaymentAccountField accounts={accounts} balances={balances} {...control} />}
       </FormField>
       <FormField<PaymentFormInput> name="occurredOn" label={messages.date} isRequired>
         {(control) => <DateInput title={messages.date} today={today} {...control} />}
@@ -145,7 +158,18 @@ function ChargePaymentForm({
   )
 }
 
-function PaymentAccountField({ accounts, value, onChange, id, onBlur }: PaymentAccountFieldProps) {
+function PaymentAccountField({
+  accounts,
+  balances,
+  value,
+  onChange,
+  id,
+  onBlur,
+}: PaymentAccountFieldProps) {
+  const balanceOf = (accountId: string) => {
+    const cents = balances.get(accountId)
+    return cents === undefined ? undefined : messages.balance(formatBrl(cents))
+  }
   const [isOpen, setIsOpen] = useState(false)
   const anchor = useRef<HTMLButtonElement>(null)
   const chosen = accounts.find((account) => account.id === value)
@@ -155,6 +179,7 @@ function PaymentAccountField({ accounts, value, onChange, id, onBlur }: PaymentA
         id={id}
         ref={anchor}
         value={chosen?.name ?? null}
+        detail={chosen && balanceOf(chosen.id)}
         art={chosen && <CategoryArt name={chosen.name} icon={chosen.icon ?? WALLET_ICON} />}
         placeholder={messages.accountPlaceholder}
         onClick={() => setIsOpen(true)}
@@ -165,6 +190,7 @@ function PaymentAccountField({ accounts, value, onChange, id, onBlur }: PaymentA
         items={accounts.map((account) => ({
           value: account.id,
           label: account.name,
+          detail: balanceOf(account.id),
           icon: account.icon ?? WALLET_ICON,
         }))}
         value={value || null}

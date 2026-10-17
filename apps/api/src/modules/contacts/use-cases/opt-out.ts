@@ -10,10 +10,12 @@ import {
   findOptOutWorkspaceId,
   insertOptOutToken,
   lockContact,
+  selectLatestEmailedChargeCreator,
   selectOptOutToken,
   updateContact,
 } from '@api/modules/contacts/contacts.repository'
-import type { ContactRow } from '@api/modules/contacts/contacts.types'
+import type { ContactRow, OptOutResult } from '@api/modules/contacts/contacts.types'
+import { getAccount } from '@api/modules/identity'
 import { contactOptOutRequestSchema } from '@financas/shared'
 
 const LINK_INVALID = 'LINK_INVALID'
@@ -35,29 +37,30 @@ export async function optOutByLink(
   db: Database,
   rawRequest: unknown,
   clock: Clock = systemClock,
-): Promise<void> {
+): Promise<OptOutResult> {
   const { token } = parseOrThrow(contactOptOutRequestSchema, rawRequest, LINK_INVALID)
   const tokenHash = hashToken(token)
   const workspaceId = await findOptOutWorkspaceId(db, tokenHash)
   if (!workspaceId) {
     throw invalidLink()
   }
-  await withWorkspace(db, workspaceId, async (tx) => {
+  const requesterId = await withWorkspace(db, workspaceId, async (tx) => {
     const stored = await selectOptOutToken(tx, tokenHash)
     const contact = stored && (await lockContact(tx, stored.contactId))
     if (!stored || !contact || !tokenMatchesHash(token, stored.tokenHash)) {
       throw invalidLink()
     }
-    if (contact.optedOutVia === 'email_link') {
-      return
+    if (contact.optedOutVia !== 'email_link') {
+      await audited(tx, contactAuditTarget(workspaceId, contact.id), 'update', () =>
+        updateContact(tx, contact.id, {
+          optedOutAt: contact.optedOutAt ?? clock.now(),
+          optedOutVia: 'email_link',
+        }),
+      )
     }
-    await audited(tx, contactAuditTarget(workspaceId, contact.id), 'update', () =>
-      updateContact(tx, contact.id, {
-        optedOutAt: contact.optedOutAt ?? clock.now(),
-        optedOutVia: 'email_link',
-      }),
-    )
+    return selectLatestEmailedChargeCreator(tx, contact.id)
   })
+  return { requesterName: requesterId ? (await getAccount(db, requesterId)).displayName : null }
 }
 
 function invalidLink(): ValidationError {
