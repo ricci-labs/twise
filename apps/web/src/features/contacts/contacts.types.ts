@@ -1,13 +1,18 @@
 import type { ContactChange, IsoDate, NewContact, Permission } from '@financas/shared'
 import type { ChargeBodyItem, ChargeHistory } from '@web/components/finance/charge-body'
 import type { ContactChannel } from '@web/components/finance/contact-row'
+import type { FieldControlProps } from '@web/components/forms/form-field'
 import type {
   fetchContactBalances,
   fetchContactCharges,
   fetchContactOpenItems,
   fetchContacts,
 } from '@web/features/contacts/api/contacts.queries'
-import type { CONTACT_SORTS, contactFormSchema } from '@web/features/contacts/contacts.schemas'
+import type {
+  CONTACT_SORTS,
+  contactFormSchema,
+  paymentFormSchema,
+} from '@web/features/contacts/contacts.schemas'
 import type { ReactNode } from 'react'
 import type { z } from 'zod'
 
@@ -23,6 +28,7 @@ export type ContactChargeView = {
   id: string
   createdOn: IsoDate
   amountCents: number
+  paidCents: number
   status: ContactCharge['status']
   itemCount: number
   history: ChargeHistory | undefined
@@ -43,6 +49,7 @@ export type ContactChargesProps = {
   contactId: string
   canUpdate: boolean
   today: IsoDate
+  contactName: string
   onResend: (chargeId: string) => void
 }
 
@@ -55,6 +62,7 @@ export type ContactChargeItemProps = {
   onResend: () => void
   onRetryEmail: () => void
   onFixEmail: () => void
+  onPay: () => void
 }
 
 export type ChargePixProps = {
@@ -86,6 +94,7 @@ export type ChargeActionsInput = {
   onResend: () => void
   onRetryEmail: () => void
   onFixEmail: () => void
+  onPay: () => void
 }
 
 export type ContactOpenItems = {
@@ -261,3 +270,21 @@ export type ContactFormFooterProps = {
 }
 
 export type OptOutView = 'confirming' | 'done' | 'linkInvalid' | 'paused' | 'failed'
+
+export type PaymentFormInput = z.input<typeof paymentFormSchema>
+
+export type ChargePaymentSheetProps = {
+  workspaceId: string
+  contactName: string
+  charge: ContactChargeView | null
+  today: IsoDate
+  onOpenChange: (isOpen: boolean) => void
+}
+
+export type ChargePaymentFormProps = Omit<ChargePaymentSheetProps, 'charge'> & {
+  charge: ContactChargeView
+}
+
+export type PaymentAccountFieldProps = FieldControlProps & {
+  accounts: readonly { id: string; name: string; icon: string | null }[]
+}

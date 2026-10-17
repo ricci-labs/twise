@@ -2,9 +2,11 @@ import {
   CONTACT_NAME_MAX_LENGTH,
   CONTACT_NOTES_MAX_LENGTH,
   emailSchema,
+  isoDateSchema,
   PIX_KEY_MAX_LENGTH,
 } from '@financas/shared'
 import { contactsMessages } from '@web/features/contacts/contacts.messages'
+import { centsOfTypedAmount } from '@web/lib/format/money'
 import { phoneE164Of } from '@web/lib/format/phone'
 import { formMessages } from '@web/lib/forms/forms.messages'
 import { z } from 'zod'
@@ -53,3 +55,11 @@ export const contactFormSchema = z
       phone.trim() === '' || phoneE164Of({ callingCode, number: phone }) !== null,
     { path: ['phone'], message: contactsMessages.form.phoneInvalid },
   )
+
+export const paymentFormSchema = z.object({
+  amount: z
+    .string()
+    .refine((text) => (centsOfTypedAmount(text) ?? 0) > 0, contactsMessages.payment.amountInvalid),
+  accountId: z.string().min(1),
+  occurredOn: isoDateSchema,
+})

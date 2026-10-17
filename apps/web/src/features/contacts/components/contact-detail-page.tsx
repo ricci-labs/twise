@@ -174,6 +174,7 @@ function ContactDetailBody({
         contactId={contact.id}
         canUpdate={hasPermission(permissions, 'contacts', 'update')}
         today={today}
+        contactName={contact.name}
         onResend={onChargeOpen}
       />
       <ContactTalkTo contact={contact} />

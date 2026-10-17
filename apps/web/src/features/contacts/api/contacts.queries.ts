@@ -1,3 +1,4 @@
+import { MONEY_ACCOUNT_KINDS } from '@financas/shared'
 import { queryOptions } from '@tanstack/react-query'
 import { unwrap } from '@web/lib/api/unwrap'
 import { apiClient } from '@web/lib/api-client'
@@ -61,6 +62,19 @@ export function contactChargesQueryOptions(workspaceId: string, contactId: strin
 
 export function fetchContactCharges(workspaceId: string, contactId: string) {
   return unwrap(workspaceApi.charges.$get({ param: { workspaceId }, query: { contactId } }))
+}
+
+export function moneyAccountsQueryOptions(workspaceId: string) {
+  return queryOptions({
+    queryKey: [...queryKeys.workspace(workspaceId), 'accounts'] as const,
+    queryFn: () => unwrap(workspaceApi.accounts.$get({ param: { workspaceId } })),
+    select: (accounts) =>
+      accounts.filter(
+        (account) =>
+          account.archivedAt === null &&
+          (MONEY_ACCOUNT_KINDS as readonly string[]).includes(account.kind),
+      ),
+  })
 }
 
 export function chargeTextQueryOptions(workspaceId: string) {

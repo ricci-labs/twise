@@ -124,6 +124,7 @@ export const CONTACT_D_OPEN_ITEMS = [
   }),
 ]
 
+export const MONEY_ACCOUNT = '00000000-0000-4000-8000-0000000000a7'
 export const CHARGE_SENT = '00000000-0000-4000-8000-0000000000c1'
 export const CHARGE_PAID = '00000000-0000-4000-8000-0000000000c2'
 
@@ -145,6 +146,7 @@ export const CONTACT_D_CHARGES = [
     sentTo: 'member.d@exemplo.com',
     emailStatus: 'sent',
     emailError: null,
+    payments: [],
     createdAt: '2026-10-20T17:30:00.000Z',
     items: [
       {
@@ -179,6 +181,14 @@ export const CONTACT_D_CHARGES = [
     sentTo: '+5511999990004',
     emailStatus: null,
     emailError: null,
+    payments: [
+      {
+        entryId: '00000000-0000-4000-8000-0000000000e9',
+        amountCents: 16000,
+        receivedOn: '2026-09-15',
+        accountId: MONEY_ACCOUNT,
+      },
+    ],
     createdAt: '2026-09-12T12:00:00.000Z',
     items: [
       {
@@ -209,6 +219,22 @@ export function contactAnswers(contactId: string, overrides: Record<string, Fake
       Response.json(contactId === CONTACT_D ? CONTACT_D_OPEN_ITEMS : []),
     [`GET ${BASE}/charges`]: () => Response.json(contactId === CONTACT_D ? CONTACT_D_CHARGES : []),
     [`GET ${BASE}/charges/${CHARGE_SENT}`]: () => Response.json(CONTACT_D_CHARGES[0]),
+    [`GET ${BASE}/accounts`]: () =>
+      Response.json([
+        {
+          id: MONEY_ACCOUNT,
+          parentId: null,
+          kind: 'checking',
+          name: 'Conta X',
+          icon: null,
+          color: null,
+          ownerUserId: null,
+          holderUserId: null,
+          isShared: true,
+          archivedAt: null,
+          createdAt: '2026-01-01T00:00:00.000Z',
+        },
+      ]),
     [`GET ${BASE}/settings/charge-text`]: () =>
       Response.json({
         subject: '{quem cobra} te enviou uma cobrança de {valor}',
