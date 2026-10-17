@@ -191,6 +191,16 @@ Decided with the new-entry design (2026-10-10, version 2 on 2026-10-14,
   page colour, so the white fields stand out, and the footer of buttons is white with a top border.
   Field labels are 14 px medium (500), as in the design system; the selected option of a choice is
   semibold.
+- **Summary tiles side by side** (contacts design, 2026-10-16; Previstos, Orçamentos, the Home…):
+  the amount never wraps; when both tiles do not fit, the second one drops to its own line
+  (flex-wrap). Tested with 7-digit amounts.
+- **Button groups:** buttons of one group have the same height and width (a grid). On the phone the
+  primary takes the full width and the others share the row below; on wide containers all sit in
+  one row. No loose "⋯" beside a row of buttons.
+- **Dense rows:** a row with three or more things on the right (amount, chevron, "⋯") has no
+  drawing; the status moves to the second line.
+- **Fields side by side:** their help texts are the same length (one line) or absent; a field whose
+  help needs more goes full width.
 - **Toasts** are an ink card with white text and a mint action; a confirmation carries the mint
   check. On the phone they sit above the tab bar, or above a form's buttons, and the floating "+"
   moves up while one shows.

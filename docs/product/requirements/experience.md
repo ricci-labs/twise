@@ -58,7 +58,7 @@ Placeholders only (the repo is public).
 | J2 | Record a card purchase in installments, shared with a friend | `ENT-02` |
 | J3 | Check the next invoice: lines, own vs fronted for others, and pay it | `CARD-02`, `CARD-03`, `ENT-02` |
 | J4 | Fix a wrong entry (amount or category) or delete and restore it | `ENT-03`, `ENT-04`, `ENT-05` |
-| J5 | Charge a friend what they owe, send it by WhatsApp with Pix, and record the payment | `CON-02`, `CON-03`, `CON-04` |
+| J5 | Charge a friend what they owe, send it by WhatsApp or e-mail with Pix, and record the payment | `CON-02`, `CON-03`, `CON-04` |
 | J6 | Set up rent and salary as recurring, then confirm a payment matches the planned bill | `PLAN-01`, `PLAN-02`, `PLAN-03` |
 | J7 | A commission arrived: see the suggested split and move the money | `HOME-03`, `ENT-02` |
 | J8 | "Posso comprar?": simulate a purchase in installments and see its impact month by month | `HOME-02` |
@@ -107,6 +107,7 @@ Priority MVP unless marked Later. Module files hold the full spec of each screen
 | `WS-01` | Create a workspace (first run, or from the switcher) |
 | `SET-01` | Workspace settings: name, financial period, budget base, installment view, time zone |
 | `SET-02` | Pix receiving (key and receiver shown on charges) |
+| `SET-03` | Charge text: e-mail subject, opening and closing of every charge |
 | `MEM-01` | Members: list, change role, remove, leave |
 | `MEM-02` | Roles: list, create and edit custom roles |
 | `MEM-03` | Invitations: invite by email or phone, pending list, revoke |
@@ -144,7 +145,7 @@ Priority MVP unless marked Later. Module files hold the full spec of each screen
 |---|---|
 | `CON-01` | Contacts and what each owes |
 | `CON-02` | Contact detail: open items, charges |
-| `CON-03` | New charge: preview message, Pix, send |
+| `CON-03` | New charge: preview, then send by WhatsApp, e-mail or copy |
 | `CON-04` | Record a payment for a charge |
 | `CON-05` | New or edit contact |
 
