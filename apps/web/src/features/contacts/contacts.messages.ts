@@ -187,6 +187,8 @@ export const contactsMessages = {
     noPix: 'Configure sua chave Pix para incluir o Pix copia e cola nas cobranças.',
     setUpPix: 'Configurar Pix',
     changeText: 'Mudar o texto padrão das cobranças',
+    messagePreview: 'Prévia da mensagem',
+    messageKept: 'O texto fica guardado na cobrança e não muda depois.',
     emailPreviewTitle: 'O e-mail como ele chega',
     emailPreviewClose: 'Voltar',
     emailSender: (workspaceName: string) => `Twise · ${workspaceName}`,

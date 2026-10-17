@@ -124,7 +124,11 @@ export function pixReceiverQueryOptions(workspaceId: string) {
   return queryOptions({
     queryKey: [...queryKeys.workspace(workspaceId), 'settings'] as const,
     queryFn: () => unwrap(workspaceApi.settings.$get({ param: { workspaceId } })),
-    select: (settings) => ({ name: settings.pixReceiverName, city: settings.pixReceiverCity }),
+    select: (settings) => ({
+      key: settings.pixReceivingKey,
+      name: settings.pixReceiverName,
+      city: settings.pixReceiverCity,
+    }),
   })
 }
 
