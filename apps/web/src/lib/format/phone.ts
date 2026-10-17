@@ -19,6 +19,7 @@ export const CALLING_CODES = [
   '+598',
 ] as const
 
+const WHATSAPP_URL = 'https://wa.me/'
 const BRAZIL_LANDLINE_DIGITS = 10
 const BRAZIL_MOBILE_DIGITS = 11
 const AREA_CODE_DIGITS = 2
@@ -50,6 +51,16 @@ export function phonePartsOf(phoneE164: string | null): PhoneParts {
   }
   const number = phoneE164.slice(callingCode.length)
   return { callingCode, number: tidyPhoneNumber({ callingCode, number }) }
+}
+
+export function formatPhone(phoneE164: string): string {
+  const { callingCode, number } = phonePartsOf(phoneE164)
+  return number.startsWith(INTERNATIONAL_PREFIX) ? number : `${callingCode} ${number}`
+}
+
+export function whatsappLink(phoneE164: string, text?: string): string {
+  const base = `${WHATSAPP_URL}${digitsOf(phoneE164)}`
+  return text ? `${base}?text=${encodeURIComponent(text)}` : base
 }
 
 export function tidyPhoneNumber({ callingCode, number }: PhoneParts): string {

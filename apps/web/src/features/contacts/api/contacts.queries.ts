@@ -5,6 +5,8 @@ import { queryKeys } from '@web/lib/query-keys'
 
 const workspaceApi = apiClient.api.workspaces[':workspaceId']
 
+const EVERY_FUTURE_ITEM = '9999-12-31'
+
 export function contactsQueryOptions(workspaceId: string) {
   return queryOptions({
     queryKey: [...queryKeys.workspace(workspaceId), 'contacts', 'list'] as const,
@@ -32,6 +34,22 @@ export function contactQueryOptions(workspaceId: string, contactId: string) {
     queryKey: [...queryKeys.workspace(workspaceId), 'contacts', 'one', contactId] as const,
     queryFn: () => fetchContact(workspaceId, contactId),
   })
+}
+
+export function contactOpenItemsQueryOptions(workspaceId: string, contactId: string) {
+  return queryOptions({
+    queryKey: [...queryKeys.workspace(workspaceId), 'contacts', 'open-items', contactId] as const,
+    queryFn: () => fetchContactOpenItems(workspaceId, contactId),
+  })
+}
+
+export function fetchContactOpenItems(workspaceId: string, contactId: string) {
+  return unwrap(
+    workspaceApi.contacts[':contactId']['open-items'].$get({
+      param: { workspaceId, contactId },
+      query: { until: EVERY_FUTURE_ITEM, includeCharged: 'true' },
+    }),
+  )
 }
 
 export function fetchContact(workspaceId: string, contactId: string) {
