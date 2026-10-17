@@ -4,6 +4,35 @@ import type { FakeAnswer, FakeWorkspaceHoliday } from '@web/testing/testing.type
 
 const BASE = `/api/workspaces/${WORKSPACE_ID}`
 
+export const WORKSPACE_PIX = {
+  pixReceivingKey: 'member.a@exemplo.com',
+  pixReceiverName: 'MEMBER A',
+  pixReceiverCity: 'SAO PAULO',
+}
+
+export const NO_PIX = { pixReceivingKey: null, pixReceiverName: null, pixReceiverCity: null }
+
+export function workspaceSettingsAnswer(
+  pix: Readonly<Record<string, string | null>> = WORKSPACE_PIX,
+): Record<string, FakeAnswer> {
+  return {
+    [`GET ${BASE}/settings`]: () =>
+      Response.json({
+        currency: 'BRL',
+        timezone: 'America/Sao_Paulo',
+        locale: 'pt-BR',
+        periodAnchor: 'calendar_month',
+        periodAnchorValue: null,
+        installmentBudgetView: 'per_installment',
+        budgetBase: 'fixed_income',
+        weekStartsOn: 0,
+        ...pix,
+        contactMessagesDailyCap: 20,
+        chargeReminderEveryDays: null,
+      }),
+  }
+}
+
 export const CITY_BIRTHDAY = '00000000-0000-4000-8000-0000000007a1'
 
 export const CITY_PATRON = '00000000-0000-4000-8000-0000000007a2'
