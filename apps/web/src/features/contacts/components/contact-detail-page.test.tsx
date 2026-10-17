@@ -324,4 +324,41 @@ describe('CON-02 contact detail', () => {
       .element(page.getByRole('button', { name: 'Ações de Member D' }))
       .not.toBeInTheDocument()
   })
+
+  describe('on the desktop', () => {
+    beforeEach(async () => {
+      await page.viewport(1440, 1000)
+    })
+
+    it('puts the contact in two columns with the payments received on the right', async () => {
+      const { fetchSpy } = await openContact()
+
+      await expect.element(page.getByRole('heading', { name: 'Member D', level: 1 })).toBeVisible()
+      await expect.element(page.getByText('Contato · WhatsApp e e-mail')).toBeVisible()
+      await expect
+        .element(page.getByRole('navigation', { name: 'Caminho' }).getByRole('link'))
+        .toHaveAttribute('href', `/w/${WORKSPACE_ID}/contacts`)
+      await expect.element(page.getByRole('link', { name: 'Editar' })).toBeVisible()
+      await expect.element(page.getByRole('button', { name: 'Nova cobrança' })).toBeVisible()
+      await expect.element(page.getByText('Recebeu sem cobrança?')).toBeVisible()
+      await expect.element(page.getByRole('link', { name: 'Registrar recebimento' })).toBeVisible()
+      const payments = page.getByRole('list', { name: 'Pagamentos recebidos' })
+      await expect.element(payments.getByText('Pagamento de cobrança')).toBeVisible()
+      await expect.element(payments.getByText('Cobrança de 12/09 · Conta X')).toBeVisible()
+      await expect.element(payments.getByText('Recebimento de contato')).toBeVisible()
+      await expect.element(payments.getByText('Sem cobrança · Conta X')).toBeVisible()
+      await expect.element(payments.getByText(/^\+R\$\s90,00$/)).toBeVisible()
+      const entriesCall = fetchSpy.mock.calls
+        .map(([input]) => String(input))
+        .find((url) => url.includes('/entries?'))
+      expect(entriesCall).toContain(`contactId=${CONTACT_D}`)
+      expect(entriesCall).toContain('types=settlement')
+      await expectNoAccessibilityViolations(page.getByRole('main').element())
+    })
+
+    it('says when nothing was received yet', async () => {
+      await openContact({ contactId: CONTACT_C })
+      await expect.element(page.getByText('Nenhum pagamento recebido ainda.')).toBeVisible()
+    })
+  })
 })

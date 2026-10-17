@@ -210,6 +210,33 @@ export const CONTACT_D_CHARGE_FAILED = {
   emailError: '550 5.1.1 mailbox unavailable',
 }
 
+const RECEIVABLE = '00000000-0000-4000-8000-0000000000ab'
+
+export const CONTACT_D_RECEIPTS = [
+  {
+    id: '00000000-0000-4000-8000-0000000000e9',
+    entryType: 'settlement',
+    occurredOn: '2026-09-15',
+    description: 'Member D pagou',
+    amountCents: 16000,
+    postings: [
+      { accountId: MONEY_ACCOUNT, amountCents: 16000 },
+      { accountId: RECEIVABLE, amountCents: -16000 },
+    ],
+  },
+  {
+    id: '00000000-0000-4000-8000-0000000000ea',
+    entryType: 'settlement',
+    occurredOn: '2026-08-02',
+    description: 'Member D pagou',
+    amountCents: 9000,
+    postings: [
+      { accountId: MONEY_ACCOUNT, amountCents: 9000 },
+      { accountId: RECEIVABLE, amountCents: -9000 },
+    ],
+  },
+]
+
 export function contactAnswers(contactId: string, overrides: Record<string, FakeAnswer> = {}) {
   return {
     ...contactsAnswers(),
@@ -219,6 +246,8 @@ export function contactAnswers(contactId: string, overrides: Record<string, Fake
       Response.json(contactId === CONTACT_D ? CONTACT_D_OPEN_ITEMS : []),
     [`GET ${BASE}/charges`]: () => Response.json(contactId === CONTACT_D ? CONTACT_D_CHARGES : []),
     [`GET ${BASE}/charges/${CHARGE_SENT}`]: () => Response.json(CONTACT_D_CHARGES[0]),
+    [`GET ${BASE}/entries`]: () =>
+      Response.json({ items: contactId === CONTACT_D ? CONTACT_D_RECEIPTS : [], nextCursor: null }),
     [`GET ${BASE}/accounts`]: () =>
       Response.json([
         {
