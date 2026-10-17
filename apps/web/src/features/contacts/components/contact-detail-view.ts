@@ -1,5 +1,5 @@
 import { type ChargeStatus, type IsoDate, todayIn } from '@financas/shared'
-import type { ChargeHistory } from '@web/components/finance/charge-body'
+import type { ChargeHistory, ChargeReceipt } from '@web/components/finance/charge-body'
 import type { ChargePreviewItem } from '@web/components/finance/charge-preview'
 import type { PlanSummaryTile } from '@web/components/finance/plan-summary-tiles'
 import type { UntilNextDue } from '@web/components/finance/until-chips'
@@ -59,15 +59,17 @@ export function contactChargeViewOf(
   charge: ContactCharge,
   today: IsoDate,
   timeZone: string,
+  accountNames: ReadonlyMap<string, string> = new Map(),
 ): ContactChargeView {
   const isOpen = OPEN_STATUSES.includes(charge.status)
   return {
     id: charge.id,
     createdOn: todayIn(timeZone, new Date(charge.createdAt)) as IsoDate,
     amountCents: charge.amountCents,
+    paidCents: charge.paidCents,
     status: charge.status,
     itemCount: charge.items.length,
-    history: historyOf(charge),
+    history: historyOf(charge, receiptOf(charge, accountNames)),
     sentVia: charge.sentVia,
     hasEmailFailed: charge.emailStatus === 'failed',
     sentTo: charge.sentTo,
@@ -85,16 +87,36 @@ export function contactChargeViewOf(
   }
 }
 
-function historyOf(charge: ContactCharge): ChargeHistory | undefined {
+function historyOf(
+  charge: ContactCharge,
+  receipt: ChargeReceipt | undefined,
+): ChargeHistory | undefined {
   if (charge.emailStatus === 'failed' && charge.sentTo) {
     return { kind: 'emailFailed', sentTo: charge.sentTo }
   }
   if (!charge.sentAt) {
-    return undefined
+    return receipt && { kind: 'received', receipt }
   }
   return {
     kind: 'sent',
     send: { via: charge.sentVia ?? MARKED_SENT, sentAt: charge.sentAt, sentTo: charge.sentTo },
+    receipt,
+  }
+}
+
+function receiptOf(
+  charge: ContactCharge,
+  accountNames: ReadonlyMap<string, string>,
+): ChargeReceipt | undefined {
+  const last = charge.payments.at(-1)
+  if (!last) {
+    return undefined
+  }
+  return {
+    receivedCents: charge.paidCents,
+    receivedOn: last.receivedOn as IsoDate,
+    accountName: (last.accountId && accountNames.get(last.accountId)) || '',
+    leftCents: Math.max(charge.amountCents - charge.paidCents, 0),
   }
 }
 

@@ -10,6 +10,7 @@ import {
   CONTACT_D_CHARGES,
   CONTACT_D_OPEN_ITEMS,
   contactAnswers,
+  MONEY_ACCOUNT,
 } from '@web/testing/contacts-api'
 import { fakeApi, WORKSPACE_ID, workspaceAccess, workspaceList } from '@web/testing/fake-api'
 import type { FakeAnswer } from '@web/testing/testing.types'
@@ -171,5 +172,43 @@ describe('CON-03 new charge', () => {
 
     await page.getByRole('button', { name: 'Corrigir e-mail' }).click()
     await expect.poll(() => app.router.state.location.search).toMatchObject({ contact: CONTACT_D })
+  })
+
+  it('records a payment for a charge, warns above what is left and links the entry', async () => {
+    const paid: unknown[] = []
+    const { app } = await openNewCharge(
+      {
+        [`POST ${BASE}/charges/${CHARGE_SENT}/payments`]: async (request) => {
+          paid.push(await request.json())
+          return Response.json({ entryId: NEW_CHARGE }, { status: 201 })
+        },
+      },
+      CHARGE_SENT,
+    )
+    await page
+      .getByRole('dialog', { name: 'Enviar cobrança' })
+      .getByRole('button', { name: 'Fechar' })
+      .last()
+      .click()
+
+    await page.getByRole('button', { name: /Cobrança de 20\/10/ }).click()
+    await page.getByRole('button', { name: 'Registrar pagamento' }).click()
+    const sheet = page.getByRole('dialog', { name: 'Registrar pagamento' })
+    await expect.element(sheet.getByText(/nada recebido ainda · falta R\$\s200,00/)).toBeVisible()
+    await expect
+      .element(sheet.getByRole('textbox', { name: /Valor recebido/ }))
+      .toHaveValue('200,00')
+    await sheet.getByRole('textbox', { name: /Valor recebido/ }).fill('250,00')
+    await expect.element(sheet.getByText(/o excesso fica como crédito do contato/)).toBeVisible()
+    await sheet.getByRole('button', { name: 'Registrar pagamento' }).click()
+
+    await expect.element(page.getByText('Pagamento registrado.')).toBeVisible()
+    expect(paid).toEqual([
+      { amountCents: 25000, receivedInAccountId: MONEY_ACCOUNT, occurredOn: '2026-10-20' },
+    ])
+    await page.getByRole('button', { name: 'Ver lançamento' }).click()
+    await expect
+      .poll(() => app.router.state.location.pathname)
+      .toBe(`/w/${WORKSPACE_ID}/entries/${NEW_CHARGE}`)
   })
 })

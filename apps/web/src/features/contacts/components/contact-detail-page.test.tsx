@@ -218,6 +218,7 @@ describe('CON-02 contact detail', () => {
   it('offers no cancel on a paid charge, and only copying to a viewer', async () => {
     await openContact()
     await page.getByRole('button', { name: /Cobrança de 12\/09/ }).click()
+    await expect.element(page.getByText(/R\$\s160,00 recebidos em 15\/09 na Conta X/)).toBeVisible()
     await page.getByRole('button', { name: 'Ações da cobrança de 12/09' }).click()
     const sheet = page.getByRole('dialog')
     await expect.element(sheet.getByRole('button', { name: 'Copiar mensagem' })).toBeVisible()

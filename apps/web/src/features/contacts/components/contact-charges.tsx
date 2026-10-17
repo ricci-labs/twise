@@ -12,9 +12,13 @@ import {
 } from '@web/components/finance/charge-body'
 import { ChargeRow } from '@web/components/finance/charge-row'
 import { MessageBubble } from '@web/components/finance/message-bubble'
-import { contactChargesQueryOptions } from '@web/features/contacts/api/contacts.queries'
+import {
+  contactChargesQueryOptions,
+  moneyAccountsQueryOptions,
+} from '@web/features/contacts/api/contacts.queries'
 import { useCancelCharge } from '@web/features/contacts/api/use-cancel-charge'
 import { useSendChargeEmail } from '@web/features/contacts/api/use-charge-actions'
+import { ChargePaymentSheet } from '@web/features/contacts/components/charge-payment-sheet'
 import { contactChargeViewOf } from '@web/features/contacts/components/contact-detail-view'
 import { contactsMessages } from '@web/features/contacts/contacts.messages'
 import type {
@@ -38,14 +42,17 @@ export function ContactCharges({
   contactId,
   canUpdate,
   today,
+  contactName,
   onResend,
 }: ContactChargesProps) {
   const charges = useQuery(contactChargesQueryOptions(workspaceId, contactId))
+  const accounts = useQuery(moneyAccountsQueryOptions(workspaceId)).data ?? []
   const cancel = useCancelCharge(workspaceId)
   const sendEmail = useSendChargeEmail(workspaceId)
   const navigate = useNavigate()
   const [openId, setOpenId] = useState<string | null>(null)
   const [cancelling, setCancelling] = useState<ContactChargeView | null>(null)
+  const [paying, setPaying] = useState<ContactChargeView | null>(null)
   if (charges.isError) {
     return (
       <ListSection title={messages.charges}>
@@ -65,7 +72,10 @@ export function ContactCharges({
       </ListSection>
     )
   }
-  const views = charges.data.map((charge) => contactChargeViewOf(charge, today, TIME_ZONE))
+  const accountNames = new Map(accounts.map((account) => [account.id, account.name]))
+  const views = charges.data.map((charge) =>
+    contactChargeViewOf(charge, today, TIME_ZONE, accountNames),
+  )
   return (
     <ListSection
       title={messages.charges}
@@ -89,6 +99,7 @@ export function ContactCharges({
                 onError: (error) => showToast(errorMessageFor(error), { tone: 'danger' }),
               })
             }
+            onPay={() => setPaying(charge)}
             onFixEmail={() =>
               void navigate({
                 to: '.',
@@ -98,6 +109,13 @@ export function ContactCharges({
           />
         ))}
       </ul>
+      <ChargePaymentSheet
+        workspaceId={workspaceId}
+        contactName={contactName}
+        charge={paying}
+        today={today}
+        onOpenChange={(isOpen) => !isOpen && setPaying(null)}
+      />
       <ConfirmDialog
         title={messages.cancelTitle}
         description={messages.cancelText}
@@ -130,6 +148,7 @@ function ContactChargeItem({
   onResend,
   onRetryEmail,
   onFixEmail,
+  onPay,
 }: ContactChargeItemProps) {
   const copy = async (text: string, done: string) => {
     showToast((await copyText(text)) ? done : messages.copyFailed)
@@ -180,6 +199,7 @@ function ContactChargeItem({
           onResend,
           onRetryEmail,
           onFixEmail,
+          onPay,
         })}
       />
     </ChargeRow>
@@ -194,6 +214,7 @@ function chargeActionsOf({
   onResend,
   onRetryEmail,
   onFixEmail,
+  onPay,
 }: ChargeActionsInput): Pick<ChargeBodyProps, 'primaryAction' | 'actions'> {
   const pix: ChargeAction[] = copyPix
     ? [{ key: 'pix', label: messages.copyPix, icon: 'pix', onPress: copyPix }]
@@ -214,6 +235,7 @@ function chargeActionsOf({
   }
   if (canUpdate && charge.isOpen) {
     return {
+      primaryAction: { key: 'pay', label: messages.pay, icon: 'payment', onPress: onPay },
       actions: [{ key: 'resend', label: messages.resend, icon: 'send', onPress: onResend }, ...pix],
     }
   }

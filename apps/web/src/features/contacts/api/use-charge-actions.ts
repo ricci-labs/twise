@@ -1,3 +1,4 @@
+import type { ChargePayment } from '@financas/shared'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { unwrap, unwrapEmpty } from '@web/lib/api/unwrap'
 import { apiClient } from '@web/lib/api-client'
@@ -40,6 +41,20 @@ export function useSendChargeEmail(workspaceId: string) {
       unwrapEmpty(
         workspaceApi.charges[':chargeId']['send-email'].$post({
           param: { workspaceId, chargeId },
+        }),
+      ),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: queryKeys.workspace(workspaceId) }),
+  })
+}
+
+export function usePayCharge(workspaceId: string) {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: ({ chargeId, payment }: { chargeId: string; payment: ChargePayment }) =>
+      unwrap(
+        workspaceApi.charges[':chargeId'].payments.$post({
+          param: { workspaceId, chargeId },
+          json: payment,
         }),
       ),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: queryKeys.workspace(workspaceId) }),
