@@ -58,6 +58,7 @@ import { budgetSummaryExamples } from '@web/components/finance/budget-summary'
 import { cardBlockExamples } from '@web/components/finance/card-block'
 import { categoryRowExamples } from '@web/components/finance/category-row'
 import { chargeBodyExamples } from '@web/components/finance/charge-body'
+import { chargePreviewExamples } from '@web/components/finance/charge-preview'
 import { chargeRowExamples } from '@web/components/finance/charge-row'
 import { contactHeaderExamples } from '@web/components/finance/contact-header'
 import { contactRowExamples } from '@web/components/finance/contact-row'
@@ -79,6 +80,7 @@ import { matchQuestionExamples } from '@web/components/finance/match-question'
 import { messageBubbleExamples } from '@web/components/finance/message-bubble'
 import { nextDatesPreviewExamples } from '@web/components/finance/next-dates-preview'
 import { nextHolidayCardExamples } from '@web/components/finance/next-holiday-card'
+import { nothingToChargeExamples } from '@web/components/finance/nothing-to-charge'
 import { occurrenceGroupExamples } from '@web/components/finance/occurrence-group'
 import { occurrenceRowExamples } from '@web/components/finance/occurrence-row'
 import { openItemRowExamples } from '@web/components/finance/open-item-row'
@@ -96,6 +98,7 @@ import { subcategoryChipExamples } from '@web/components/finance/subcategory-chi
 import { subcategoryChipsExamples } from '@web/components/finance/subcategory-chips'
 import { transferFlowExamples } from '@web/components/finance/transfer-flow'
 import { trashRowExamples } from '@web/components/finance/trash-row'
+import { untilChipsExamples } from '@web/components/finance/until-chips'
 import { fieldGroupExamples } from '@web/components/forms/field-group'
 import { formFieldExamples } from '@web/components/forms/form-field'
 import { lockedFieldExamples } from '@web/components/forms/locked-field'
@@ -259,6 +262,9 @@ export const workbenchSections: readonly ComponentExamples[] = [
   chargeBodyExamples,
   messageBubbleExamples,
   pixBoxExamples,
+  untilChipsExamples,
+  chargePreviewExamples,
+  nothingToChargeExamples,
   toggleChipsExamples,
   filterChipsExamples,
   listSummaryExamples,
