@@ -13,6 +13,8 @@ export const CONTACT_SORTS = ['overdue', 'name'] as const
 
 const NEW = 'new'
 
+const CONTACT_FOR_FORM = 'form'
+
 export const contactsSearchSchema = z.object({
   sort: z.enum(CONTACT_SORTS).optional().catch(undefined),
 })
@@ -29,6 +31,8 @@ export const contactSearchSchema = z.object({
     .union([z.literal(NEW), z.uuid()])
     .optional()
     .catch(undefined),
+  contactFor: z.literal(CONTACT_FOR_FORM).optional().catch(undefined),
+  createdContact: z.uuid().optional().catch(undefined),
 })
 
 export const contactFormSchema = z

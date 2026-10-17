@@ -77,6 +77,7 @@ export function EntryForm({
   canSeeContacts,
   canCreateAccounts,
   canCreateCards,
+  canCreateContacts,
   today,
   prefill = {},
   onClose,
@@ -246,6 +247,7 @@ export function EntryForm({
           canSeeContacts={canSeeContacts}
           canCreateAccounts={canCreateAccounts}
           canCreateCards={canCreateCards}
+          canCreateContacts={canCreateContacts}
           isNewForm={isNewForm}
           autoFill={autoFill}
           amountInput={amountInput}

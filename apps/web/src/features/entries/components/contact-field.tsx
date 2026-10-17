@@ -14,19 +14,24 @@ import type {
   EntryContact,
   EntryFormInput,
 } from '@web/features/entries/entries.types'
+import {
+  useCreatedContact,
+  useNewContactForm,
+} from '@web/features/entries/hooks/use-created-contact'
 import { formatShortDate } from '@web/lib/format/calendar'
 import { formatTypedAmount } from '@web/lib/format/money'
-import { useEffect, useRef } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 import { useFormContext, useWatch } from 'react-hook-form'
 
 const messages = entriesMessages.settlements
+const NEW_CONTACT = entriesMessages.shares.newContact
 const EMPTY = {
   icon: 'together',
   title: entriesMessages.shares.empty.title,
   text: entriesMessages.shares.empty.text,
 }
 
-export function ContactField({ workspaceId }: ContactFieldProps) {
+export function ContactField({ workspaceId, canCreateContacts }: ContactFieldProps) {
   const contacts = (useQuery(contactsQueryOptions(workspaceId)).data ?? []).filter(
     (contact) => !contact.isArchived,
   )
@@ -35,6 +40,8 @@ export function ContactField({ workspaceId }: ContactFieldProps) {
   const contactId = useWatch<EntryFormInput, 'contactId'>({ name: 'contactId' })
   const chosen = contacts.find((contact) => contact.id === contactId)
   useSettlementDefaults(chosen?.name, balanceOf.get(contactId))
+  usePickCreatedContact()
+  const openNewContact = useNewContactForm()
 
   return (
     <FormField<EntryFormInput> name="contactId" label={entriesMessages.fields.contact} isRequired>
@@ -47,11 +54,26 @@ export function ContactField({ workspaceId }: ContactFieldProps) {
           items={byMostOwed(contacts, balanceOf).map((contact) =>
             itemOf(contact.id, contact.name, balanceOf.get(contact.id)),
           )}
-          empty={EMPTY}
+          empty={
+            canCreateContacts
+              ? { ...EMPTY, actionLabel: NEW_CONTACT, onAction: openNewContact }
+              : EMPTY
+          }
+          action={canCreateContacts ? { label: NEW_CONTACT, onPress: openNewContact } : undefined}
         />
       )}
     </FormField>
   )
+}
+
+function usePickCreatedContact() {
+  const { setValue } = useFormContext<EntryFormInput>()
+  const pick = useCallback(
+    (contactId: string) =>
+      setValue('contactId', contactId, { shouldDirty: true, shouldValidate: true }),
+    [setValue],
+  )
+  useCreatedContact(pick)
 }
 
 function byMostOwed(

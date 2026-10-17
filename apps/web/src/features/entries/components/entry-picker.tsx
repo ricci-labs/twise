@@ -14,6 +14,7 @@ export function EntryPicker({
   layout,
   searchLabel,
   empty,
+  action,
 }: EntryPickerProps) {
   const [isOpen, setIsOpen] = useState(false)
   const anchor = useRef<HTMLButtonElement>(null)
@@ -54,6 +55,7 @@ export function EntryPicker({
           }
         }}
         onSelect={(value) => control.onChange({ target: { value } })}
+        action={action}
         empty={
           empty && {
             ...empty,

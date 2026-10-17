@@ -138,6 +138,7 @@ function EntryReplaceForm({
           canSeeContacts={hasPermission(permissions, 'contacts', 'view')}
           canCreateAccounts={hasPermission(permissions, 'accounts', 'create')}
           canCreateCards={hasPermission(permissions, 'cards', 'create')}
+          canCreateContacts={hasPermission(permissions, 'contacts', 'create')}
           isNewForm={false}
           autoFill={autoFill}
           amountInput={amountInput}

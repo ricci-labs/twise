@@ -7,6 +7,7 @@ import {
   accessAs,
   apiError,
   fakeApi,
+  OWNER_PERMISSIONS,
   VIEWER_PERMISSIONS,
   WORKSPACE_ID,
   workspaceAccess,
@@ -1035,5 +1036,74 @@ describe('ENT-02 and the planned bills', () => {
     await expect
       .element(page.getByRole('dialog', { name: 'Isto paga alguma conta prevista?' }))
       .not.toBeInTheDocument()
+  })
+})
+
+const MEMBER_E = '00000000-0000-4000-8000-0000000000d3'
+
+function newContactAnswers() {
+  const contacts = [contact(MEMBER_C, 'Member C'), contact(MEMBER_D, 'Member D')]
+  return {
+    [`GET ${BASE}/contacts`]: () => Response.json(contacts),
+    [`POST ${BASE}/contacts`]: async (request: Request) => {
+      const { name } = await request.json()
+      contacts.push(contact(MEMBER_E, name))
+      return Response.json({ contactId: MEMBER_E }, { status: 201 })
+    },
+  }
+}
+
+async function createContactNamed(name: string) {
+  await page.getByRole('button', { name: 'Novo contato' }).click()
+  await expect.element(page.getByRole('dialog', { name: 'Novo contato' })).toBeVisible()
+  await page.getByLabelText(/^Nome/).fill(name)
+  await page.getByRole('button', { name: 'Criar contato' }).click()
+  await expect.element(page.getByRole('dialog', { name: 'Novo contato' })).not.toBeInTheDocument()
+}
+
+describe('ENT-02 new contact from the pickers', () => {
+  afterEach(async () => {
+    vi.restoreAllMocks()
+    await page.viewport(414, 896)
+  })
+
+  it('creates a contact from the settlement picker and picks it', async () => {
+    const { app } = await openNewEntry({ answers: newContactAnswers() })
+    await page.getByRole('radio', { name: 'Mais' }).click()
+    await page.getByRole('button', { name: /^Recebimento de contato/ }).click()
+    await page.getByRole('button', { name: /^Contato/ }).click()
+
+    await createContactNamed('Member E')
+
+    await expectText(page.getByRole('button', { name: /^Contato/ }), /Member E/)
+    await expect.element(page.getByRole('dialog', { name: 'Novo lançamento' })).toBeVisible()
+    await expect.poll(() => app.router.state.location.search).toEqual({ entry: 'new' })
+  })
+
+  it('creates a contact from the split and adds it as a share', async () => {
+    await openNewEntry({ answers: newContactAnswers() })
+    await fillExpense()
+    await page.getByRole('button', { name: /Dividir com contatos/ }).click()
+
+    await createContactNamed('Member E')
+
+    await expect.element(page.getByRole('textbox', { name: 'Parte de Member E' })).toBeVisible()
+  })
+
+  it('offers no new contact to someone who cannot create contacts', async () => {
+    await openNewEntry({
+      access: () =>
+        accessAs(
+          'Membro',
+          OWNER_PERMISSIONS.filter(
+            (permission) => !(permission.module === 'contacts' && permission.action === 'create'),
+          ),
+        ),
+    })
+    await fillExpense()
+    await page.getByRole('button', { name: /Dividir com contatos/ }).click()
+
+    await expect.element(page.getByRole('button', { name: 'Member C' })).toBeVisible()
+    await expect.element(page.getByRole('button', { name: 'Novo contato' })).not.toBeInTheDocument()
   })
 })

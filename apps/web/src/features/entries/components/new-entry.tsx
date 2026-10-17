@@ -110,6 +110,7 @@ function NewEntryForm({
       canSeeContacts={hasPermission(permissions, 'contacts', 'view')}
       canCreateAccounts={hasPermission(permissions, 'accounts', 'create')}
       canCreateCards={hasPermission(permissions, 'cards', 'create')}
+      canCreateContacts={hasPermission(permissions, 'contacts', 'create')}
       today={todayIn(TIME_ZONE, new Date())}
       prefill={prefill}
       onClose={onClose}

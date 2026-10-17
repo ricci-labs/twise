@@ -9,9 +9,14 @@ import type { LeadFieldsProps, MoneyFieldsProps } from '@web/features/entries/en
 
 const fields = entriesMessages.fields
 
-export function LeadFields({ entryType, workspaceId, canCreateAccounts }: LeadFieldsProps) {
+export function LeadFields({
+  entryType,
+  workspaceId,
+  canCreateAccounts,
+  canCreateContacts,
+}: LeadFieldsProps) {
   if (entryType === 'settlement') {
-    return <ContactField workspaceId={workspaceId} />
+    return <ContactField workspaceId={workspaceId} canCreateContacts={canCreateContacts} />
   }
   if (entryType === 'opening_balance') {
     return (

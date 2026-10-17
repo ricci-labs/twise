@@ -11,14 +11,23 @@ import type {
   QuickFill,
   SharesFieldProps,
 } from '@web/features/entries/entries.types'
+import {
+  useCreatedContact,
+  useNewContactForm,
+} from '@web/features/entries/hooks/use-created-contact'
 import { centsOfTypedAmount, formatTypedAmount } from '@web/lib/format/money'
-import { useRef, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import { useController } from 'react-hook-form'
 
 const messages = entriesMessages.shares
 const EMPTY = { icon: 'together', title: messages.empty.title, text: messages.empty.text }
 
-export function SharesField({ workspaceId, yoursName, totals }: SharesFieldProps) {
+export function SharesField({
+  workspaceId,
+  canCreateContacts,
+  yoursName,
+  totals,
+}: SharesFieldProps) {
   const [isPicking, setIsPicking] = useState(false)
   const anchor = useRef<HTMLButtonElement>(null)
   const contacts = useQuery(contactsQueryOptions(workspaceId)).data ?? []
@@ -34,6 +43,23 @@ export function SharesField({ workspaceId, yoursName, totals }: SharesFieldProps
     .map((contact) => ({ value: contact.id, label: contact.name, isPerson: true }))
 
   const change = (next: EntryShareInput[]) => field.onChange(next)
+  const openNewContact = useNewContactForm()
+  const canAddNew = canCreateContacts && !isFull
+  useCreatedContact(
+    useCallback(
+      (contactId: string) => {
+        const current = field.value
+        if (
+          current.length >= MAX_SHARES_PER_ENTRY ||
+          current.some((share) => share.contactId === contactId)
+        ) {
+          return
+        }
+        field.onChange([...current, { contactId, amount: '' }])
+      },
+      [field],
+    ),
+  )
   const fill = (quickFill: QuickFill) => {
     if (totalCents === null) {
       return
@@ -56,7 +82,8 @@ export function SharesField({ workspaceId, yoursName, totals }: SharesFieldProps
       isOpen={isPicking}
       onOpenChange={setIsPicking}
       onSelect={(contactId) => change([...shares, { contactId, amount: '' }])}
-      empty={active.length === 0 ? EMPTY : undefined}
+      empty={active.length === 0 ? emptyOf(canAddNew, openNewContact) : undefined}
+      action={canAddNew ? { label: messages.newContact, onPress: openNewContact } : undefined}
     />
   )
 
@@ -99,6 +126,12 @@ export function SharesField({ workspaceId, yoursName, totals }: SharesFieldProps
       {picker}
     </>
   )
+}
+
+function emptyOf(canAddNew: boolean, openNewContact: () => void) {
+  return canAddNew
+    ? { ...EMPTY, actionLabel: messages.newContact, onAction: openNewContact }
+    : EMPTY
 }
 
 function errorOf(isOver: boolean, formError: string | undefined, isFull: boolean) {

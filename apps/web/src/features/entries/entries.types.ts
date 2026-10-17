@@ -14,7 +14,12 @@ import type { InstallmentRow } from '@web/components/finance/installment-rows'
 import type { ShareRow } from '@web/components/finance/share-rows'
 import type { TransferEnd } from '@web/components/finance/transfer-flow'
 import type { FieldControlProps } from '@web/components/forms/form-field'
-import type { PickerEmpty, PickerItem, PickerSheetProps } from '@web/components/inputs/picker-sheet'
+import type {
+  PickerAction,
+  PickerEmpty,
+  PickerItem,
+  PickerSheetProps,
+} from '@web/components/inputs/picker-sheet'
 import type {
   fetchAccounts,
   fetchBalances,
@@ -113,6 +118,7 @@ export type ContactBalance = Awaited<ReturnType<typeof fetchContactBalances>>[nu
 
 export type ContactFieldProps = {
   workspaceId: string
+  canCreateContacts: boolean
 }
 
 export type EntryContact = Awaited<ReturnType<typeof fetchContacts>>[number]
@@ -198,6 +204,7 @@ export type EntryFormProps = {
   canSeeContacts: boolean
   canCreateAccounts: boolean
   canCreateCards: boolean
+  canCreateContacts: boolean
   today: IsoDate
   prefill?: EntryPrefill
   onClose: () => void
@@ -248,6 +255,7 @@ export type LeadFieldsProps = {
   entryType: FormEntryType
   workspaceId: string
   canCreateAccounts: boolean
+  canCreateContacts: boolean
 }
 
 export type MoneyFieldsProps = {
@@ -303,6 +311,7 @@ export type EntryPickerProps = {
   layout?: PickerSheetProps['layout']
   searchLabel?: string
   empty?: PickerEmpty
+  action?: PickerAction
 }
 
 export type DateFieldProps = {
@@ -319,6 +328,7 @@ export type QuickFill = (totalCents: number, contactCount: number) => number[]
 
 export type SharesFieldProps = {
   workspaceId: string
+  canCreateContacts: boolean
   yoursName: string
   totals: ShareTotals
 }
@@ -616,6 +626,7 @@ export type EntryFormFieldsProps = {
   canSeeContacts: boolean
   canCreateAccounts: boolean
   canCreateCards: boolean
+  canCreateContacts: boolean
   isNewForm: boolean
   autoFill: AutoFillControls
   amountInput: RefObject<HTMLInputElement | null>
