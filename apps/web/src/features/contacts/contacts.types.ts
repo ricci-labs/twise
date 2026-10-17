@@ -60,6 +60,18 @@ export type ContactDetailPageProps = {
   contactId: string
   permissions: readonly Permission[]
   onNewCharge: () => void
+  onDeleted: () => void
+}
+
+export type ContactMenuDialog = 'archive' | 'delete' | null
+
+export type ContactDetailMenuProps = {
+  workspaceId: string
+  contact: Contact
+  owedCents: number
+  permissions: readonly Permission[]
+  onNewCharge: () => void
+  onDeleted: () => void
 }
 
 export type ContactDetailBodyProps = ContactDetailPageProps & {
@@ -70,6 +82,7 @@ export type ContactDetailBodyProps = ContactDetailPageProps & {
 }
 
 export type ContactDetailFrameProps = Pick<ContactDetailPageProps, 'workspaceId'> & {
+  actions?: ReactNode
   children: ReactNode
 }
 

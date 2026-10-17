@@ -9,6 +9,7 @@ import {
   CONTACT_D,
   CONTACT_D_OPEN_ITEMS,
   CONTACT_F,
+  CONTACT_G,
   contactAnswers,
 } from '@web/testing/contacts-api'
 import {
@@ -228,6 +229,94 @@ describe('CON-02 contact detail', () => {
     await expect.element(page.getByRole('button', { name: 'Copiar mensagem' })).toBeVisible()
     await expect
       .element(page.getByRole('button', { name: 'Ações da cobrança de 20/10' }))
+      .not.toBeInTheDocument()
+  })
+
+  it('opens the edit form from the pencil and from the actions', async () => {
+    const { app } = await openContact()
+
+    await page.getByRole('link', { name: 'Editar contato' }).click()
+    await expect.poll(() => app.router.state.location.search).toMatchObject({ contact: CONTACT_D })
+    await expect.element(page.getByRole('textbox', { name: 'Nome' })).toHaveValue('Member D')
+  })
+
+  it('marks the contact as not wanting messages from the actions', async () => {
+    let change: unknown = null
+    await openContact({
+      answers: {
+        [`PATCH ${BASE}/contacts/${CONTACT_D}`]: async (request) => {
+          change = await request.json()
+          return new Response(null, { status: 204 })
+        },
+      },
+    })
+    await page.getByRole('button', { name: 'Ações de Member D' }).click()
+    await page
+      .getByRole('dialog')
+      .getByRole('switch', { name: /Não quer receber mensagens/ })
+      .click()
+
+    await expect.element(page.getByText('Marcado: não quer receber mensagens.')).toBeVisible()
+    expect(change).toEqual({ isOptedOut: true })
+  })
+
+  it('explains why a contact who owes cannot be archived and offers the charge', async () => {
+    const { app } = await openContact()
+    await page.getByRole('button', { name: 'Ações de Member D' }).click()
+    await page.getByRole('dialog').getByRole('button', { name: 'Arquivar' }).click()
+
+    const blocked = page.getByRole('alertdialog', { name: 'Não dá para arquivar Member D' })
+    await expect.element(blocked.getByText(/Member D ainda deve R\$\s520,00\./)).toBeVisible()
+    await blocked.getByRole('button', { name: 'Nova cobrança' }).click()
+    await expect.poll(() => app.router.state.location.search).toMatchObject({ charge: 'new' })
+  })
+
+  it('unarchives an archived contact', async () => {
+    let change: unknown = null
+    await openContact({
+      contactId: CONTACT_G,
+      answers: {
+        [`PATCH ${BASE}/contacts/${CONTACT_G}`]: async (request) => {
+          change = await request.json()
+          return new Response(null, { status: 204 })
+        },
+      },
+    })
+    await page.getByRole('button', { name: 'Ações de Member G' }).click()
+    await page.getByRole('dialog').getByRole('button', { name: 'Desarquivar' }).click()
+
+    await expect.element(page.getByText('Contato desarquivado.')).toBeVisible()
+    expect(change).toEqual({ isArchived: false })
+  })
+
+  it('warns before deleting a contact who owes and goes back to the list', async () => {
+    let deleted = false
+    const { app } = await openContact({
+      answers: {
+        [`DELETE ${BASE}/contacts/${CONTACT_D}`]: () => {
+          deleted = true
+          return new Response(null, { status: 204 })
+        },
+      },
+    })
+    await page.getByRole('button', { name: 'Ações de Member D' }).click()
+    await page.getByRole('dialog').getByRole('button', { name: 'Excluir' }).click()
+
+    const confirm = page.getByRole('alertdialog', { name: 'Excluir Member D?' })
+    await expect.element(confirm.getByText(/não apaga as dívidas dos lançamentos/)).toBeVisible()
+    await confirm.getByRole('button', { name: 'Excluir' }).click()
+
+    await expect.poll(() => app.router.state.location.pathname).toBe(`/w/${WORKSPACE_ID}/contacts`)
+    expect(deleted).toBe(true)
+  })
+
+  it('gives a viewer no pencil and no actions', async () => {
+    await openContact({ access: () => accessAs('Leitor', VIEWER_PERMISSIONS) })
+
+    await expect.element(page.getByText('Mercado da semana')).toBeVisible()
+    await expect.element(page.getByRole('link', { name: 'Editar contato' })).not.toBeInTheDocument()
+    await expect
+      .element(page.getByRole('button', { name: 'Ações de Member D' }))
       .not.toBeInTheDocument()
   })
 })

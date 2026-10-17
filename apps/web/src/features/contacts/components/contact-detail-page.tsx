@@ -21,6 +21,7 @@ import {
   contactQueryOptions,
 } from '@web/features/contacts/api/contacts.queries'
 import { ContactCharges } from '@web/features/contacts/components/contact-charges'
+import { ContactDetailMenu } from '@web/features/contacts/components/contact-detail-menu'
 import {
   contactTilesOf,
   hasSomethingToCharge,
@@ -104,11 +105,12 @@ export function ContactDetailPage(props: ContactDetailPageProps) {
   )
 }
 
-function ContactDetailFrame({ workspaceId, children }: ContactDetailFrameProps) {
+function ContactDetailFrame({ workspaceId, actions, children }: ContactDetailFrameProps) {
   return (
     <PageFrame className="gap-4 lg:gap-5">
       <SubPageHeader
         title={messages.title}
+        actions={actions}
         backLabel={messages.back}
         back={<Link to="/w/$workspaceId/contacts" params={{ workspaceId }} />}
       />
@@ -125,11 +127,24 @@ function ContactDetailBody({
   openItems,
   today,
   onNewCharge,
+  onDeleted,
 }: ContactDetailBodyProps) {
   const owedCents = balance?.owedCents ?? 0
   const items = openItemsByDue(openItems, today)
   return (
-    <ContactDetailFrame workspaceId={workspaceId}>
+    <ContactDetailFrame
+      workspaceId={workspaceId}
+      actions={
+        <ContactDetailMenu
+          workspaceId={workspaceId}
+          contact={contact}
+          owedCents={owedCents}
+          permissions={permissions}
+          onNewCharge={onNewCharge}
+          onDeleted={onDeleted}
+        />
+      }
+    >
       <ContactHeader
         name={contact.name}
         owedCents={owedCents}
