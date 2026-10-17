@@ -21,10 +21,18 @@ describe('contactBalances', () => {
         contactId: 'j',
         owedCents: 31_000,
         overdueCents: 6_000,
+        overdueSince: '2026-10-10',
         nextDueOn: '2026-11-10',
         nextDueCents: 15_000,
       },
-      { contactId: 'm', owedCents: 3_000, overdueCents: 3_000, nextDueOn: null, nextDueCents: 0 },
+      {
+        contactId: 'm',
+        owedCents: 3_000,
+        overdueCents: 3_000,
+        overdueSince: '2026-10-01',
+        nextDueOn: null,
+        nextDueCents: 0,
+      },
     ])
   })
 
@@ -37,7 +45,7 @@ describe('contactBalances', () => {
       ],
       TODAY,
     )
-    expect(paidAhead).toMatchObject({ owedCents: 5_000, overdueCents: 0 })
+    expect(paidAhead).toMatchObject({ owedCents: 5_000, overdueCents: 0, overdueSince: null })
   })
 
   it('counts an item due today as overdue', () => {
@@ -46,5 +54,18 @@ describe('contactBalances', () => {
       TODAY,
     )
     expect(dueToday?.overdueCents).toBe(1_000)
+  })
+
+  it('dates the overdue from the oldest item the payments have not covered', () => {
+    const [partlyPaid] = contactBalances(
+      [
+        { contactId: 'j', amountCents: 8_000, effectiveOn: '2026-10-12' },
+        { contactId: 'j', amountCents: 12_000, effectiveOn: '2026-09-10' },
+        { contactId: 'j', amountCents: 5_000, effectiveOn: '2026-11-10' },
+        { contactId: 'j', amountCents: -12_000, effectiveOn: '2026-10-01' },
+      ],
+      TODAY,
+    )
+    expect(partlyPaid).toMatchObject({ overdueCents: 8_000, overdueSince: '2026-10-12' })
   })
 })

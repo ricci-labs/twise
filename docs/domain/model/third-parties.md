@@ -36,7 +36,7 @@ extension); deleting a contact frees both.
 |---|---|---|
 | `GET /contacts` | `contacts:view` | `listContacts`: active contacts by name: `id`, `name`, `phoneE164`, `email`, `pixKey`, `notes`, `isOptedOut`, `isArchived` |
 | `POST /contacts` | `contacts:create` | `createContact` `{ name, phoneE164?, email?, pixKey?, notes? }` → `201 { contactId }` |
-| `GET /contacts/balances` | `contacts:view` | `listContactBalances`: per active contact with postings, `{ contactId, name, phoneE164, email, owedCents, overdueCents, nextDueOn, nextDueCents, dueNotChargedCents, nextOpenDueOn, lastCharge }` (the phone and e-mail draw the channels line; the last three are the charge state, G63, below) |
+| `GET /contacts/balances` | `contacts:view` | `listContactBalances`: per active contact with postings, `{ contactId, name, phoneE164, email, owedCents, overdueCents, overdueSince, nextDueOn, nextDueCents, dueNotChargedCents, nextOpenDueOn, lastCharge }` (the phone and e-mail draw the channels line; the last three are the charge state, G63, below) |
 | `GET /contacts/upcoming?limit=` | `contacts:view` | `listUpcomingContactItems`: the next open items due **after today** across active contacts, soonest first (then by contact name), charged or not: `{ contactId, contactName, postingId, description, installmentNo, installmentCount, dueOn, remainingCents }`; `limit` 1–50, default 5 (`400 UPCOMING_CONTACT_ITEMS_QUERY_INVALID`). The desktop's "Próximos vencimentos" (G63) |
 | `GET /contacts/:contactId` | `contacts:view` | `getContact`: one active contact, as in the list; a deleted one is `404 CONTACT_NOT_FOUND` |
 | `PATCH /contacts/:contactId` | `contacts:update` | `changeContact`: only the fields sent (`null` clears `phoneE164`, `email`, `pixKey`, `notes`), plus `isOptedOut` and `isArchived` → `204` |
@@ -181,6 +181,8 @@ the invoice total never changed, and the incoming money is in the account.
   - owed = the sum of the lines;
   - overdue = what fell due up to today (including today) minus everything paid, never below
     zero. A payment ahead of time counts against what's due;
+  - overdue since = the due date of the oldest item the payments haven't covered (oldest first),
+    null when nothing is overdue ("vencido desde 10/10")
   - next due = the earliest future date and its total.
 - The dashboard warns about each contact with something overdue (insight `contact_overdue`).
 - **Own vs fronted on card invoices:** `GET /cards/:cardId/invoices` adds `frontedCents` (the receivable lines of the same entries and installments) and `ownCents` (total − fronted) to each invoice. Each line of `GET …/invoices/:invoiceId/lines` gets its `frontedCents`.

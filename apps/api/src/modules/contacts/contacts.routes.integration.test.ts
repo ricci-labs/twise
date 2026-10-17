@@ -245,6 +245,7 @@ describe('contact balances and archiving', () => {
       email: 'contact.owing@example.com',
       owedCents: 11_000,
       overdueCents: 6_000,
+      overdueSince: addDays(today, -5),
       nextDueOn: addDays(today, 10),
       nextDueCents: 5_000,
       dueNotChargedCents: 6_000,
