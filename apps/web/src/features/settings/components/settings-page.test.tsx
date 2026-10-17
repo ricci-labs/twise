@@ -9,7 +9,13 @@ import {
   workspaceAccess,
   workspaceList,
 } from '@web/testing/fake-api'
-import { holidaysAnswer, NO_PIX, workspaceSettingsAnswer } from '@web/testing/settings-api'
+import {
+  chargeTextAnswer,
+  holidaysAnswer,
+  NO_PIX,
+  WORKSPACE_TEXT,
+  workspaceSettingsAnswer,
+} from '@web/testing/settings-api'
 import type { FakeAnswer } from '@web/testing/testing.types'
 import { beforeEach, describe, expect, it } from 'vitest'
 import { page } from 'vitest/browser'
@@ -22,6 +28,7 @@ async function openSettings(answers: Record<string, FakeAnswer> = {}) {
     [`GET /api/workspaces/${WORKSPACE_ID}`]: workspaceAccess,
     ...holidaysAnswer(),
     ...workspaceSettingsAnswer(),
+    ...chargeTextAnswer(),
     ...answers,
   })
   const app = createApp(createMemoryHistory({ initialEntries: [`/w/${WORKSPACE_ID}/settings`] }))
@@ -78,6 +85,30 @@ describe('Configurações', () => {
     await openSettings(workspaceSettingsAnswer(NO_PIX))
     await expect
       .element(page.getByRole('link', { name: /Recebimento por Pix/ }).getByText('Não configurado'))
+      .toBeVisible()
+  })
+
+  it('lists the charge text under Recebimentos and opens it', async () => {
+    const app = await openSettings()
+    const text = page
+      .getByRole('region', { name: 'Recebimentos' })
+      .getByRole('link', { name: /Mensagem das cobranças/ })
+    await expect.element(text.getByText('Texto padrão')).toBeVisible()
+    await text.click()
+    await expect
+      .poll(() => app.router.state.location.pathname)
+      .toBe(`/w/${WORKSPACE_ID}/settings/charge-text`)
+    await expect
+      .element(page.getByRole('heading', { name: 'Mensagem das cobranças', level: 1 }))
+      .toBeVisible()
+  })
+
+  it('says when the workspace wrote its own charge text', async () => {
+    await openSettings(chargeTextAnswer(WORKSPACE_TEXT))
+    await expect
+      .element(
+        page.getByRole('link', { name: /Mensagem das cobranças/ }).getByText('Texto do espaço'),
+      )
       .toBeVisible()
   })
 

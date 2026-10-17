@@ -6,6 +6,7 @@ import { PageFrame } from '@web/components/layout/page-frame'
 import { PageHeader } from '@web/components/layout/page-header'
 import { SettingsRow } from '@web/components/navigation/settings-row'
 import {
+  chargeTextQueryOptions,
   holidaysQueryOptions,
   todayQueryOptions,
   workspaceSettingsQueryOptions,
@@ -13,6 +14,7 @@ import {
 import { holidaySummaryText } from '@web/features/settings/components/holiday-views'
 import { settingsMessages as messages } from '@web/features/settings/settings.messages'
 import type {
+  ChargeTextRowProps,
   HolidaysRowProps,
   PixRowProps,
   SettingsPageProps,
@@ -22,6 +24,7 @@ import { hasPermission } from '@web/lib/permissions'
 
 const HOLIDAYS_ART = 'calendar'
 const PIX_ART = 'coin'
+const CHARGE_TEXT_ART = 'list'
 
 export function SettingsPage({ workspaceId, permissions }: SettingsPageProps) {
   usePageTitle(messages.pageTitle)
@@ -37,6 +40,7 @@ export function SettingsPage({ workspaceId, permissions }: SettingsPageProps) {
         {hasPermission(permissions, 'settings', 'view') && (
           <AccountGroup title={messages.groups.receiving}>
             <PixRow workspaceId={workspaceId} />
+            <ChargeTextRow workspaceId={workspaceId} />
           </AccountGroup>
         )}
       </div>
@@ -73,6 +77,23 @@ function PixRow({ workspaceId }: PixRowProps) {
       link={<Link to="/w/$workspaceId/settings/pix" params={{ workspaceId }} />}
     />
   )
+}
+
+function ChargeTextRow({ workspaceId }: ChargeTextRowProps) {
+  const text = useQuery(chargeTextQueryOptions(workspaceId)).data
+  const row = messages.chargeTextRow
+  return (
+    <SettingsRow
+      title={row.title}
+      detail={text && chargeTextRowDetail(text.isDefault)}
+      icon={CHARGE_TEXT_ART}
+      link={<Link to="/w/$workspaceId/settings/charge-text" params={{ workspaceId }} />}
+    />
+  )
+}
+
+function chargeTextRowDetail(isDefault: boolean): string {
+  return isDefault ? messages.chargeTextRow.standard : messages.chargeTextRow.custom
 }
 
 function pixRowDetail(receiverName: string | null): string {

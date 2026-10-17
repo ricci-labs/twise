@@ -40,3 +40,18 @@ export function fetchHolidays(workspaceId: string, year: number) {
     workspaceApi.holidays.$get({ param: { workspaceId }, query: { year: String(year) } }),
   )
 }
+
+export function chargeTextQueryOptions(workspaceId: string) {
+  return queryOptions({
+    queryKey: chargeTextKey(workspaceId),
+    queryFn: () => fetchChargeText(workspaceId),
+  })
+}
+
+export function chargeTextKey(workspaceId: string) {
+  return [...queryKeys.workspace(workspaceId), 'settings', 'charge-text'] as const
+}
+
+export function fetchChargeText(workspaceId: string) {
+  return unwrap(workspaceApi.settings['charge-text'].$get({ param: { workspaceId } }))
+}
