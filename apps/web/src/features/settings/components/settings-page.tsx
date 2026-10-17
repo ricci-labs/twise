@@ -8,14 +8,20 @@ import { SettingsRow } from '@web/components/navigation/settings-row'
 import {
   holidaysQueryOptions,
   todayQueryOptions,
+  workspaceSettingsQueryOptions,
 } from '@web/features/settings/api/settings.queries'
 import { holidaySummaryText } from '@web/features/settings/components/holiday-views'
 import { settingsMessages as messages } from '@web/features/settings/settings.messages'
-import type { HolidaysRowProps, SettingsPageProps } from '@web/features/settings/settings.types'
+import type {
+  HolidaysRowProps,
+  PixRowProps,
+  SettingsPageProps,
+} from '@web/features/settings/settings.types'
 import { usePageTitle } from '@web/hooks/use-page-title'
 import { hasPermission } from '@web/lib/permissions'
 
 const HOLIDAYS_ART = 'calendar'
+const PIX_ART = 'coin'
 
 export function SettingsPage({ workspaceId, permissions }: SettingsPageProps) {
   usePageTitle(messages.pageTitle)
@@ -26,6 +32,11 @@ export function SettingsPage({ workspaceId, permissions }: SettingsPageProps) {
         {hasPermission(permissions, 'planning', 'view') && (
           <AccountGroup title={messages.groups.planning}>
             <HolidaysRow workspaceId={workspaceId} />
+          </AccountGroup>
+        )}
+        {hasPermission(permissions, 'settings', 'view') && (
+          <AccountGroup title={messages.groups.receiving}>
+            <PixRow workspaceId={workspaceId} />
           </AccountGroup>
         )}
       </div>
@@ -50,4 +61,20 @@ function HolidaysRow({ workspaceId }: HolidaysRowProps) {
       link={<Link to="/w/$workspaceId/settings/holidays" params={{ workspaceId }} />}
     />
   )
+}
+
+function PixRow({ workspaceId }: PixRowProps) {
+  const settings = useQuery(workspaceSettingsQueryOptions(workspaceId)).data
+  return (
+    <SettingsRow
+      title={messages.pixRow.title}
+      detail={settings ? pixRowDetail(settings.pixReceiverName) : undefined}
+      icon={PIX_ART}
+      link={<Link to="/w/$workspaceId/settings/pix" params={{ workspaceId }} />}
+    />
+  )
+}
+
+function pixRowDetail(receiverName: string | null): string {
+  return receiverName === null ? messages.pixRow.missing : messages.pixRow.configured(receiverName)
 }

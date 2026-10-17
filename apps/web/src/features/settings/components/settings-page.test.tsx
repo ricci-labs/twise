@@ -9,17 +9,20 @@ import {
   workspaceAccess,
   workspaceList,
 } from '@web/testing/fake-api'
-import { holidaysAnswer } from '@web/testing/settings-api'
+import { holidaysAnswer, NO_PIX, workspaceSettingsAnswer } from '@web/testing/settings-api'
+import type { FakeAnswer } from '@web/testing/testing.types'
 import { beforeEach, describe, expect, it } from 'vitest'
 import { page } from 'vitest/browser'
 import { render } from 'vitest-browser-react'
 
-async function openSettings() {
+async function openSettings(answers: Record<string, FakeAnswer> = {}) {
   fakeApi({
     'GET /api/auth/me': account,
     'GET /api/workspaces': () => workspaceList(),
     [`GET /api/workspaces/${WORKSPACE_ID}`]: workspaceAccess,
     ...holidaysAnswer(),
+    ...workspaceSettingsAnswer(),
+    ...answers,
   })
   const app = createApp(createMemoryHistory({ initialEntries: [`/w/${WORKSPACE_ID}/settings`] }))
   await render(<AppProviders app={app} />)
@@ -55,6 +58,27 @@ describe('Configurações', () => {
       .poll(() => app.router.state.location.pathname)
       .toBe(`/w/${WORKSPACE_ID}/settings/holidays`)
     await expect.element(page.getByRole('heading', { name: 'Feriados', level: 1 })).toBeVisible()
+  })
+
+  it('lists the Pix under Recebimentos with who receives it and opens it', async () => {
+    const app = await openSettings()
+    const receiving = page.getByRole('region', { name: 'Recebimentos' })
+    const pix = receiving.getByRole('link', { name: /Recebimento por Pix/ })
+    await expect.element(pix.getByText('Chave cadastrada · MEMBER A')).toBeVisible()
+    await pix.click()
+    await expect
+      .poll(() => app.router.state.location.pathname)
+      .toBe(`/w/${WORKSPACE_ID}/settings/pix`)
+    await expect
+      .element(page.getByRole('heading', { name: 'Recebimento por Pix', level: 1 }))
+      .toBeVisible()
+  })
+
+  it('says when the Pix is not configured', async () => {
+    await openSettings(workspaceSettingsAnswer(NO_PIX))
+    await expect
+      .element(page.getByRole('link', { name: /Recebimento por Pix/ }).getByText('Não configurado'))
+      .toBeVisible()
   })
 
   it('marks Configurações in the desktop menu', async () => {

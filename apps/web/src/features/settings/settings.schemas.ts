@@ -5,6 +5,7 @@ import {
   nationalHolidays,
   newHolidaySchema,
   parseIsoDate,
+  pixReceivingSchema,
 } from '@financas/shared'
 import { settingsMessages } from '@web/features/settings/settings.messages'
 import { z } from 'zod'
@@ -20,6 +21,8 @@ export const holidaysSearchSchema = z.object({
     .optional()
     .catch(undefined),
 })
+
+export const pixFormSchema = pixReceivingSchema.unwrap()
 
 export function holidayFormSchemaFor(takenDates: ReadonlySet<IsoDate>) {
   return z.strictObject({

@@ -2,16 +2,24 @@ import type { IsoDate, Permission } from '@financas/shared'
 import type { UseQueryResult } from '@tanstack/react-query'
 import type { MiniMonthHoliday } from '@web/components/display/mini-month-calendar'
 import type { HolidayStatus } from '@web/components/finance/holiday-row'
-import type { fetchHolidays } from '@web/features/settings/api/settings.queries'
+import type {
+  fetchHolidays,
+  fetchWorkspaceSettings,
+} from '@web/features/settings/api/settings.queries'
 import type {
   holidayFormSchemaFor,
   holidaysSearchSchema,
+  pixFormSchema,
 } from '@web/features/settings/settings.schemas'
 import type { z } from 'zod'
 
 export type HolidaysSearch = z.infer<typeof holidaysSearchSchema>
 
 export type HolidayFormInput = z.input<ReturnType<typeof holidayFormSchemaFor>>
+
+export type PixFormInput = z.input<typeof pixFormSchema>
+
+export type WorkspaceSettings = Awaited<ReturnType<typeof fetchWorkspaceSettings>>
 
 export type HolidaysOfYear = Awaited<ReturnType<typeof fetchHolidays>>
 
@@ -44,6 +52,31 @@ export type SettingsPageProps = {
 
 export type HolidaysRowProps = {
   workspaceId: string
+}
+
+export type PixRowProps = {
+  workspaceId: string
+}
+
+export type PixPageProps = {
+  workspaceId: string
+  workspaceName: string
+  permissions: readonly Permission[]
+}
+
+export type PixContentProps = {
+  workspaceId: string
+  canUpdate: boolean
+  lead: string | null
+}
+
+export type PixSettingsFormProps = PixContentProps & {
+  settings: WorkspaceSettings
+}
+
+export type PixBankPreviewProps = {
+  receiverName: string
+  receiverCity: string
 }
 
 export type HolidaysPageProps = {

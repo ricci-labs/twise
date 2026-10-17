@@ -16,6 +16,17 @@ export function todayQueryOptions(workspaceId: string) {
   })
 }
 
+export function workspaceSettingsQueryOptions(workspaceId: string) {
+  return queryOptions({
+    queryKey: [...queryKeys.workspace(workspaceId), 'settings'] as const,
+    queryFn: () => fetchWorkspaceSettings(workspaceId),
+  })
+}
+
+export function fetchWorkspaceSettings(workspaceId: string) {
+  return unwrap(workspaceApi.settings.$get({ param: { workspaceId } }))
+}
+
 export function holidaysQueryOptions(workspaceId: string, year: number) {
   return queryOptions({
     queryKey: [...queryKeys.workspace(workspaceId), 'holidays', year] as const,

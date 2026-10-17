@@ -1,4 +1,5 @@
 export { HolidaysPage } from '@web/features/settings/components/holidays-page'
+export { PixPage } from '@web/features/settings/components/pix-page'
 export { SettingsPage } from '@web/features/settings/components/settings-page'
 export { holidaysSearchSchema } from '@web/features/settings/settings.schemas'
 export type { HolidaysSearch } from '@web/features/settings/settings.types'
