@@ -41,6 +41,7 @@ export const Route = createFileRoute('/_app/w/$workspaceId')({
       kind,
       card,
       contact,
+      contactFor,
     } = Route.useSearch()
     const { account, access } = Route.useRouteContext()
     const navigate = useNavigate()
@@ -51,6 +52,11 @@ export const Route = createFileRoute('/_app/w/$workspaceId')({
       navigate({
         to: '.',
         search: (previous) => ({ ...previous, account: undefined, accountFor: undefined }),
+      })
+    const closeContactForm = () =>
+      navigate({
+        to: '.',
+        search: (previous) => ({ ...previous, contact: undefined, contactFor: undefined }),
       })
     const closeCardForm = () =>
       navigate({
@@ -142,6 +148,30 @@ export const Route = createFileRoute('/_app/w/$workspaceId')({
             })
           }}
         />
+        <ContactEditor
+          workspaceId={workspaceId}
+          permissions={access.permissions}
+          param={contact}
+          onClose={closeContactForm}
+          onCreated={(contactId) => {
+            if (contactFor) {
+              navigate({
+                to: '.',
+                search: (previous) => ({
+                  ...previous,
+                  contact: undefined,
+                  contactFor: undefined,
+                  createdContact: contactId,
+                }),
+              })
+              return
+            }
+            navigate({
+              to: '/w/$workspaceId/contacts/$contact',
+              params: { workspaceId, contact: contactId },
+            })
+          }}
+        />
         <CardEditor
           workspaceId={workspaceId}
           currentUserId={account.userId}
@@ -173,20 +203,6 @@ export const Route = createFileRoute('/_app/w/$workspaceId')({
               to: '/w/$workspaceId/categories',
               params: { workspaceId },
               search: { kind: createdKind, created: accountId },
-            })
-          }
-        />
-        <ContactEditor
-          workspaceId={workspaceId}
-          permissions={access.permissions}
-          param={contact}
-          onClose={() =>
-            navigate({ to: '.', search: (previous) => ({ ...previous, contact: undefined }) })
-          }
-          onCreated={(contactId) =>
-            navigate({
-              to: '/w/$workspaceId/contacts/$contact',
-              params: { workspaceId, contact: contactId },
             })
           }
         />

@@ -30,6 +30,7 @@ export function EntryFormFields({
   canSeeContacts,
   canCreateAccounts,
   canCreateCards,
+  canCreateContacts,
   isNewForm,
   autoFill,
   amountInput,
@@ -65,6 +66,7 @@ export function EntryFormFields({
           entryType={entryType}
           workspaceId={workspaceId}
           canCreateAccounts={canCreateAccounts}
+          canCreateContacts={canCreateContacts}
         />
         <AmountField
           isOpeningBalance={isOpeningBalance}
@@ -100,6 +102,7 @@ export function EntryFormFields({
           <div className="lg:col-span-2">
             <SharesField
               workspaceId={workspaceId}
+              canCreateContacts={canCreateContacts}
               yoursName={currentUserName}
               totals={shareTotals}
             />

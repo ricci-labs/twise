@@ -1,7 +1,7 @@
 ---
 summary: Phases, MVP scope, current focus and the list of open questions.
 read_when: Deciding what to build next, checking whether something is in scope, or resuming work in a new session.
-updated: 2026-10-16
+updated: 2026-10-17
 ---
 
 # Roadmap
@@ -222,7 +222,7 @@ updated: 2026-10-16
   12. [x] Web: shares with contacts (the contact picker with search; "Metade" gives the contacts
       half and "Dividir igualmente" splits between you and them, the rounding cents staying in
       "Sua parte" (shared `equalShares` / `halfShares`); saving waits while the sum passes the
-      total). Waiting on the contacts round: "Novo contato" in the picker (`CON-05`)
+      total). "Novo contato" in the picker (`CON-05`) came with the contacts round
   13. [ ] Web: income, transfer (and from `HOME-03`), invoice payment, settlement, opening balance
       - [x] Income ("Recebido em", the income categories with their "Fixa" / "Variável" badge) and
         transfer ("De" and "Para", never the same account); waiting on `HOME-03`: the "Ver
@@ -238,8 +238,8 @@ updated: 2026-10-16
         `CARD-02` and `CARD-03`, which open it on that invoice
       - [x] Settlement ("Contato" first, each contact with what they owe and when it is due or
         the red "em atraso" badge, the amount and "{nome} pagou" filled from it, an amber warning
-        when receiving more). Waiting on the contacts round: "Novo contato" (`CON-05`) and
-        opening it from `CON-02`
+        when receiving more). "Novo contato" (`CON-05`) and opening it from `CON-02` ("Registrar
+        recebimento") came with the contacts round
   14. [x] Web: the desktop dialog for the other types (the type pills in one row, "Mais" as a
       384 px popover under its pill, each type's fields in the two columns)
   15. [x] Web: "Repetir um recente" and the suggestion that fills the rest (the row of the current

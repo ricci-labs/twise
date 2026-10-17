@@ -184,6 +184,7 @@ export const entriesMessages = {
   shares: {
     picker: 'Contato',
     search: 'Buscar contato',
+    newContact: 'Novo contato',
     exceed: 'A soma das partes passa do valor total.',
     notPositive: 'Informe um valor maior que zero.',
     limit: 'Até 10 contatos por lançamento.',
