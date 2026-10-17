@@ -37,6 +37,11 @@ export function toYearMonthLabel({ year, month }: YearMonth): string {
   return `${padYear(year)}-${padTwoDigits(month)}`
 }
 
+export function toBrazilianDate(date: IsoDate): string {
+  const { year, month, day } = parseIsoDate(date)
+  return `${padTwoDigits(day)}/${padTwoDigits(month)}/${padYear(year)}`
+}
+
 export function daysInMonth({ year, month }: YearMonth): number {
   return new Date(Date.UTC(year, month, 0)).getUTCDate()
 }

@@ -1,7 +1,7 @@
 ---
 summary: Coding conventions — naming, money, dates, IDs, errors, validation, tests, migrations, commits.
 read_when: Writing or reviewing any code.
-updated: 2026-10-15
+updated: 2026-10-16
 ---
 
 # Conventions
@@ -34,7 +34,7 @@ without comments.
   In `packages/shared/src` the concepts are grouped by area, mirroring the API modules: `core/`
   (money, calendar, paging, deletion), `identity/` (identity, workspaces, access, members,
   invitations, notifications), `ledger/` (ledger, cards, installments), `contacts/` (contacts,
-  charges, pix), `planning/` (planning, recurrence, budgets, goals, allocation), `reports/`
+  charges, charge-text, pix), `planning/` (planning, recurrence, budgets, goals, allocation), `reports/`
   (reports, metrics, insights, simulation); `attachments/` and `audit/` stand alone. A new concept
   goes into the area of the module that owns it: `@shared/<area>/<concept>/<concept>.ts`.
 - **Every type lives in a `<concept>.types.ts` file**, exported or not, in every folder, tests

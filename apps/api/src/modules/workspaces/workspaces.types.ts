@@ -49,6 +49,9 @@ export type SettingsUpdate = Omit<WorkspaceSettingsChange, 'periodAnchorValue'> 
   pixReceivingKey?: string | null
   pixReceiverName?: string | null
   pixReceiverCity?: string | null
+  chargeSubject?: string | null
+  chargeOpening?: string | null
+  chargeClosing?: string | null
 }
 
 export type WorkspaceRouteDeps = {

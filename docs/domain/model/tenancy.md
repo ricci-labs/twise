@@ -1,7 +1,7 @@
 ---
 summary: Identity and multi-tenancy tables — users, WhatsApp identities, workspaces, memberships, invitations — and all settings/preferences tables (financial period, installment view, notifications).
 read_when: Working on auth, workspaces, memberships, invitations, settings screens, or anything scoped by tenant.
-updated: 2026-09-29
+updated: 2026-10-16
 ---
 
 # Tenancy, identity and settings
@@ -193,6 +193,9 @@ They live in `onboarding` because they span `members`, `access`, `identity` and 
 | `GET /api/workspaces/:workspaceId/settings` | `settings:view` | every setting below |
 | `PATCH /api/workspaces/:workspaceId/settings` | `settings:update` | `workspaceSettingsChangeSchema` (shared): currency, time zone (IANA), locale, financial period (anchor and value together; `calendar_month` clears the value), installment view, budget base, week start → the updated settings. A value the DB rules refuse is `400 SETTINGS_INVALID` |
 | `PUT /api/workspaces/:workspaceId/settings/pix` | `settings:update` | `pixReceivingSchema`: `{ key, receiverName (≤ 25), receiverCity (≤ 15) }` sets the Pix that charges carry; `null` removes it → `204`; `400 PIX_INVALID` |
+| `GET /api/workspaces/:workspaceId/settings/charge-text` | `settings:view` | `{ subject, opening, closing, isDefault }`, the defaults until the workspace changes them |
+| `PUT /api/workspaces/:workspaceId/settings/charge-text` | `settings:update` | `chargeTextSchema`: `{ subject, opening, closing }` (`closing` may be `null`, the channel default) → the same body as `GET`. A shape error or an issue of `chargeTextIssues` is `400 CHARGE_TEXT_INVALID` with `details` `{ field, reason: 'empty' \| 'unknown_tag' \| 'too_long', tag?, maxLength? }` (the first issue) |
+| `DELETE /api/workspaces/:workspaceId/settings/charge-text` | `settings:update` | back to the default → `204` |
 
 The enum values (`PERIOD_ANCHORS`, `INSTALLMENT_BUDGET_VIEWS`, `BUDGET_BASES`) live in
 `@financas/shared` (`workspaces.constants.ts`), so the tables and the web use the same lists.
@@ -216,6 +219,7 @@ Created with defaults by `createWorkspace()`. Every rule below is a CHECK constr
 | `pix_receiver_name`, `pix_receiver_city` | text null | null | Required by the Pix payload format |
 | `contact_messages_daily_cap` | smallint | 20 | Anti-ban guard for charges to contacts |
 | `charge_reminder_every_days` | smallint null | 3 | Re-send interval for unpaid charges; null = no reminders |
+| `charge_subject`, `charge_opening`, `charge_closing` | text null | null | The workspace's charge text (G64, `third-parties.md` → Charge text). All null = the default; subject and opening are set together; a null closing is each channel's default. Lengths 1–120, 1–300, 0–300 |
 
 **Financial period examples** (`planning.md` has the algorithm):
 | Anchor | Value | Period labeled `2026-10` |

@@ -5,12 +5,16 @@ import { authorize, currentWorkspace } from '@api/modules/access'
 import { createWorkspace } from '@api/modules/onboarding'
 import {
   changeWorkspaceSettings,
+  getChargeText,
   getWorkspaceSettings,
   renameWorkspace,
+  resetChargeText,
+  setChargeText,
   setPixReceiving,
 } from '@api/modules/workspaces/workspaces.service'
 import type { WorkspaceRouteDeps } from '@api/modules/workspaces/workspaces.types'
 import {
+  chargeTextSchema,
   pixReceivingSchema,
   workspaceNameRequestSchema,
   workspaceSettingsChangeSchema,
@@ -69,4 +73,20 @@ export function workspaceSettingsRoutes({ db }: WorkspaceRouteDeps) {
         return c.body(null, NO_CONTENT)
       },
     )
+    .get('/settings/charge-text', authorize('settings', 'view'), async (c) => {
+      return c.json(await getChargeText(db, currentWorkspace(c).workspaceId))
+    })
+    .put(
+      '/settings/charge-text',
+      authorize('settings', 'update'),
+      jsonBody(chargeTextSchema, 'CHARGE_TEXT_INVALID'),
+      async (c) => {
+        const { workspaceId } = currentWorkspace(c)
+        return c.json(await setChargeText(db, workspaceId, c.req.valid('json')))
+      },
+    )
+    .delete('/settings/charge-text', authorize('settings', 'update'), async (c) => {
+      await resetChargeText(db, currentWorkspace(c).workspaceId)
+      return c.body(null, NO_CONTENT)
+    })
 }

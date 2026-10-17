@@ -35,7 +35,11 @@ import {
   readPostingDetails,
   recordEntryInTransaction,
 } from '@api/modules/ledger'
-import { currentWorkspaceSettings } from '@api/modules/workspaces'
+import {
+  currentChargeText,
+  currentWorkspaceSettings,
+  findCurrentWorkspace,
+} from '@api/modules/workspaces'
 import {
   type ChargeStatus,
   chargeMessage,
@@ -112,10 +116,12 @@ export async function createCharge(
     const messageText = chargeMessage({
       contactName: contact.name,
       requesterName: requester.displayName,
+      workspaceName: (await findCurrentWorkspace(tx))?.name ?? '',
       items,
       totalCents,
       dueOn,
       pixPayload,
+      text: await currentChargeText(tx),
     })
     await updateCharge(tx, chargeId, { messageText, pixPayload })
     await auditCreation(tx, chargeAuditTarget(workspaceId, chargeId))

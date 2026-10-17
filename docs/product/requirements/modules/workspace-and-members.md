@@ -107,8 +107,9 @@ cobranças sairão sem o Pix copia e cola."). Error `PIX_INVALID`.
 
 ## SET-03 Charge text (MVP)
 "Mensagem das cobranças", a page under Configurações (`/configuracoes/mensagem-das-cobrancas`),
-also reached from "Mudar o texto padrão das cobranças" after creating a charge. `GET/PUT/DELETE
-/settings/charge-text` (G64), `settings:update`. Design: `../../../design/contacts/emails.md` and
+also reached from "Mudar o texto padrão das cobranças" after creating a charge. `GET
+/settings/charge-text` (`settings:view`: members read it, viewers don't open Configurações),
+`PUT/DELETE` (`settings:update`), G64. Design: `../../../design/contacts/emails.md` and
 the `Texto` screens.
 **RF-WS-7** The workspace customizes three parts; the rest of the WhatsApp message and of the
 e-mail is fixed (greeting, heading, items, total, due date, Pix, notes, footer, opt-out link),
@@ -117,7 +118,7 @@ explained under a padlock.
 |---|---|---|---|
 | subject | "Assunto do e-mail" | "{quem cobra} te enviou uma cobrança de {valor}" | 1–120 after filling the tags |
 | opening | "Abertura" (e-mail and WhatsApp) | "{quem cobra} pediu para te lembrar do que está em aberto. Dá para pagar com Pix, o valor já vem preenchido." | 1–300 |
-| closing | "Encerramento" (e-mail and WhatsApp) | "Qualquer dúvida, é só responder este e-mail." (WhatsApp: none by default) | 0–300 |
+| closing | "Encerramento" (e-mail and WhatsApp) | "Qualquer dúvida, é só responder este e-mail." (WhatsApp: none by default) | 0–300; untouched it stays `null`, each channel's default, so the e-mail sentence never goes to WhatsApp |
 Tags `{contato}`, `{quem cobra}`, `{valor}`, `{vencimento}`, `{espaço}` are inserted by buttons
 ("Nome do contato", "Quem cobra", "Valor", "Vencimento", "Espaço") and shown as chips. An unknown
 tag is a field error ("Esta informação não existe: {apelido}. Use os botões abaixo para inserir.",

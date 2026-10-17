@@ -1,3 +1,4 @@
+import { chargeClosingFor, fillChargeTags } from '@shared/contacts/charge-text/charge-text'
 import type { ChargeStatus } from '@shared/contacts/charges/charges.constants'
 import type {
   ChargeableItem,
@@ -5,6 +6,7 @@ import type {
   OpenItem,
 } from '@shared/contacts/charges/charges.types'
 import type { IsoDate } from '@shared/core/calendar/calendar.types'
+import { toBrazilianDate } from '@shared/core/calendar/dates'
 import { formatBrl } from '@shared/core/money/money'
 
 export function openItems(
@@ -36,12 +38,14 @@ export function chargeMessage(input: ChargeMessageInput): string {
   const lines = input.items.map(
     (item) => `• ${item.description}${installmentLabel(item)} — ${formatBrl(item.remainingCents)}`,
   )
+  const closing = fillChargeTags(chargeClosingFor(input.text.closing, 'whatsapp'), input)
   return [
-    `Oi, ${input.contactName}! ${input.requesterName} pediu para te lembrar do que está em aberto:`,
+    `Oi, ${input.contactName}! ${fillChargeTags(input.text.opening, input)}`,
     ...lines,
     `Total: ${formatBrl(input.totalCents)}`,
-    ...(input.dueOn ? [`Vencimento: ${brazilianDate(input.dueOn)}`] : []),
+    ...(input.dueOn ? [`Vencimento: ${toBrazilianDate(input.dueOn)}`] : []),
     ...(input.pixPayload ? ['Pix copia e cola:', input.pixPayload] : []),
+    ...(closing ? [closing] : []),
   ].join('\n')
 }
 
@@ -49,11 +53,6 @@ function installmentLabel(item: OpenItem): string {
   return item.installmentNo !== null && item.installmentCount > 1
     ? ` (parcela ${item.installmentNo}/${item.installmentCount})`
     : ''
-}
-
-function brazilianDate(date: IsoDate): string {
-  const [year, month, day] = date.split('-')
-  return `${day}/${month}/${year}`
 }
 
 export function chargeStatusOf(

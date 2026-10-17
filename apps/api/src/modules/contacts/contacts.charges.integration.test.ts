@@ -12,7 +12,7 @@ import {
   payCharge,
 } from '@api/modules/contacts'
 import { createAccount, createCard, deleteEntry, recordEntry } from '@api/modules/ledger'
-import { setPixReceiving } from '@api/modules/workspaces'
+import { resetChargeText, setChargeText, setPixReceiving } from '@api/modules/workspaces'
 import { testAppDeps } from '@api/testing/app'
 import { connectTestDatabases } from '@api/testing/database'
 import { createFixtures } from '@api/testing/fixtures'
@@ -106,7 +106,10 @@ describe('createCharge', () => {
         amountCents: 3_000,
       },
     ])
-    expect(created?.messageText).toContain('Oi, Contact J!')
+    expect(created?.messageText).toMatch(
+      /^Oi, Contact J! .+ pediu para te lembrar do que está em aberto\. Dá para pagar com Pix/,
+    )
+    expect(created?.messageText).not.toContain('e-mail')
     expect(created?.messageText).toContain('• Jantar — R$ 30,00')
   })
 
@@ -133,6 +136,32 @@ describe('createCharge', () => {
     )
     expect(next?.pixPayload).toContain('br.gov.bcb.pix')
     expect(next?.messageText).toContain(next?.pixPayload ?? 'missing')
+  })
+
+  it('writes the message with the workspace text in force, and later edits keep it', async () => {
+    const { workspaceId, charge, charges } = await household()
+    await setChargeText(databases.app, workspaceId, {
+      subject: '{quem cobra} cobra {valor}',
+      opening: 'Aqui é do espaço {espaço}: {valor} até {vencimento}.',
+      closing: 'Abraço, {contato}!',
+    })
+    const first = await charge()
+    await setChargeText(databases.app, workspaceId, {
+      subject: 'Outro assunto',
+      opening: 'Outra abertura.',
+      closing: '',
+    })
+    const second = await charge('2026-11-30')
+    await resetChargeText(databases.app, workspaceId)
+
+    const firstLines = byId(await charges(), first.chargeId)?.messageText.split('\n') ?? []
+    expect(firstLines[0]).toMatch(
+      /^Oi, Contact J! Aqui é do espaço Charges .+: R\$\s30,00 até 06\/10\/2026\.$/,
+    )
+    expect(firstLines.at(-1)).toBe('Abraço, Contact J!')
+    const secondLines = byId(await charges(), second.chargeId)?.messageText.split('\n') ?? []
+    expect(secondLines[0]).toBe('Oi, Contact J! Outra abertura.')
+    expect(secondLines.at(-1)).toBe('Vencimento: 10/11/2026')
   })
 
   it('charges an item again once its charge is cancelled, and refuses when nothing is open', async () => {

@@ -1,7 +1,7 @@
 ---
 summary: Canonical terms. Maps Portuguese words used by the user and the UI to English code names.
 read_when: Naming anything, or turning a Portuguese term from the user or a WhatsApp message into code.
-updated: 2026-10-14
+updated: 2026-10-16
 ---
 
 # Glossary
@@ -47,6 +47,7 @@ updated: 2026-10-14
 | terceiro, contato | `contact` | Someone outside the workspace who owes (or is owed) money. |
 | a receber | `receivable` (system account) + `contact_id` on the posting | What contacts owe the workspace. |
 | cobrança | `charge` | A message asking a contact to pay open items. |
+| mensagem das cobranças (assunto, abertura, encerramento) | `chargeText` (`subject`, `opening`, `closing`) | The workspace's customizable part of every charge message; tags like `{quem cobra}` are filled when the charge is created. |
 | acerto, pagamento do terceiro | `entry_type = settlement` | A contact paying back. |
 | conta fixa, assinatura, boleto recorrente | `recurrence_rule` | A rule that generates expected occurrences. |
 | previsto | `planned_occurrence` | An expected bill or income on a date. |
