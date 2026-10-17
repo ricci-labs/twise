@@ -74,11 +74,21 @@ function outboxDelivery(env: MailerEnv): Deliver {
 
 function toMailOptions(env: MailerEnv, message: EmailMessage) {
   return {
-    from: { name: env.EMAIL_FROM_NAME, address: env.EMAIL_FROM ?? DEVELOPMENT_SENDER },
+    from: {
+      name: message.fromName ?? env.EMAIL_FROM_NAME,
+      address: env.EMAIL_FROM ?? DEVELOPMENT_SENDER,
+    },
     to: message.to,
+    replyTo: message.replyTo,
     subject: message.subject,
     text: message.text,
     html: message.html,
+    attachments: (message.inlineImages ?? []).map((image) => ({
+      cid: image.cid,
+      filename: image.filename,
+      contentType: image.contentType,
+      content: Buffer.from(image.base64, 'base64'),
+    })),
   }
 }
 

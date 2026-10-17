@@ -1,7 +1,7 @@
 ---
 summary: Supporting tables — tags, attachments (receipts/notas), notification outbox (reminders, charges), audit log, agent runs/messages/pending actions.
 read_when: Working on tags, file uploads/receipts, reminders and message sending, audit, or agent persistence.
-updated: 2026-09-27
+updated: 2026-10-17
 ---
 
 # Supporting tables
@@ -79,10 +79,20 @@ payload, dueAt, dedupeKey })` inserts once per key (`{ isNew }`).
 **Worker** (job `send-notifications`, every 5 minutes, per workspace, ADR 0025):
 `deliverDueNotifications` claims up to 20 pending **email** rows due now (`FOR UPDATE SKIP LOCKED`),
 writes the pt-BR email (`notifications.emails.ts`: `bill_reminder`, `invoice_reminder`, payloads
-validated by the shared schemas) and sends it through the `Mailer`. Outcomes:
+validated by the shared schemas) and sends it through the `Mailer`. A **contact** recipient's
+e-mail is written by the module that queued it and stored whole in the payload
+(`preparedEmailPayloadSchema`: `{ email: { to, subject, text, html, fromName?, replyTo?,
+inlineImages? } }`, the images sent inline by `cid`), so the worker only sends it. Outcomes:
 - sent → `sent` + `sent_at`, event `notification.sent`;
-- a send error → retried after 2^attempts minutes (2, 4, 8, 16), then `failed` at the fifth attempt;
-- a payload it can't write, or a contact recipient by email → `failed` at once.
+- the mail server refuses the recipient (SMTP 5xx) → `failed` at once, with its reply as
+  `last_error`;
+- any other send error → retried after 2^attempts minutes (2, 4, 8, 16), then `failed` at the
+  fifth attempt;
+- a payload it can't write → `failed` at once.
+
+A sent or failed-for-good row is reported to `DeliveryDeps.onDelivered(tx, { notificationId, kind,
+payload, outcome, error })` inside the same transaction, so the module that queued it can record
+the outcome (the charge e-mail, G62) without the notifications module importing it.
 
 Failures log `notification.failed` (`willRetry`). WhatsApp rows stay pending until that channel
 exists.

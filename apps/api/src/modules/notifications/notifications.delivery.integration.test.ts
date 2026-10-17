@@ -1,6 +1,7 @@
 import { withWorkspace } from '@api/core/db/tx'
 import { createContact } from '@api/modules/contacts'
 import {
+  type DeliveryReport,
   deliverDueNotifications,
   enqueueNotification,
   type NewNotification,
@@ -142,4 +143,99 @@ describe('deliverDueNotifications', () => {
       failed: 2,
     })
   })
+
+  it('sends an e-mail prepared for a contact and tells the listener it left', async () => {
+    const { workspaceId } = await fixtures.createWorkspaceOwnedBy(userId, 'Prepared')
+    const contactId = await contactIn(workspaceId)
+    const recording = createRecordingMailer()
+    const reports: DeliveryReport[] = []
+    await queue(workspaceId, preparedFor(workspaceId, contactId))
+
+    const result = await deliverDueNotifications(databases.app, workspaceId, {
+      ...deps(recording.mailer),
+      onDelivered: async (_tx, report) => {
+        reports.push(report)
+      },
+    })
+
+    expect(result).toEqual({ sent: 1, retried: 0, failed: 0 })
+    expect(recording.sent[0]).toMatchObject({
+      template: 'charge',
+      to: 'contact.j@example.test',
+      fromName: 'Twise · Casa',
+      replyTo: 'member.a@example.test',
+    })
+    expect(reports).toEqual([
+      expect.objectContaining({ kind: 'charge', outcome: 'sent', error: null }),
+    ])
+  })
+
+  it('gives up at once when the server refuses the address, and says why', async () => {
+    const { workspaceId } = await fixtures.createWorkspaceOwnedBy(userId, 'Refused')
+    const contactId = await contactIn(workspaceId)
+    const refused = Object.assign(new Error('550 5.1.1 mailbox unavailable'), { responseCode: 550 })
+    const reports: DeliveryReport[] = []
+    await queue(workspaceId, preparedFor(workspaceId, contactId))
+
+    const result = await deliverDueNotifications(databases.app, workspaceId, {
+      ...deps({ send: async () => Promise.reject(refused) }),
+      onDelivered: async (_tx, report) => {
+        reports.push(report)
+      },
+    })
+
+    expect(result).toEqual({ sent: 0, retried: 0, failed: 1 })
+    expect((await rowsOf(workspaceId))[0]).toMatchObject({ status: 'failed', attempts: 1 })
+    expect(reports).toEqual([
+      expect.objectContaining({ outcome: 'failed', error: '550 5.1.1 mailbox unavailable' }),
+    ])
+  })
+
+  it('retries a temporary failure without telling the listener yet', async () => {
+    const { workspaceId } = await fixtures.createWorkspaceOwnedBy(userId, 'Busy')
+    const contactId = await contactIn(workspaceId)
+    const busy = Object.assign(new Error('421 try again later'), { responseCode: 421 })
+    const reports: DeliveryReport[] = []
+    await queue(workspaceId, preparedFor(workspaceId, contactId))
+
+    const result = await deliverDueNotifications(databases.app, workspaceId, {
+      ...deps({ send: async () => Promise.reject(busy) }),
+      onDelivered: async (_tx, report) => {
+        reports.push(report)
+      },
+    })
+
+    expect(result).toEqual({ sent: 0, retried: 1, failed: 0 })
+    expect(reports).toEqual([])
+  })
 })
+
+async function contactIn(workspaceId: string): Promise<string> {
+  const { contactId } = await createContact(
+    databases.app,
+    { workspaceId, userId },
+    { name: 'Contact J' },
+  )
+  return contactId
+}
+
+function preparedFor(workspaceId: string, contactId: string): NewNotification {
+  return {
+    workspaceId,
+    recipient: { contactId },
+    channel: 'email',
+    kind: 'charge',
+    payload: {
+      email: {
+        to: 'contact.j@example.test',
+        subject: 'Member A te enviou uma cobrança de R$ 200,00',
+        text: 'Oi, Contact J!',
+        html: '<p>Oi, Contact J!</p>',
+        fromName: 'Twise · Casa',
+        replyTo: 'member.a@example.test',
+      },
+    },
+    dueAt: new Date('2026-10-17T11:00:00Z'),
+    dedupeKey: crypto.randomUUID(),
+  }
+}

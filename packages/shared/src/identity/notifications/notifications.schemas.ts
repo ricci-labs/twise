@@ -17,3 +17,26 @@ export const invoiceReminderPayloadSchema = z.object({
 })
 
 export type InvoiceReminderPayload = z.infer<typeof invoiceReminderPayloadSchema>
+
+const MAX_INLINE_IMAGES = 4
+
+export const inlineImageSchema = z.object({
+  cid: z.string().min(1),
+  filename: z.string().min(1),
+  contentType: z.string().min(1),
+  base64: z.string().min(1),
+})
+
+export const preparedEmailPayloadSchema = z.object({
+  email: z.object({
+    to: z.email(),
+    subject: z.string().min(1),
+    text: z.string().min(1),
+    html: z.string().min(1),
+    fromName: z.string().min(1).optional(),
+    replyTo: z.email().optional(),
+    inlineImages: z.array(inlineImageSchema).max(MAX_INLINE_IMAGES).optional(),
+  }),
+})
+
+export type PreparedEmailPayload = z.infer<typeof preparedEmailPayloadSchema>

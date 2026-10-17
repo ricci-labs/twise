@@ -5,6 +5,8 @@ export {
 } from '@api/modules/notifications/notifications.service'
 export type {
   DeliveryDeps,
+  DeliveryListener,
+  DeliveryReport,
   DeliveryResult,
   EnqueuedNotification,
   NewNotification,
