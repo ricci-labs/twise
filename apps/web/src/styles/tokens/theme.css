@@ -252,6 +252,8 @@
   --breakpoint-lg: 64rem;
   --breakpoint-xl: 80rem;
 
+  --container-action-row: 35rem;
+
   --ease-standard: cubic-bezier(0.2, 0, 0, 1);
   --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
   --ease-emphasized: cubic-bezier(0.3, 0, 0, 1.3);
@@ -387,6 +389,10 @@
   background-position: left center;
   background-repeat: repeat-x;
   background-size: 0.4375rem 0.25rem;
+}
+
+@utility basis-pair {
+  flex-basis: calc(50% - --spacing(1.25));
 }
 
 @utility w-anchor {

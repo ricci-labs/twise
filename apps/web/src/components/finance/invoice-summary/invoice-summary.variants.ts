@@ -12,9 +12,11 @@ export const invoiceSummaryDatesVariants = cva('text-chip font-normal text-ink-m
 
 export const invoiceSummaryTotalVariants = cva('mt-1')
 
-export const invoiceSummaryFactsVariants = cva('mt-1 grid grid-cols-2 gap-2')
+export const invoiceSummaryFactsVariants = cva('mt-1 flex flex-wrap gap-2')
 
-export const invoiceSummaryFactVariants = cva('rounded-md bg-page px-3 py-2.5')
+export const invoiceSummaryFactVariants = cva(
+  'min-w-min grow basis-pair rounded-md bg-page px-3 py-2.5',
+)
 
 export const invoiceSummaryFactLabelVariants = cva('text-fine font-medium text-ink-muted')
 

@@ -62,5 +62,25 @@ describe('PlanSummaryTiles', () => {
     const bills = screen.getByText('R$ 3.489,70').element().getBoundingClientRect()
     const income = screen.getByText('R$ 9.000,00').element().getBoundingClientRect()
     expect(bills.top).toBe(income.top)
+    const tiles = screen.container.querySelectorAll('dl > div')
+    expect(tiles[0]?.getBoundingClientRect().width).toBe(tiles[1]?.getBoundingClientRect().width)
+  })
+
+  it('drops the second tile to its own line as soon as one amount outgrows half the row', async () => {
+    const screen = await render(
+      <div className="w-82">
+        <PlanSummaryTiles
+          label="Resumo do período"
+          tiles={[
+            { label: 'Falta pagar', amountCents: 125652000 },
+            { label: 'Falta receber', amountCents: 9000, tone: 'income' },
+          ]}
+        />
+      </div>,
+    )
+    const toPay = screen.getByText('R$ 1.256.520,00').element().getBoundingClientRect()
+    const toReceive = screen.getByText('R$ 90,00').element().getBoundingClientRect()
+    expect(toReceive.top).toBeGreaterThan(toPay.bottom)
+    expect(toPay.height).toBeLessThan(30)
   })
 })

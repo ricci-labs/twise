@@ -26,4 +26,32 @@ describe('InvoiceSummary', () => {
       .toBeVisible()
     await expectNoAccessibilityViolations(screen.container)
   })
+
+  it('keeps 7-digit amounts on one line inside the card, even on a 320 px phone', async () => {
+    const screen = await render(
+      <div className="w-72">
+        <InvoiceSummary
+          title="Fatura de novembro"
+          status={{ label: 'Aberta', tone: 'warning' }}
+          dates="Fecha 25/10 · vence 04/11"
+          totalCents={251304000}
+          paid={{ label: 'Pago', cents: 125652000 }}
+          due={{ label: 'Falta pagar', cents: 125652000 }}
+          own={{ label: 'Seu', cents: 251304000 }}
+          fronted={{ label: 'De terceiros', cents: 0 }}
+          splitLabel="Seu R$ 2.513.040,00"
+        />
+      </div>,
+    )
+    const card = screen.getByRole('region', { name: 'Fatura de novembro' }).element()
+    const contentRight =
+      card.getBoundingClientRect().right - Number.parseFloat(getComputedStyle(card).paddingRight)
+    for (const fact of ['Pago', 'Falta pagar']) {
+      const value = screen.getByText(fact, { exact: true }).element().nextElementSibling
+      const amount = value?.firstElementChild?.getBoundingClientRect()
+      expect(amount?.height).toBeLessThan(30)
+      expect(amount?.right).toBeLessThanOrEqual(value?.getBoundingClientRect().right ?? 0)
+      expect(value?.parentElement?.getBoundingClientRect().right).toBeLessThanOrEqual(contentRight)
+    }
+  })
 })

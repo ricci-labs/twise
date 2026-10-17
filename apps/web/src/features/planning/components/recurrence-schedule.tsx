@@ -59,7 +59,9 @@ export function RecurrenceScheduleFields({ workspaceId, today }: RecurrenceSched
           {(control) => <Select title={messages.weekend} options={WEEKEND_OPTIONS} {...control} />}
         </FormField>
       )}
-      <StartsOnField workspaceId={workspaceId} today={today} />
+      <div className="lg:col-span-2 lg:grid lg:grid-cols-2 lg:gap-x-6">
+        <StartsOnField workspaceId={workspaceId} today={today} />
+      </div>
       <div className="flex flex-col gap-3 lg:col-span-2">
         <Controller<RecurrenceFormInput, 'hasEnd'>
           name="hasEnd"

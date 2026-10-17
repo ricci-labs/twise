@@ -218,7 +218,12 @@ describe('PLAN-06 commission split', () => {
   it('starts from the suggestion when there are no steps', async () => {
     await openSplit({ steps: [] })
     await expect.element(page.getByText('Nenhum passo ainda.')).toBeVisible()
-    await page.getByRole('button', { name: 'Usar a sugestão' }).click()
+    const suggestion = page.getByRole('button', { name: 'Usar a sugestão' })
+    const add = page.getByRole('button', { name: 'Adicionar passo' })
+    expect(suggestion.element().getBoundingClientRect().width).toBe(
+      add.element().getBoundingClientRect().width,
+    )
+    await suggestion.click()
     await expect.element(steps().getByText('Completar a reserva de emergência')).toBeVisible()
     await expect.element(steps().getByText('O que sobrar para Conta X')).toBeVisible()
     await expect.element(page.getByRole('button', { name: 'Salvar divisão' })).toBeEnabled()
