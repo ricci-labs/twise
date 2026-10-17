@@ -28,6 +28,7 @@ import {
   openItemDetail,
   openItemsByDue,
 } from '@web/features/contacts/components/contact-detail-view'
+import { NewCharge } from '@web/features/contacts/components/new-charge'
 import { contactsMessages } from '@web/features/contacts/contacts.messages'
 import type {
   ContactDetailActionsProps,
@@ -128,6 +129,8 @@ function ContactDetailBody({
   today,
   onNewCharge,
   onDeleted,
+  isChargeOpen,
+  onChargeClose,
 }: ContactDetailBodyProps) {
   const owedCents = balance?.owedCents ?? 0
   const items = openItemsByDue(openItems, today)
@@ -170,6 +173,18 @@ function ContactDetailBody({
         today={today}
       />
       <ContactTalkTo contact={contact} />
+      {isChargeOpen && hasPermission(permissions, 'contacts', 'create') && (
+        <NewCharge
+          workspaceId={workspaceId}
+          contact={contact}
+          balance={balance}
+          openItems={openItems}
+          today={today}
+          permissions={permissions}
+          isOpen={isChargeOpen}
+          onClose={onChargeClose}
+        />
+      )}
     </ContactDetailFrame>
   )
 }

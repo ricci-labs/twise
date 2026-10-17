@@ -6,6 +6,7 @@ export const Route = createFileRoute('/_app/w/$workspaceId/contacts_/$contact')(
   component: function ContactRoute() {
     const { workspaceId, contact } = Route.useParams()
     const { access } = Route.useRouteContext()
+    const { charge } = Route.useSearch()
     const navigate = useNavigate()
     return (
       <ContactDetailPage
@@ -15,6 +16,10 @@ export const Route = createFileRoute('/_app/w/$workspaceId/contacts_/$contact')(
         permissions={access.permissions}
         onNewCharge={() =>
           void navigate({ to: '.', search: (previous) => ({ ...previous, charge: 'new' }) })
+        }
+        isChargeOpen={charge === 'new'}
+        onChargeClose={() =>
+          void navigate({ to: '.', search: (previous) => ({ ...previous, charge: undefined }) })
         }
         onDeleted={() =>
           void navigate({ to: '/w/$workspaceId/contacts', params: { workspaceId }, replace: true })

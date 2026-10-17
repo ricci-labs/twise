@@ -112,6 +112,10 @@ describe('CON-02 contact detail', () => {
 
     await page.getByRole('button', { name: 'Nova cobrança' }).click()
     await expect.poll(() => app.router.state.location.search).toMatchObject({ charge: 'new' })
+    const newCharge = page.getByRole('dialog', { name: 'Nova cobrança' })
+    await expect.element(newCharge).toBeVisible()
+    await newCharge.getByRole('button', { name: 'Cancelar' }).last().click()
+    await expect.element(newCharge).not.toBeInTheDocument()
 
     await page.getByRole('link', { name: 'Recebeu sem cobrança? Registrar recebimento' }).click()
     await expect
