@@ -16,14 +16,18 @@ import {
   listOpenItems,
   listUpcomingContactItems,
   markChargeSent,
+  optOutByLink,
   payCharge,
 } from '@api/modules/contacts/contacts.service'
-import type { ContactRouteDeps } from '@api/modules/contacts/contacts.types'
+import type { ContactOptOutRouteDeps, ContactRouteDeps } from '@api/modules/contacts/contacts.types'
+import { limitInvalidLinks } from '@api/modules/identity'
 import {
   chargeListQuerySchema,
   chargeParamsSchema,
   chargePaymentSchema,
+  chargeSentSchema,
   contactChangeSchema,
+  contactOptOutRequestSchema,
   contactParamsSchema,
   deletionRequestSchema,
   newChargeSchema,
@@ -35,6 +39,8 @@ import { Hono } from 'hono'
 
 const CREATED = 201
 const NO_CONTENT = 204
+
+export const PUBLIC_CONTACT_ROUTES = ['POST /api/public/contacts/opt-out'] as const
 
 export function contactRoutes({ db }: ContactRouteDeps) {
   const contact = pathParams(contactParamsSchema, 'CONTACT_NOT_FOUND')
@@ -150,11 +156,18 @@ export function chargeRoutes({ db }: ContactRouteDeps) {
       const { workspaceId } = currentWorkspace(c)
       return c.json(await getCharge(db, workspaceId, c.req.valid('param').chargeId))
     })
-    .post('/:chargeId/sent', authorize('contacts', 'update'), charge, async (c) => {
-      const { workspaceId } = currentWorkspace(c)
-      await markChargeSent(db, { workspaceId, chargeId: c.req.valid('param').chargeId })
-      return c.body(null, NO_CONTENT)
-    })
+    .post(
+      '/:chargeId/sent',
+      authorize('contacts', 'update'),
+      charge,
+      jsonBody(chargeSentSchema, 'CHARGE_SENT_INVALID'),
+      async (c) => {
+        const { workspaceId } = currentWorkspace(c)
+        const { chargeId } = c.req.valid('param')
+        await markChargeSent(db, { workspaceId, chargeId }, c.req.valid('json'))
+        return c.body(null, NO_CONTENT)
+      },
+    )
     .post(
       '/:chargeId/payments',
       authorize('contacts', 'update'),
@@ -175,4 +188,16 @@ export function chargeRoutes({ db }: ContactRouteDeps) {
       await cancelCharge(db, { workspaceId, chargeId: c.req.valid('param').chargeId })
       return c.body(null, NO_CONTENT)
     })
+}
+
+export function contactOptOutRoutes(deps: ContactOptOutRouteDeps) {
+  return new Hono<AppEnv>().post(
+    '/opt-out',
+    jsonBody(contactOptOutRequestSchema, 'LINK_INVALID'),
+    limitInvalidLinks(deps),
+    async (c) => {
+      await optOutByLink(deps.db, c.req.valid('json'))
+      return c.body(null, NO_CONTENT)
+    },
+  )
 }

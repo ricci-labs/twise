@@ -1,7 +1,9 @@
 import { createApp } from '@api/app'
+import { withWorkspace } from '@api/core/db/tx'
 import {
   type ChargeView,
   cancelCharge,
+  changeContact,
   createCharge,
   createContact,
   listCharges,
@@ -11,13 +13,15 @@ import {
   markChargeSent,
   payCharge,
 } from '@api/modules/contacts'
+import { charges as chargesTable } from '@api/modules/contacts/contacts.table'
 import { createAccount, createCard, deleteEntry, recordEntry } from '@api/modules/ledger'
 import { resetChargeText, setChargeText, setPixReceiving } from '@api/modules/workspaces'
 import { testAppDeps } from '@api/testing/app'
-import { connectTestDatabases } from '@api/testing/database'
+import { connectTestDatabases, POSTGRES_ERRORS, postgresErrorCodeOf } from '@api/testing/database'
 import { createFixtures } from '@api/testing/fixtures'
 import { addMemberWithSystemRole, loggedInUser, requestsAs } from '@api/testing/http'
 import { todayIn } from '@financas/shared'
+import { eq } from 'drizzle-orm'
 import { afterAll, describe, expect, it } from 'vitest'
 
 const databases = connectTestDatabases()
@@ -290,15 +294,65 @@ describe('charge status', () => {
     const { workspaceId, charge, charges } = await household()
     const { chargeId } = await charge()
     const ref = { workspaceId, chargeId }
-    await markChargeSent(databases.app, ref, MID_OCTOBER)
+    await markChargeSent(databases.app, ref, { via: 'manual' }, MID_OCTOBER)
     expect(byId(await charges(), chargeId)).toMatchObject({ status: 'sent' })
-    await expect(markChargeSent(databases.app, ref)).rejects.toMatchObject({
+    await expect(markChargeSent(databases.app, ref, { via: 'manual' })).rejects.toMatchObject({
       code: 'CHARGE_STATUS_REFUSED',
     })
     await cancelCharge(databases.app, ref)
     await expect(cancelCharge(databases.app, ref)).rejects.toMatchObject({
       code: 'CHARGE_STATUS_REFUSED',
     })
+  })
+
+  it('records the channel and the address of a send, and refuses an unknown channel', async () => {
+    const { workspaceId, contactId, charge, charges } = await household()
+    await changeContact(databases.app, { workspaceId, contactId }, { phoneE164: '+5511900001111' })
+    const byWhatsapp = (await charge()).chargeId
+    const byHand = (await charge('2026-12-31')).chargeId
+    for (const body of [{}, { via: 'email' }, { via: 'pigeon' }]) {
+      await expect(
+        markChargeSent(databases.app, { workspaceId, chargeId: byHand }, body),
+      ).rejects.toMatchObject({ code: 'CHARGE_SENT_INVALID' })
+    }
+    await markChargeSent(
+      databases.app,
+      { workspaceId, chargeId: byWhatsapp },
+      { via: 'whatsapp' },
+      MID_OCTOBER,
+    )
+    await markChargeSent(databases.app, { workspaceId, chargeId: byHand }, { via: 'manual' })
+
+    const listed = await charges()
+    expect(byId(listed, byWhatsapp)).toMatchObject({
+      status: 'sent',
+      sentAt: MID_OCTOBER.now(),
+      sentVia: 'whatsapp',
+      sentTo: '+5511900001111',
+      emailStatus: null,
+      emailError: null,
+    })
+    expect(byId(listed, byHand)).toMatchObject({ sentVia: 'manual', sentTo: null })
+  })
+
+  it('keeps the e-mail outcome only on e-mail sends, with a short reason for a failure', async () => {
+    const { workspaceId, charge } = await household()
+    const { chargeId } = await charge()
+    const change = (values: Partial<typeof chargesTable.$inferInsert>) =>
+      withWorkspace(databases.app, workspaceId, (tx) =>
+        tx.update(chargesTable).set(values).where(eq(chargesTable.id, chargeId)),
+      )
+    for (const values of [
+      { emailStatus: 'queued' as const },
+      { sentVia: 'whatsapp' as const, emailStatus: 'sent' as const },
+      { sentVia: 'email' as const },
+      { sentVia: 'email' as const, emailStatus: 'sent' as const, emailError: '550 refused' },
+      { sentVia: 'email' as const, emailStatus: 'failed' as const, emailError: 'x'.repeat(201) },
+    ]) {
+      expect(await postgresErrorCodeOf(change(values))).toBe(POSTGRES_ERRORS.checkViolation)
+    }
+    const refused = { sentVia: 'email' as const, emailStatus: 'failed' as const, emailError: '550' }
+    expect(await postgresErrorCodeOf(change(refused))).toBeUndefined()
   })
 })
 
@@ -378,6 +432,8 @@ describe('charges over HTTP', () => {
     expect((await viewer.get(`${base}/charges?contactId=${contactId}`)).status).toBe(200)
     expect((await owner.post(`${base}/charges/not-a-uuid/cancel`)).status).toBe(404)
     expect((await viewer.post(`${base}/charges/${crypto.randomUUID()}/sent`)).status).toBe(403)
+    const noChannel = await owner.post(`${base}/charges/${crypto.randomUUID()}/sent`, {})
+    expect(await noChannel.json()).toMatchObject({ error: { code: 'CHARGE_SENT_INVALID' } })
   })
 })
 

@@ -142,6 +142,7 @@ message.
 | `CONTACT_HAS_BALANCE` | 409 | Archiving with a balance | "Só dá para arquivar quando o saldo estiver zerado.", in a dialog titled "{nome} ainda deve R$ X" with "Nova cobrança" | dialog |
 | `CONTACT_HAS_NO_EMAIL` | 409 | Sending a charge by e-mail to a contact without e-mail (guard: the option is hidden) | "Este contato não tem e-mail. Adicione um para enviar por e-mail." | toast |
 | `CONTACT_OPTED_OUT` | 409 | Sending a charge by e-mail to a contact who opted out (guard: the option is disabled) | "Este contato pediu para não receber e-mails." (the disabled option reads "{nome} pediu para não receber e-mails") | toast |
+| `CONTACT_OPTED_OUT_BY_LINK` | 409 | A member turns the opt-out off, but the contact set it by the e-mail link (guard: the switch is disabled with the reason) | "Este contato pediu pelo link do e-mail para não receber cobranças. Só ele pode mudar isso." | toast |
 | `CHARGE_INVALID` | 400 | Invalid date | "Informe uma data válida (dd/mm/aaaa)." | field date |
 | `CHARGE_QUERY_INVALID` | 400 | Invalid filter (guard) | "Não foi possível carregar as cobranças." | section |
 | `CHARGE_NOT_FOUND` | 404 | Charge gone | "Esta cobrança não existe mais." | toast |
@@ -149,6 +150,7 @@ message.
 | `UPCOMING_CONTACT_ITEMS_QUERY_INVALID` | 400 | Invalid upcoming items limit (guard) | "Não foi possível carregar os próximos vencimentos." | section error |
 | `NOTHING_TO_CHARGE` | 409 | Nothing open up to the date | "Este contato não tem nada em aberto até essa data." | form |
 | `CHARGE_STATUS_REFUSED` | 409 | Action not allowed in the charge's status | sent: "Esta cobrança já foi enviada ou tem pagamento." · cancel: "Cobranças com pagamento não podem ser canceladas." · payment: "Esta cobrança foi cancelada e não recebe pagamentos." | form / toast |
+| `CHARGE_SENT_INVALID` | 400 | Marking sent without `via` `whatsapp` or `manual` (guard) | "Não foi possível concluir. Código: {ref}." | toast |
 | `CHARGE_PAYMENT_INVALID` | 400 | Payment form invalid | per field | fields |
 | `CHARGE_TEXT_INVALID` | 400 | Charge text invalid: an unknown tag, empty or too long; `details` (`field`; `reason` `unknown_tag`, `empty` or `too_long`; `tag` or `maxLength`) names the first one (no `details` for a body of the wrong shape) | "Confira o texto da mensagem." · per field: unknown tag "Esta informação não existe: {apelido}. Use os botões abaixo para inserir.", length "Use até {n} caracteres.", empty "Escreva a abertura da mensagem." | field |
 

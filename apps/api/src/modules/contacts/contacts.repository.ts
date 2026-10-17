@@ -1,9 +1,10 @@
-import type { WorkspaceTransaction } from '@api/core/db/db.types'
+import type { Database, WorkspaceTransaction } from '@api/core/db/db.types'
 import type { AuditTarget } from '@api/modules/audit'
 import {
   chargeItems,
   chargePayments,
   charges,
+  contactOptOutTokens,
   contacts,
 } from '@api/modules/contacts/contacts.table'
 import type {
@@ -17,9 +18,11 @@ import type {
   NewChargePaymentRow,
   NewChargeRow,
   NewContactRow,
+  NewOptOutTokenRow,
+  OptOutTokenRow,
 } from '@api/modules/contacts/contacts.types'
 import { OPEN_CHARGE_STATUSES } from '@financas/shared'
-import { and, asc, desc, eq, inArray, isNull } from 'drizzle-orm'
+import { and, asc, desc, eq, inArray, isNull, sql } from 'drizzle-orm'
 
 export function selectActiveContacts(tx: WorkspaceTransaction): Promise<ContactRow[]> {
   return tx
@@ -69,6 +72,42 @@ export async function updateContact(
   update: ContactUpdate,
 ): Promise<void> {
   await tx.update(contacts).set(update).where(eq(contacts.id, contactId))
+}
+
+export async function lockContact(
+  tx: WorkspaceTransaction,
+  contactId: string,
+): Promise<ContactRow | undefined> {
+  const [contact] = await tx.select().from(contacts).where(eq(contacts.id, contactId)).for('update')
+  return contact
+}
+
+export async function insertOptOutToken(
+  tx: WorkspaceTransaction,
+  token: NewOptOutTokenRow,
+): Promise<void> {
+  await tx.insert(contactOptOutTokens).values(token)
+}
+
+export async function findOptOutWorkspaceId(
+  db: Database,
+  tokenHash: string,
+): Promise<string | null> {
+  const result = await db.execute<{ workspace_id: string | null }>(
+    sql`select contact_opt_out_workspace_id(${tokenHash}) as workspace_id`,
+  )
+  return result.rows[0]?.workspace_id ?? null
+}
+
+export async function selectOptOutToken(
+  tx: WorkspaceTransaction,
+  tokenHash: string,
+): Promise<OptOutTokenRow | undefined> {
+  const [token] = await tx
+    .select()
+    .from(contactOptOutTokens)
+    .where(eq(contactOptOutTokens.tokenHash, tokenHash))
+  return token
 }
 
 export async function selectPostingsInOpenCharges(

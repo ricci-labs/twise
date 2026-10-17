@@ -161,6 +161,10 @@
       "value": ""
     },
     {
+      "key": "optOutToken",
+      "value": ""
+    },
+    {
       "key": "today",
       "value": ""
     },
@@ -2158,11 +2162,25 @@
           "name": "Mark charge sent",
           "request": {
             "method": "POST",
-            "header": [],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "url": {
               "raw": "{{baseUrl}}/api/workspaces/{{workspaceId}}/charges/{{chargeId}}/sent",
               "host": ["{{baseUrl}}"],
               "path": ["api", "workspaces", "{{workspaceId}}", "charges", "{{chargeId}}", "sent"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"via\": \"manual\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             }
           },
           "event": [
@@ -4281,6 +4299,42 @@
               "host": ["{{baseUrl}}"],
               "path": ["api", "auth", "logout"]
             }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": ["pm.test('answers 204', () => pm.response.to.have.status(204))"]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Opt out of charge e-mails",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/public/contacts/opt-out",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "public", "contacts", "opt-out"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"token\": \"{{optOutToken}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "No login. optOutToken is the value after #token= in the opt-out link at the foot of a charge e-mail. 204, also when the contact had already opted out; an unknown token is 400 LINK_INVALID."
           },
           "event": [
             {

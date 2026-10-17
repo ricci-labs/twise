@@ -3,9 +3,13 @@ import { tenantIsolation } from '@api/core/db/tenancy'
 import { users } from '@api/modules/identity/identity.table'
 import { workspaces } from '@api/modules/workspaces/workspaces.table'
 import {
+  CHARGE_EMAIL_ERROR_MAX_LENGTH,
+  CHARGE_EMAIL_STATUSES,
+  CHARGE_SENT_VIAS,
   CHARGE_STATUSES,
   CONTACT_NAME_MAX_LENGTH,
   CONTACT_NOTES_MAX_LENGTH,
+  CONTACT_OPT_OUT_VIAS,
   EMAIL_MAX_LENGTH,
   PIX_KEY_MAX_LENGTH,
 } from '@financas/shared'
@@ -26,6 +30,8 @@ import {
 
 const limit = (value: number) => sql.raw(String(value))
 
+export const contactOptOutVia = pgEnum('contact_opt_out_via', CONTACT_OPT_OUT_VIAS)
+
 export const contacts = pgTable(
   'contacts',
   {
@@ -39,6 +45,7 @@ export const contacts = pgTable(
     pixKey: text(),
     notes: text(),
     optedOutAt: timestamp({ withTimezone: true }),
+    optedOutVia: contactOptOutVia(),
     archivedAt: timestamp({ withTimezone: true }),
     ...softDelete(() => users.id),
     ...timestamps(),
@@ -71,11 +78,41 @@ export const contacts = pgTable(
       'contacts_notes',
       sql`${table.notes} is null or length(${table.notes}) <= ${limit(CONTACT_NOTES_MAX_LENGTH)}`,
     ),
+    check(
+      'contacts_opted_out_via',
+      sql`(${table.optedOutAt} is null) = (${table.optedOutVia} is null)`,
+    ),
     tenantIsolation('contacts', table.workspaceId),
   ],
 ).enableRLS()
 
+export const contactOptOutTokens = pgTable(
+  'contact_opt_out_tokens',
+  {
+    workspaceId: uuid()
+      .notNull()
+      .references(() => workspaces.id, { onDelete: 'cascade' }),
+    id: primaryId(),
+    contactId: uuid().notNull(),
+    tokenHash: text().notNull(),
+    createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [
+    uniqueIndex('contact_opt_out_tokens_token_hash_unique').on(table.tokenHash),
+    foreignKey({
+      name: 'contact_opt_out_tokens_contact_fk',
+      columns: [table.workspaceId, table.contactId],
+      foreignColumns: [contacts.workspaceId, contacts.id],
+    }).onDelete('cascade'),
+    tenantIsolation('contact_opt_out_tokens', table.workspaceId),
+  ],
+).enableRLS()
+
 export const chargeStatus = pgEnum('charge_status', CHARGE_STATUSES)
+
+export const chargeSentVia = pgEnum('charge_sent_via', CHARGE_SENT_VIAS)
+
+export const chargeEmailStatus = pgEnum('charge_email_status', CHARGE_EMAIL_STATUSES)
 
 export const charges = pgTable(
   'charges',
@@ -91,6 +128,10 @@ export const charges = pgTable(
     messageText: text().notNull(),
     pixPayload: text(),
     sentAt: timestamp({ withTimezone: true }),
+    sentVia: chargeSentVia(),
+    sentTo: text(),
+    emailStatus: chargeEmailStatus(),
+    emailError: text(),
     lastRemindedAt: timestamp({ withTimezone: true }),
     createdByUserId: uuid()
       .notNull()
@@ -108,6 +149,14 @@ export const charges = pgTable(
     check(
       'charges_sent_when_sent',
       sql`${table.status} = 'draft' or ${table.status} = 'cancelled' or ${table.sentAt} is not null`,
+    ),
+    check(
+      'charges_email_status',
+      sql`(${table.sentVia} is not distinct from 'email') = (${table.emailStatus} is not null)`,
+    ),
+    check(
+      'charges_email_error',
+      sql`${table.emailError} is null or (${table.emailStatus} is not distinct from 'failed' and length(${table.emailError}) <= ${limit(CHARGE_EMAIL_ERROR_MAX_LENGTH)})`,
     ),
     tenantIsolation('charges', table.workspaceId),
   ],

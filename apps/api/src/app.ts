@@ -11,7 +11,12 @@ import {
   uploadBodyLimitOf,
 } from '@api/modules/attachments/attachments.routes'
 import { auditRoutes } from '@api/modules/audit/audit.routes'
-import { chargeRoutes, contactRoutes } from '@api/modules/contacts/contacts.routes'
+import {
+  chargeRoutes,
+  contactOptOutRoutes,
+  contactRoutes,
+  PUBLIC_CONTACT_ROUTES,
+} from '@api/modules/contacts/contacts.routes'
 import { healthRoutes, PUBLIC_HEALTH_ROUTES } from '@api/modules/health/health.routes'
 import { resolveSession } from '@api/modules/identity'
 import { identityRoutes, PUBLIC_AUTH_ROUTES } from '@api/modules/identity/identity.routes'
@@ -33,6 +38,7 @@ export const PUBLIC_ROUTES: ReadonlySet<string> = new Set([
   ...PUBLIC_HEALTH_ROUTES,
   ...PUBLIC_AUTH_ROUTES,
   ...PUBLIC_INVITATION_ROUTES,
+  ...PUBLIC_CONTACT_ROUTES,
 ])
 
 export function createApp(deps: AppDeps) {
@@ -52,6 +58,7 @@ export function createApp(deps: AppDeps) {
     .route('/api/health', healthRoutes(deps))
     .route('/api/auth', identityRoutes(deps))
     .route('/api/invitations', invitationResponseRoutes(deps))
+    .route('/api/public/contacts', contactOptOutRoutes(deps))
     .route('/api/workspaces', workspaceListRoutes(deps))
     .route('/api/workspaces', workspaceCreationRoutes(deps))
     .route('/api/workspaces/:workspaceId', workspaceScopedRoutes(deps))

@@ -154,7 +154,8 @@ without comments.
   for pending tasks. Routes that email **after** their work is done (password changed or reset,
   invitations, the verification of an invitation sign-up) also send it through `BackgroundTasks`,
   so a mail failure never turns a finished change into a `500`.
-- **Routes that use an email link** (`POST /api/auth/verify-email`, `/password/reset`) take the
+- **Routes that use an email link** (`POST /api/auth/verify-email`, `/password/reset`,
+  `/api/public/contacts/opt-out`) take the
   token in the body (the web reads it from the URL fragment). Each `LINK_INVALID` counts against the
   client (default 20 per hour); over the limit they answer `429` even for a valid link. A reset
   checks the link with a read-only query **before** hashing the new password, so fake links can't

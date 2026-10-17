@@ -283,7 +283,7 @@ describe('writes across the modules', () => {
     )
     const chargeId = await idOf(owner.post(`${base}/contacts/${contactId}/charges`, {}))
     await expectLatest('charges', chargeId, 'create')
-    await ok(owner.post(`${base}/charges/${chargeId}/sent`))
+    await ok(owner.post(`${base}/charges/${chargeId}/sent`, { via: 'manual' }))
     await expectLatest('charges', chargeId, 'update')
     await ok(
       owner.post(`${base}/charges/${chargeId}/payments`, {

@@ -484,6 +484,13 @@
       "when": 1792200270502,
       "tag": "0068_charge_text",
       "breakpoints": true
+    },
+    {
+      "idx": 69,
+      "version": "7",
+      "when": 1792207116321,
+      "tag": "0069_charge_email",
+      "breakpoints": true
     }
   ]
 }

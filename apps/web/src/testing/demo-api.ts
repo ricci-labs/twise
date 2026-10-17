@@ -56,6 +56,7 @@ function demoContacts() {
     pixKey: null,
     notes: null,
     isOptedOut: false,
+    optedOutVia: null,
     isArchived: false,
   }))
 }
