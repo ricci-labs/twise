@@ -1,3 +1,4 @@
+import type { IsoDate } from '@shared/core/calendar/calendar.types'
 import type { ContactChannel } from '@web/components/finance/contact-row'
 import type {
   Contact,
@@ -10,6 +11,7 @@ import type {
 const SETTLED = {
   owedCents: 0,
   overdueCents: 0,
+  overdueSince: null,
   nextDueOn: null,
   nextDueCents: 0,
   dueNotChargedCents: 0,
@@ -27,14 +29,22 @@ export function listedContactsOf(
 ): ListedContact[] {
   const balanceOf = new Map(balances.map((balance) => [balance.contactId, balance]))
   return contacts.map((contact) => {
-    const { owedCents, overdueCents, nextDueOn, nextDueCents, dueNotChargedCents, lastCharge } =
-      balanceOf.get(contact.id) ?? SETTLED
+    const {
+      owedCents,
+      overdueCents,
+      overdueSince,
+      nextDueOn,
+      nextDueCents,
+      dueNotChargedCents,
+      lastCharge,
+    } = balanceOf.get(contact.id) ?? SETTLED
     const hasDueToCharge = dueNotChargedCents > 0
     return {
       id: contact.id,
       name: contact.name,
       owedCents,
       overdueCents,
+      overdueSince,
       nextDueOn,
       nextDueCents,
       hasDueToCharge,
@@ -72,7 +82,12 @@ export function contactsSummaryOf(contacts: readonly ListedContact[]): ContactsS
     owingCount: owing.length,
     overdueCents: late.reduce((total, contact) => total + contact.overdueCents, 0),
     overdueCount: late.length,
+    overdueSince: oldestOf(late.map((contact) => contact.overdueSince)),
   }
+}
+
+function oldestOf(dates: readonly (IsoDate | null)[]): IsoDate | null {
+  return dates.filter((date) => date !== null).sort()[0] ?? null
 }
 
 function channelsOf(contact: Contact): ContactChannel[] {

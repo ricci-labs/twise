@@ -70,6 +70,7 @@ describe('listed contacts', () => {
       owingCount: 3,
       overdueCents: 20000,
       overdueCount: 1,
+      overdueSince: '2026-10-10',
     })
   })
 })

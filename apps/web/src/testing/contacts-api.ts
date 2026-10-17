@@ -47,6 +47,7 @@ function balance(contactId: string, owedCents: number, extra: object = {}) {
     contactId,
     owedCents,
     overdueCents: 0,
+    overdueSince: null,
     nextDueOn: null,
     nextDueCents: 0,
     dueNotChargedCents: 0,
@@ -67,6 +68,7 @@ export const CONTACT_BALANCES = [
   }),
   balance(CONTACT_D, 52000, {
     overdueCents: 20000,
+    overdueSince: '2026-10-10',
     nextDueOn: '2026-11-10',
     nextDueCents: 16000,
     dueNotChargedCents: 20000,

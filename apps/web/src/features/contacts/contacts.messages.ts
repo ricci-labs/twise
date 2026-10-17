@@ -18,6 +18,8 @@ export const contactsMessages = {
     owedFrom: (count: number) => `de ${count} ${plural(count, 'contato', 'contatos')}`,
     overdue: 'Em atraso',
     overdueCount: (count: number) => `${count} ${plural(count, 'contato', 'contatos')}`,
+    overdueSince: (count: number, since: string) =>
+      `${count} ${plural(count, 'contato', 'contatos')} · desde ${since}`,
   },
   sort: {
     label: 'Ordenar',

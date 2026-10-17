@@ -11,6 +11,7 @@ export function ContactList({ workspaceId, label, contacts, onCharge }: ContactL
           name={contact.name}
           owedCents={contact.owedCents}
           overdueCents={contact.overdueCents}
+          overdueSince={contact.overdueSince}
           nextDueOn={contact.nextDueOn}
           nextDueCents={contact.nextDueCents}
           chargedOn={contact.chargedOn}
