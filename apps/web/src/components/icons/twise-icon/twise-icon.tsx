@@ -215,6 +215,14 @@ const TWISE_ICON_SHAPES: Record<TwiseIconName, TwiseIconShape> = {
       </>
     ),
   },
+  messageOff: {
+    weight: LINE_WEIGHT,
+    stroke: (
+      <>
+        <path d="m2 2 20 20M8.4 2.7a10 10 0 0 1 12.9 12.9M4.9 4.9A10 10 0 0 0 3 16.3a2 2 0 0 1 .1 1.2l-1.1 3.3a1 1 0 0 0 1.2 1.2l3.4-1a2 2 0 0 1 1.1.1 10 10 0 0 0 11.3-2" />
+      </>
+    ),
+  },
   more: {
     weight: LINE_WEIGHT,
     stroke: (

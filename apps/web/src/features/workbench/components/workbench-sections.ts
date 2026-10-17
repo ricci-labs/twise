@@ -28,6 +28,7 @@ import { dividerExamples } from '@web/components/display/divider'
 import { filterChipsExamples } from '@web/components/display/filter-chips'
 import { kpiCardExamples } from '@web/components/display/kpi-card'
 import { kpiCarouselExamples } from '@web/components/display/kpi-carousel'
+import { listSectionExamples } from '@web/components/display/list-section'
 import { listSummaryExamples } from '@web/components/display/list-summary'
 import { miniMonthCalendarExamples } from '@web/components/display/mini-month-calendar'
 import { nextStepCardExamples } from '@web/components/display/next-step-card'
@@ -60,6 +61,7 @@ import { categoryRowExamples } from '@web/components/finance/category-row'
 import { chargeBodyExamples } from '@web/components/finance/charge-body'
 import { chargePreviewExamples } from '@web/components/finance/charge-preview'
 import { chargeRowExamples } from '@web/components/finance/charge-row'
+import { contactChannelsExamples } from '@web/components/finance/contact-channels'
 import { contactHeaderExamples } from '@web/components/finance/contact-header'
 import { contactRowExamples } from '@web/components/finance/contact-row'
 import { cyclePreviewExamples } from '@web/components/finance/cycle-preview'
@@ -213,6 +215,7 @@ export const workbenchSections: readonly ComponentExamples[] = [
   occurrenceGroupExamples,
   contactRowExamples,
   contactHeaderExamples,
+  contactChannelsExamples,
   openItemRowExamples,
   planSummaryTilesExamples,
   nextDatesPreviewExamples,
@@ -255,6 +258,7 @@ export const workbenchSections: readonly ComponentExamples[] = [
   trashTabsExamples,
   entryHeaderExamples,
   detailSectionExamples,
+  listSectionExamples,
   linkedItemExamples,
   attachAreaExamples,
   installmentRowsExamples,
