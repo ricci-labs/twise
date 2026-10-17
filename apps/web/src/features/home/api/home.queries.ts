@@ -118,6 +118,7 @@ function fetchContacts(workspaceId: string) {
       demoDirectory().contacts.map((contact) => ({
         ...contact,
         phoneE164: null,
+        email: null,
         pixKey: null,
         notes: null,
         isOptedOut: false,

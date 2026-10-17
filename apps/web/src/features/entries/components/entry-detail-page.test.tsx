@@ -92,6 +92,7 @@ async function openDetail(
           id: CONTACT_C,
           name: 'Member C',
           phoneE164: null,
+          email: null,
           pixKey: null,
           notes: null,
           isOptedOut: false,

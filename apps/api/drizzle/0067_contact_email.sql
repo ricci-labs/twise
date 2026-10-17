@@ -1,0 +1,3 @@
+ALTER TABLE "contacts" ADD COLUMN "email" text;--> statement-breakpoint
+CREATE UNIQUE INDEX "contacts_one_per_email" ON "contacts" USING btree ("workspace_id",lower("email")) WHERE "contacts"."email" is not null and "contacts"."deleted_at" is null;--> statement-breakpoint
+ALTER TABLE "contacts" ADD CONSTRAINT "contacts_email" CHECK ("contacts"."email" is null or (length("contacts"."email") <= 254 and "contacts"."email" ~ '^[^@[:space:]]+@[^@[:space:]]+$'));

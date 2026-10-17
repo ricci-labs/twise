@@ -69,6 +69,7 @@ describe('contacts', () => {
       id: onlyName,
       name: 'Contact J',
       phoneE164: null,
+      email: null,
       pixKey: null,
       notes: null,
       isOptedOut: false,
@@ -131,6 +132,49 @@ describe('contacts', () => {
   })
 })
 
+describe('contact e-mails', () => {
+  it('are stored lower-cased, changed, cleared, and refused when malformed', async () => {
+    const contactId = await created(
+      member.post(contactsPath, { name: 'Contact E', email: ' Contact.E@Example.com ' }),
+    )
+    const path = `${contactsPath}/${contactId}`
+    expect((await (await viewer.get(path)).json()) as ContactItem).toMatchObject({
+      email: 'contact.e@example.com',
+    })
+    expect((await member.patch(path, { email: 'contact.e2@example.com' })).status).toBe(204)
+    expect((await contacts()).find((contact) => contact.id === contactId)?.email).toBe(
+      'contact.e2@example.com',
+    )
+    expect((await member.patch(path, { email: null })).status).toBe(204)
+    expect((await contacts()).find((contact) => contact.id === contactId)?.email).toBeNull()
+    for (const email of ['contact.e', 'a@', '', 'a b@example.com']) {
+      const response = await member.post(contactsPath, { name: 'X', email })
+      expect([response.status, await codeOf(response)]).toEqual([400, 'CONTACT_INVALID'])
+    }
+  })
+
+  it('belong to one active contact, in any case, until that contact is deleted', async () => {
+    const first = await created(
+      member.post(contactsPath, { name: 'Contact F', email: 'contact.f@example.com' }),
+    )
+    const taken = await member.post(contactsPath, {
+      name: 'Outro',
+      email: 'CONTACT.F@example.com',
+    })
+    expect([taken.status, await codeOf(taken)]).toEqual([409, 'CONTACT_EMAIL_TAKEN'])
+    const other = await created(member.post(contactsPath, { name: 'Contact G' }))
+    const changed = await member.patch(`${contactsPath}/${other}`, {
+      email: 'contact.f@example.com',
+    })
+    expect([changed.status, await codeOf(changed)]).toEqual([409, 'CONTACT_EMAIL_TAKEN'])
+
+    expect((await owner.del(`${contactsPath}/${first}`)).status).toBe(204)
+    expect(
+      (await member.patch(`${contactsPath}/${other}`, { email: 'contact.f@example.com' })).status,
+    ).toBe(204)
+  })
+})
+
 describe('GET /contacts/:contactId', () => {
   it('shows one contact to anyone who may view, and 404 once it is deleted', async () => {
     const contactId = await created(
@@ -159,7 +203,13 @@ describe('contact balances and archiving', () => {
       ).accountId
     const checking = await account('checking', 'Conta X')
     const dining = await account('expense_category', 'Restaurantes')
-    const j = await created(member.post(contactsPath, { name: 'Contact Owing' }))
+    const j = await created(
+      member.post(contactsPath, {
+        name: 'Contact Owing',
+        phoneE164: '+5511900006666',
+        email: 'contact.owing@example.com',
+      }),
+    )
     const dinner = (occurredOn: string, amountCents: number, share: number) =>
       member.post(`${workspacePath}/entries`, {
         entryType: 'expense',
@@ -191,6 +241,8 @@ describe('contact balances and archiving', () => {
     expect(balances.find((balance) => balance.contactId === j)).toEqual({
       contactId: j,
       name: 'Contact Owing',
+      phoneE164: '+5511900006666',
+      email: 'contact.owing@example.com',
       owedCents: 11_000,
       overdueCents: 6_000,
       nextDueOn: addDays(today, 10),

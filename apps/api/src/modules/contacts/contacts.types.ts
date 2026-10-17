@@ -20,6 +20,7 @@ export type ContactItem = {
   id: string
   name: string
   phoneE164: string | null
+  email: string | null
   pixKey: string | null
   notes: string | null
   isOptedOut: boolean
@@ -49,9 +50,13 @@ export type ContactRouteDeps = {
   db: Database
 }
 
-export type ContactBalanceItem = ContactBalance & {
+export type ContactSummary = {
   name: string
+  phoneE164: string | null
+  email: string | null
 }
+
+export type ContactBalanceItem = ContactBalance & ContactSummary
 
 export type ChargeRow = typeof charges.$inferSelect
 

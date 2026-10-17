@@ -19,7 +19,7 @@ updated: 2026-10-16
 | `workspace_id`, `id` | | |
 | `name` | text not null | 1–80 characters |
 | `phone_e164` | text null | `+55…` format (CHECK). Required to send charges over WhatsApp |
-| `email` | citext null | Valid e-mail, unique among active contacts (`409 CONTACT_EMAIL_TAKEN`). Required to send charges by e-mail (G61) |
+| `email` | text null | Valid e-mail, stored trimmed and lower-cased (the shared `emailSchema`; CHECK ≤ 254 characters, one `@`, no spaces). Required to send charges by e-mail (G61) |
 | `pix_key` | text null | Only if the household ever pays *them* (≤ 77 characters, the Pix limit) |
 | `notes` | text null | ≤ 500 characters |
 | `opted_out_at` | timestamptz null | Contact replied asking not to receive charges. Sending is blocked while set. Set again, it keeps the first moment |
@@ -28,15 +28,17 @@ updated: 2026-10-16
 | `archived_at` | | `PATCH { isArchived: true }` only when the balance is zero (`409 CONTACT_HAS_BALANCE`) |
 | soft delete, timestamps | | |
 
-One active contact per phone (`409 CONTACT_PHONE_TAKEN`); deleting a contact frees its phone.
+One active contact per phone (`409 CONTACT_PHONE_TAKEN`) and per e-mail, in any case (`409
+CONTACT_EMAIL_TAKEN`, a partial unique index on `lower(email)` like `users.email`, so no `citext`
+extension); deleting a contact frees both.
 
 | Route | Permission | Does |
 |---|---|---|
-| `GET /contacts` | `contacts:view` | `listContacts`: active contacts by name, with `isOptedOut`, `isArchived` |
-| `POST /contacts` | `contacts:create` | `createContact` `{ name, phoneE164?, pixKey?, notes? }` → `201 { contactId }` |
-| `GET /contacts/balances` | `contacts:view` | `listContactBalances`: per active contact with postings, `{ contactId, name, owedCents, overdueCents, nextDueOn, nextDueCents }` |
+| `GET /contacts` | `contacts:view` | `listContacts`: active contacts by name: `id`, `name`, `phoneE164`, `email`, `pixKey`, `notes`, `isOptedOut`, `isArchived` |
+| `POST /contacts` | `contacts:create` | `createContact` `{ name, phoneE164?, email?, pixKey?, notes? }` → `201 { contactId }` |
+| `GET /contacts/balances` | `contacts:view` | `listContactBalances`: per active contact with postings, `{ contactId, name, phoneE164, email, owedCents, overdueCents, nextDueOn, nextDueCents }` (the phone and e-mail draw the channels line) |
 | `GET /contacts/:contactId` | `contacts:view` | `getContact`: one active contact, as in the list; a deleted one is `404 CONTACT_NOT_FOUND` |
-| `PATCH /contacts/:contactId` | `contacts:update` | `changeContact`: only the fields sent, plus `isOptedOut` and `isArchived` → `204` |
+| `PATCH /contacts/:contactId` | `contacts:update` | `changeContact`: only the fields sent (`null` clears `phoneE164`, `email`, `pixKey`, `notes`), plus `isOptedOut` and `isArchived` → `204` |
 | `DELETE /contacts/:contactId` | `contacts:delete` | `deleteContact` (soft, optional `reason`) → `204` |
 
 ## `charges`
