@@ -19,6 +19,7 @@ export const badgeVariants = cva(
         success: 'bg-success-soft text-success',
         warning: 'bg-warning-soft text-warning',
         danger: 'bg-danger-soft text-danger',
+        partial: 'bg-status-partial-soft text-status-partial',
       },
     },
     defaultVariants: { tone: 'neutral', size: 'md' },

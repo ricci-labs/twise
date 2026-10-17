@@ -45,6 +45,7 @@ const TEXT_PAIRS = [
     `status-${status}-soft`,
   ]),
   ['ink', 'mint-soft'],
+  ['ink', 'danger-soft'],
   ['sketch-ink', 'sketch-paper'],
 ]
 const ACCOUNT_SCREEN_TEXT_PAIRS = [

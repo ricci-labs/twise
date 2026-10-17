@@ -16,5 +16,24 @@ export const badgeExamples: ComponentExamples = {
         </div>
       ),
     },
+    {
+      name: 'Situação de uma cobrança',
+      render: () => (
+        <div className="flex flex-wrap gap-2">
+          <Badge size="xs" hasDot>
+            Rascunho
+          </Badge>
+          <Badge tone="warning" size="xs" hasDot>
+            Enviada
+          </Badge>
+          <Badge tone="partial" size="xs" hasDot>
+            Paga em parte
+          </Badge>
+          <Badge tone="success" size="xs" hasDot>
+            Paga
+          </Badge>
+        </div>
+      ),
+    },
   ],
 }
