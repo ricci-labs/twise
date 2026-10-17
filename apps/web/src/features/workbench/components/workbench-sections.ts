@@ -63,6 +63,7 @@ import { chargeRowExamples } from '@web/components/finance/charge-row'
 import { contactHeaderExamples } from '@web/components/finance/contact-header'
 import { contactRowExamples } from '@web/components/finance/contact-row'
 import { cyclePreviewExamples } from '@web/components/finance/cycle-preview'
+import { emailSendSheetExamples } from '@web/components/finance/email-send-sheet'
 import { entryDayGroupExamples } from '@web/components/finance/entry-day-group'
 import { entryHeaderExamples } from '@web/components/finance/entry-header'
 import { entryRowExamples } from '@web/components/finance/entry-row'
@@ -89,6 +90,7 @@ import { planSummaryTilesExamples } from '@web/components/finance/plan-summary-t
 import { recentEntriesExamples } from '@web/components/finance/recent-entries'
 import { recurrenceRowExamples } from '@web/components/finance/recurrence-row'
 import { reserveCardExamples } from '@web/components/finance/reserve-card'
+import { sendOptionsExamples } from '@web/components/finance/send-options'
 import { shareRowsExamples } from '@web/components/finance/share-rows'
 import { sharesListExamples } from '@web/components/finance/shares-list'
 import { splitExampleExamples } from '@web/components/finance/split-example'
@@ -258,6 +260,8 @@ export const workbenchSections: readonly ComponentExamples[] = [
   installmentRowsExamples,
   shareRowsExamples,
   transferFlowExamples,
+  sendOptionsExamples,
+  emailSendSheetExamples,
   chargeRowExamples,
   chargeBodyExamples,
   messageBubbleExamples,
