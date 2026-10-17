@@ -1765,7 +1765,7 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"Contact J\",\n  \"phoneE164\": null,\n  \"notes\": \"Colega\"\n}",
+              "raw": "{\n  \"name\": \"Contact J\",\n  \"phoneE164\": null,\n  \"email\": \"contact.j@example.com\",\n  \"notes\": \"Colega\"\n}",
               "options": {
                 "raw": {
                   "language": "json"

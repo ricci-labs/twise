@@ -1,7 +1,7 @@
 import { systemClock } from '@api/core/clock'
 import type { Clock } from '@api/core/clock.types'
 import type { Database, WorkspaceTransaction } from '@api/core/db/db.types'
-import { POSTGRES_UNIQUE_VIOLATION, postgresErrorCode } from '@api/core/db/errors'
+import { postgresConstraintName } from '@api/core/db/errors'
 import { withWorkspace } from '@api/core/db/tx'
 import { ConflictError, NotFoundError, parseOrThrow } from '@api/core/http/errors'
 import { auditCreation, audited } from '@api/modules/audit'
@@ -18,6 +18,7 @@ import type {
   ContactItem,
   ContactRef,
   ContactRow,
+  ContactSummary,
   ContactsContext,
   CreatedContact,
   DeleteContactInput,
@@ -34,6 +35,17 @@ import {
 } from '@financas/shared'
 
 const CONTACT_INVALID = 'CONTACT_INVALID'
+
+const TAKEN_CHANNELS = new Map([
+  [
+    'contacts_one_per_phone',
+    { code: 'CONTACT_PHONE_TAKEN', message: 'Another contact has this phone' },
+  ],
+  [
+    'contacts_one_per_email',
+    { code: 'CONTACT_EMAIL_TAKEN', message: 'Another contact has this email' },
+  ],
+])
 
 export function listContacts(db: Database, workspaceId: string): Promise<ContactItem[]> {
   return withWorkspace(db, workspaceId, async (tx) => (await selectActiveContacts(tx)).map(itemOf))
@@ -60,12 +72,12 @@ export function listContactBalances(
 ): Promise<ContactBalanceItem[]> {
   return withWorkspace(db, workspaceId, async (tx) => {
     const { timezone } = await currentWorkspaceDefaults(tx)
-    const names = new Map(
-      (await selectActiveContacts(tx)).map((contact) => [contact.id, contact.name]),
-    )
+    const active = new Map((await selectActiveContacts(tx)).map((contact) => [contact.id, contact]))
     return contactBalances(await readContactPostings(tx), todayIn(timezone, clock.now()))
-      .filter((balance) => names.has(balance.contactId))
-      .map((balance) => ({ ...balance, name: names.get(balance.contactId) ?? '' }))
+      .flatMap((balance) => {
+        const contact = active.get(balance.contactId)
+        return contact ? [{ ...balance, ...summaryOf(contact) }] : []
+      })
       .sort((left, right) => left.name.localeCompare(right.name))
   })
 }
@@ -86,7 +98,7 @@ export async function createContact(
   rawInput: unknown,
 ): Promise<CreatedContact> {
   const contact = parseOrThrow(newContactSchema, rawInput, CONTACT_INVALID)
-  return refusingTakenPhones(() =>
+  return refusingTakenChannels(() =>
     withWorkspace(db, workspaceId, async (tx) => {
       const contactId = await insertContact(tx, { workspaceId, ...contact })
       await auditCreation(tx, contactAuditTarget(workspaceId, contactId))
@@ -106,7 +118,7 @@ export async function changeContact(
     rawChange,
     CONTACT_INVALID,
   )
-  await refusingTakenPhones(() =>
+  await refusingTakenChannels(() =>
     withWorkspace(db, workspaceId, async (tx) => {
       const current = await lockExistingContact(tx, contactId)
       if (isArchived) {
@@ -188,17 +200,20 @@ function optOutMoment(current: ContactRow, isOptedOut: boolean, clock: Clock): D
   return current.optedOutAt ?? clock.now()
 }
 
-async function refusingTakenPhones<T>(work: () => Promise<T>): Promise<T> {
+async function refusingTakenChannels<T>(work: () => Promise<T>): Promise<T> {
   try {
     return await work()
   } catch (error) {
-    if (postgresErrorCode(error) === POSTGRES_UNIQUE_VIOLATION) {
-      throw new ConflictError('CONTACT_PHONE_TAKEN', 'Another contact has this phone', {
-        cause: error,
-      })
+    const taken = TAKEN_CHANNELS.get(postgresConstraintName(error) ?? '')
+    if (taken) {
+      throw new ConflictError(taken.code, taken.message, { cause: error })
     }
     throw error
   }
+}
+
+function summaryOf(contact: ContactRow): ContactSummary {
+  return { name: contact.name, phoneE164: contact.phoneE164, email: contact.email }
 }
 
 function itemOf(contact: ContactRow): ContactItem {
@@ -206,6 +221,7 @@ function itemOf(contact: ContactRow): ContactItem {
     id: contact.id,
     name: contact.name,
     phoneE164: contact.phoneE164,
+    email: contact.email,
     pixKey: contact.pixKey,
     notes: contact.notes,
     isOptedOut: contact.optedOutAt !== null,

@@ -22,7 +22,7 @@ afterAll(async () => {
 
 function insertContact(
   workspaceId: string,
-  values: { name?: string; phoneE164?: string | null } = {},
+  values: { name?: string; phoneE164?: string | null; email?: string | null } = {},
 ) {
   return withWorkspace(databases.app, workspaceId, (tx) =>
     tx.insert(contacts).values({ workspaceId, name: 'Contact J', ...values }),
@@ -30,13 +30,26 @@ function insertContact(
 }
 
 describe('contacts table', () => {
-  it('refuses a malformed phone and a blank name', async () => {
+  it('refuses a malformed phone, a malformed e-mail and a blank name', async () => {
     const { workspaceId } = await fixtures.createWorkspaceOwnedBy(ownerUserId, 'Contact checks')
-    for (const values of [{ phoneE164: '5511900001111' }, { name: ' ' }]) {
+    for (const values of [
+      { phoneE164: '5511900001111' },
+      { email: 'contact.j' },
+      { email: `${'a'.repeat(250)}@example.com` },
+      { name: ' ' },
+    ]) {
       expect(await postgresErrorCodeOf(insertContact(workspaceId, values))).toBe(
         POSTGRES_ERRORS.checkViolation,
       )
     }
+  })
+
+  it('keeps one active contact per e-mail, whatever its case', async () => {
+    const { workspaceId } = await fixtures.createWorkspaceOwnedBy(ownerUserId, 'Contact e-mails')
+    await insertContact(workspaceId, { email: 'contact.j@example.com' })
+    expect(
+      await postgresErrorCodeOf(insertContact(workspaceId, { email: 'Contact.J@example.com' })),
+    ).toBe(POSTGRES_ERRORS.uniqueViolation)
   })
 
   it('keeps contacts inside their workspace', async () => {

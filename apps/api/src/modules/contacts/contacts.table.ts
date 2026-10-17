@@ -6,6 +6,7 @@ import {
   CHARGE_STATUSES,
   CONTACT_NAME_MAX_LENGTH,
   CONTACT_NOTES_MAX_LENGTH,
+  EMAIL_MAX_LENGTH,
   PIX_KEY_MAX_LENGTH,
 } from '@financas/shared'
 import { sql } from 'drizzle-orm'
@@ -34,6 +35,7 @@ export const contacts = pgTable(
     id: primaryId(),
     name: text().notNull(),
     phoneE164: text('phone_e164'),
+    email: text(),
     pixKey: text(),
     notes: text(),
     optedOutAt: timestamp({ withTimezone: true }),
@@ -46,6 +48,9 @@ export const contacts = pgTable(
     uniqueIndex('contacts_one_per_phone')
       .on(table.workspaceId, table.phoneE164)
       .where(sql`${table.phoneE164} is not null and ${table.deletedAt} is null`),
+    uniqueIndex('contacts_one_per_email')
+      .on(table.workspaceId, sql`lower(${table.email})`)
+      .where(sql`${table.email} is not null and ${table.deletedAt} is null`),
     check(
       'contacts_name',
       sql`length(trim(${table.name})) between 1 and ${limit(CONTACT_NAME_MAX_LENGTH)}`,
@@ -53,6 +58,10 @@ export const contacts = pgTable(
     check(
       'contacts_phone_e164',
       sql`${table.phoneE164} is null or ${table.phoneE164} ~ '^[+][1-9][0-9]{7,14}$'`,
+    ),
+    check(
+      'contacts_email',
+      sql`${table.email} is null or (length(${table.email}) <= ${limit(EMAIL_MAX_LENGTH)} and ${table.email} ~ '^[^@[:space:]]+@[^@[:space:]]+$')`,
     ),
     check(
       'contacts_pix_key',

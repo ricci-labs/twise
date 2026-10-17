@@ -33,6 +33,7 @@ function contact(id: string, name: string) {
     id,
     name,
     phoneE164: null,
+    email: null,
     pixKey: null,
     notes: null,
     isOptedOut: false,

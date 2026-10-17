@@ -264,8 +264,16 @@ describe('writes across the modules', () => {
 
     const contactId = await idOf(owner.post(`${base}/contacts`, { name: 'Contact J' }))
     await expectLatest('contacts', contactId, 'create')
-    await ok(owner.patch(`${base}/contacts/${contactId}`, { notes: 'Colega' }))
-    await expectLatest('contacts', contactId, 'update')
+    await ok(
+      owner.patch(`${base}/contacts/${contactId}`, {
+        notes: 'Colega',
+        email: 'contact.j@example.com',
+      }),
+    )
+    expect(await expectLatest('contacts', contactId, 'update')).toMatchObject({
+      before: { email: null },
+      after: { notes: 'Colega', email: 'contact.j@example.com' },
+    })
     await ok(
       owner.post(`${base}/entries`, {
         ...expense('Jantar'),

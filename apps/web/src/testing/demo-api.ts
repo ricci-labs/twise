@@ -52,6 +52,7 @@ function demoContacts() {
     id,
     name: DEMO_NAMES[id] ?? id,
     phoneE164: null,
+    email: null,
     pixKey: null,
     notes: null,
     isOptedOut: false,
