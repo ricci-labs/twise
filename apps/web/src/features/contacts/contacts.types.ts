@@ -7,6 +7,7 @@ import type {
   fetchContactBalances,
   fetchContactCharges,
   fetchContactOpenItems,
+  fetchContactReceipts,
   fetchContacts,
   fetchUpcomingContactItems,
 } from '@web/features/contacts/api/contacts.queries'
@@ -361,4 +362,40 @@ export type ContactNameCellProps = {
 
 export type UpcomingBodyProps = {
   upcoming: UseQueryResult<UpcomingContactItem[]>
+}
+
+export type ContactReceipt = Awaited<ReturnType<typeof fetchContactReceipts>>['items'][number]
+
+export type ReceiptFacts = {
+  chargedOn: ReadonlyMap<string, IsoDate>
+  accountNames: ReadonlyMap<string, string>
+}
+
+export type ContactDetailDesktopProps = {
+  workspaceId: string
+  contact: Contact
+  menu: ReactNode
+  canCharge: boolean
+  canRecordReceipt: boolean
+  onNewCharge: () => void
+  main: ReactNode
+  talkTo: ReactNode
+}
+
+export type ContactReceiptCardProps = {
+  contact: Contact
+}
+
+export type ContactPaymentsCardProps = {
+  workspaceId: string
+  contactId: string
+}
+
+export type ContactPaymentsListProps = {
+  receipts: readonly ContactReceipt[]
+  facts: ReceiptFacts
+}
+
+export type ContactEditLinkProps = {
+  contactId: string
 }

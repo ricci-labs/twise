@@ -1,5 +1,6 @@
 import { formatBrl } from '@financas/shared'
 import { Link } from '@tanstack/react-router'
+import { Button } from '@web/components/actions/button'
 import { type ItemAction, ItemActions } from '@web/components/actions/item-actions'
 import { ConfirmDialog } from '@web/components/feedback/confirm-dialog'
 import { showToast } from '@web/components/feedback/toast'
@@ -8,8 +9,11 @@ import { useChangeContact, useDeleteContact } from '@web/features/contacts/api/u
 import { contactsMessages } from '@web/features/contacts/contacts.messages'
 import type {
   ContactDetailMenuProps,
+  ContactEditLinkProps,
   ContactMenuDialog,
 } from '@web/features/contacts/contacts.types'
+import { useMediaQuery } from '@web/hooks/use-media-query'
+import { DESKTOP_QUERY } from '@web/lib/breakpoints'
 import { errorMessageFor } from '@web/lib/errors/error-message'
 import { hasPermission } from '@web/lib/permissions'
 import { useState } from 'react'
@@ -90,16 +94,7 @@ export function ContactDetailMenu({
   ]
   return (
     <>
-      {canUpdate && (
-        <Link
-          to="."
-          search={(previous) => ({ ...previous, contact: contact.id })}
-          aria-label={messages.edit}
-          className="grid size-touch place-items-center rounded-full text-ink outline-none hover:bg-sunken focus-visible:ring-2 focus-visible:ring-focus-ring"
-        >
-          <TwiseIcon name="edit" />
-        </Link>
-      )}
+      {canUpdate && <ContactEditLink contactId={contact.id} />}
       <ItemActions
         title={contact.name}
         triggerLabel={messages.actions(contact.name)}
@@ -146,5 +141,28 @@ export function ContactDetailMenu({
         }}
       />
     </>
+  )
+}
+
+function ContactEditLink({ contactId }: ContactEditLinkProps) {
+  const isDesktop = useMediaQuery(DESKTOP_QUERY)
+  const link = <Link to="." search={(previous) => ({ ...previous, contact: contactId })} />
+  if (isDesktop) {
+    return (
+      <Button variant="secondary" render={link}>
+        <TwiseIcon name="edit" size="md" />
+        {messages.editButton}
+      </Button>
+    )
+  }
+  return (
+    <Link
+      to="."
+      search={(previous) => ({ ...previous, contact: contactId })}
+      aria-label={messages.edit}
+      className="grid size-touch place-items-center rounded-full text-ink outline-none hover:bg-sunken focus-visible:ring-2 focus-visible:ring-focus-ring"
+    >
+      <TwiseIcon name="edit" />
+    </Link>
   )
 }

@@ -8,6 +8,8 @@ const workspaceApi = apiClient.api.workspaces[':workspaceId']
 
 const EVERY_FUTURE_ITEM = '9999-12-31'
 const UPCOMING_LIMIT = 5
+const RECEIPTS_LIMIT = 5
+const SETTLEMENT = 'settlement' as const
 
 export function contactsQueryOptions(workspaceId: string) {
   return queryOptions({
@@ -97,6 +99,23 @@ export function fetchUpcomingContactItems(workspaceId: string) {
     workspaceApi.contacts.upcoming.$get({
       param: { workspaceId },
       query: { limit: String(UPCOMING_LIMIT) },
+    }),
+  )
+}
+
+export function contactReceiptsQueryOptions(workspaceId: string, contactId: string) {
+  return queryOptions({
+    queryKey: [...queryKeys.workspace(workspaceId), 'entries', 'contact', contactId] as const,
+    queryFn: () => fetchContactReceipts(workspaceId, contactId),
+    select: (page) => page.items,
+  })
+}
+
+export function fetchContactReceipts(workspaceId: string, contactId: string) {
+  return unwrap(
+    workspaceApi.entries.$get({
+      param: { workspaceId },
+      query: { contactId, types: [SETTLEMENT], limit: String(RECEIPTS_LIMIT) },
     }),
   )
 }
