@@ -1,7 +1,7 @@
 ---
 summary: Functional requirements for the app shell and workspaces — switcher, creating a workspace, settings (financial period, budget base, installment view, time zone), Pix receiving, the charge text, members, roles and permissions, invitations (SHELL-01, WS-01, SET-01..03, MEM-01..03).
 read_when: Designing or building the shell, workspace settings, members, roles or invitations.
-updated: 2026-10-16
+updated: 2026-10-17
 ---
 
 # Workspace and members
@@ -117,7 +117,7 @@ explained under a padlock.
 | Field | Label | Default | Rules |
 |---|---|---|---|
 | subject | "Assunto do e-mail" | "{quem cobra} te enviou uma cobrança de {valor}" | 1–120 after filling the tags |
-| opening | "Abertura" (e-mail and WhatsApp) | "{quem cobra} pediu para te lembrar do que está em aberto. Dá para pagar com Pix, o valor já vem preenchido." | 1–300 |
+| opening | "Abertura" (e-mail and WhatsApp) | "{quem cobra} pediu para te lembrar do que está em aberto. Dá para pagar com Pix, o valor já vem preenchido." (without the workspace Pix the untouched default stops after "em aberto.", `chargeOpeningFor`) | 1–300 |
 | closing | "Encerramento" (e-mail and WhatsApp) | "Qualquer dúvida, é só responder este e-mail." (WhatsApp: none by default) | 0–300; untouched it stays `null`, each channel's default, so the e-mail sentence never goes to WhatsApp |
 Tags `{contato}`, `{quem cobra}`, `{valor}`, `{vencimento}`, `{espaço}` are inserted by buttons
 ("Nome do contato", "Quem cobra", "Valor", "Vencimento", "Espaço") and shown as chips. An unknown

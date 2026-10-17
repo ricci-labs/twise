@@ -6,6 +6,8 @@ import {
   type ChargeTextChannel,
   type ChargeTextField,
   DEFAULT_CHARGE_CLOSINGS,
+  DEFAULT_CHARGE_OPENING,
+  DEFAULT_CHARGE_OPENING_WITHOUT_PIX,
 } from '@shared/contacts/charge-text/charge-text.constants'
 import type {
   ChargeTagSource,
@@ -40,6 +42,12 @@ export function chargeSubject(subject: string, source: ChargeTagSource): string 
   const filled = fillChargeTags(subject, source)
   const { maxLength } = CHARGE_TEXT_LIMITS.subject
   return filled.length > maxLength ? `${filled.slice(0, maxLength - 1)}${ELLIPSIS}` : filled
+}
+
+export function chargeOpeningFor(opening: string, hasPix: boolean): string {
+  return !hasPix && opening === DEFAULT_CHARGE_OPENING
+    ? DEFAULT_CHARGE_OPENING_WITHOUT_PIX
+    : opening
 }
 
 export function chargeClosingFor(closing: string | null, channel: ChargeTextChannel): string {

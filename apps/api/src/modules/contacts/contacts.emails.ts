@@ -4,6 +4,7 @@ import { pageLink } from '@api/core/email/links'
 import type { ChargeEmail, ChargeEmailInput } from '@api/modules/contacts/contacts.types'
 import {
   chargeClosingFor,
+  chargeOpeningFor,
   chargeSubject,
   fillChargeTags,
   formatBrl,
@@ -30,7 +31,7 @@ export function chargeEmail(input: ChargeEmailInput): ChargeEmail {
     dueOn: input.dueOn,
   }
   const greeting = `Oi, ${input.contactName}!`
-  const opening = fillChargeTags(input.text.opening, source)
+  const opening = fillChargeTags(chargeOpeningFor(input.text.opening, input.pix !== null), source)
   const closing = fillChargeTags(chargeClosingFor(input.text.closing, 'email'), source)
   const pix = input.pix
   const rendered = renderEmail({

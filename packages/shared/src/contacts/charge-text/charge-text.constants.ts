@@ -33,6 +33,9 @@ export const DEFAULT_CHARGE_SUBJECT = '{quem cobra} te enviou uma cobrança de {
 export const DEFAULT_CHARGE_OPENING =
   '{quem cobra} pediu para te lembrar do que está em aberto. Dá para pagar com Pix, o valor já vem preenchido.'
 
+export const DEFAULT_CHARGE_OPENING_WITHOUT_PIX =
+  '{quem cobra} pediu para te lembrar do que está em aberto.'
+
 export const DEFAULT_CHARGE_CLOSINGS: Readonly<Record<ChargeTextChannel, string>> = {
   whatsapp: '',
   email: 'Qualquer dúvida, é só responder este e-mail.',

@@ -173,6 +173,9 @@ describe('SET-03 Mensagem das cobranças', () => {
 
   it('leaves the Pix out of the example when the workspace has none', async () => {
     await openChargeText({ answers: workspaceSettingsAnswer(NO_PIX) })
+    await expect
+      .element(page.getByText('Oi, Ana! Member A pediu para te lembrar do que está em aberto.'))
+      .toBeVisible()
     await page.getByRole('button', { name: 'WhatsApp' }).click()
     await expect.element(page.getByText(/Total: R\$\s200,00/)).toBeVisible()
     await expect.element(page.getByText('Pix copia e cola:')).not.toBeInTheDocument()

@@ -1,5 +1,6 @@
 import {
   chargeClosingFor,
+  chargeOpeningFor,
   chargeSubject,
   chargeTextIssues,
   fillChargeTags,
@@ -7,6 +8,7 @@ import {
 } from '@shared/contacts/charge-text/charge-text'
 import {
   DEFAULT_CHARGE_CLOSINGS,
+  DEFAULT_CHARGE_OPENING,
   DEFAULT_CHARGE_TEXT,
 } from '@shared/contacts/charge-text/charge-text.constants'
 import { chargeTextSchema } from '@shared/contacts/charge-text/charge-text.schemas'
@@ -51,6 +53,16 @@ describe('chargeSubject', () => {
     const subject = chargeSubject('{quem cobra} cobra', { ...SOURCE, requesterName: longName })
     expect(subject).toHaveLength(120)
     expect(subject.endsWith('N…')).toBe(true)
+  })
+})
+
+describe('chargeOpeningFor', () => {
+  it('drops the Pix sentence only from the default opening and only without Pix', () => {
+    expect(chargeOpeningFor(DEFAULT_CHARGE_OPENING, false)).toBe(
+      '{quem cobra} pediu para te lembrar do que está em aberto.',
+    )
+    expect(chargeOpeningFor(DEFAULT_CHARGE_OPENING, true)).toBe(DEFAULT_CHARGE_OPENING)
+    expect(chargeOpeningFor('Pague pelo Pix, {contato}.', false)).toBe('Pague pelo Pix, {contato}.')
   })
 })
 

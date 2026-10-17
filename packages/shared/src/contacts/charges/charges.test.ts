@@ -81,6 +81,23 @@ describe('chargeMessage', () => {
     )
   })
 
+  it('drops the Pix sentence of the default opening when the workspace has no Pix', () => {
+    const items = openItems(TV, 0, { until: '2026-10-31', alreadyCharged: new Set() })
+    const message = chargeMessage({
+      contactName: 'Contact J',
+      requesterName: 'Member A',
+      workspaceName: 'Casa',
+      items,
+      totalCents: 10_000,
+      dueOn: '2026-10-10',
+      pixPayload: null,
+      text: DEFAULT_CHARGE_TEXT,
+    })
+    expect(message.split('\n')[0]).toBe(
+      'Oi, Contact J! Member A pediu para te lembrar do que está em aberto.',
+    )
+  })
+
   it('leaves out the installment, the due date and the Pix when there are none', () => {
     const message = chargeMessage({
       contactName: 'Contact M',
