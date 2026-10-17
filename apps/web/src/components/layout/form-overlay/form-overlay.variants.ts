@@ -17,6 +17,7 @@ export const formOverlayPopupVariants = cva(
         md: 'lg:top-15 lg:bottom-15 lg:h-fit lg:w-140',
         roomy: 'lg:top-15 lg:bottom-15 lg:h-fit lg:w-180',
         wide: 'lg:top-15 lg:bottom-15 lg:h-fit lg:w-190',
+        split: 'lg:top-15 lg:bottom-15 lg:h-fit lg:w-220',
       },
     },
     defaultVariants: { size: 'lg' },

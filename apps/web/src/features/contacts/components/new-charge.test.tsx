@@ -271,4 +271,41 @@ describe('CON-03 new charge', () => {
       .poll(() => app.router.state.location.pathname)
       .toBe(`/w/${WORKSPACE_ID}/entries/${NEW_CHARGE}`)
   })
+
+  describe('on the desktop', () => {
+    beforeEach(async () => {
+      await page.viewport(1440, 900)
+    })
+
+    it('previews the message beside the date and remakes it when the date changes', async () => {
+      await openNewCharge(workspaceSettingsAnswer())
+      const dialog = page.getByRole('dialog', { name: 'Nova cobrança' })
+      const preview = dialog.getByRole('region', { name: 'Prévia da mensagem' })
+
+      await expect.element(preview.getByText(/Oi, Member D! Member A pediu/)).toBeVisible()
+      await expect.element(preview.getByText('Vencimento: 10/10/2026')).toBeVisible()
+      await expect.element(preview.getByText('Pix copia e cola:')).toBeVisible()
+      await expect
+        .element(dialog.getByText('O texto fica guardado na cobrança e não muda depois.'))
+        .toBeVisible()
+      await dialog.getByRole('radio', { name: /Até 10\/11/ }).click()
+      await expect.element(preview.getByText(/TV da sala \(parcela 2\/3\)/)).toBeVisible()
+      await expect.element(preview.getByText('Vencimento: 10/11/2026')).toBeVisible()
+      await expect.element(dialog.getByRole('button', { name: 'Cancelar' }).last()).toBeVisible()
+      await expectNoAccessibilityViolations(dialog.element())
+    })
+
+    it('puts the message on the left and the Pix and the channels on the right', async () => {
+      await openNewCharge()
+      await page.getByRole('button', { name: 'Criar cobrança' }).click()
+      const created = page.getByRole('dialog', { name: 'Cobrança criada' })
+
+      await expect.element(created.getByText('A mensagem, como Member D vai ler')).toBeVisible()
+      await expect
+        .element(created.getByRole('button', { name: /Enviar pelo WhatsApp/ }))
+        .toBeVisible()
+      await expect.element(created.getByRole('button', { name: 'Fechar' }).last()).toBeVisible()
+      await expectNoAccessibilityViolations(created.element())
+    })
+  })
 })

@@ -572,7 +572,7 @@ component here, so the form, and later the account, card and planning forms, sha
   the top and as tall as its content (up to 820 px), for the account and category forms;
   `size="wide"` is the same at 760 px, for the card form's two columns (fields side by side at the
   same height, the days preview and the switch across both); `size="roomy"` is the same at 720 px,
-  for the contact form (Nome, Chave Pix and Observações across, WhatsApp | E-mail side by side). The desktop header keeps 4 px under
+  for the contact form (Nome, Chave Pix and Observações across, WhatsApp | E-mail side by side); `size="split"` is the same at 880 px, for the new charge and the created charge (two columns, as tall as their content). The desktop header keeps 4 px under
   the 44 px "X" row, as the design's `dlg__head`. `actions="single"` gives the phone footer of one
   button its 20 px bottom.
 - `IllustrationPicker` (`components/inputs/illustration-picker`, Base UI `RadioGroup`): the 13

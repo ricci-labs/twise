@@ -28,7 +28,10 @@ import {
   useMarkChargeSent,
   useSendChargeEmail,
 } from '@web/features/contacts/api/use-charge-actions'
-import { chargeEmailPreviewOf } from '@web/features/contacts/components/charge-email-view'
+import {
+  chargeEmailPreviewOf,
+  chargeMessagePreviewOf,
+} from '@web/features/contacts/components/charge-email-view'
 import {
   chargeableBy,
   defaultUntilOf,
@@ -36,12 +39,18 @@ import {
 } from '@web/features/contacts/components/contact-detail-view'
 import { contactsMessages } from '@web/features/contacts/contacts.messages'
 import type {
+  ChargeComposeFieldsProps,
   ChargeComposeProps,
   ChargeEmailSendProps,
+  ChargeMessagePreviewProps,
   ChargePixProps,
+  CreatedChargeLayoutProps,
   CreatedChargeProps,
+  DialogDismissProps,
   NewChargeProps,
 } from '@web/features/contacts/contacts.types'
+import { useMediaQuery } from '@web/hooks/use-media-query'
+import { DESKTOP_QUERY } from '@web/lib/breakpoints'
 import { errorMessageFor } from '@web/lib/errors/error-message'
 import { formatPhone, whatsappLink } from '@web/lib/format/phone'
 import { hasPermission } from '@web/lib/permissions'
@@ -59,26 +68,17 @@ export function NewCharge(props: NewChargeProps) {
   )
 }
 
-function ChargeCompose({
-  workspaceId,
-  contact,
-  balance,
-  openItems,
-  today,
-  isOpen,
-  onClose,
-  onCreated,
-}: ChargeComposeProps) {
+function ChargeCompose(props: ChargeComposeProps) {
+  const { workspaceId, contact, balance, today, openItems, isOpen, onClose, onCreated } = props
+  const isDesktop = useMediaQuery(DESKTOP_QUERY)
   const create = useCreateCharge(workspaceId, contact.id)
   const [until, setUntil] = useState(() => defaultUntilOf(balance, today))
-  const next = nextUntilOf(openItems, today)
-  const items = chargeableBy(openItems, until, today)
-  const totalCents = items.reduce((sum, item) => sum + item.amountCents, 0)
-  const owed = formatBrl(balance?.owedCents ?? 0)
+  const hasItems = chargeableBy(openItems, until, today).length > 0
   return (
     <FormOverlay
       title={messages.title}
       closeLabel={messages.close}
+      size="split"
       isOpen={isOpen}
       onRequestClose={onClose}
       onSubmit={(event) => {
@@ -89,54 +89,108 @@ function ChargeCompose({
         })
       }}
       footer={
-        <>
-          <TextLink render={<button type="button" onClick={onClose} />}>{messages.close}</TextLink>
-          <Button type="submit" isLoading={create.isPending} disabled={items.length === 0}>
+        <div className="flex flex-col gap-2 lg:flex-row lg:items-center lg:justify-between">
+          <DialogDismiss label={messages.close} onPress={onClose} />
+          <Button type="submit" isLoading={create.isPending} disabled={!hasItems}>
             {messages.create}
           </Button>
-        </>
+        </div>
       }
     >
-      <div className="flex flex-col gap-4 px-4 lg:px-8">
-        <div className="flex items-center gap-3 rounded-md bg-sunken p-3">
-          <Avatar name={contact.name} size="xl" tone="paper" />
-          <div className="flex min-w-0 flex-col">
-            <span className="line-clamp-2 font-semibold text-body">{contact.name}</span>
-            <span className="text-body-sm text-ink-muted">
-              {(balance?.overdueCents ?? 0) > 0
-                ? messages.owesLate(owed, formatBrl(balance?.overdueCents ?? 0))
-                : messages.owes(owed)}
-            </span>
-          </div>
-        </div>
-        <UntilChips
-          label={messages.until}
-          today={today}
-          next={next}
-          value={until}
-          onChange={setUntil}
-        />
-        {items.length > 0 ? (
-          <ChargePreview items={items} totalCents={totalCents} />
-        ) : (
-          <NothingToCharge
-            chargedOn={balance?.lastCharge?.createdOn ?? null}
-            next={
-              next
-                ? {
-                    dueOn: next.dueOn,
-                    amountCents: chargeableBy(openItems, next.dueOn, today).reduce(
-                      (sum, item) => sum + item.amountCents,
-                      0,
-                    ),
-                  }
-                : null
-            }
-            onIncludeNext={next ? () => setUntil(next.dueOn) : undefined}
+      <div className="flex flex-col gap-4 px-4 lg:grid lg:grid-cols-2 lg:items-start lg:gap-6 lg:px-8">
+        <ChargeComposeFields {...props} until={until} onUntilChange={setUntil} />
+        {isDesktop && hasItems && (
+          <ChargeMessagePreviewPanel
+            workspaceId={workspaceId}
+            contactName={contact.name}
+            currentUser={props.currentUser}
+            openItems={openItems}
+            until={until}
           />
         )}
       </div>
     </FormOverlay>
+  )
+}
+
+function ChargeComposeFields({
+  contact,
+  balance,
+  openItems,
+  today,
+  until,
+  onUntilChange,
+}: ChargeComposeFieldsProps) {
+  const next = nextUntilOf(openItems, today)
+  const items = chargeableBy(openItems, until, today)
+  const totalCents = items.reduce((sum, item) => sum + item.amountCents, 0)
+  const owed = formatBrl(balance?.owedCents ?? 0)
+  return (
+    <div className="flex flex-col gap-4">
+      <div className="flex items-center gap-3 rounded-md bg-sunken p-3">
+        <Avatar name={contact.name} size="xl" tone="paper" />
+        <div className="flex min-w-0 flex-col">
+          <span className="line-clamp-2 font-semibold text-body">{contact.name}</span>
+          <span className="text-body-sm text-ink-muted">
+            {(balance?.overdueCents ?? 0) > 0
+              ? messages.owesLate(owed, formatBrl(balance?.overdueCents ?? 0))
+              : messages.owes(owed)}
+          </span>
+        </div>
+      </div>
+      <UntilChips
+        label={messages.until}
+        today={today}
+        next={next}
+        value={until}
+        onChange={onUntilChange}
+      />
+      {items.length > 0 ? (
+        <ChargePreview items={items} totalCents={totalCents} />
+      ) : (
+        <NothingToCharge
+          chargedOn={balance?.lastCharge?.createdOn ?? null}
+          next={
+            next
+              ? {
+                  dueOn: next.dueOn,
+                  amountCents: chargeableBy(openItems, next.dueOn, today).reduce(
+                    (sum, item) => sum + item.amountCents,
+                    0,
+                  ),
+                }
+              : null
+          }
+          onIncludeNext={next ? () => onUntilChange(next.dueOn) : undefined}
+        />
+      )}
+    </div>
+  )
+}
+
+function ChargeMessagePreviewPanel({
+  workspaceId,
+  contactName,
+  currentUser,
+  openItems,
+  until,
+}: ChargeMessagePreviewProps) {
+  const text = useQuery(chargeTextQueryOptions(workspaceId)).data ?? DEFAULT_CHARGE_TEXT
+  const receiver = useQuery(pixReceiverQueryOptions(workspaceId)).data ?? NO_RECEIVER
+  const preview = chargeMessagePreviewOf({
+    openItems,
+    until,
+    contactName,
+    sender: currentUser,
+    text,
+    receiver,
+  })
+  return (
+    <section aria-label={messages.messagePreview} className="flex flex-col gap-2">
+      <h2 className="font-medium text-body-sm text-ink-muted">{messages.messagePreview}</h2>
+      <MessageBubble message={preview.message} pixPayload={preview.pixPayload} />
+      <p className="text-note text-ink-muted">{messages.messageKept}</p>
+    </section>
   )
 }
 
@@ -161,70 +215,86 @@ function CreatedCharge({
     <FormOverlay
       title={isResend ? messages.resendTitle : messages.createdTitle}
       closeLabel={messages.done}
+      size="split"
       isOpen={isOpen}
       onRequestClose={onClose}
       footer={
-        <TextLink render={<button type="button" onClick={onClose} />}>{messages.done}</TextLink>
+        <div className="flex flex-col lg:flex-row lg:justify-end">
+          <DialogDismiss label={messages.done} onPress={onClose} />
+        </div>
       }
     >
       {charge.data ? (
-        <div className="flex flex-col gap-4 px-4 lg:px-8">
-          {!isResend && (
-            <Alert tone="success" icon="ok">
-              {messages.created(formatBrl(charge.data.amountCents))}
-            </Alert>
-          )}
-          <SendOptions
-            contactName={contact.name}
-            message={charge.data.messageText}
-            whatsapp={
-              contact.phoneE164
-                ? {
-                    phone: formatPhone(contact.phoneE164),
-                    onSend: () => {
-                      window.open(
-                        whatsappLink(contact.phoneE164 ?? '', charge.data?.messageText),
-                        '_blank',
-                        'noreferrer',
-                      )
-                      setIsAsking(true)
-                    },
+        <CreatedChargeLayout
+          alert={
+            !isResend && (
+              <Alert tone="success" icon="ok">
+                {messages.created(formatBrl(charge.data.amountCents))}
+              </Alert>
+            )
+          }
+          send={
+            <SendOptions
+              contactName={contact.name}
+              message={charge.data.messageText}
+              whatsapp={
+                contact.phoneE164
+                  ? {
+                      phone: formatPhone(contact.phoneE164),
+                      onSend: () => {
+                        window.open(
+                          whatsappLink(contact.phoneE164 ?? '', charge.data?.messageText),
+                          '_blank',
+                          'noreferrer',
+                        )
+                        setIsAsking(true)
+                      },
+                    }
+                  : null
+              }
+              email={
+                email
+                  ? {
+                      address: email,
+                      isOptedOut: contact.isOptedOut,
+                      onSend: () => setIsEmailOpen(true),
+                    }
+                  : null
+              }
+              onCopied={toast(messages.messageCopied)}
+              onCopyFailed={toast(messages.copyFailed)}
+            />
+          }
+          message={
+            <section className="flex flex-col gap-2">
+              <h2 className="font-medium text-body-sm text-ink-muted">
+                {messages.messageAs(contact.name)}
+              </h2>
+              <MessageBubble
+                message={charge.data.messageText}
+                pixPayload={charge.data.pixPayload}
+              />
+              {hasPermission(permissions, 'settings', 'update') && (
+                <TextLink
+                  className="self-start"
+                  render={
+                    <Link to="/w/$workspaceId/settings/charge-text" params={{ workspaceId }} />
                   }
-                : null
-            }
-            email={
-              email
-                ? {
-                    address: email,
-                    isOptedOut: contact.isOptedOut,
-                    onSend: () => setIsEmailOpen(true),
-                  }
-                : null
-            }
-            onCopied={toast(messages.messageCopied)}
-            onCopyFailed={toast(messages.copyFailed)}
-          />
-          <section className="flex flex-col gap-2">
-            <h2 className="font-medium text-body-sm text-ink-muted">
-              {messages.messageAs(contact.name)}
-            </h2>
-            <MessageBubble message={charge.data.messageText} pixPayload={charge.data.pixPayload} />
-            {hasPermission(permissions, 'settings', 'update') && (
-              <TextLink
-                className="self-start"
-                render={<Link to="/w/$workspaceId/settings/charge-text" params={{ workspaceId }} />}
-              >
-                {messages.changeText}
-              </TextLink>
-            )}
-          </section>
-          <ChargePix
-            workspaceId={workspaceId}
-            permissions={permissions}
-            amountCents={charge.data.amountCents}
-            pixPayload={charge.data.pixPayload}
-          />
-        </div>
+                >
+                  {messages.changeText}
+                </TextLink>
+              )}
+            </section>
+          }
+          pix={
+            <ChargePix
+              workspaceId={workspaceId}
+              permissions={permissions}
+              amountCents={charge.data.amountCents}
+              pixPayload={charge.data.pixPayload}
+            />
+          }
+        />
       ) : (
         <div className="px-4 lg:px-8">
           <ListSkeleton rows={3} />
@@ -266,6 +336,43 @@ function CreatedCharge({
         }}
       />
     </FormOverlay>
+  )
+}
+
+function DialogDismiss({ label, onPress }: DialogDismissProps) {
+  const isDesktop = useMediaQuery(DESKTOP_QUERY)
+  return isDesktop ? (
+    <Button variant="quiet" onClick={onPress}>
+      {label}
+    </Button>
+  ) : (
+    <TextLink render={<button type="button" onClick={onPress} />}>{label}</TextLink>
+  )
+}
+
+function CreatedChargeLayout({ alert, send, message, pix }: CreatedChargeLayoutProps) {
+  const isDesktop = useMediaQuery(DESKTOP_QUERY)
+  if (!isDesktop) {
+    return (
+      <div className="flex flex-col gap-4 px-4">
+        {alert}
+        {send}
+        {message}
+        {pix}
+      </div>
+    )
+  }
+  return (
+    <div className="grid grid-cols-2 items-start gap-6 px-8">
+      <div className="flex flex-col gap-4">
+        {alert}
+        {message}
+      </div>
+      <div className="flex flex-col gap-4">
+        {pix}
+        {send}
+      </div>
+    </div>
   )
 }
 

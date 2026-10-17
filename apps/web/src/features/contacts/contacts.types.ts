@@ -302,6 +302,7 @@ export type ChargeEmailPreviewInput = {
 }
 
 export type PixReceiver = {
+  key?: string | null
   name: string | null
   city: string | null
 }
@@ -398,4 +399,43 @@ export type ContactPaymentsListProps = {
 
 export type ContactEditLinkProps = {
   contactId: string
+}
+
+export type ChargeMessagePreviewInput = {
+  openItems: readonly ContactOpenItem[]
+  until: IsoDate
+  contactName: string
+  sender: ChargeSender
+  text: ChargeText
+  receiver: PixReceiver
+}
+
+export type ChargeMessagePreview = {
+  message: string
+  pixPayload: string | null
+}
+
+export type ChargeComposeFieldsProps = ChargeComposeProps & {
+  until: IsoDate
+  onUntilChange: (until: IsoDate) => void
+}
+
+export type ChargeMessagePreviewProps = {
+  workspaceId: string
+  contactName: string
+  currentUser: ChargeSender
+  openItems: readonly ContactOpenItem[]
+  until: IsoDate
+}
+
+export type CreatedChargeLayoutProps = {
+  alert: ReactNode
+  send: ReactNode
+  message: ReactNode
+  pix: ReactNode
+}
+
+export type DialogDismissProps = {
+  label: string
+  onPress: () => void
 }
