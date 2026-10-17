@@ -350,6 +350,11 @@ export type EntryPayment = {
   amountCents: number
 }
 
+export type EntryReceipt = {
+  occurredOn: IsoDate
+  accountId: string | null
+}
+
 export type EntryCandidateFilter = {
   accountId: string
   entryType: EntryType
