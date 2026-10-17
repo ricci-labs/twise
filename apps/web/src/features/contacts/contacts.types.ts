@@ -61,6 +61,27 @@ export type ContactDetailPageProps = {
   permissions: readonly Permission[]
   onNewCharge: () => void
   onDeleted: () => void
+  isChargeOpen: boolean
+  onChargeClose: () => void
+}
+
+export type NewChargeProps = {
+  workspaceId: string
+  contact: Contact
+  balance: ContactBalance | undefined
+  openItems: readonly ContactOpenItem[]
+  today: IsoDate
+  permissions: readonly Permission[]
+  isOpen: boolean
+  onClose: () => void
+}
+
+export type ChargeComposeProps = NewChargeProps & {
+  onCreated: (chargeId: string) => void
+}
+
+export type CreatedChargeProps = NewChargeProps & {
+  chargeId: string
 }
 
 export type ContactMenuDialog = 'archive' | 'delete' | null

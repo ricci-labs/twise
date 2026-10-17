@@ -1,5 +1,7 @@
 import { type ChargeStatus, type IsoDate, todayIn } from '@financas/shared'
+import type { ChargePreviewItem } from '@web/components/finance/charge-preview'
 import type { PlanSummaryTile } from '@web/components/finance/plan-summary-tiles'
+import type { UntilNextDue } from '@web/components/finance/until-chips'
 import { contactsMessages } from '@web/features/contacts/contacts.messages'
 import type {
   ContactBalance,
@@ -85,4 +87,43 @@ function chargeItemDescription(item: ContactCharge['items'][number]): string {
   return item.installmentNo === null
     ? item.description
     : `${item.description} · ${messages.installment(item.installmentNo, item.installmentCount)}`
+}
+
+export function chargeableBy(
+  items: readonly ContactOpenItem[],
+  until: IsoDate,
+  today: IsoDate,
+): ChargePreviewItem[] {
+  return items
+    .filter((item) => item.inChargeId === null && item.effectiveOn <= until)
+    .map((item) => ({
+      key: item.postingId,
+      description: chargeItemLabel(item),
+      dueOn: item.effectiveOn,
+      isOverdue: item.effectiveOn <= today,
+      amountCents: item.remainingCents,
+    }))
+}
+
+export function nextUntilOf(
+  items: readonly ContactOpenItem[],
+  today: IsoDate,
+): UntilNextDue | null {
+  const upcoming = items.filter((item) => item.inChargeId === null && item.effectiveOn > today)
+  const dueOn = upcoming.map((item) => item.effectiveOn).sort()[0]
+  return dueOn
+    ? { dueOn, installmentCount: upcoming.filter((item) => item.effectiveOn === dueOn).length }
+    : null
+}
+
+export function defaultUntilOf(balance: ContactBalance | undefined, today: IsoDate): IsoDate {
+  return balance && balance.dueNotChargedCents === 0 && balance.nextOpenDueOn
+    ? balance.nextOpenDueOn
+    : today
+}
+
+function chargeItemLabel(item: ContactOpenItem): string {
+  return item.installmentNo === null
+    ? item.description
+    : `${item.description} (${messages.installment(item.installmentNo, item.installmentCount).toLowerCase()})`
 }
