@@ -13,4 +13,13 @@ describe('ListSkeleton', () => {
     expect(status.element().querySelectorAll('[aria-hidden=true]')).toHaveLength(2)
     await expectNoAccessibilityViolations(screen.container)
   })
+
+  it('draws a round art for lists of people', async () => {
+    const screen = await render(<ListSkeleton rows={1} art="circle" />)
+    const art = screen.container.querySelector('[aria-hidden=true] > span') as HTMLElement
+
+    const { width } = art.getBoundingClientRect()
+
+    expect(Number.parseFloat(getComputedStyle(art).borderRadius)).toBeGreaterThanOrEqual(width / 2)
+  })
 })

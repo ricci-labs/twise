@@ -1,3 +1,6 @@
 export const archivedToggleMessages = {
-  label: (count: number) => `Arquivadas (${count})`,
+  label: {
+    feminine: (count: number) => `Arquivadas (${count})`,
+    masculine: (count: number) => `Arquivados (${count})`,
+  },
 } as const

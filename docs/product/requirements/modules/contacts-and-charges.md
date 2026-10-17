@@ -64,7 +64,7 @@ it and this file disagreed, the design won and this file follows it). The charge
   entry undoes the payment.
 
 ## CON-01 Contacts (MVP)
-Route `/contatos`. Permission `contacts:view`. `GET /contacts` + `GET /contacts/balances`.
+Route `/w/:id/contacts` (`?sort=name`). Permission `contacts:view`. `GET /contacts` + `GET /contacts/balances`.
 
 Reached from Mais › Contatos e cobranças and from the Home's "A receber" card ("Ver contatos").
 

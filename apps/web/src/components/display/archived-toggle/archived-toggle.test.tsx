@@ -20,6 +20,16 @@ describe('ArchivedToggle', () => {
     await expectNoAccessibilityViolations(screen.container)
   })
 
+  it('names archived people in the masculine', async () => {
+    const screen = await render(
+      <ArchivedToggle count={1} gender="masculine">
+        <p>Member G</p>
+      </ArchivedToggle>,
+    )
+
+    await expect.element(screen.getByRole('button', { name: 'Arquivados (1)' })).toBeVisible()
+  })
+
   it('is not there when nothing is archived', async () => {
     const screen = await render(
       <ArchivedToggle count={0}>

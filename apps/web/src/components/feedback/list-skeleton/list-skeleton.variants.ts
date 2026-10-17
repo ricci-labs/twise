@@ -10,16 +10,14 @@ export const listSkeletonRowVariants = cva(
 
 export const listSkeletonTextVariants = cva('flex flex-1 flex-col gap-1.5')
 
-export const listSkeletonBlockVariants = cva(
-  'animate-pulse rounded-sm bg-sunken motion-reduce:animate-none',
-  {
-    variants: {
-      shape: {
-        art: 'size-10.5 rounded-md',
-        name: 'h-3.5 w-1/2',
-        detail: 'h-3 w-7/10',
-        value: 'h-4 w-21',
-      },
+export const listSkeletonBlockVariants = cva('animate-pulse bg-sunken motion-reduce:animate-none', {
+  variants: {
+    shape: {
+      square: 'size-10.5 rounded-md',
+      circle: 'size-10.5 rounded-full',
+      name: 'h-3.5 w-1/2 rounded-sm',
+      detail: 'h-3 w-7/10 rounded-sm',
+      value: 'h-4 w-21 rounded-sm',
     },
   },
-)
+})

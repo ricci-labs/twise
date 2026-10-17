@@ -6,5 +6,9 @@ export const listSkeletonExamples: ComponentExamples = {
   examples: [
     { name: 'Três linhas', render: () => <ListSkeleton /> },
     { name: 'Duas linhas', render: () => <ListSkeleton rows={2} /> },
+    {
+      name: 'Pessoas, com a inicial num círculo',
+      render: () => <ListSkeleton rows={4} art="circle" />,
+    },
   ],
 }

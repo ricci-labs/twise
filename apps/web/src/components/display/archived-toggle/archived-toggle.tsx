@@ -8,7 +8,13 @@ import {
 import { TwiseIcon } from '@web/components/icons/twise-icon'
 import { ChevronDown } from 'lucide-react'
 
-export function ArchivedToggle({ count, children, isOpen, onOpenChange }: ArchivedToggleProps) {
+export function ArchivedToggle({
+  count,
+  gender = 'feminine',
+  children,
+  isOpen,
+  onOpenChange,
+}: ArchivedToggleProps) {
   if (count === 0) {
     return null
   }
@@ -21,7 +27,7 @@ export function ArchivedToggle({ count, children, isOpen, onOpenChange }: Archiv
     >
       <Collapsible.Trigger className={archivedToggleTriggerVariants()}>
         <TwiseIcon name="archive" size="sm" />
-        {messages.label(count)}
+        {messages.label[gender](count)}
         <ChevronDown data-slot="chevron" aria-hidden="true" />
       </Collapsible.Trigger>
       <Collapsible.Panel>{children}</Collapsible.Panel>

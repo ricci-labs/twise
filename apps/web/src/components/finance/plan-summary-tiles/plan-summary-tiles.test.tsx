@@ -47,6 +47,23 @@ describe('PlanSummaryTiles', () => {
     }
   })
 
+  it('paints an amount that is late in the danger colour', async () => {
+    const screen = await render(
+      <PlanSummaryTiles
+        label="A receber"
+        tiles={[
+          { label: 'Total a receber', amountCents: 84000, tone: 'income' },
+          { label: 'Em atraso', amountCents: 20000, tone: 'danger' },
+        ]}
+      />,
+    )
+    const late = screen.getByText('R$ 200,00').element().closest('dd') as HTMLElement
+    const total = screen.getByText('R$ 840,00').element().closest('dd') as HTMLElement
+
+    expect(getComputedStyle(late).color).not.toBe(getComputedStyle(total).color)
+    await expectNoAccessibilityViolations(screen.container)
+  })
+
   it('keeps the two tiles side by side on a 360 px phone when the amounts fit', async () => {
     const screen = await render(
       <div className="w-82">
