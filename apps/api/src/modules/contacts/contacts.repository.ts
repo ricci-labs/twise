@@ -143,6 +143,18 @@ export function selectCharges(tx: WorkspaceTransaction, contactId?: string): Pro
     .orderBy(desc(charges.createdAt), desc(charges.id))
 }
 
+export function selectOpenCharges(
+  tx: WorkspaceTransaction,
+  contactId?: string,
+): Promise<ChargeRow[]> {
+  const open = inArray(charges.status, [...OPEN_CHARGE_STATUSES])
+  return tx
+    .select()
+    .from(charges)
+    .where(contactId ? and(open, eq(charges.contactId, contactId)) : open)
+    .orderBy(desc(charges.createdAt), desc(charges.id))
+}
+
 export function selectChargeItems(
   tx: WorkspaceTransaction,
   chargeIds: string[],

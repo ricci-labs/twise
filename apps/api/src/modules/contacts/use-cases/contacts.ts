@@ -23,18 +23,26 @@ import type {
   CreatedContact,
   DeleteContactInput,
 } from '@api/modules/contacts/contacts.types'
-import { readContactPostings } from '@api/modules/ledger'
+import { readOpenChargeFacts } from '@api/modules/contacts/use-cases/open-items'
+import {
+  type ContactItems,
+  readContactItemsByContact,
+  readContactPostings,
+} from '@api/modules/ledger'
 import { currentWorkspaceDefaults } from '@api/modules/workspaces'
 import {
   type ContactBalance,
   contactBalances,
   contactChangeSchema,
+  contactChargeState,
   type IsoDate,
   newContactSchema,
   todayIn,
 } from '@financas/shared'
 
 const CONTACT_INVALID = 'CONTACT_INVALID'
+
+const NO_ITEMS: ContactItems = { items: [], paidCents: 0 }
 
 const TAKEN_CHANNELS = new Map([
   [
@@ -72,11 +80,23 @@ export function listContactBalances(
 ): Promise<ContactBalanceItem[]> {
   return withWorkspace(db, workspaceId, async (tx) => {
     const { timezone } = await currentWorkspaceDefaults(tx)
+    const today = todayIn(timezone, clock.now())
     const active = new Map((await selectActiveContacts(tx)).map((contact) => [contact.id, contact]))
-    return contactBalances(await readContactPostings(tx), todayIn(timezone, clock.now()))
+    const itemsByContact = await readContactItemsByContact(tx)
+    const { marks, chargesByContact } = await readOpenChargeFacts(tx, timezone)
+    return contactBalances(await readContactPostings(tx), today)
       .flatMap((balance) => {
         const contact = active.get(balance.contactId)
-        return contact ? [{ ...balance, ...summaryOf(contact) }] : []
+        if (!contact) {
+          return []
+        }
+        const { items, paidCents } = itemsByContact.get(contact.id) ?? NO_ITEMS
+        const chargeState = contactChargeState(items, paidCents, {
+          today,
+          marks,
+          chargesNewestFirst: chargesByContact.get(contact.id) ?? [],
+        })
+        return [{ ...balance, ...summaryOf(contact), ...chargeState }]
       })
       .sort((left, right) => left.name.localeCompare(right.name))
   })

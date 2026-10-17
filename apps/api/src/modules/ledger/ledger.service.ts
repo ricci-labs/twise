@@ -40,6 +40,7 @@ export {
   readBalanceFacts,
   readCardFacts,
   readContactItems,
+  readContactItemsByContact,
   readContactPostings,
   readEntryDates,
   readEntryPayments,

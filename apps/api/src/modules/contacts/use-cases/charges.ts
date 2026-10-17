@@ -12,7 +12,6 @@ import {
   insertChargePayment,
   lockActiveContact,
   lockCharge,
-  selectActiveContact,
   selectCharge,
   selectChargeExists,
   selectChargeItems,
@@ -27,7 +26,6 @@ import type {
   ChargeView,
   ContactRef,
   CreatedCharge,
-  OpenItemsRef,
   RecordedPayment,
 } from '@api/modules/contacts/contacts.types'
 import { getAccount } from '@api/modules/identity'
@@ -150,21 +148,6 @@ export function getCharge(
   })
 }
 
-export function listOpenItems(
-  db: Database,
-  { workspaceId, contactId }: OpenItemsRef,
-  until?: IsoDate,
-  clock: Clock = systemClock,
-): Promise<OpenItem[]> {
-  return withWorkspace(db, workspaceId, async (tx) => {
-    if (!(await selectActiveContact(tx, contactId))) {
-      throw new NotFoundError('CONTACT_NOT_FOUND', `Contact ${contactId} not found`)
-    }
-    const { timezone } = await currentWorkspaceSettings(tx)
-    return chargeableItemsOf(tx, contactId, until ?? todayIn(timezone, clock.now()))
-  })
-}
-
 export async function markChargeSent(
   db: Database,
   ref: ChargeRef,
@@ -248,7 +231,7 @@ function chargeNotFound(chargeId: string): NotFoundError {
   return new NotFoundError('CHARGE_NOT_FOUND', `Charge ${chargeId} not found`)
 }
 
-async function paidByCharge(
+export async function paidByCharge(
   tx: WorkspaceTransaction,
   chargeIds: string[],
 ): Promise<ReadonlyMap<string, number>> {

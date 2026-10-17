@@ -6,7 +6,13 @@ import type {
   contacts,
 } from '@api/modules/contacts/contacts.table'
 import type { PostingDetails } from '@api/modules/ledger'
-import type { ChargeStatus, ContactBalance } from '@financas/shared'
+import type {
+  ChargeMark,
+  ChargeStatus,
+  ChargeSummary,
+  ContactBalance,
+  ContactChargeState,
+} from '@financas/shared'
 
 export type ContactRow = typeof contacts.$inferSelect
 
@@ -56,7 +62,7 @@ export type ContactSummary = {
   email: string | null
 }
 
-export type ContactBalanceItem = ContactBalance & ContactSummary
+export type ContactBalanceItem = ContactBalance & ContactSummary & ContactChargeState
 
 export type ChargeRow = typeof charges.$inferSelect
 
@@ -81,6 +87,11 @@ export type ChargeItemRow = {
 export type OpenItemsRef = {
   workspaceId: string
   contactId: string
+}
+
+export type OpenChargeFacts = {
+  marks: ReadonlyMap<string, ChargeMark>
+  chargesByContact: ReadonlyMap<string, ChargeSummary[]>
 }
 
 export type ChargeView = {

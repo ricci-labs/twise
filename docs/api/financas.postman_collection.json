@@ -1920,12 +1920,39 @@
           ]
         },
         {
+          "name": "Upcoming contact items",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/workspaces/{{workspaceId}}/contacts/upcoming?limit=5",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "workspaces", "{{workspaceId}}", "contacts", "upcoming"],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "5"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": ["pm.test('answers 200', () => pm.response.to.have.status(200))"]
+              }
+            }
+          ]
+        },
+        {
           "name": "Contact open items",
           "request": {
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/api/workspaces/{{workspaceId}}/contacts/{{contactId}}/open-items?until={{in30Days}}",
+              "raw": "{{baseUrl}}/api/workspaces/{{workspaceId}}/contacts/{{contactId}}/open-items?until={{in30Days}}&includeCharged=true",
               "host": ["{{baseUrl}}"],
               "path": [
                 "api",
@@ -1939,6 +1966,10 @@
                 {
                   "key": "until",
                   "value": "{{in30Days}}"
+                },
+                {
+                  "key": "includeCharged",
+                  "value": "true"
                 }
               ]
             }

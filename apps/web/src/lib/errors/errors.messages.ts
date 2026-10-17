@@ -126,6 +126,7 @@ export const errorMessages: Readonly<Record<string, string>> = {
   CHARGE_QUERY_INVALID: 'Não foi possível carregar as cobranças.',
   CHARGE_NOT_FOUND: 'Esta cobrança não existe mais.',
   OPEN_ITEMS_QUERY_INVALID: 'Informe uma data válida (dd/mm/aaaa).',
+  UPCOMING_CONTACT_ITEMS_QUERY_INVALID: 'Não foi possível carregar os próximos vencimentos.',
   NOTHING_TO_CHARGE: 'Este contato não tem nada em aberto até essa data.',
   CHARGE_STATUS_REFUSED: 'Esta cobrança já foi enviada ou tem pagamento.',
   CHARGE_PAYMENT_INVALID: 'Não foi possível concluir. Código: {ref}.',

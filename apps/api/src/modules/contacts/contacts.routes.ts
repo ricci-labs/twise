@@ -14,6 +14,7 @@ import {
   listContactBalances,
   listContacts,
   listOpenItems,
+  listUpcomingContactItems,
   markChargeSent,
   payCharge,
 } from '@api/modules/contacts/contacts.service'
@@ -28,6 +29,7 @@ import {
   newChargeSchema,
   newContactSchema,
   openItemsQuerySchema,
+  upcomingContactItemsQuerySchema,
 } from '@financas/shared'
 import { Hono } from 'hono'
 
@@ -44,6 +46,15 @@ export function contactRoutes({ db }: ContactRouteDeps) {
     .get('/balances', authorize('contacts', 'view'), async (c) => {
       return c.json(await listContactBalances(db, currentWorkspace(c).workspaceId))
     })
+    .get(
+      '/upcoming',
+      authorize('contacts', 'view'),
+      queryParams(upcomingContactItemsQuerySchema, 'UPCOMING_CONTACT_ITEMS_QUERY_INVALID'),
+      async (c) => {
+        const { workspaceId } = currentWorkspace(c)
+        return c.json(await listUpcomingContactItems(db, workspaceId, c.req.valid('query').limit))
+      },
+    )
     .get('/:contactId', authorize('contacts', 'view'), contact, async (c) => {
       const { workspaceId } = currentWorkspace(c)
       return c.json(await getContact(db, workspaceId, c.req.valid('param').contactId))
@@ -56,9 +67,7 @@ export function contactRoutes({ db }: ContactRouteDeps) {
       async (c) => {
         const { workspaceId } = currentWorkspace(c)
         const { contactId } = c.req.valid('param')
-        return c.json(
-          await listOpenItems(db, { workspaceId, contactId }, c.req.valid('query').until),
-        )
+        return c.json(await listOpenItems(db, { workspaceId, contactId }, c.req.valid('query')))
       },
     )
     .post(

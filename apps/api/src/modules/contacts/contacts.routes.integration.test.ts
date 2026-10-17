@@ -247,6 +247,9 @@ describe('contact balances and archiving', () => {
       overdueCents: 6_000,
       nextDueOn: addDays(today, 10),
       nextDueCents: 5_000,
+      dueNotChargedCents: 6_000,
+      nextOpenDueOn: addDays(today, 10),
+      lastCharge: null,
     })
 
     const early = await member.patch(`${contactsPath}/${j}`, { isArchived: true })
