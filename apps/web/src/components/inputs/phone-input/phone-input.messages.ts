@@ -1,0 +1,21 @@
+export const phoneInputMessages = {
+  country: 'País',
+  countryValue: (callingCode: string) => `País: ${callingCode}`,
+  option: (country: string, callingCode: string) => `${country} (${callingCode})`,
+  brazilPlaceholder: '(11) 99999-0000',
+  countries: {
+    '+55': 'Brasil',
+    '+49': 'Alemanha',
+    '+54': 'Argentina',
+    '+56': 'Chile',
+    '+34': 'Espanha',
+    '+1': 'Estados Unidos e Canadá',
+    '+33': 'França',
+    '+39': 'Itália',
+    '+81': 'Japão',
+    '+595': 'Paraguai',
+    '+351': 'Portugal',
+    '+44': 'Reino Unido',
+    '+598': 'Uruguai',
+  },
+} as const
