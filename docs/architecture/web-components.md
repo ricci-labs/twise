@@ -40,7 +40,7 @@ where it's used.
 | `charts/` | `BarChart`, `ForecastChart`, `DonutChart`, each with its text alternative |
 | `navigation/` | `BottomBar`, `Sidebar`, `TopBar`, `WorkspaceSwitcher`, `BackLink`, `Breadcrumb`, `ScrollArrows`, `YearStepper`, `SettingsRow` |
 | `layout/` | `AppShell`, `FormOverlay`, `SidePanel`, `Page`, `PageHeader`, `Section`, `Stack`, `Grid` |
-| `finance/` | `StatHero`, `InsightCard`, `InvoiceCard`, `InvoicePreview`, `SharesList`, `RecentEntries`, `AccountRow`, `AccountGroup`, `CardBlock`, `InvoiceSummary`, `InvoiceLine`, `EntryRow`, `OccurrenceRow`, `HolidayRow`, `NextHolidayCard`, `ContactRow`, `ContactHeader`, `OpenItemRow`, `ChargePreview`, `AmountSplitEditor`, `AllocationStepRow`, `SplitExample` |
+| `finance/` | `StatHero`, `InsightCard`, `InvoiceCard`, `InvoicePreview`, `SharesList`, `RecentEntries`, `AccountRow`, `AccountGroup`, `CardBlock`, `InvoiceSummary`, `InvoiceLine`, `EntryRow`, `OccurrenceRow`, `HolidayRow`, `NextHolidayCard`, `ContactRow`, `ContactHeader`, `OpenItemRow`, `ChargeRow`, `ChargeBody`, `ChargePreview`, `AmountSplitEditor`, `AllocationStepRow`, `SplitExample` |
 | `brand/` | `Logo`, `OwlScene` (the layered owl scenes and their motion), `AppSplash` |
 | `icons/` | `TwiseIcon` and the icon registries (see Icons) |
 
@@ -377,7 +377,8 @@ passes the overview's numbers.
   whole width in equal options with the raised white selection (the "Contas | Categorias" tabs).
 - `Badge` (`components/display/badge`): a short status pill (`neutral`, `info`, `success`,
   `warning`, `danger`), e.g. "Período encerrado"; `neutral` is the design's `fn-badge--neutral`
-  (`status-neutral-soft` with the muted `status-neutral` text, "Futura"). `size="sm"` (22 px) for
+  (`status-neutral-soft` with the muted `status-neutral` text, "Futura"); `partial` is
+  `fn-badge--partial` (`status-partial`, a charge's "Paga em parte"). `size="sm"` (22 px) for
   the nature of an income category, `size="status"` (22 px, 10 px sides, the design's `fn-badge`)
   for an invoice's state in a table, `size="tiny"` (18 px, 11 px text) inside a preview row
   ("Fechada"), `size="compact"` (20 px, 8 px sides) beside the name in a `PickerField`.
@@ -1044,3 +1045,22 @@ them. Every number and date comes from the API; the rows only word them.
   dd/mm" (`chargedOn`) or "Atrasado", then the card and share detail the screen words, and what is
   still owed, which never wraps. The `link` element wraps the row. Grouped by `OccurrenceGroup`
   `heading="label"`.
+- `ChargeRow` (`components/finance/charge-row`, Base UI `Collapsible`): one charge in the
+  contact's "Cobranças" (`li`), with no drawing. The whole header is the toggle (`aria-expanded`),
+  so it opens in place: line 1 "Cobrança de dd/mm" (one line, then "…"), the amount (never wraps)
+  and the chevron; line 2 the status `Badge` with its dot (`draft` "Rascunho" and `cancelled`
+  "Cancelada" neutral, `sent` "Enviada" warning, `partially_paid` "Paga em parte" partial, `paid`
+  "Paga" success) then "n itens · canal" ("e-mail não saiu" with `hasEmailFailed`). The "⋯"
+  (`ItemActions`, the items from `actions`: Copiar mensagem, Anexar comprovante, Cancelar
+  cobrança) sits outside the toggle and only while open; a viewer gets none. `children` is the body.
+- `ChargeBody` (`components/finance/charge-body`): the open charge. The send history line on the
+  page colour, with the channel's icon ("Enviada por e-mail em 20/10 às 14:32 para …", the address
+  in bold and broken anywhere; with a `receipt`, what was received, when, where and what is left),
+  tinted `danger-soft` with the reason when the e-mail was refused (`kind: 'emailFailed'`); the
+  items with dotted leaders, a solid line, then "Total · venceu em dd/mm"; a `<details>`
+  "Mensagem" (open unless `isMessageOpen` is false) around the `message` slot, where the screen
+  puts the message bubble; then an `ActionGrid`: `primaryAction` across the row on the phone and
+  `actions` sharing the row below (Registrar pagamento · Enviar de novo · Copiar Pix; Tentar o
+  e-mail de novo · Pelo WhatsApp · Corrigir e-mail). With no primary, a viewer's "Copiar mensagem
+  · Copiar Pix", the grid is `even`. An action names its icon (`payment`, `send`, `pix`, `retry`,
+  `whatsapp`, `edit`, `message`) or goes without one, as the viewer's do.

@@ -57,6 +57,8 @@ import { budgetRowExamples } from '@web/components/finance/budget-row'
 import { budgetSummaryExamples } from '@web/components/finance/budget-summary'
 import { cardBlockExamples } from '@web/components/finance/card-block'
 import { categoryRowExamples } from '@web/components/finance/category-row'
+import { chargeBodyExamples } from '@web/components/finance/charge-body'
+import { chargeRowExamples } from '@web/components/finance/charge-row'
 import { contactHeaderExamples } from '@web/components/finance/contact-header'
 import { contactRowExamples } from '@web/components/finance/contact-row'
 import { cyclePreviewExamples } from '@web/components/finance/cycle-preview'
@@ -250,6 +252,8 @@ export const workbenchSections: readonly ComponentExamples[] = [
   installmentRowsExamples,
   shareRowsExamples,
   transferFlowExamples,
+  chargeRowExamples,
+  chargeBodyExamples,
   toggleChipsExamples,
   filterChipsExamples,
   listSummaryExamples,

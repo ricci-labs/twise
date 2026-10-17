@@ -8,3 +8,18 @@ export function formatDay(instant: string, timeZone = DEFAULT_TIME_ZONE): string
     year: 'numeric',
   }).format(new Date(instant))
 }
+
+export function formatDayOfMonth(instant: string, timeZone = DEFAULT_TIME_ZONE): string {
+  return new Intl.DateTimeFormat('pt-BR', { timeZone, day: '2-digit', month: '2-digit' }).format(
+    new Date(instant),
+  )
+}
+
+export function formatTime(instant: string, timeZone = DEFAULT_TIME_ZONE): string {
+  return new Intl.DateTimeFormat('pt-BR', {
+    timeZone,
+    hour: '2-digit',
+    minute: '2-digit',
+    hourCycle: 'h23',
+  }).format(new Date(instant))
+}

@@ -1,0 +1,21 @@
+export const chargeBodyMessages = {
+  sent: {
+    email: 'Enviada por e-mail',
+    whatsapp: 'Enviada pelo WhatsApp',
+    manual: 'Marcada como enviada',
+  },
+  onDayAt: (day: string, time: string) => ` em ${day} às ${time}`,
+  onDay: (day: string) => ` em ${day}`,
+  to: ' para ',
+  separator: ' · ',
+  received: (amount: string) => `${amount} recebidos`,
+  receivedWhere: (day: string, account: string) => ` em ${day} na ${account}`,
+  left: (amount: string) => `, falta ${amount}`,
+  emailFailedBefore: 'O e-mail não saiu: o endereço ',
+  emailFailedAfter: ' recusou. Confira o e-mail do contato ou envie pelo WhatsApp.',
+  total: 'Total',
+  dueFuture: (day: string) => ` · vence em ${day}`,
+  duePast: (day: string) => ` · venceu em ${day}`,
+  message: 'Mensagem',
+  actions: 'Ações da cobrança',
+} as const
