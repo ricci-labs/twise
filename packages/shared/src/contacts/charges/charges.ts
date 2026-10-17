@@ -1,4 +1,8 @@
-import { chargeClosingFor, fillChargeTags } from '@shared/contacts/charge-text/charge-text'
+import {
+  chargeClosingFor,
+  chargeOpeningFor,
+  fillChargeTags,
+} from '@shared/contacts/charge-text/charge-text'
 import type { ChargeStatus } from '@shared/contacts/charges/charges.constants'
 import type {
   ChargeableItem,
@@ -40,7 +44,7 @@ export function chargeMessage(input: ChargeMessageInput): string {
   )
   const closing = fillChargeTags(chargeClosingFor(input.text.closing, 'whatsapp'), input)
   return [
-    `Oi, ${input.contactName}! ${fillChargeTags(input.text.opening, input)}`,
+    `Oi, ${input.contactName}! ${fillChargeTags(chargeOpeningFor(input.text.opening, input.pixPayload !== null), input)}`,
     ...lines,
     `Total: ${formatBrl(input.totalCents)}`,
     ...(input.dueOn ? [`Vencimento: ${toBrazilianDate(input.dueOn)}`] : []),

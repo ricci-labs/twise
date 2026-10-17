@@ -111,8 +111,9 @@ describe('createCharge', () => {
       },
     ])
     expect(created?.messageText).toMatch(
-      /^Oi, Contact J! .+ pediu para te lembrar do que está em aberto\. Dá para pagar com Pix/,
+      /^Oi, Contact J! .+ pediu para te lembrar do que está em aberto\.\n• Jantar/,
     )
+    expect(created?.messageText).not.toContain('Dá para pagar com Pix')
     expect(created?.messageText).not.toContain('e-mail')
     expect(created?.messageText).toContain('• Jantar — R$ 30,00')
   })

@@ -2,6 +2,7 @@ import {
   type ChargeTagSource,
   type ChargeText,
   chargeClosingFor,
+  chargeOpeningFor,
   chargeSubject,
   fillChargeTags,
   type IsoDate,
@@ -36,7 +37,7 @@ export function chargeEmailPreviewOf({
     contactName,
     requesterName: sender.name,
     workspaceName: sender.workspaceName,
-    opening: fillChargeTags(text.opening, source),
+    opening: fillChargeTags(chargeOpeningFor(text.opening, charge.pixPayload !== null), source),
     closing: closingOf(text, source),
     items: charge.items.map((item) => ({
       key: item.postingId,

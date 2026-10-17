@@ -1,7 +1,7 @@
 ---
 summary: Design of the charge email (sent from the app to a contact): layout, copy, subject options, what is customizable and the opt-out link.
 read_when: Building the charge email template, the email sending of charges, or the charge text settings.
-updated: 2026-10-16
+updated: 2026-10-17
 ---
 
 # The charge email
@@ -42,7 +42,7 @@ Default (option A, approved): **"{quem cobra} te enviou uma cobrança de {valor}
 | Part | Who sets it | Default | Limits |
 |---|---|---|---|
 | Subject | workspace (Mensagem das cobranças) | "{quem cobra} te enviou uma cobrança de {valor}" | 1–120 after filling |
-| Opening (email and WhatsApp) | workspace | "{quem cobra} pediu para te lembrar do que está em aberto. Dá para pagar com Pix, o valor já vem preenchido." | 1–300 |
+| Opening (email and WhatsApp) | workspace | "{quem cobra} pediu para te lembrar do que está em aberto. Dá para pagar com Pix, o valor já vem preenchido." (without Pix the default stops after "em aberto.", decided 2026-10-17) | 1–300 |
 | Closing (email and WhatsApp) | workspace | "Qualquer dúvida, é só responder este e-mail." (WhatsApp: none by default) | 0–300 |
 | Greeting, heading, items, total, due date, Pix, notes, footer, opt-out link | fixed | — | — |
 

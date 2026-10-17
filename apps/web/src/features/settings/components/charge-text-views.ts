@@ -2,6 +2,7 @@ import {
   type ChargeText,
   chargeClosingFor,
   chargeMessage,
+  chargeOpeningFor,
   chargeSubject,
   DEFAULT_CHARGE_CLOSINGS,
   fillChargeTags,
@@ -49,7 +50,7 @@ export function chargeTextPreviewsOf(
   const pixPayload = pixPayloadOf(pix, totalCents)
   const sender = messages.sender(workspaceName)
   const subject = chargeSubject(text.subject, source)
-  const opening = fillChargeTags(text.opening, source)
+  const opening = fillChargeTags(chargeOpeningFor(text.opening, pixPayload !== null), source)
   return {
     sender,
     subject,

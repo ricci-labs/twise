@@ -137,6 +137,8 @@ describe('POST /charges/:chargeId/send-email', () => {
     expect(email.html).not.toContain('cid:pix-qr')
     expect(email.inlineImages).toEqual([])
     expect(email.text).not.toContain('Quem recebe')
+    expect(email.text).toMatch(/pediu para te lembrar do que está em aberto\.\n/)
+    expect(email.text).not.toContain('Dá para pagar com Pix')
   })
 
   it('refuses a contact without e-mail, or one who opted out', async () => {
