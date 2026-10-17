@@ -3,7 +3,7 @@ import { cva } from 'class-variance-authority'
 export const planSummaryTilesVariants = cva('flex flex-wrap gap-2.5')
 
 export const planSummaryTileVariants = cva(
-  'flex min-w-min flex-1 flex-col gap-0.5 rounded-xl border border-border bg-surface px-3 py-3',
+  'flex min-w-min grow basis-pair flex-col gap-0.5 rounded-xl border border-border bg-surface px-3 py-3',
 )
 
 export const planSummaryLabelVariants = cva('text-row-detail font-medium text-ink-muted')

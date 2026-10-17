@@ -1,3 +1,4 @@
+import { actionGridExamples } from '@web/components/actions/action-grid'
 import { actionMenuExamples } from '@web/components/actions/action-menu'
 import { addTileExamples } from '@web/components/actions/add-tile'
 import { buttonExamples } from '@web/components/actions/button'
@@ -137,6 +138,7 @@ import type { ComponentExamples } from '@web/lib/examples.types'
 
 export const workbenchSections: readonly ComponentExamples[] = [
   buttonExamples,
+  actionGridExamples,
   segmentedControlExamples,
   moneyInputExamples,
   choiceChipsExamples,

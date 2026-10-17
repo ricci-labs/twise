@@ -1,7 +1,7 @@
 ---
 summary: The web's single source of visual values — token tiers and files, naming, colour roles, type, spacing, radius, elevation, motion, layers, breakpoints, dark mode, tokens in JS, and the checks that keep raw values out.
 read_when: Adding or changing a colour, font, size, shadow, animation or theme; styling anything in apps/web; reviewing a web PR.
-updated: 2026-10-15
+updated: 2026-10-16
 ---
 
 # Web design tokens
@@ -162,7 +162,14 @@ hides the bar of a swipeable row (the KPI carousel).
 `--breakpoint-*: initial`, then `md` 768 px (`bp-tablet`), `lg` 1024 px (`bp-desktop`: sidebar
 instead of the bottom bar) and `xl` 1280 px (`bp-wide`). The base styles are the 360 px layout
 (mobile first, RNF-RESP-1), so there is no `sm`. Container queries (`@container`)
-are preferred for components that live in both the sidebar and the main column.
+are preferred for components that live in both the sidebar and the main column. One named
+container size: `--container-action-row` (560 px), where a button group (`ActionGrid`) moves from
+the phone grid to one row (`@action-row:` / `@max-action-row:`).
+
+**Summary tile pairs** (`../product/requirements/ui-standards.md` → Visual rules): the row is
+`flex flex-wrap` with a gap of at most 10 px, each tile `min-w-min grow basis-pair`
+(`flex-basis: calc(50% - 5px)`), the amount `whitespace-nowrap`. Two tiles share the row while each
+amount fits its half; when one does not, the second drops to its own line.
 
 ## Dark mode
 - `@custom-variant dark (&:where(.dark, .dark *))`: the `.dark` class on `<html>`, as shadcn

@@ -278,7 +278,11 @@ describe('PLAN-02 new recurrence', () => {
         transfers: { monthlyCents: 0, count: 0 },
       }),
     })
-    await expect.element(page.getByRole('link', { name: 'Nova receita' })).toBeVisible()
+    const income = page.getByRole('link', { name: 'Nova receita' })
+    await expect.element(income).toBeVisible()
+    expect(income.element().getBoundingClientRect().width).toBe(
+      page.getByRole('link', { name: 'Nova conta fixa' }).element().getBoundingClientRect().width,
+    )
     await page.getByRole('link', { name: 'Nova conta fixa' }).click()
     await expect.element(form()).toBeVisible()
     await expect.element(page.getByRole('button', { name: /^Pago com/ })).toBeVisible()
@@ -325,6 +329,21 @@ describe('PLAN-02 new recurrence on the desktop', () => {
     expect(amount.left).toBeGreaterThan(description.right)
     expect(amount.top).toBeLessThan(description.bottom)
     await expectNoAccessibilityViolations(form().element())
+  })
+
+  it('gives the first date, whose help the weekend rule lacks, a row of its own', async () => {
+    await openNewRecurrence()
+    const weekend = form()
+      .getByRole('button', { name: /^Se cair em fim de semana/ })
+      .element()
+      .getBoundingClientRect()
+    const firstDate = form()
+      .getByRole('button', { name: /^Primeira data/ })
+      .element()
+      .getBoundingClientRect()
+    expect(firstDate.top).toBeGreaterThan(weekend.bottom)
+    expect(firstDate.left).toBe(weekend.left)
+    expect(firstDate.width).toBe(weekend.width)
   })
 })
 

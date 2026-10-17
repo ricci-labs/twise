@@ -53,6 +53,39 @@ describe('HOME-01 states', () => {
     await expectNoAccessibilityViolations(screen.container)
   })
 
+  it('drops a 7-digit achievement to its own line instead of squeezing its neighbour', async () => {
+    const closed = demoOverview('closed')
+    const summary = closed.metrics.periodSummary
+    const screen = await openHome(`${HOME}?period=2026-09`, {
+      [`GET /api/workspaces/${WORKSPACE_ID}/overview`]: () =>
+        Response.json({
+          ...closed,
+          metrics: {
+            ...closed.metrics,
+            periodSummary: summary && { ...summary, reserveAddedCents: 125652000 },
+          },
+        }),
+    })
+    await page.viewport(360, 800)
+    const achievements = screen.getByRole('region', { name: 'Conquistas de setembro' })
+
+    const added = achievements.getByText('+R$ 1.256.520,00')
+    await expect.element(added).toBeVisible()
+    const amount = added.element()
+    const tile = amount.closest('li') as HTMLElement
+    const tileBox = tile.getBoundingClientRect()
+    const padding = Number.parseFloat(getComputedStyle(tile).paddingRight)
+    expect(amount.getBoundingClientRect().right).toBeLessThanOrEqual(tileBox.right - padding)
+    const boxes = [...(tile.parentElement?.children ?? [])].map((item) =>
+      item.getBoundingClientRect(),
+    )
+    for (const box of boxes) {
+      const rowMates = boxes.filter((other) => other.top === box.top)
+      expect(rowMates.every((other) => other.width === box.width)).toBe(true)
+    }
+    expect(boxes.filter((box) => box.top === tileBox.top)).toHaveLength(1)
+  })
+
   it('guides a new workspace through its first steps instead of empty numbers', async () => {
     const empty = demoOverview('current')
     const screen = await openHome(HOME, {

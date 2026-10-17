@@ -211,7 +211,7 @@ function EmptySplit({ hasReserve, canEdit, onSuggest, onAdd }: EmptySplitProps) 
       text={hasReserve ? messages.emptyText : messages.emptyTextNoReserve}
       action={
         canEdit && (
-          <div className="flex flex-col items-center gap-3">
+          <div className="grid justify-center gap-3">
             <Button onClick={onSuggest}>
               <TwiseIcon name="plus" size="sm" />
               {messages.suggestion}

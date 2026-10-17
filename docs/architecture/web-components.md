@@ -32,7 +32,7 @@ where it's used.
 
 | Family | Components (from the brief) |
 |---|---|
-| `actions/` | `Button`, `IconButton`, `SubmitButton`, `FloatingActionButton`, `ActionMenu`, `ItemActions`, `SegmentedControl`, `AddTile`, `ShowMoreButton` |
+| `actions/` | `Button`, `IconButton`, `SubmitButton`, `FloatingActionButton`, `ActionMenu`, `ItemActions`, `SegmentedControl`, `AddTile`, `ShowMoreButton`, `ActionGrid` |
 | `inputs/` | `TextInput`, `PasswordInput`, `EmailInput`, `PhoneInput`, `SearchInput`, `TextArea`, `MoneyInput`, `ChoiceChips`, `PickerField`, `PickerSheet`, `Stepper`, `RadioCardList`, `RadioSentenceList`, `DateInput`, `PeriodPicker`, `Select`, `FilterButton`, `CheckboxMenu`, `Combobox`, `Checkbox`, `RadioGroup`, `Switch`, `DayOfMonthPicker`, `FileUpload`, `ColorSwatch` |
 | `forms/` | `Form`, `FormField`, `FieldGroup`, `LockedField`, `FormErrorSummary`, `FormFooter`, `RequiredLegend` |
 | `feedback/` | `Toast`, `InlineAlert`, `AutoFillTip`, `Banner`, `ConfirmDialog`, `EmptyState`, `EmptyBlock`, `Skeleton`, `ListSkeleton`, `KpiSkeleton`, `ErrorState` |
@@ -493,6 +493,13 @@ component here, so the form, and later the account, card and planning forms, sha
   the next page is fetched from the API (`isLoading` keeps it busy until it arrives).
   `useLongList` (`hooks/use-long-list.ts`) holds the 5-first rule, the search threshold and the
   focus move; the sizes live in `lib/long-lists.ts`.
+- `ActionGrid` (`components/actions/action-grid`): one group of buttons with the same height and
+  width (`../design/contacts/components.md` item 7; `../product/requirements/ui-standards.md` → Button groups). Its
+  children are `Button`s, the primary first: on the phone a grid of two equal columns, gap 8, the
+  primary 48 px across both and the others 44 px sharing the rows below (a lone last one takes the
+  whole row); labels centred, never wrapped. From a 560 px container (`@action-row`) all sit in one
+  row of equal cells, 44 px. `layout="even"` has no primary (a viewer's "Copiar mensagem · Copiar
+  Pix"); `label` names the group. A "⋯" never sits loose beside it: its items go in the item's menu.
 - `InvoicePreview` (`components/finance/invoice-preview`): the sunken box under the card with the
   calendar drawing, the sentence ("A 1ª parcela entra na fatura que vence em **04/11**.") and, with
   more than one installment or a closed invoice, one row per installment ("1/3 · vence 04/11 · R$
@@ -912,9 +919,10 @@ online with `asChild` are translated to `render`.
   takes the list's place when `count` is 0.
 - `PlanSummaryTiles` (`components/finance/plan-summary-tiles`): two tiles ("Falta pagar" / "Falta
   receber", "Contas fixas por mês" / "Receitas fixas por mês") as a description list, each with its
-  amount (income in `mint-ink`, "≈" for an estimate) and a muted note. Side by side while both
-  amounts fit; when they don't (7-digit amounts on a narrow phone) each takes the whole row, so an
-  amount is never cut.
+  amount (income in `mint-ink`, "≈" for an estimate) and a muted note. Side by side, each half the
+  row (`basis-pair`), while each amount fits its half; when one doesn't (7-digit amounts on a
+  phone) the second tile drops to its own line, so an amount is never cut or wrapped. The same
+  rule holds for the invoice's "Pago" / "Falta pagar" tiles and the Home's achievement tiles.
 - `SegmentedControl` `selection="outline"`: the app's one selection style (2 px `ink` outline, bold
   label) for tabs that switch a page's parts, as Planning's "Previstos | Contas fixas | Orçamentos |
   Metas"; the default `raised` keeps the white pill with a shadow. With `width="full"` the options

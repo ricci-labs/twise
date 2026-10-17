@@ -131,7 +131,7 @@ function Empty({ workspaceId, canCreate }: { workspaceId: string; canCreate: boo
       text={messages.emptyText}
       action={
         canCreate && (
-          <div className="flex flex-col items-center gap-4">
+          <div className="grid justify-center gap-4">
             <Button render={newRecurrenceLink(workspaceId, 'expense')}>
               <TwiseIcon name="plus" size="sm" />
               {messages.add.bills}
