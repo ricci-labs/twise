@@ -187,7 +187,7 @@ describe('CON-02 contact detail', () => {
     await page.getByRole('button', { name: /Cobrança de 20\/10/ }).click()
 
     await expect.element(page.getByText('Total · venceu em 10/10')).toBeVisible()
-    await expect.element(page.getByText(/Marcada como enviada em 20\/10/)).toBeVisible()
+    await expect.element(page.getByText(/Enviada por e-mail em 20\/10/)).toBeVisible()
     await page.getByRole('button', { name: 'Copiar Pix' }).click()
     await expect.element(page.getByText('Pix copiado.')).toBeVisible()
     expect(writeText).toHaveBeenLastCalledWith(expect.stringContaining('br.gov.bcb.pix'))

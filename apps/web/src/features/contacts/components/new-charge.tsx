@@ -1,4 +1,4 @@
-import { formatBrl } from '@financas/shared'
+import { chargeSubject, DEFAULT_CHARGE_TEXT, formatBrl, type IsoDate } from '@financas/shared'
 import { useQuery } from '@tanstack/react-query'
 import { Link } from '@tanstack/react-router'
 import { Button } from '@web/components/actions/button'
@@ -9,14 +9,22 @@ import { ConfirmDialog } from '@web/components/feedback/confirm-dialog'
 import { ListSkeleton } from '@web/components/feedback/list-skeleton'
 import { showToast } from '@web/components/feedback/toast'
 import { ChargePreview } from '@web/components/finance/charge-preview'
+import { EmailSendSheet } from '@web/components/finance/email-send-sheet'
 import { MessageBubble } from '@web/components/finance/message-bubble'
 import { NothingToCharge } from '@web/components/finance/nothing-to-charge'
 import { PixBox } from '@web/components/finance/pix-box'
 import { SendOptions } from '@web/components/finance/send-options'
 import { UntilChips } from '@web/components/finance/until-chips'
 import { FormOverlay } from '@web/components/layout/form-overlay'
-import { chargeQueryOptions } from '@web/features/contacts/api/contacts.queries'
-import { useCreateCharge, useMarkChargeSent } from '@web/features/contacts/api/use-charge-actions'
+import {
+  chargeQueryOptions,
+  chargeTextQueryOptions,
+} from '@web/features/contacts/api/contacts.queries'
+import {
+  useCreateCharge,
+  useMarkChargeSent,
+  useSendChargeEmail,
+} from '@web/features/contacts/api/use-charge-actions'
 import {
   chargeableBy,
   defaultUntilOf,
@@ -25,6 +33,8 @@ import {
 import { contactsMessages } from '@web/features/contacts/contacts.messages'
 import type {
   ChargeComposeProps,
+  ChargeEmailSendProps,
+  ChargePixProps,
   CreatedChargeProps,
   NewChargeProps,
 } from '@web/features/contacts/contacts.types'
@@ -36,9 +46,9 @@ import { useState } from 'react'
 const messages = contactsMessages.newCharge
 
 export function NewCharge(props: NewChargeProps) {
-  const [chargeId, setChargeId] = useState<string | null>(null)
+  const [chargeId, setChargeId] = useState<string | null>(props.chargeId ?? null)
   return chargeId ? (
-    <CreatedCharge {...props} chargeId={chargeId} />
+    <CreatedCharge {...props} chargeId={chargeId} isResend={props.chargeId === chargeId} />
   ) : (
     <ChargeCompose {...props} onCreated={setChargeId} />
   )
@@ -129,17 +139,21 @@ function CreatedCharge({
   workspaceId,
   contact,
   permissions,
+  currentUser,
   chargeId,
+  isResend,
   isOpen,
   onClose,
 }: CreatedChargeProps) {
   const charge = useQuery(chargeQueryOptions(workspaceId, chargeId))
   const markSent = useMarkChargeSent(workspaceId)
   const [isAsking, setIsAsking] = useState(false)
+  const [isEmailOpen, setIsEmailOpen] = useState(false)
   const toast = (text: string) => () => showToast(text)
+  const email = contact.email
   return (
     <FormOverlay
-      title={messages.createdTitle}
+      title={isResend ? messages.resendTitle : messages.createdTitle}
       closeLabel={messages.done}
       isOpen={isOpen}
       onRequestClose={onClose}
@@ -149,9 +163,11 @@ function CreatedCharge({
     >
       {charge.data ? (
         <div className="flex flex-col gap-4 px-4 lg:px-8">
-          <Alert tone="success" icon="ok">
-            {messages.created(formatBrl(charge.data.amountCents))}
-          </Alert>
+          {!isResend && (
+            <Alert tone="success" icon="ok">
+              {messages.created(formatBrl(charge.data.amountCents))}
+            </Alert>
+          )}
           <SendOptions
             contactName={contact.name}
             message={charge.data.messageText}
@@ -170,6 +186,15 @@ function CreatedCharge({
                   }
                 : null
             }
+            email={
+              email
+                ? {
+                    address: email,
+                    isOptedOut: contact.isOptedOut,
+                    onSend: () => setIsEmailOpen(true),
+                  }
+                : null
+            }
             onCopied={toast(messages.messageCopied)}
             onCopyFailed={toast(messages.copyFailed)}
           />
@@ -179,30 +204,32 @@ function CreatedCharge({
             </h2>
             <MessageBubble message={charge.data.messageText} pixPayload={charge.data.pixPayload} />
           </section>
-          {charge.data.pixPayload ? (
-            <PixBox
-              amountCents={charge.data.amountCents}
-              payload={charge.data.pixPayload}
-              onCopied={toast(messages.pixCopied)}
-              onCopyFailed={toast(messages.copyFailed)}
-            />
-          ) : (
-            <Alert tone="info" icon="info">
-              {messages.noPix}{' '}
-              {hasPermission(permissions, 'settings', 'update') && (
-                <TextLink
-                  render={<Link to="/w/$workspaceId/settings/pix" params={{ workspaceId }} />}
-                >
-                  {messages.setUpPix}
-                </TextLink>
-              )}
-            </Alert>
-          )}
+          <ChargePix
+            workspaceId={workspaceId}
+            permissions={permissions}
+            amountCents={charge.data.amountCents}
+            pixPayload={charge.data.pixPayload}
+          />
         </div>
       ) : (
         <div className="px-4 lg:px-8">
           <ListSkeleton rows={3} />
         </div>
+      )}
+      {email && charge.data && (
+        <ChargeEmailSend
+          workspaceId={workspaceId}
+          contactName={contact.name}
+          currentUser={currentUser}
+          chargeId={chargeId}
+          email={email}
+          amountCents={charge.data.amountCents}
+          dueOn={charge.data.dueOn as IsoDate | null}
+          hasPix={charge.data.pixPayload !== null}
+          isOpen={isEmailOpen}
+          onOpenChange={setIsEmailOpen}
+          onSent={onClose}
+        />
       )}
       <ConfirmDialog
         title={messages.sentTitle}
@@ -227,5 +254,72 @@ function CreatedCharge({
         }}
       />
     </FormOverlay>
+  )
+}
+
+function ChargePix({ workspaceId, permissions, amountCents, pixPayload }: ChargePixProps) {
+  if (pixPayload) {
+    return (
+      <PixBox
+        amountCents={amountCents}
+        payload={pixPayload}
+        onCopied={() => showToast(messages.pixCopied)}
+        onCopyFailed={() => showToast(messages.copyFailed)}
+      />
+    )
+  }
+  return (
+    <Alert tone="info" icon="info">
+      {messages.noPix}{' '}
+      {hasPermission(permissions, 'settings', 'update') && (
+        <TextLink render={<Link to="/w/$workspaceId/settings/pix" params={{ workspaceId }} />}>
+          {messages.setUpPix}
+        </TextLink>
+      )}
+    </Alert>
+  )
+}
+
+function ChargeEmailSend({
+  workspaceId,
+  contactName,
+  currentUser,
+  chargeId,
+  email,
+  amountCents,
+  dueOn,
+  hasPix,
+  isOpen,
+  onOpenChange,
+  onSent,
+}: ChargeEmailSendProps) {
+  const chargeText = useQuery(chargeTextQueryOptions(workspaceId))
+  const sendEmail = useSendChargeEmail(workspaceId)
+  return (
+    <EmailSendSheet
+      isOpen={isOpen}
+      onOpenChange={onOpenChange}
+      to={email}
+      subject={chargeSubject((chargeText.data ?? DEFAULT_CHARGE_TEXT).subject, {
+        contactName,
+        requesterName: currentUser.name,
+        workspaceName: currentUser.workspaceName,
+        totalCents: amountCents,
+        dueOn,
+      })}
+      replyTo={{ name: currentUser.name, email: currentUser.email }}
+      hasPix={hasPix}
+      isSending={sendEmail.isPending}
+      onSend={() =>
+        sendEmail.mutate(chargeId, {
+          onSuccess: () => {
+            onOpenChange(false)
+            showToast(messages.emailSent(email), { tone: 'success' })
+            onSent()
+          },
+          onError: (error) => showToast(errorMessageFor(error), { tone: 'danger' }),
+        })
+      }
+    />
   )
 }

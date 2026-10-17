@@ -1,17 +1,24 @@
 import { useQuery } from '@tanstack/react-query'
+import { useNavigate } from '@tanstack/react-router'
 import { ListSection } from '@web/components/display/list-section'
 import { ConfirmDialog } from '@web/components/feedback/confirm-dialog'
 import { ListSkeleton } from '@web/components/feedback/list-skeleton'
 import { SectionError } from '@web/components/feedback/section-error'
 import { showToast } from '@web/components/feedback/toast'
-import { ChargeBody } from '@web/components/finance/charge-body'
+import {
+  type ChargeAction,
+  ChargeBody,
+  type ChargeBodyProps,
+} from '@web/components/finance/charge-body'
 import { ChargeRow } from '@web/components/finance/charge-row'
 import { MessageBubble } from '@web/components/finance/message-bubble'
 import { contactChargesQueryOptions } from '@web/features/contacts/api/contacts.queries'
 import { useCancelCharge } from '@web/features/contacts/api/use-cancel-charge'
+import { useSendChargeEmail } from '@web/features/contacts/api/use-charge-actions'
 import { contactChargeViewOf } from '@web/features/contacts/components/contact-detail-view'
 import { contactsMessages } from '@web/features/contacts/contacts.messages'
 import type {
+  ChargeActionsInput,
   ContactChargeItemProps,
   ContactChargesProps,
   ContactChargeView,
@@ -22,12 +29,21 @@ import { errorMessageFor } from '@web/lib/errors/error-message'
 import { useState } from 'react'
 
 const messages = contactsMessages.detail
+const newChargeMessages = contactsMessages.newCharge
 const TIME_ZONE = 'America/Sao_Paulo'
 const LOADING_ROWS = 2
 
-export function ContactCharges({ workspaceId, contactId, canUpdate, today }: ContactChargesProps) {
+export function ContactCharges({
+  workspaceId,
+  contactId,
+  canUpdate,
+  today,
+  onResend,
+}: ContactChargesProps) {
   const charges = useQuery(contactChargesQueryOptions(workspaceId, contactId))
   const cancel = useCancelCharge(workspaceId)
+  const sendEmail = useSendChargeEmail(workspaceId)
+  const navigate = useNavigate()
   const [openId, setOpenId] = useState<string | null>(null)
   const [cancelling, setCancelling] = useState<ContactChargeView | null>(null)
   if (charges.isError) {
@@ -65,6 +81,20 @@ export function ContactCharges({ workspaceId, contactId, canUpdate, today }: Con
             isOpen={openId === charge.id}
             onOpenChange={(isOpen) => setOpenId(isOpen ? charge.id : null)}
             onCancel={() => setCancelling(charge)}
+            onResend={() => onResend(charge.id)}
+            onRetryEmail={() =>
+              sendEmail.mutate(charge.id, {
+                onSuccess: () =>
+                  showToast(newChargeMessages.emailSent(charge.sentTo ?? ''), { tone: 'success' }),
+                onError: (error) => showToast(errorMessageFor(error), { tone: 'danger' }),
+              })
+            }
+            onFixEmail={() =>
+              void navigate({
+                to: '.',
+                search: (previous) => ({ ...previous, contact: contactId }),
+              })
+            }
           />
         ))}
       </ul>
@@ -97,6 +127,9 @@ function ContactChargeItem({
   isOpen,
   onOpenChange,
   onCancel,
+  onResend,
+  onRetryEmail,
+  onFixEmail,
 }: ContactChargeItemProps) {
   const copy = async (text: string, done: string) => {
     showToast((await copyText(text)) ? done : messages.copyFailed)
@@ -109,6 +142,8 @@ function ContactChargeItem({
       amountCents={charge.amountCents}
       status={charge.status}
       itemCount={charge.itemCount}
+      sentVia={charge.sentVia}
+      hasEmailFailed={charge.hasEmailFailed}
       isOpen={isOpen}
       onOpenChange={onOpenChange}
       actions={
@@ -137,20 +172,52 @@ function ContactChargeItem({
         dueOn={charge.dueOn}
         isDuePast={charge.isDuePast}
         message={<MessageBubble message={charge.messageText} pixPayload={pixPayload} />}
-        actions={[
-          { key: 'message', label: messages.copyMessage, onPress: copyMessage },
-          ...(pixPayload
-            ? [
-                {
-                  key: 'pix',
-                  label: messages.copyPix,
-                  icon: 'pix' as const,
-                  onPress: () => void copy(pixPayload, messages.pixCopied),
-                },
-              ]
-            : []),
-        ]}
+        {...chargeActionsOf({
+          charge,
+          canUpdate,
+          copyMessage,
+          copyPix: pixPayload ? () => void copy(pixPayload, messages.pixCopied) : null,
+          onResend,
+          onRetryEmail,
+          onFixEmail,
+        })}
       />
     </ChargeRow>
   )
+}
+
+function chargeActionsOf({
+  charge,
+  canUpdate,
+  copyMessage,
+  copyPix,
+  onResend,
+  onRetryEmail,
+  onFixEmail,
+}: ChargeActionsInput): Pick<ChargeBodyProps, 'primaryAction' | 'actions'> {
+  const pix: ChargeAction[] = copyPix
+    ? [{ key: 'pix', label: messages.copyPix, icon: 'pix', onPress: copyPix }]
+    : []
+  if (canUpdate && charge.hasEmailFailed && charge.isOpen) {
+    return {
+      primaryAction: {
+        key: 'retry',
+        label: messages.retryEmail,
+        icon: 'retry',
+        onPress: onRetryEmail,
+      },
+      actions: [
+        { key: 'whatsapp', label: messages.byWhatsApp, icon: 'whatsapp', onPress: onResend },
+        { key: 'fix', label: messages.fixEmail, icon: 'edit', onPress: onFixEmail },
+      ],
+    }
+  }
+  if (canUpdate && charge.isOpen) {
+    return {
+      actions: [{ key: 'resend', label: messages.resend, icon: 'send', onPress: onResend }, ...pix],
+    }
+  }
+  return {
+    actions: [{ key: 'message', label: messages.copyMessage, onPress: copyMessage }, ...pix],
+  }
 }

@@ -32,3 +32,16 @@ export function useMarkChargeSent(workspaceId: string) {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: queryKeys.workspace(workspaceId) }),
   })
 }
+
+export function useSendChargeEmail(workspaceId: string) {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (chargeId: string) =>
+      unwrapEmpty(
+        workspaceApi.charges[':chargeId']['send-email'].$post({
+          param: { workspaceId, chargeId },
+        }),
+      ),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: queryKeys.workspace(workspaceId) }),
+  })
+}

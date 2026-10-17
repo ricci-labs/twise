@@ -63,6 +63,13 @@ export function fetchContactCharges(workspaceId: string, contactId: string) {
   return unwrap(workspaceApi.charges.$get({ param: { workspaceId }, query: { contactId } }))
 }
 
+export function chargeTextQueryOptions(workspaceId: string) {
+  return queryOptions({
+    queryKey: [...queryKeys.workspace(workspaceId), 'settings', 'charge-text'] as const,
+    queryFn: () => unwrap(workspaceApi.settings['charge-text'].$get({ param: { workspaceId } })),
+  })
+}
+
 export function chargeQueryOptions(workspaceId: string, chargeId: string) {
   return queryOptions({
     queryKey: [...queryKeys.workspace(workspaceId), 'contacts', 'charge', chargeId] as const,

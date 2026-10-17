@@ -5,7 +5,7 @@ export const Route = createFileRoute('/_app/w/$workspaceId/contacts_/$contact')(
   validateSearch: contactDetailSearchSchema,
   component: function ContactRoute() {
     const { workspaceId, contact } = Route.useParams()
-    const { access } = Route.useRouteContext()
+    const { access, account } = Route.useRouteContext()
     const { charge } = Route.useSearch()
     const navigate = useNavigate()
     return (
@@ -17,7 +17,15 @@ export const Route = createFileRoute('/_app/w/$workspaceId/contacts_/$contact')(
         onNewCharge={() =>
           void navigate({ to: '.', search: (previous) => ({ ...previous, charge: 'new' }) })
         }
-        isChargeOpen={charge === 'new'}
+        charge={charge}
+        currentUser={{
+          name: account.displayName,
+          email: account.email,
+          workspaceName: access.workspace.name,
+        }}
+        onChargeOpen={(chargeId) =>
+          void navigate({ to: '.', search: (previous) => ({ ...previous, charge: chargeId }) })
+        }
         onChargeClose={() =>
           void navigate({ to: '.', search: (previous) => ({ ...previous, charge: undefined }) })
         }
