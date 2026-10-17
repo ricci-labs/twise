@@ -27,7 +27,12 @@ function contact(id: string, name: string, extra: object = {}) {
 
 export const CONTACTS = [
   contact(CONTACT_C, 'Member C'),
-  contact(CONTACT_D, 'Member D', { email: 'member.d@exemplo.com' }),
+  contact(CONTACT_D, 'Member D', {
+    phoneE164: '+5511999990004',
+    email: 'member.d@exemplo.com',
+    pixKey: 'member.d@exemplo.com',
+    notes: 'Divide a TV da sala e o mercado do mês.',
+  }),
   contact(CONTACT_E, 'Member E', {
     phoneE164: null,
     email: 'member.e@exemplo.com',
@@ -81,6 +86,52 @@ export const CONTACT_BALANCES = [
   }),
   balance(CONTACT_F, -3000),
 ]
+
+function openItem(postingId: string, description: string, effectiveOn: string, extra: object = {}) {
+  return {
+    postingId,
+    description,
+    installmentNo: null,
+    installmentCount: 1,
+    effectiveOn,
+    amountCents: 12000,
+    remainingCents: 12000,
+    inChargeId: null,
+    inChargeCreatedOn: null,
+    ...extra,
+  }
+}
+
+export const CONTACT_D_OPEN_ITEMS = [
+  openItem('00000000-0000-4000-8000-0000000000f1', 'Mercado da semana', '2026-10-10'),
+  openItem('00000000-0000-4000-8000-0000000000f2', 'Jantar de aniversário', '2026-10-10', {
+    amountCents: 8000,
+    remainingCents: 8000,
+  }),
+  openItem('00000000-0000-4000-8000-0000000000f3', 'TV da sala', '2026-11-10', {
+    installmentNo: 2,
+    installmentCount: 3,
+    amountCents: 16000,
+    remainingCents: 16000,
+  }),
+  openItem('00000000-0000-4000-8000-0000000000f4', 'TV da sala', '2026-12-10', {
+    installmentNo: 3,
+    installmentCount: 3,
+    amountCents: 16000,
+    remainingCents: 16000,
+  }),
+]
+
+export function contactAnswers(contactId: string, overrides: Record<string, FakeAnswer> = {}) {
+  return {
+    ...contactsAnswers(),
+    [`GET ${BASE}/contacts/${contactId}`]: () =>
+      Response.json(CONTACTS.find((item) => item.id === contactId)),
+    [`GET ${BASE}/contacts/${contactId}/open-items`]: () =>
+      Response.json(contactId === CONTACT_D ? CONTACT_D_OPEN_ITEMS : []),
+    ...overrides,
+  }
+}
 
 export function contactsAnswers(overrides: Record<string, FakeAnswer> = {}) {
   return {

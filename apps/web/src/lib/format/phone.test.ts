@@ -1,4 +1,10 @@
-import { phoneE164Of, phonePartsOf, tidyPhoneNumber } from '@web/lib/format/phone'
+import {
+  formatPhone,
+  phoneE164Of,
+  phonePartsOf,
+  tidyPhoneNumber,
+  whatsappLink,
+} from '@web/lib/format/phone'
 import { describe, expect, it } from 'vitest'
 
 describe('phoneE164Of', () => {
@@ -44,5 +50,21 @@ describe('tidyPhoneNumber', () => {
     expect(tidyPhoneNumber({ callingCode: '+55', number: '11999990000' })).toBe('(11) 99999-0000')
     expect(tidyPhoneNumber({ callingCode: '+55', number: '9999' })).toBe('9999')
     expect(tidyPhoneNumber({ callingCode: '+1', number: '2025550000' })).toBe('2025550000')
+  })
+})
+
+describe('formatPhone', () => {
+  it('shows the country code before the number, as the contact page lists it', () => {
+    expect(formatPhone('+5511999990004')).toBe('+55 (11) 99999-0004')
+    expect(formatPhone('+2348012345678')).toBe('+2348012345678')
+  })
+})
+
+describe('whatsappLink', () => {
+  it('opens the chat with the digits only and the message encoded', () => {
+    expect(whatsappLink('+5511999990004')).toBe('https://wa.me/5511999990004')
+    expect(whatsappLink('+5511999990004', 'Oi, tudo bem?')).toBe(
+      'https://wa.me/5511999990004?text=Oi%2C%20tudo%20bem%3F',
+    )
   })
 })

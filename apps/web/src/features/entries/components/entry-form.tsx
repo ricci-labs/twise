@@ -300,6 +300,7 @@ function prefilled(blank: EntryFormInput, prefill: EntryPrefill): EntryFormInput
     amount: prefill.amountCents ? formatTypedAmount(prefill.amountCents) : blank.amount,
     cardAccountId: prefill.cardAccountId ?? blank.cardAccountId,
     invoiceId: prefill.invoiceId ?? blank.invoiceId,
+    contactId: prefill.contactId ?? blank.contactId,
     ...prefill.planned,
   }
 }
