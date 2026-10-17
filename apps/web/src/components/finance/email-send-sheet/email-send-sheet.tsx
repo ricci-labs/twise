@@ -45,14 +45,16 @@ export function EmailSendSheet({
             {messages.replyToValue(replyTo.email, replyTo.name)}
           </EmailFact>
         </dl>
-        <TextLink
-          render={<button type="button" />}
-          onClick={onPreview}
-          className={emailPreviewLinkVariants()}
-        >
-          <Eye aria-hidden="true" />
-          {messages.preview}
-        </TextLink>
+        {onPreview && (
+          <TextLink
+            render={<button type="button" />}
+            onClick={onPreview}
+            className={emailPreviewLinkVariants()}
+          >
+            <Eye aria-hidden="true" />
+            {messages.preview}
+          </TextLink>
+        )}
         <p className={emailCarriesVariants()}>
           {hasPix ? messages.carriesWithPix : messages.carries}
         </p>

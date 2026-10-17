@@ -18,7 +18,10 @@ export const contactsSearchSchema = z.object({
 })
 
 export const contactDetailSearchSchema = z.object({
-  charge: z.literal(NEW).optional().catch(undefined),
+  charge: z
+    .union([z.literal(NEW), z.uuid()])
+    .optional()
+    .catch(undefined),
 })
 
 export const contactSearchSchema = z.object({

@@ -49,6 +49,7 @@ const messages = contactsMessages.detail
 const NOT_FOUND = 'CONTACT_NOT_FOUND'
 const TIME_ZONE = 'America/Sao_Paulo'
 const LOADING_ROWS = 4
+const NEW_CHARGE = 'new'
 
 export function ContactDetailPage(props: ContactDetailPageProps) {
   usePageTitle(messages.pageTitle)
@@ -129,7 +130,9 @@ function ContactDetailBody({
   today,
   onNewCharge,
   onDeleted,
-  isChargeOpen,
+  charge,
+  currentUser,
+  onChargeOpen,
   onChargeClose,
 }: ContactDetailBodyProps) {
   const owedCents = balance?.owedCents ?? 0
@@ -171,20 +174,25 @@ function ContactDetailBody({
         contactId={contact.id}
         canUpdate={hasPermission(permissions, 'contacts', 'update')}
         today={today}
+        onResend={onChargeOpen}
       />
       <ContactTalkTo contact={contact} />
-      {isChargeOpen && hasPermission(permissions, 'contacts', 'create') && (
-        <NewCharge
-          workspaceId={workspaceId}
-          contact={contact}
-          balance={balance}
-          openItems={openItems}
-          today={today}
-          permissions={permissions}
-          isOpen={isChargeOpen}
-          onClose={onChargeClose}
-        />
-      )}
+      {charge &&
+        hasPermission(permissions, 'contacts', charge === NEW_CHARGE ? 'create' : 'update') && (
+          <NewCharge
+            key={charge}
+            chargeId={charge === NEW_CHARGE ? undefined : charge}
+            currentUser={currentUser}
+            workspaceId={workspaceId}
+            contact={contact}
+            balance={balance}
+            openItems={openItems}
+            today={today}
+            permissions={permissions}
+            isOpen
+            onClose={onChargeClose}
+          />
+        )}
     </ContactDetailFrame>
   )
 }

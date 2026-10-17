@@ -6,6 +6,7 @@ import { MEMBER_A } from '@web/testing/accounts-api'
 import {
   CHARGE_SENT,
   CONTACT_D,
+  CONTACT_D_CHARGE_FAILED,
   CONTACT_D_CHARGES,
   CONTACT_D_OPEN_ITEMS,
   contactAnswers,
@@ -19,7 +20,7 @@ import { render } from 'vitest-browser-react'
 const BASE = `/api/workspaces/${WORKSPACE_ID}`
 const NEW_CHARGE = '00000000-0000-4000-8000-0000000000c9'
 
-async function openNewCharge(answers: Record<string, FakeAnswer> = {}) {
+async function openNewCharge(answers: Record<string, FakeAnswer> = {}, charge = 'new') {
   const requests: { path: string; body: unknown }[] = []
   fakeApi({
     'GET /api/auth/me': () =>
@@ -33,6 +34,14 @@ async function openNewCharge(answers: Record<string, FakeAnswer> = {}) {
       },
       [`GET ${BASE}/charges/${NEW_CHARGE}`]: () =>
         Response.json({ ...CONTACT_D_CHARGES[0], id: NEW_CHARGE, status: 'draft', sentAt: null }),
+      [`POST ${BASE}/charges/${NEW_CHARGE}/send-email`]: () => {
+        requests.push({ path: 'send-email', body: null })
+        return new Response(null, { status: 204 })
+      },
+      [`POST ${BASE}/charges/${CHARGE_SENT}/send-email`]: () => {
+        requests.push({ path: 'resend-email', body: null })
+        return new Response(null, { status: 204 })
+      },
       [`POST ${BASE}/charges/${NEW_CHARGE}/sent`]: async (request) => {
         requests.push({ path: 'sent', body: await request.json() })
         return new Response(null, { status: 204 })
@@ -42,7 +51,7 @@ async function openNewCharge(answers: Record<string, FakeAnswer> = {}) {
   })
   const app = createApp(
     createMemoryHistory({
-      initialEntries: [`/w/${WORKSPACE_ID}/contacts/${CONTACT_D}?charge=new`],
+      initialEntries: [`/w/${WORKSPACE_ID}/contacts/${CONTACT_D}?charge=${charge}`],
     }),
   )
   await render(<AppProviders app={app} />)
@@ -118,5 +127,49 @@ describe('CON-03 new charge', () => {
     await expect.element(page.getByText('Cobrança marcada como enviada.')).toBeVisible()
     expect(requests[1]).toEqual({ path: 'sent', body: { via: 'whatsapp' } })
     await expect.poll(() => app.router.state.location.search).not.toHaveProperty('charge')
+  })
+
+  it('sends the new charge by e-mail after showing to whom and the subject', async () => {
+    const { requests } = await openNewCharge()
+    await page.getByRole('button', { name: 'Criar cobrança' }).click()
+
+    await page.getByRole('button', { name: /Enviar por e-mail/ }).click()
+    const sheet = page.getByRole('dialog', { name: 'Enviar por e-mail' })
+    await expect.element(sheet.getByText('member.d@exemplo.com')).toBeVisible()
+    await expect
+      .element(sheet.getByText(/Member A te enviou uma cobrança de R\$\s200,00/))
+      .toBeVisible()
+    await sheet.getByRole('button', { name: 'Enviar e-mail' }).click()
+
+    await expect.element(page.getByText('E-mail enviado para member.d@exemplo.com.')).toBeVisible()
+    expect(requests.map(({ path }) => path)).toEqual(['create', 'send-email'])
+  })
+
+  it('opens a sent charge again to send it once more', async () => {
+    await openNewCharge({}, CHARGE_SENT)
+
+    const resend = page.getByRole('dialog', { name: 'Enviar cobrança' })
+    await expect.element(resend.getByRole('button', { name: /Enviar pelo WhatsApp/ })).toBeVisible()
+    await expect.element(resend.getByText(/criada. Fica como rascunho/)).not.toBeInTheDocument()
+  })
+
+  it('offers to retry a refused e-mail, to send by WhatsApp or to fix the address', async () => {
+    const { requests, app } = await openNewCharge({
+      [`GET ${BASE}/charges`]: () => Response.json([CONTACT_D_CHARGE_FAILED]),
+    })
+    await page
+      .getByRole('dialog', { name: 'Nova cobrança' })
+      .getByRole('button', { name: 'Cancelar' })
+      .last()
+      .click()
+
+    await page.getByRole('button', { name: /Cobrança de 20\/10/ }).click()
+    await expect.element(page.getByText(/O e-mail não saiu/)).toBeVisible()
+    await page.getByRole('button', { name: 'Tentar o e-mail de novo' }).click()
+    await expect.element(page.getByText('E-mail enviado para member.d@exemplo.com.')).toBeVisible()
+    expect(requests.map(({ path }) => path)).toEqual(['resend-email'])
+
+    await page.getByRole('button', { name: 'Corrigir e-mail' }).click()
+    await expect.poll(() => app.router.state.location.search).toMatchObject({ contact: CONTACT_D })
   })
 })

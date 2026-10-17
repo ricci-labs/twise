@@ -26,6 +26,9 @@ export type ContactChargeView = {
   status: ContactCharge['status']
   itemCount: number
   history: ChargeHistory | undefined
+  sentVia: ContactCharge['sentVia']
+  sentTo: string | null
+  hasEmailFailed: boolean
   items: ChargeBodyItem[]
   dueOn: IsoDate | null
   isDuePast: boolean
@@ -40,6 +43,7 @@ export type ContactChargesProps = {
   contactId: string
   canUpdate: boolean
   today: IsoDate
+  onResend: (chargeId: string) => void
 }
 
 export type ContactChargeItemProps = {
@@ -48,6 +52,40 @@ export type ContactChargeItemProps = {
   isOpen: boolean
   onOpenChange: (isOpen: boolean) => void
   onCancel: () => void
+  onResend: () => void
+  onRetryEmail: () => void
+  onFixEmail: () => void
+}
+
+export type ChargePixProps = {
+  workspaceId: string
+  permissions: readonly Permission[]
+  amountCents: number
+  pixPayload: string | null
+}
+
+export type ChargeEmailSendProps = {
+  workspaceId: string
+  contactName: string
+  currentUser: ChargeSender
+  chargeId: string
+  email: string
+  amountCents: number
+  dueOn: IsoDate | null
+  hasPix: boolean
+  isOpen: boolean
+  onOpenChange: (isOpen: boolean) => void
+  onSent: () => void
+}
+
+export type ChargeActionsInput = {
+  charge: ContactChargeView
+  canUpdate: boolean
+  copyMessage: () => void
+  copyPix: (() => void) | null
+  onResend: () => void
+  onRetryEmail: () => void
+  onFixEmail: () => void
 }
 
 export type ContactOpenItems = {
@@ -61,7 +99,9 @@ export type ContactDetailPageProps = {
   permissions: readonly Permission[]
   onNewCharge: () => void
   onDeleted: () => void
-  isChargeOpen: boolean
+  charge: string | undefined
+  currentUser: ChargeSender
+  onChargeOpen: (chargeId: string) => void
   onChargeClose: () => void
 }
 
@@ -72,8 +112,16 @@ export type NewChargeProps = {
   openItems: readonly ContactOpenItem[]
   today: IsoDate
   permissions: readonly Permission[]
+  currentUser: ChargeSender
+  chargeId?: string
   isOpen: boolean
   onClose: () => void
+}
+
+export type ChargeSender = {
+  name: string
+  email: string
+  workspaceName: string
 }
 
 export type ChargeComposeProps = NewChargeProps & {
@@ -82,6 +130,7 @@ export type ChargeComposeProps = NewChargeProps & {
 
 export type CreatedChargeProps = NewChargeProps & {
   chargeId: string
+  isResend: boolean
 }
 
 export type ContactMenuDialog = 'archive' | 'delete' | null

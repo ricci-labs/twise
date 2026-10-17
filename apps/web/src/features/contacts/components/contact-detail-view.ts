@@ -1,4 +1,5 @@
 import { type ChargeStatus, type IsoDate, todayIn } from '@financas/shared'
+import type { ChargeHistory } from '@web/components/finance/charge-body'
 import type { ChargePreviewItem } from '@web/components/finance/charge-preview'
 import type { PlanSummaryTile } from '@web/components/finance/plan-summary-tiles'
 import type { UntilNextDue } from '@web/components/finance/until-chips'
@@ -66,9 +67,10 @@ export function contactChargeViewOf(
     amountCents: charge.amountCents,
     status: charge.status,
     itemCount: charge.items.length,
-    history: charge.sentAt
-      ? { kind: 'sent', send: { via: MARKED_SENT, sentAt: charge.sentAt } }
-      : undefined,
+    history: historyOf(charge),
+    sentVia: charge.sentVia,
+    hasEmailFailed: charge.emailStatus === 'failed',
+    sentTo: charge.sentTo,
     items: charge.items.map((item) => ({
       key: item.postingId,
       description: chargeItemDescription(item),
@@ -80,6 +82,19 @@ export function contactChargeViewOf(
     canCancel: isOpen && charge.paidCents === 0,
     messageText: charge.messageText,
     pixPayload: charge.pixPayload,
+  }
+}
+
+function historyOf(charge: ContactCharge): ChargeHistory | undefined {
+  if (charge.emailStatus === 'failed' && charge.sentTo) {
+    return { kind: 'emailFailed', sentTo: charge.sentTo }
+  }
+  if (!charge.sentAt) {
+    return undefined
+  }
+  return {
+    kind: 'sent',
+    send: { via: charge.sentVia ?? MARKED_SENT, sentAt: charge.sentAt, sentTo: charge.sentTo },
   }
 }
 

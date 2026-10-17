@@ -10,7 +10,7 @@ export type EmailSendSheetProps = {
   subject: string
   replyTo: EmailReplyTo
   hasPix: boolean
-  onPreview: () => void
+  onPreview?: () => void
   onSend: () => void
   isSending?: boolean
 }

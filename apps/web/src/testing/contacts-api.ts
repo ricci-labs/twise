@@ -141,6 +141,10 @@ export const CONTACT_D_CHARGES = [
     messageText: `Oi, Member D! Member A pediu para te lembrar do que está em aberto.\n• Mercado da semana — R$ 120,00\n• Jantar de aniversário — R$ 80,00\nTotal: R$ 200,00\nPix copia e cola:\n${PIX_PAYLOAD}`,
     pixPayload: PIX_PAYLOAD,
     sentAt: '2026-10-20T17:32:00.000Z',
+    sentVia: 'email',
+    sentTo: 'member.d@exemplo.com',
+    emailStatus: 'sent',
+    emailError: null,
     createdAt: '2026-10-20T17:30:00.000Z',
     items: [
       {
@@ -171,6 +175,10 @@ export const CONTACT_D_CHARGES = [
     messageText: 'Oi, Member D! Total: R$ 160,00',
     pixPayload: null,
     sentAt: '2026-09-12T12:00:00.000Z',
+    sentVia: 'whatsapp',
+    sentTo: '+5511999990004',
+    emailStatus: null,
+    emailError: null,
     createdAt: '2026-09-12T12:00:00.000Z',
     items: [
       {
@@ -185,6 +193,13 @@ export const CONTACT_D_CHARGES = [
   },
 ]
 
+export const CONTACT_D_CHARGE_FAILED = {
+  ...CONTACT_D_CHARGES[0],
+  status: 'draft',
+  emailStatus: 'failed',
+  emailError: '550 5.1.1 mailbox unavailable',
+}
+
 export function contactAnswers(contactId: string, overrides: Record<string, FakeAnswer> = {}) {
   return {
     ...contactsAnswers(),
@@ -193,6 +208,14 @@ export function contactAnswers(contactId: string, overrides: Record<string, Fake
     [`GET ${BASE}/contacts/${contactId}/open-items`]: () =>
       Response.json(contactId === CONTACT_D ? CONTACT_D_OPEN_ITEMS : []),
     [`GET ${BASE}/charges`]: () => Response.json(contactId === CONTACT_D ? CONTACT_D_CHARGES : []),
+    [`GET ${BASE}/charges/${CHARGE_SENT}`]: () => Response.json(CONTACT_D_CHARGES[0]),
+    [`GET ${BASE}/settings/charge-text`]: () =>
+      Response.json({
+        subject: '{quem cobra} te enviou uma cobrança de {valor}',
+        opening: '{quem cobra} pediu para te lembrar do que está em aberto.',
+        closing: null,
+        isDefault: true,
+      }),
     ...overrides,
   }
 }
