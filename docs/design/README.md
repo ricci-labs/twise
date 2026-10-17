@@ -1,7 +1,7 @@
 ---
 summary: Index of the visual design (Twise design system, account screens, app shell and Home, icons, owl illustrations and motion) and how to use it when building the web app.
 read_when: Building or changing any web screen or component, picking colors/type/spacing, or using the owl illustrations.
-updated: 2026-10-15
+updated: 2026-10-16
 ---
 
 # Design
@@ -48,6 +48,11 @@ The UX/UI was designed visually (no production code) and exported here so it can
 | `planning-b/screens.md` | Building one of those screens, mobile and desktop, with HTML, PNG and notes |
 | `planning-b/components.md` | Components for goals, split steps and the example, holidays and the year calendar |
 | `planning-b/decisions.md` | **Before building planning round B:** changes to planning.md, holidays moving to Configurações, the selection fix in picker sheets, API needs G58–G60 |
+| `contacts/README.md` | Starting contacts and charges (CON-01..05, SET-02), charges by email and the customizable charge text |
+| `contacts/screens.md` | Building one of those screens, mobile and desktop, with HTML, PNG and notes |
+| `contacts/components.md` | Components for contacts, charges, sending, the contact form and the charge text editor |
+| `contacts/emails.md` | Building the charge email, its subject, the customizable parts and the opt-out link |
+| `contacts/decisions.md` | **Before building contacts:** changes to the requirements, email on contacts and charges by email, four new app-wide UI rules, API needs G61–G64 |
 | `assets/ilustracoes/README-sistema.md` | The system illustrations (invoice payment, transfer, opening balance, receipt) |
 | `assets/ilustracoes/soltas/` | Category illustrations without the paper square, for white surfaces |
 | `assets/icones/` | The Twise interface icons (two layers) |
@@ -55,7 +60,7 @@ The UX/UI was designed visually (no production code) and exported here so it can
 
 ## How to use it
 
-1. Read `account/decisions.md`, `home/decisions.md`, `entries/decisions.md`, `accounts/decisions.md`, `entries-list/decisions.md`, `planning/decisions.md` and `planning-b/decisions.md` first: where the design and the requirement docs disagree, the design wins and the requirement doc must be updated in the same PR.
+1. Read `account/decisions.md`, `home/decisions.md`, `entries/decisions.md`, `accounts/decisions.md`, `entries-list/decisions.md`, `planning/decisions.md`, `planning-b/decisions.md` and `contacts/decisions.md` first: where the design and the requirement docs disagree, the design wins and the requirement doc must be updated in the same PR.
 2. Build components before screens (`account/components.md`). Screens are compositions; no screen should need one-off CSS.
 3. For a screen, open its PNG to see it and its HTML for exact copy, spacing and states. The HTML is a reference, not code to copy: its inline CSS (`tw-…` classes) predates the design system classes (`fn-…`). Use tokens and components.
 4. Copy (pt-BR) in the screens and notes is final. Error copy comes from `product/requirements/error-messages.md`.

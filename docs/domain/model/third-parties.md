@@ -1,7 +1,7 @@
 ---
-summary: Contacts (third parties), how their share of entries is recorded (receivable postings, installments, several per entry), charges sent directly over WhatsApp, and settlements.
+summary: Contacts (third parties), how their share of entries is recorded (receivable postings, installments, several per entry), charges sent over WhatsApp or e-mail, the workspace's charge text, and settlements.
 read_when: Working on contacts, splitting an entry with other people, charges (cobranças) or recording that someone paid back.
-updated: 2026-09-29
+updated: 2026-10-16
 ---
 
 # Third parties: contacts, charges, settlements
@@ -19,9 +19,12 @@ updated: 2026-09-29
 | `workspace_id`, `id` | | |
 | `name` | text not null | 1–80 characters |
 | `phone_e164` | text null | `+55…` format (CHECK). Required to send charges over WhatsApp |
+| `email` | citext null | Valid e-mail, unique among active contacts (`409 CONTACT_EMAIL_TAKEN`). Required to send charges by e-mail (G61) |
 | `pix_key` | text null | Only if the household ever pays *them* (≤ 77 characters, the Pix limit) |
 | `notes` | text null | ≤ 500 characters |
 | `opted_out_at` | timestamptz null | Contact replied asking not to receive charges. Sending is blocked while set. Set again, it keeps the first moment |
+| `opted_out_via` | `member` \| `email_link` null | Who set it. E-mails are never sent while set; members can clear only a `member` opt-out |
+| `opt_out_token` | text | Per contact, in the charge e-mail's opt-out link (stored as a hash, like `auth_tokens`) |
 | `archived_at` | | `PATCH { isArchived: true }` only when the balance is zero (`409 CONTACT_HAS_BALANCE`) |
 | soft delete, timestamps | | |
 
@@ -46,6 +49,9 @@ One active contact per phone (`409 CONTACT_PHONE_TAKEN`); deleting a contact fre
 | `message_text` | text | The exact text sent (audit) |
 | `pix_payload` | text null | Pix "copia e cola" with the amount, generated from the **workspace's** receiving key |
 | `sent_at`, `last_reminded_at` | timestamptz null | |
+| `sent_via` | `whatsapp` \| `email` \| `manual` null | The channel of the last send (G62) |
+| `sent_to` | text null | The phone or e-mail it went to |
+| `email_status`, `email_error` | `queued` \| `sent` \| `failed`, text null | The e-mail's outcome; a refusal puts the charge back to `draft` with the reason |
 | `created_by_user_id` | | |
 
 Implemented notes: `status` starts `draft`; `sent_at` is set whenever the charge left `draft`
@@ -91,9 +97,15 @@ that month.
 - **Open items** (`openItems`): a contact's receivable lines, with their payments applied to the
   **oldest items first** (by due date, then posting). Items still open, due up to the chosen date and
   not already in an open charge. Each carries what's left of it.
-- **Message** (`chargeMessage`, pt-BR, the exact text is stored on the charge): who asks, one line
-  per item (`parcela n/N` when there are installments), the total, the due date and the Pix copia
-  e cola, each only when there is one.
+- **Message** (`chargeMessage`, pt-BR, the exact text is stored on the charge): the workspace's
+  opening (`{quem cobra}`, `{valor}`… filled in), one line per item (`parcela n/N` when there are
+  installments), the total, the due date, the Pix copia e cola, each only when there is one, and the
+  workspace's closing. The web uses the same function for the live previews. The e-mail subject
+  comes from the same template.
+- **Charge text** (`GET/PUT/DELETE /settings/charge-text`, `settings:update`, G64): `{ subject,
+  opening, closing }` with the tags `{contato}`, `{quem cobra}`, `{valor}`, `{vencimento}`,
+  `{espaço}`; an unknown tag is `400 CHARGE_TEXT_INVALID`; `DELETE` goes back to the default. The
+  text in force when a charge is created is the one stored in it.
 - **Pix copia e cola** (`pixCopiaECola`): a static BR Code (EMV) with the amount, the workspace's key,
   receiver name (≤ 25) and city (≤ 15) without accents, the charge as the transaction id, closed by
   its CRC-16/CCITT-FALSE.
@@ -105,9 +117,18 @@ that month.
 | `GET /contacts/:contactId/open-items?until=` | `contacts:view` | `listOpenItems`: what a charge created now would include (same computation, default today): each item with `description`, `installmentNo`, `installmentCount`, `effectiveOn`, `amountCents` and `remainingCents`, oldest first; items in an open charge are left out |
 | `GET /charges?contactId=` | `contacts:view` | `listCharges`: newest first, with items (`postingId`, `description`, `installmentNo`, `installmentCount`, `effectiveOn`, charged `amountCents`), `paidCents` and the derived status |
 | `GET /charges/:chargeId` | `contacts:view` | `getCharge`: one charge, as in the list |
-| `POST /charges/:chargeId/sent` | `contacts:update` | `markChargeSent`: draft → sent (also when a member forwards the message by hand) |
+| `POST /charges/:chargeId/sent` | `contacts:update` | `markChargeSent` `{ via: 'whatsapp' \| 'manual' }`: draft → sent (also when a member forwards the message by hand) |
+| `POST /charges/:chargeId/send-email` | `contacts:update` | `sendChargeEmail` (G62): queues the charge e-mail in `notification_outbox`, marks it sent with `sentVia: 'email'`, `sentTo`, `sentAt`, `emailStatus: 'queued'`; `409 CONTACT_HAS_NO_EMAIL`, `409 CONTACT_OPTED_OUT` |
+| `POST /api/public/contacts/opt-out` | public | `{ token }` → sets `opted_out_at` and `opted_out_via: 'email_link'` (no login) |
 | `POST /charges/:chargeId/payments` | `contacts:update` | `payCharge` `{ amountCents, receivedInAccountId, occurredOn }`: records the `settlement` entry and links it → `201 { entryId }`; a cancelled charge is `409 CHARGE_STATUS_REFUSED` |
 | `POST /charges/:chargeId/cancel` | `contacts:update` | `cancelCharge`: an open charge without payments → cancelled; its items can be charged again. `409 CHARGE_STATUS_REFUSED` otherwise |
+
+### Sending a charge by e-mail
+`sendChargeEmail` enqueues the e-mail through `notification_outbox`, like the account e-mails; the
+template lives in `contacts.emails.ts` on `core/email/layout.ts` (`../../design/contacts/emails.md`):
+From "Twise · {espaço}", Reply-To the member who created the charge, the QR code a PNG of the same
+Pix payload, the opt-out link with the contact's token. The worker records `email_status: 'sent'`,
+or `failed` with `email_error` and the charge back to `draft` when the server refuses the address.
 
 ### Sending a charge (direct, via the platform's WhatsApp)
 1. The user asks ("cobra o J") or a scheduled monthly charge triggers.

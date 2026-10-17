@@ -1,7 +1,7 @@
 ---
-summary: Functional requirements for the app shell and workspaces — switcher, creating a workspace, settings (financial period, budget base, installment view, time zone), Pix receiving, members, roles and permissions, invitations (SHELL-01, WS-01, SET-01..02, MEM-01..03).
+summary: Functional requirements for the app shell and workspaces — switcher, creating a workspace, settings (financial period, budget base, installment view, time zone), Pix receiving, the charge text, members, roles and permissions, invitations (SHELL-01, WS-01, SET-01..03, MEM-01..03).
 read_when: Designing or building the shell, workspace settings, members, roles or invitations.
-updated: 2026-10-09
+updated: 2026-10-16
 ---
 
 # Workspace and members
@@ -92,15 +92,40 @@ cobranças a cada {n} dias" appear later, when editable.
 valores."), `WORKSPACE_NAME_INVALID`.
 
 ## SET-02 Pix receiving (MVP)
-A section of `SET-01`. `PUT /settings/pix`, `settings:update`.
-**RF-WS-6** The Pix shown in charges (`CON-03`).
+"Recebimento por Pix", a page under Configurações (`/configuracoes/recebimento-por-pix`), also
+reached from the note of a charge without Pix. `PUT /settings/pix`, `settings:update`. Design:
+`../../../design/contacts/` (`Pix`).
+**RF-WS-6** The Pix shown in charges (`CON-03`). The name and the city have counters (25 and 15),
+and a preview shows what the payer's bank app displays.
 | Field | Label | Required | Rules |
 |---|---|---|---|
 | key | "Chave Pix" | yes | trimmed, 1–77 (CPF, e-mail, telefone ou aleatória; the format isn't checked) |
 | receiverName | "Nome de quem recebe" | yes | 1–25; help "Aparece no app do banco de quem paga. Sem acentos fica melhor." |
 | receiverCity | "Cidade" | yes | 1–15 |
-The three go together. Actions "Salvar Pix", "Remover Pix" (dialog "As próximas cobranças sairão
-sem o Pix copia e cola."). Error `PIX_INVALID`.
+The three go together. Actions "Salvar Pix", "Remover Pix" (danger text; dialog "As próximas
+cobranças sairão sem o Pix copia e cola."). Error `PIX_INVALID`.
+
+## SET-03 Charge text (MVP)
+"Mensagem das cobranças", a page under Configurações (`/configuracoes/mensagem-das-cobrancas`),
+also reached from "Mudar o texto padrão das cobranças" after creating a charge. `GET/PUT/DELETE
+/settings/charge-text` (G64), `settings:update`. Design: `../../../design/contacts/emails.md` and
+the `Texto` screens.
+**RF-WS-7** The workspace customizes three parts; the rest of the WhatsApp message and of the
+e-mail is fixed (greeting, heading, items, total, due date, Pix, notes, footer, opt-out link),
+explained under a padlock.
+| Field | Label | Default | Rules |
+|---|---|---|---|
+| subject | "Assunto do e-mail" | "{quem cobra} te enviou uma cobrança de {valor}" | 1–120 after filling the tags |
+| opening | "Abertura" (e-mail and WhatsApp) | "{quem cobra} pediu para te lembrar do que está em aberto. Dá para pagar com Pix, o valor já vem preenchido." | 1–300 |
+| closing | "Encerramento" (e-mail and WhatsApp) | "Qualquer dúvida, é só responder este e-mail." (WhatsApp: none by default) | 0–300 |
+Tags `{contato}`, `{quem cobra}`, `{valor}`, `{vencimento}`, `{espaço}` are inserted by buttons
+("Nome do contato", "Quem cobra", "Valor", "Vencimento", "Espaço") and shown as chips. An unknown
+tag is a field error ("Esta informação não existe: {apelido}. Use os botões abaixo para inserir.",
+`CHARGE_TEXT_INVALID`) and keeps "Salvar texto" disabled. Previews with tabs "E-mail" (the inbox
+row: sender, subject, preheader) and "WhatsApp" (the whole message), updated while typing; on the
+desktop the fields and the WhatsApp preview on the left, the inbox and the full e-mail on the right.
+"Voltar ao texto padrão" resets (`DELETE`). Charges already created never change: their message
+is stored.
 
 ## MEM-01 Members (MVP)
 Route `/membros`. `members:view` (not for viewers). `GET /members`, `GET /roles`.

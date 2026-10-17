@@ -138,7 +138,10 @@ message.
 | `CONTACT_INVALID` | 400 | Contact form invalid | per field | fields |
 | `CONTACT_NOT_FOUND` | 404 | Contact deleted | "Este contato não existe mais." | page / toast |
 | `CONTACT_PHONE_TAKEN` | 409 | Another active contact has the number | "Outro contato já usa esse número." | field phone |
-| `CONTACT_HAS_BALANCE` | 409 | Archiving with a balance | "Só dá para arquivar quando o saldo estiver zerado." | toast |
+| `CONTACT_EMAIL_TAKEN` | 409 | Another active contact has the e-mail | "Outro contato já usa esse e-mail." | field e-mail |
+| `CONTACT_HAS_BALANCE` | 409 | Archiving with a balance | title "{nome} ainda deve R$ X", text "Só dá para arquivar quando o saldo estiver zerado." + "Nova cobrança" | dialog |
+| `CONTACT_HAS_NO_EMAIL` | 409 | Sending a charge by e-mail to a contact without e-mail (guard: the option is hidden) | "Este contato não tem e-mail. Adicione um para enviar por e-mail." | toast |
+| `CONTACT_OPTED_OUT` | 409 | Sending a charge by e-mail to a contact who opted out (guard: the option is disabled) | "{nome} pediu para não receber e-mails." | toast |
 | `CHARGE_INVALID` | 400 | Invalid date | "Informe uma data válida (dd/mm/aaaa)." | field date |
 | `CHARGE_QUERY_INVALID` | 400 | Invalid filter (guard) | "Não foi possível carregar as cobranças." | section |
 | `CHARGE_NOT_FOUND` | 404 | Charge gone | "Esta cobrança não existe mais." | toast |
@@ -146,6 +149,7 @@ message.
 | `NOTHING_TO_CHARGE` | 409 | Nothing open up to the date | "Este contato não tem nada em aberto até essa data." | form |
 | `CHARGE_STATUS_REFUSED` | 409 | Action not allowed in the charge's status | sent: "Esta cobrança já foi enviada ou tem pagamento." · cancel: "Cobranças com pagamento não podem ser canceladas." · payment: "Esta cobrança foi cancelada e não recebe pagamentos." | form / toast |
 | `CHARGE_PAYMENT_INVALID` | 400 | Payment form invalid | per field | fields |
+| `CHARGE_TEXT_INVALID` | 400 | Charge text invalid: an unknown tag, empty or too long | unknown tag: "Esta informação não existe: {apelido}. Use os botões abaixo para inserir." · length: "Use até {n} caracteres." · empty: "Escreva a abertura da mensagem." | field |
 
 ## Planning
 | Code | HTTP | When | Message | Shown as |
