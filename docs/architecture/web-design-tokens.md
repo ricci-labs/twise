@@ -68,7 +68,8 @@ When to use each one: the design system guide → Colour, and each token's notes
 
 ## Typography
 - **Two families, bundled:** Bricolage Grotesque (`font-display`: greeting, screen titles, the
-  "Livre para gastar" figure) and Figtree (`font-sans`: everything else). Imported from Fontsource
+  "Livre para gastar" figure) and Figtree (`font-sans`: everything else; `font-mono`, the
+  system monospace, only for a Pix copia e cola code). Imported from Fontsource
   (`@fontsource-variable/bricolage-grotesque`, `@fontsource-variable/figtree`), the same `woff2`
   files the design uses, so Vite ships them with the app (RNF-PRIV-1: no font CDN).
 - **Type styles** are the design's, each with size, line height, weight and letter spacing
@@ -106,7 +107,8 @@ When to use each one: the design system guide → Colour, and each token's notes
   "Fecha todo dia 25". From the shell's design CSS: `wordmark` (30, 750, display), the sidebar's
   "twise"; `overline` (11.5/16, 600, 0.06em), the sidebar's group labels ("MAIS", "ESPAÇO");
   `account-name` (14/18, 600), the workspace and account names in its foot. `card-title` (18/24, 700,
-  display), a card's title on the desktop.
+  display), a card's title on the desktop. From the contacts design CSS: `code` (12/17, 400, with
+  `font-mono`), a Pix copia e cola code.
 - **Table columns:** the desktop tables' column templates are theme values
   (`--grid-template-columns-table-accounts`, `-cards`, `-invoices`, `-lines`, `-categories`,
   `-incomes`), copied from the design CSS, so a table row uses `grid-cols-table-accounts` instead
@@ -124,8 +126,9 @@ When to use each one: the design system guide → Colour, and each token's notes
   `control-sm` 36 px, `control-xs` 30 px (the small button inside a list row, with the
   `button-sm` type style), `fab` 56 px (`size-fab`).
 - **Radius:** the design's fixed scale, `sm` 8 px, `md` 14 px (fields, alerts), `lg` 20 px (cards,
-  dialogs), `xl` 28 px (main card, bottom sheet), `full` (buttons, badges, chips), and `swatch`
-  3 px, a chart legend's square.
+  dialogs), `xl` 28 px (main card, bottom sheet), `full` (buttons, badges, chips), `swatch`
+  3 px, a chart legend's square, and `bubble` 16 px with its `bubble-tail` 4 px corner, a message
+  bubble (`rounded-bubble rounded-tl-bubble-tail`).
 - **Elevation:** flat by default (cards use `border`). `shadow-raised` (the selected option of a
   segmented control), `shadow-float` (floating button, menus,
   toasts), `shadow-bar` (the phone's bottom bar, cast upwards) and `shadow-dialog` (dialogs, bottom

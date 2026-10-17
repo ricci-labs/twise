@@ -46,6 +46,7 @@ const TEXT_PAIRS = [
   ]),
   ['ink', 'mint-soft'],
   ['ink', 'danger-soft'],
+  ['ink-muted', 'mint-soft'],
   ['sketch-ink', 'sketch-paper'],
 ]
 const ACCOUNT_SCREEN_TEXT_PAIRS = [
