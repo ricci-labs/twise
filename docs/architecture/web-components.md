@@ -33,14 +33,14 @@ where it's used.
 | Family | Components (from the brief) |
 |---|---|
 | `actions/` | `Button`, `IconButton`, `SubmitButton`, `FloatingActionButton`, `ActionMenu`, `ItemActions`, `SegmentedControl`, `AddTile`, `ShowMoreButton`, `ActionGrid` |
-| `inputs/` | `TextInput`, `PasswordInput`, `EmailInput`, `PhoneInput`, `SearchInput`, `TextArea`, `MoneyInput`, `ChoiceChips`, `PickerField`, `PickerSheet`, `Stepper`, `RadioCardList`, `RadioSentenceList`, `DateInput`, `PeriodPicker`, `Select`, `FilterButton`, `CheckboxMenu`, `Combobox`, `Checkbox`, `RadioGroup`, `Switch`, `DayOfMonthPicker`, `FileUpload`, `ColorSwatch` |
+| `inputs/` | `TextInput`, `PasswordInput`, `EmailInput`, `PhoneInput`, `SearchInput`, `TextArea`, `MoneyInput`, `ChoiceChips`, `PickerField`, `PickerSheet`, `Stepper`, `RadioCardList`, `RadioSentenceList`, `DateInput`, `PeriodPicker`, `Select`, `FilterButton`, `CheckboxMenu`, `Combobox`, `Checkbox`, `RadioGroup`, `Switch`, `DayOfMonthPicker`, `FileUpload`, `ColorSwatch`, `ChargeTextEditor` |
 | `forms/` | `Form`, `FormField`, `FieldGroup`, `LockedField`, `FormErrorSummary`, `FormFooter`, `RequiredLegend` |
 | `feedback/` | `Toast`, `InlineAlert`, `AutoFillTip`, `Banner`, `ConfirmDialog`, `EmptyState`, `EmptyBlock`, `Skeleton`, `ListSkeleton`, `KpiSkeleton`, `ErrorState` |
 | `display/` | `Amount`, `DateBlock`, `MiniMonthCalendar`, `StatusBadge`, `Avatar`, `ListItem`, `Card`, `StatCard`, `ThresholdProgress`, `Tabs`, `Accordion`, `DataList` (table on desktop, list on mobile), `LoadMore`, `Tooltip`, `HelpPopover`, `FilterChips`, `CategoryIcon`, `ArchivedToggle` |
 | `charts/` | `BarChart`, `ForecastChart`, `DonutChart`, each with its text alternative |
 | `navigation/` | `BottomBar`, `Sidebar`, `TopBar`, `WorkspaceSwitcher`, `BackLink`, `Breadcrumb`, `ScrollArrows`, `YearStepper`, `SettingsRow` |
 | `layout/` | `AppShell`, `FormOverlay`, `SidePanel`, `Page`, `PageHeader`, `Section`, `Stack`, `Grid` |
-| `finance/` | `StatHero`, `InsightCard`, `InvoiceCard`, `InvoicePreview`, `SharesList`, `RecentEntries`, `AccountRow`, `AccountGroup`, `CardBlock`, `InvoiceSummary`, `InvoiceLine`, `EntryRow`, `OccurrenceRow`, `HolidayRow`, `NextHolidayCard`, `ContactRow`, `ContactHeader`, `OpenItemRow`, `ChargeRow`, `ChargeBody`, `MessageBubble`, `PixBox`, `UntilChips`, `ChargePreview`, `NothingToCharge`, `SendOptions`, `EmailSendSheet`, `AmountSplitEditor`, `AllocationStepRow`, `SplitExample` |
+| `finance/` | `StatHero`, `InsightCard`, `InvoiceCard`, `InvoicePreview`, `SharesList`, `RecentEntries`, `AccountRow`, `AccountGroup`, `CardBlock`, `InvoiceSummary`, `InvoiceLine`, `EntryRow`, `OccurrenceRow`, `HolidayRow`, `NextHolidayCard`, `ContactRow`, `ContactHeader`, `OpenItemRow`, `ChargeRow`, `ChargeBody`, `MessageBubble`, `PixBox`, `InboxPreview`, `ChargeEmailPreview`, `UntilChips`, `ChargePreview`, `NothingToCharge`, `SendOptions`, `EmailSendSheet`, `AmountSplitEditor`, `AllocationStepRow`, `SplitExample` |
 | `brand/` | `Logo`, `OwlScene` (the layered owl scenes and their motion), `AppSplash` |
 | `icons/` | `TwiseIcon` and the icon registries (see Icons) |
 
@@ -1088,6 +1088,31 @@ contact form (CON-05) use them. Every number and date comes from the API; the ro
 - `PixBox` (`components/finance/pix-box`): "Pix copia e cola · R$ X", the whole code in mono,
   broken anywhere, and "Copiar Pix", which writes it to the clipboard and calls `onCopied` (the
   screen's toast) or `onCopyFailed`.
+- `ChargeTextEditor` + `ChargeTagButtons` (`components/inputs/charge-text-editor`): a field of
+  the charge text (SET-03) whose tags show as chips. It stays a plain `textarea`, the one the
+  `FormField` control drives (label, `aria-describedby`, undo, IME, spell check and selection are
+  the browser's own), with the text written as stored (`{quem cobra}`). A copy of the text sits in
+  the same grid cell behind it, transparent, with each tag in a `mark`: a known one (`CHARGE_TAGS`)
+  in `mint-soft` with a `mint` outline, an unknown `{…}` in `danger-soft` with a wavy `danger`
+  underline. Both layers share font, padding and wrapping, so the marks fall under the words, and
+  the copy (plus one trailing space) gives the cell its height, so the field grows with the text
+  without a scroll bar. `isSingleLine` (the subject) ignores Enter and turns pasted breaks into
+  spaces. `ChargeTagButtons` is the `fieldset` "Inserir informação" of dashed "+" pills ("Nome do
+  contato", "Quem cobra", "Valor", "Vencimento", "Espaço"); a press keeps the focus in the field
+  and calls `onInsert(tag)`, and the screen puts the tag at the caret. A contenteditable with
+  real chips was left out: its caret, selection, undo and screen-reader text would all be ours to
+  build.
+- `InboxPreview` (`components/finance/inbox-preview`): one message in an inbox, on the page
+  colour: the sender and the time ("agora" by default) on the first line, the subject and the
+  preheader on one line each, cut with "…" (the whole text in `title`). Used by the charge text
+  settings and the subject options.
+- `ChargeEmailPreview` (`components/finance/charge-email-preview`): an approximation of the charge
+  e-mail in the app's tokens (`../design/contacts/emails.md`), for the desktop of SET-03: subject
+  and sender over the logo, the card with the mint band and the `together` owls, "Oi, {contato}!",
+  "R$ X para {quem cobra}", the opening, the items table with the 2 px line before "Total", "Venceu
+  em" (danger) or "Vence em", the Pix block (a QR icon stands for the QR code) and the code in a
+  dashed box, the closing, the notes ("Quem recebe…" only with Pix) and the footer with the
+  opt-out line. It takes the opening and closing already filled; an empty closing is left out.
 - `PhoneInput` (`components/inputs/phone-input`, the design's `PhoneField`): the country `Select`
   (92 px, "+55" in the box, "Brasil (+55)" and a short list of other countries in the sheet, named
   "País: +55") and the number (`type="tel"`), both 48 px, 8 px apart. It takes the `FormField`

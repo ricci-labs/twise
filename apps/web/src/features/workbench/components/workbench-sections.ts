@@ -59,6 +59,7 @@ import { budgetSummaryExamples } from '@web/components/finance/budget-summary'
 import { cardBlockExamples } from '@web/components/finance/card-block'
 import { categoryRowExamples } from '@web/components/finance/category-row'
 import { chargeBodyExamples } from '@web/components/finance/charge-body'
+import { chargeEmailPreviewExamples } from '@web/components/finance/charge-email-preview'
 import { chargePreviewExamples } from '@web/components/finance/charge-preview'
 import { chargeRowExamples } from '@web/components/finance/charge-row'
 import { contactChannelsExamples } from '@web/components/finance/contact-channels'
@@ -71,6 +72,7 @@ import { entryHeaderExamples } from '@web/components/finance/entry-header'
 import { entryRowExamples } from '@web/components/finance/entry-row'
 import { goalCardExamples } from '@web/components/finance/goal-card'
 import { holidayRowExamples } from '@web/components/finance/holiday-row'
+import { inboxPreviewExamples } from '@web/components/finance/inbox-preview'
 import { installmentRowsExamples } from '@web/components/finance/installment-rows'
 import { invoiceFactsExamples } from '@web/components/finance/invoice-facts'
 import { invoiceLineExamples } from '@web/components/finance/invoice-line'
@@ -109,6 +111,7 @@ import { lockedFieldExamples } from '@web/components/forms/locked-field'
 import { twiseIconExamples } from '@web/components/icons/twise-icon'
 import { calendarMonthExamples } from '@web/components/inputs/calendar-month'
 import { calendarSheetExamples } from '@web/components/inputs/calendar-sheet'
+import { chargeTextEditorExamples } from '@web/components/inputs/charge-text-editor'
 import { checkboxMenuExamples } from '@web/components/inputs/checkbox-menu'
 import { choiceChipsExamples } from '@web/components/inputs/choice-chips'
 import { colorPickerExamples } from '@web/components/inputs/color-picker'
@@ -181,6 +184,7 @@ export const workbenchSections: readonly ComponentExamples[] = [
   periodPickerExamples,
   selectExamples,
   textAreaExamples,
+  chargeTextEditorExamples,
   confirmDialogExamples,
   momentSheetExamples,
   formOverlayExamples,
@@ -273,6 +277,8 @@ export const workbenchSections: readonly ComponentExamples[] = [
   untilChipsExamples,
   chargePreviewExamples,
   nothingToChargeExamples,
+  inboxPreviewExamples,
+  chargeEmailPreviewExamples,
   toggleChipsExamples,
   filterChipsExamples,
   listSummaryExamples,
