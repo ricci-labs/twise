@@ -40,7 +40,7 @@ where it's used.
 | `charts/` | `BarChart`, `ForecastChart`, `DonutChart`, each with its text alternative |
 | `navigation/` | `BottomBar`, `Sidebar`, `TopBar`, `WorkspaceSwitcher`, `BackLink`, `Breadcrumb`, `ScrollArrows`, `YearStepper`, `SettingsRow` |
 | `layout/` | `AppShell`, `FormOverlay`, `SidePanel`, `Page`, `PageHeader`, `Section`, `Stack`, `Grid` |
-| `finance/` | `StatHero`, `InsightCard`, `InvoiceCard`, `InvoicePreview`, `SharesList`, `RecentEntries`, `AccountRow`, `AccountGroup`, `CardBlock`, `InvoiceSummary`, `InvoiceLine`, `EntryRow`, `OccurrenceRow`, `HolidayRow`, `NextHolidayCard`, `ContactRow`, `ContactHeader`, `OpenItemRow`, `ChargeRow`, `ChargeBody`, `MessageBubble`, `PixBox`, `UntilChips`, `ChargePreview`, `NothingToCharge`, `AmountSplitEditor`, `AllocationStepRow`, `SplitExample` |
+| `finance/` | `StatHero`, `InsightCard`, `InvoiceCard`, `InvoicePreview`, `SharesList`, `RecentEntries`, `AccountRow`, `AccountGroup`, `CardBlock`, `InvoiceSummary`, `InvoiceLine`, `EntryRow`, `OccurrenceRow`, `HolidayRow`, `NextHolidayCard`, `ContactRow`, `ContactHeader`, `OpenItemRow`, `ChargeRow`, `ChargeBody`, `MessageBubble`, `PixBox`, `UntilChips`, `ChargePreview`, `NothingToCharge`, `SendOptions`, `EmailSendSheet`, `AmountSplitEditor`, `AllocationStepRow`, `SplitExample` |
 | `brand/` | `Logo`, `OwlScene` (the layered owl scenes and their motion), `AppSplash` |
 | `icons/` | `TwiseIcon` and the icon registries (see Icons) |
 
@@ -1106,3 +1106,20 @@ contact form (CON-05) use them. Every number and date comes from the API; the ro
   item vence até essa data.", plus "A próxima parcela vence em dd/mm." with `next`) and, with
   `next` and `onIncludeNext`, the secondary "Incluir até dd/mm · R$ X". The screen disables
   "Criar cobrança" meanwhile.
+- `SendOptions` (`components/finance/send-options`): "Como enviar" after a charge is created
+  (RF-CON-7), a group of stacked 64 px options: icon, title, then the address and what happens
+  ("+55 … · abre o WhatsApp com a mensagem", "… · o app envia e já marca como enviada"), with a
+  chevron. Each channel shows only when the screen passes it (`whatsapp` needs a phone, `email` an
+  address). With `email.isOptedOut` the e-mail option stays visible but `aria-disabled`, saying
+  "{nome} pediu para não receber e-mails". "Copiar mensagem" (dashed, 56 px) is always there and
+  writes `message` to the clipboard, then calls `onCopied` or `onCopyFailed`. Without WhatsApp nor
+  e-mail, `onAddChannel` adds the link "Adicionar WhatsApp ou e-mail". Each option is named by its
+  title and described by its detail line. The WhatsApp opt-out warning stays in the screen
+  (`ConfirmDialog`).
+- `EmailSendSheet` (`components/finance/email-send-sheet`): the e-mail confirmation (G62) in a
+  `Sheet`: a bottom sheet on the phone, a dialog in the middle of the screen on the desktop (no
+  bottom sheets there). It holds a `dl` with "Para", "Assunto" and "Respostas vão para" (address
+  and name, broken anywhere). Below it, "Ver o e-mail como ele chega" (`onPreview`), then the
+  sentence on what the e-mail carries (the Pix only with `hasPix`) and the unsubscribe link. The
+  footer has "Voltar", which closes, and "Enviar e-mail", which shows `isSending` and does not send
+  twice. The subject comes from props (the shared `chargeSubject`).
