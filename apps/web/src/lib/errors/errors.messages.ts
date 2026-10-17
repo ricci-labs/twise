@@ -118,7 +118,10 @@ export const errorMessages: Readonly<Record<string, string>> = {
   CONTACT_INVALID: 'Não foi possível concluir. Código: {ref}.',
   CONTACT_NOT_FOUND: 'Este contato não existe mais.',
   CONTACT_PHONE_TAKEN: 'Outro contato já usa esse número.',
+  CONTACT_EMAIL_TAKEN: 'Outro contato já usa esse e-mail.',
   CONTACT_HAS_BALANCE: 'Só dá para arquivar quando o saldo estiver zerado.',
+  CONTACT_HAS_NO_EMAIL: 'Este contato não tem e-mail. Adicione um para enviar por e-mail.',
+  CONTACT_OPTED_OUT: 'Este contato pediu para não receber e-mails.',
   CHARGE_INVALID: 'Informe uma data válida (dd/mm/aaaa).',
   CHARGE_QUERY_INVALID: 'Não foi possível carregar as cobranças.',
   CHARGE_NOT_FOUND: 'Esta cobrança não existe mais.',
@@ -126,6 +129,7 @@ export const errorMessages: Readonly<Record<string, string>> = {
   NOTHING_TO_CHARGE: 'Este contato não tem nada em aberto até essa data.',
   CHARGE_STATUS_REFUSED: 'Esta cobrança já foi enviada ou tem pagamento.',
   CHARGE_PAYMENT_INVALID: 'Não foi possível concluir. Código: {ref}.',
+  CHARGE_TEXT_INVALID: 'Confira o texto da mensagem.',
   RECURRENCE_INVALID: 'Escolha um dia do mês ou um dia útil, não os dois.',
   RECURRENCE_ACCOUNTS_INVALID:
     'Confira as contas: elas precisam estar ativas e combinar com o tipo.',
