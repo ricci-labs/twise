@@ -14,6 +14,7 @@ import {
 } from '@web/features/contacts/api/contacts.queries'
 import { newContactLink } from '@web/features/contacts/components/contact-links'
 import { ContactList } from '@web/features/contacts/components/contact-list'
+import { ContactsDesktop } from '@web/features/contacts/components/contacts-desktop'
 import { ContactsSummaryTiles } from '@web/features/contacts/components/contacts-summary-tiles'
 import { listedContactsOf, sortContacts } from '@web/features/contacts/components/listed-contacts'
 import { contactsMessages } from '@web/features/contacts/contacts.messages'
@@ -70,6 +71,8 @@ export function ContactsPage({
       <ContactsBody
         workspaceId={workspaceId}
         canCreate={canCreate}
+        canUpdate={hasPermission(permissions, 'contacts', 'update')}
+        canChangeSettings={hasPermission(permissions, 'settings', 'update')}
         sort={sort}
         onSortChange={onSortChange}
         onCharge={onCharge}
@@ -78,7 +81,8 @@ export function ContactsPage({
   )
 }
 
-function ContactsBody({ workspaceId, canCreate, sort, onSortChange, onCharge }: ContactsBodyProps) {
+function ContactsBody(props: ContactsBodyProps) {
+  const { workspaceId } = props
   const contacts = useQuery(contactsQueryOptions(workspaceId))
   const balances = useQuery(contactBalancesQueryOptions(workspaceId))
   const failed = [contacts, balances].find((query) => query.isError)
@@ -101,26 +105,12 @@ function ContactsBody({ workspaceId, canCreate, sort, onSortChange, onCharge }: 
   if (!contacts.data || !balances.data) {
     return <ContactsLoading />
   }
-  return (
-    <ContactsLoaded
-      workspaceId={workspaceId}
-      contacts={listedContactsOf(contacts.data, balances.data)}
-      canCreate={canCreate}
-      sort={sort}
-      onSortChange={onSortChange}
-      onCharge={onCharge}
-    />
-  )
+  return <ContactsLoaded {...props} contacts={listedContactsOf(contacts.data, balances.data)} />
 }
 
-function ContactsLoaded({
-  workspaceId,
-  contacts,
-  canCreate,
-  sort,
-  onSortChange,
-  onCharge,
-}: ContactsLoadedProps) {
+function ContactsLoaded(props: ContactsLoadedProps) {
+  const { workspaceId, contacts, canCreate, sort, onSortChange, onCharge } = props
+  const isDesktop = useMediaQuery(DESKTOP_QUERY)
   const active = contacts.filter((contact) => !contact.isArchived)
   const archived = sortContacts(
     contacts.filter((contact) => contact.isArchived),
@@ -150,6 +140,9 @@ function ContactsLoaded({
         {archivedGroup}
       </>
     )
+  }
+  if (isDesktop) {
+    return <ContactsDesktop {...props} active={active} archived={archived} />
   }
   return (
     <>

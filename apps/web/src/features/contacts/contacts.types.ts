@@ -1,4 +1,5 @@
 import type { ChargeText, ContactChange, IsoDate, NewContact, Permission } from '@financas/shared'
+import type { UseQueryResult } from '@tanstack/react-query'
 import type { ChargeBodyItem, ChargeHistory } from '@web/components/finance/charge-body'
 import type { ContactChannel } from '@web/components/finance/contact-row'
 import type { FieldControlProps } from '@web/components/forms/form-field'
@@ -7,6 +8,7 @@ import type {
   fetchContactCharges,
   fetchContactOpenItems,
   fetchContacts,
+  fetchUpcomingContactItems,
 } from '@web/features/contacts/api/contacts.queries'
 import type {
   CONTACT_SORTS,
@@ -214,6 +216,8 @@ export type ContactsPageProps = {
 
 export type ContactsBodyProps = Omit<ContactsPageProps, 'permissions'> & {
   canCreate: boolean
+  canUpdate: boolean
+  canChangeSettings: boolean
 }
 
 export type ContactsLoadedProps = ContactsBodyProps & {
@@ -299,4 +303,62 @@ export type ChargeEmailPreviewInput = {
 export type PixReceiver = {
   name: string | null
   city: string | null
+}
+
+export type UpcomingContactItem = Awaited<ReturnType<typeof fetchUpcomingContactItems>>[number]
+
+export type ContactsDesktopProps = Omit<ContactsLoadedProps, 'contacts'> & {
+  active: readonly ListedContact[]
+  archived: readonly ListedContact[]
+}
+
+export type ContactsKpisProps = {
+  workspaceId: string
+  contacts: readonly ListedContact[]
+}
+
+export type ContactsTableProps = {
+  workspaceId: string
+  label: string
+  contacts: readonly ListedContact[]
+  canCreate: boolean
+  canUpdate: boolean
+  onCharge: (contactId: string) => void
+}
+
+export type ContactTableActionsProps = {
+  workspaceId: string
+  contact: ListedContact
+  canCreate: boolean
+  canUpdate: boolean
+  onCharge: (contactId: string) => void
+}
+
+export type UpcomingCardProps = {
+  workspaceId: string
+}
+
+export type ChargeChannelsCardProps = {
+  workspaceId: string
+  canChangeSettings: boolean
+}
+
+export type ChargeChannelRowProps = {
+  icon: ReactNode
+  label: string
+  value: string
+  action?: ReactNode
+}
+
+export type ContactsKpiAmountProps = {
+  cents: number
+}
+
+export type ContactNameCellProps = {
+  workspaceId: string
+  contact: ListedContact
+}
+
+export type UpcomingBodyProps = {
+  upcoming: UseQueryResult<UpcomingContactItem[]>
 }

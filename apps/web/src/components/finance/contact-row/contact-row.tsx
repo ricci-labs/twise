@@ -7,8 +7,11 @@ import { contactRowMessages as messages } from '@web/components/finance/contact-
 import type {
   ContactBalanceTone,
   ContactChannel,
+  ContactChannelsProps,
+  ContactOwedProps,
   ContactRowProps,
   ContactStateFacts,
+  ContactStateProps,
 } from '@web/components/finance/contact-row/contact-row.types'
 import {
   contactRowAmountVariants,
@@ -50,7 +53,6 @@ export function ContactRow({
 }: ContactRowProps) {
   const balanceId = useId()
   const tone = balanceToneOf(owedCents, overdueCents)
-  const isOverdue = overdueCents > 0
   const content = (
     <>
       <Avatar
@@ -61,36 +63,18 @@ export function ContactRow({
       />
       <span className={contactRowTextVariants()}>
         <span className={contactRowNameVariants({ isArchived })}>{name}</span>
-        <span className={contactRowStateVariants()}>
-          {isOverdue && chargedOn && (
-            <Badge tone="warning" size="compact" hasDot>
-              {messages.badges.charged(formatShortDate(chargedOn))}
-            </Badge>
-          )}
-          {isOverdue && !chargedOn && (
-            <Badge tone="danger" size="compact" hasDot>
-              {messages.badges.overdue}
-            </Badge>
-          )}
-          {isOptedOut && (
-            <Badge tone="neutral" size="compact" hasDot>
-              {messages.badges.optedOut}
-            </Badge>
-          )}
-          {stateOf({ owedCents, overdueCents, overdueSince, nextDueOn, nextDueCents })}
-        </span>
+        <ContactState
+          owedCents={owedCents}
+          overdueCents={overdueCents}
+          overdueSince={overdueSince}
+          nextDueOn={nextDueOn}
+          nextDueCents={nextDueCents}
+          chargedOn={chargedOn}
+          isOptedOut={isOptedOut}
+          className={contactRowStateVariants()}
+        />
         {channels.length > 0 && (
-          <span className={contactRowChannelsVariants()}>
-            {channels.map((channel) => {
-              const Icon = CHANNEL_ICONS[channel]
-              return (
-                <span key={channel} className={contactRowChannelVariants()}>
-                  <Icon aria-hidden="true" />
-                  {messages.channels[channel]}
-                </span>
-              )
-            })}
-          </span>
+          <ContactChannels channels={channels} className={contactRowChannelsVariants()} />
         )}
       </span>
     </>
@@ -105,11 +89,7 @@ export function ContactRow({
       )}
       <span className={contactRowEndVariants()}>
         <span id={balanceId} className={contactRowBalanceVariants()}>
-          <Amount
-            cents={Math.abs(owedCents)}
-            size="inherit"
-            className={contactRowAmountVariants({ tone })}
-          />
+          <ContactOwed owedCents={owedCents} overdueCents={overdueCents} />
           <span className={contactRowBalanceLabelVariants()}>{messages.balance[tone]}</span>
         </span>
         {onCharge && (
@@ -124,6 +104,61 @@ export function ContactRow({
         )}
       </span>
     </li>
+  )
+}
+
+export function ContactState({
+  chargedOn = null,
+  isOptedOut = false,
+  className,
+  ...facts
+}: ContactStateProps) {
+  const isOverdue = facts.overdueCents > 0
+  return (
+    <span data-slot="contact-state" className={className}>
+      {isOverdue && chargedOn && (
+        <Badge tone="warning" size="compact" hasDot>
+          {messages.badges.charged(formatShortDate(chargedOn))}
+        </Badge>
+      )}
+      {isOverdue && !chargedOn && (
+        <Badge tone="danger" size="compact" hasDot>
+          {messages.badges.overdue}
+        </Badge>
+      )}
+      {isOptedOut && (
+        <Badge tone="neutral" size="compact" hasDot>
+          {messages.badges.optedOut}
+        </Badge>
+      )}
+      {stateOf(facts)}
+    </span>
+  )
+}
+
+export function ContactChannels({ channels, className }: ContactChannelsProps) {
+  return (
+    <span data-slot="contact-channels" className={className}>
+      {channels.map((channel) => {
+        const Icon = CHANNEL_ICONS[channel]
+        return (
+          <span key={channel} className={contactRowChannelVariants()}>
+            <Icon aria-hidden="true" />
+            {messages.channels[channel]}
+          </span>
+        )
+      })}
+    </span>
+  )
+}
+
+export function ContactOwed({ owedCents, overdueCents = 0 }: ContactOwedProps) {
+  return (
+    <Amount
+      cents={Math.abs(owedCents)}
+      size="inherit"
+      className={contactRowAmountVariants({ tone: balanceToneOf(owedCents, overdueCents) })}
+    />
   )
 }
 
