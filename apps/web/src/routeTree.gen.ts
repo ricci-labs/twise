@@ -42,6 +42,7 @@ import { Route as AppWWorkspaceIdPlanningTabRouteImport } from './routes/_app/w/
 import { Route as AppWWorkspaceIdPlanningHolidaysRouteImport } from './routes/_app/w/$workspaceId/planning/holidays'
 import { Route as AppWWorkspaceIdPlanningSplitRouteImport } from './routes/_app/w/$workspaceId/planning/split'
 import { Route as AppWWorkspaceIdSettingsIndexRouteImport } from './routes/_app/w/$workspaceId/settings/index'
+import { Route as AppWWorkspaceIdSettingsChargeTextRouteImport } from './routes/_app/w/$workspaceId/settings/charge-text'
 import { Route as AppWWorkspaceIdSettingsHolidaysRouteImport } from './routes/_app/w/$workspaceId/settings/holidays'
 import { Route as AppWWorkspaceIdSettingsPixRouteImport } from './routes/_app/w/$workspaceId/settings/pix'
 import { Route as AppWWorkspaceIdCardsCardInvoicesInvoiceRouteImport } from './routes/_app/w/$workspaceId/cards_/$card_/invoices/$invoice'
@@ -220,6 +221,12 @@ const AppWWorkspaceIdSettingsIndexRoute =
     path: '/settings/',
     getParentRoute: () => AppWWorkspaceIdRouteRoute,
   } as any)
+const AppWWorkspaceIdSettingsChargeTextRoute =
+  AppWWorkspaceIdSettingsChargeTextRouteImport.update({
+    id: '/settings/charge-text',
+    path: '/settings/charge-text',
+    getParentRoute: () => AppWWorkspaceIdRouteRoute,
+  } as any)
 const AppWWorkspaceIdSettingsHolidaysRoute =
   AppWWorkspaceIdSettingsHolidaysRouteImport.update({
     id: '/settings/holidays',
@@ -269,6 +276,7 @@ export interface FileRoutesByFullPath {
   '/w/$workspaceId/planning/$tab': typeof AppWWorkspaceIdPlanningTabRoute
   '/w/$workspaceId/planning/holidays': typeof AppWWorkspaceIdPlanningHolidaysRoute
   '/w/$workspaceId/planning/split': typeof AppWWorkspaceIdPlanningSplitRoute
+  '/w/$workspaceId/settings/charge-text': typeof AppWWorkspaceIdSettingsChargeTextRoute
   '/w/$workspaceId/settings/holidays': typeof AppWWorkspaceIdSettingsHolidaysRoute
   '/w/$workspaceId/settings/pix': typeof AppWWorkspaceIdSettingsPixRoute
   '/w/$workspaceId/planning/': typeof AppWWorkspaceIdPlanningIndexRoute
@@ -304,6 +312,7 @@ export interface FileRoutesByTo {
   '/w/$workspaceId/planning/$tab': typeof AppWWorkspaceIdPlanningTabRoute
   '/w/$workspaceId/planning/holidays': typeof AppWWorkspaceIdPlanningHolidaysRoute
   '/w/$workspaceId/planning/split': typeof AppWWorkspaceIdPlanningSplitRoute
+  '/w/$workspaceId/settings/charge-text': typeof AppWWorkspaceIdSettingsChargeTextRoute
   '/w/$workspaceId/settings/holidays': typeof AppWWorkspaceIdSettingsHolidaysRoute
   '/w/$workspaceId/settings/pix': typeof AppWWorkspaceIdSettingsPixRoute
   '/w/$workspaceId/planning': typeof AppWWorkspaceIdPlanningIndexRoute
@@ -343,6 +352,7 @@ export interface FileRoutesById {
   '/_app/w/$workspaceId/planning/$tab': typeof AppWWorkspaceIdPlanningTabRoute
   '/_app/w/$workspaceId/planning/holidays': typeof AppWWorkspaceIdPlanningHolidaysRoute
   '/_app/w/$workspaceId/planning/split': typeof AppWWorkspaceIdPlanningSplitRoute
+  '/_app/w/$workspaceId/settings/charge-text': typeof AppWWorkspaceIdSettingsChargeTextRoute
   '/_app/w/$workspaceId/settings/holidays': typeof AppWWorkspaceIdSettingsHolidaysRoute
   '/_app/w/$workspaceId/settings/pix': typeof AppWWorkspaceIdSettingsPixRoute
   '/_app/w/$workspaceId/planning/': typeof AppWWorkspaceIdPlanningIndexRoute
@@ -381,6 +391,7 @@ export interface FileRouteTypes {
     | '/w/$workspaceId/planning/$tab'
     | '/w/$workspaceId/planning/holidays'
     | '/w/$workspaceId/planning/split'
+    | '/w/$workspaceId/settings/charge-text'
     | '/w/$workspaceId/settings/holidays'
     | '/w/$workspaceId/settings/pix'
     | '/w/$workspaceId/planning/'
@@ -416,6 +427,7 @@ export interface FileRouteTypes {
     | '/w/$workspaceId/planning/$tab'
     | '/w/$workspaceId/planning/holidays'
     | '/w/$workspaceId/planning/split'
+    | '/w/$workspaceId/settings/charge-text'
     | '/w/$workspaceId/settings/holidays'
     | '/w/$workspaceId/settings/pix'
     | '/w/$workspaceId/planning'
@@ -454,6 +466,7 @@ export interface FileRouteTypes {
     | '/_app/w/$workspaceId/planning/$tab'
     | '/_app/w/$workspaceId/planning/holidays'
     | '/_app/w/$workspaceId/planning/split'
+    | '/_app/w/$workspaceId/settings/charge-text'
     | '/_app/w/$workspaceId/settings/holidays'
     | '/_app/w/$workspaceId/settings/pix'
     | '/_app/w/$workspaceId/planning/'
@@ -704,6 +717,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppWWorkspaceIdSettingsIndexRouteImport
       parentRoute: typeof AppWWorkspaceIdRouteRoute
     }
+    '/_app/w/$workspaceId/settings/charge-text': {
+      id: '/_app/w/$workspaceId/settings/charge-text'
+      path: '/settings/charge-text'
+      fullPath: '/w/$workspaceId/settings/charge-text'
+      preLoaderRoute: typeof AppWWorkspaceIdSettingsChargeTextRouteImport
+      parentRoute: typeof AppWWorkspaceIdRouteRoute
+    }
     '/_app/w/$workspaceId/settings/holidays': {
       id: '/_app/w/$workspaceId/settings/holidays'
       path: '/settings/holidays'
@@ -745,6 +765,7 @@ interface AppWWorkspaceIdRouteRouteChildren {
   AppWWorkspaceIdPlanningTabRoute: typeof AppWWorkspaceIdPlanningTabRoute
   AppWWorkspaceIdPlanningHolidaysRoute: typeof AppWWorkspaceIdPlanningHolidaysRoute
   AppWWorkspaceIdPlanningSplitRoute: typeof AppWWorkspaceIdPlanningSplitRoute
+  AppWWorkspaceIdSettingsChargeTextRoute: typeof AppWWorkspaceIdSettingsChargeTextRoute
   AppWWorkspaceIdSettingsHolidaysRoute: typeof AppWWorkspaceIdSettingsHolidaysRoute
   AppWWorkspaceIdSettingsPixRoute: typeof AppWWorkspaceIdSettingsPixRoute
   AppWWorkspaceIdPlanningIndexRoute: typeof AppWWorkspaceIdPlanningIndexRoute
@@ -769,6 +790,8 @@ const AppWWorkspaceIdRouteRouteChildren: AppWWorkspaceIdRouteRouteChildren = {
   AppWWorkspaceIdPlanningTabRoute: AppWWorkspaceIdPlanningTabRoute,
   AppWWorkspaceIdPlanningHolidaysRoute: AppWWorkspaceIdPlanningHolidaysRoute,
   AppWWorkspaceIdPlanningSplitRoute: AppWWorkspaceIdPlanningSplitRoute,
+  AppWWorkspaceIdSettingsChargeTextRoute:
+    AppWWorkspaceIdSettingsChargeTextRoute,
   AppWWorkspaceIdSettingsHolidaysRoute: AppWWorkspaceIdSettingsHolidaysRoute,
   AppWWorkspaceIdSettingsPixRoute: AppWWorkspaceIdSettingsPixRoute,
   AppWWorkspaceIdPlanningIndexRoute: AppWWorkspaceIdPlanningIndexRoute,

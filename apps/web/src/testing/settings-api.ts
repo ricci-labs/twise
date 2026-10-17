@@ -85,3 +85,27 @@ export function holidaysAnswer(
     },
   }
 }
+
+export const DEFAULT_TEXT = {
+  subject: '{quem cobra} te enviou uma cobrança de {valor}',
+  opening:
+    '{quem cobra} pediu para te lembrar do que está em aberto. Dá para pagar com Pix, o valor já vem preenchido.',
+  closing: null,
+  isDefault: true,
+}
+
+export const WORKSPACE_TEXT = {
+  subject: 'Cobrança de {quem cobra}: {valor}',
+  opening: 'Oi! Aqui é {quem cobra}. Passando para lembrar da nossa conta do mês.',
+  closing: 'Qualquer coisa me chama.',
+  isDefault: false,
+}
+
+export function chargeTextAnswer(
+  text: Readonly<Record<string, string | boolean | null>> = DEFAULT_TEXT,
+): Record<string, FakeAnswer> {
+  return {
+    [`GET ${BASE}/settings/charge-text`]: () => Response.json(text),
+    [`GET ${BASE}/periods`]: () => Response.json(demoPeriodsOf(2026)),
+  }
+}

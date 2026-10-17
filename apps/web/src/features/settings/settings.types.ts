@@ -1,16 +1,20 @@
-import type { IsoDate, Permission } from '@financas/shared'
+import type { ChargeTextField, IsoDate, Permission } from '@financas/shared'
 import type { UseQueryResult } from '@tanstack/react-query'
 import type { MiniMonthHoliday } from '@web/components/display/mini-month-calendar'
+import type { ChargeEmailPreviewProps } from '@web/components/finance/charge-email-preview'
 import type { HolidayStatus } from '@web/components/finance/holiday-row'
 import type {
+  fetchChargeText,
   fetchHolidays,
   fetchWorkspaceSettings,
 } from '@web/features/settings/api/settings.queries'
 import type {
+  chargeTextFormSchema,
   holidayFormSchemaFor,
   holidaysSearchSchema,
   pixFormSchema,
 } from '@web/features/settings/settings.schemas'
+import type { ReactNode } from 'react'
 import type { z } from 'zod'
 
 export type HolidaysSearch = z.infer<typeof holidaysSearchSchema>
@@ -18,6 +22,12 @@ export type HolidaysSearch = z.infer<typeof holidaysSearchSchema>
 export type HolidayFormInput = z.input<ReturnType<typeof holidayFormSchemaFor>>
 
 export type PixFormInput = z.input<typeof pixFormSchema>
+
+export type ChargeTextFormInput = z.input<typeof chargeTextFormSchema>
+
+export type ChargeTextFormOutput = z.output<typeof chargeTextFormSchema>
+
+export type SavedChargeText = Awaited<ReturnType<typeof fetchChargeText>>
 
 export type WorkspaceSettings = Awaited<ReturnType<typeof fetchWorkspaceSettings>>
 
@@ -148,3 +158,74 @@ export type HolidaySheetProps = {
   onOpenChange: (isOpen: boolean) => void
   onAdded: (onDate: IsoDate) => void
 }
+
+export type ChargeTextRowProps = {
+  workspaceId: string
+}
+
+export type ChargeTextPageProps = {
+  workspaceId: string
+  workspaceName: string
+  requesterName: string
+  requesterEmail: string
+  permissions: readonly Permission[]
+}
+
+export type ChargeTextContentProps = {
+  workspaceId: string
+  workspaceName: string
+  requesterName: string
+  requesterEmail: string
+  canUpdate: boolean
+  isDesktop: boolean
+}
+
+export type ChargeTextFormProps = ChargeTextContentProps & {
+  saved: SavedChargeText
+  settings: WorkspaceSettings
+  today: IsoDate
+}
+
+export type ChargeTextLayoutProps = ChargeTextFormProps & {
+  fields: ReactNode
+  submitButton: ReactNode
+}
+
+export type ChargeTextFieldsProps = {
+  canUpdate: boolean
+  footer: ReactNode
+}
+
+export type ChargeTextFieldProps = {
+  field: ChargeTextField
+  label: string
+  help: string
+  isRequired: boolean
+  isSingleLine: boolean
+  canUpdate: boolean
+  onFocus: (field: ChargeTextField) => void
+  registerElement: (field: ChargeTextField, element: HTMLTextAreaElement | null) => void
+}
+
+export type ChargeTextSample = {
+  requesterName: string
+  requesterEmail: string
+  workspaceName: string
+  today: IsoDate
+  pix: WorkspaceSettings
+}
+
+export type ChargeTextPreviews = {
+  sender: string
+  subject: string
+  preheader: string
+  whatsApp: string
+  pixPayload: string | null
+  email: ChargeEmailPreviewProps
+}
+
+export type ChargeTextPreviewProps = {
+  previews: ChargeTextPreviews
+}
+
+export type ChargeTextPreviewTab = 'email' | 'whatsapp'

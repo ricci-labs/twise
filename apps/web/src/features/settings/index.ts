@@ -1,3 +1,4 @@
+export { ChargeTextPage } from '@web/features/settings/components/charge-text-page'
 export { HolidaysPage } from '@web/features/settings/components/holidays-page'
 export { PixPage } from '@web/features/settings/components/pix-page'
 export { SettingsPage } from '@web/features/settings/components/settings-page'
