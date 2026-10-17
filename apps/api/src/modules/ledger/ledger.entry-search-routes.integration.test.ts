@@ -26,6 +26,8 @@ let bakeryId: string
 let leisureId: string
 let salaryId: string
 let cardId: string
+let contactJId: string
+let contactKId: string
 
 beforeAll(async () => {
   const ownerSession = await loggedInUser(app, databases.app, fixtures.runId, 'search-owner')
@@ -72,6 +74,11 @@ beforeAll(async () => {
   const contact = (await (
     await owner.post(`${workspacePath}/contacts`, { name: 'Contact J' })
   ).json()) as { contactId: string }
+  const otherContact = (await (
+    await owner.post(`${workspacePath}/contacts`, { name: 'Contact K' })
+  ).json()) as { contactId: string }
+  contactJId = contact.contactId
+  contactKId = otherContact.contactId
 
   await record(expense('Mercado da semana', groceriesId, '2026-10-20', ownerId))
   await record(expense('Feira de sábado', marketId, '2026-10-17', memberId))
@@ -202,8 +209,19 @@ describe('GET /entries search and filters', () => {
     expect(await descriptions(`${OCTOBER}&shared=true`)).toEqual(['Cinema com Contact J'])
   })
 
+  it('finds what touched one contact: the split and the payment back', async () => {
+    expect(await descriptions(`${OCTOBER}&contactId=${contactJId}`)).toEqual([
+      'Contact J pagou',
+      'Cinema com Contact J',
+    ])
+    expect(await descriptions(`${OCTOBER}&contactId=${contactJId}&types=settlement`)).toEqual([
+      'Contact J pagou',
+    ])
+    expect(await descriptions(`contactId=${contactKId}`)).toEqual([])
+  })
+
   it('refuses a one-letter search and an unknown type', async () => {
-    for (const query of ['q=a', 'types=gift', 'shared=yes']) {
+    for (const query of ['q=a', 'types=gift', 'shared=yes', 'contactId=x']) {
       const response = await viewer.get(`${entriesPath}?${query}`)
       const body = (await response.json()) as { error: { code: string } }
       expect([response.status, body.error.code]).toEqual([400, 'ENTRY_QUERY_INVALID'])
