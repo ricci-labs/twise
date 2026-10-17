@@ -90,6 +90,34 @@ describe('createMailer without SMTP', () => {
     expect(email).toContain(sent.messageId)
   })
 
+  it('sends on behalf of a sender name, with a reply-to and an inline image', async () => {
+    const outbox = await mkdtemp(join(tmpdir(), 'financas-outbox-'))
+    temporaryDirectories.push(outbox)
+    const { logger } = capturingLogger()
+
+    await createMailer({ ...BASE_ENV, EMAIL_OUTBOX_DIR: outbox }, logger).send({
+      ...MESSAGE,
+      fromName: 'Twise · Casa',
+      replyTo: 'member.b@example.test',
+      html: '<img src="cid:pix-qr">',
+      inlineImages: [
+        {
+          cid: 'pix-qr',
+          filename: 'pix.gif',
+          contentType: 'image/gif',
+          base64: 'R0lGODlhAQABAAAAACw=',
+        },
+      ],
+    })
+
+    const [fileName] = await readdir(outbox)
+    const email = await readFile(join(outbox, fileName ?? ''), 'utf8')
+    expect(email).toContain('From: =?UTF-8?Q?Twise_=C2=B7_Casa?= <no-reply@example.test>')
+    expect(email).toContain('Reply-To: member.b@example.test')
+    expect(email).toContain('Content-ID: <pix-qr>')
+    expect(email).toContain('Content-Type: image/gif')
+  })
+
   it('logs the template and message id, never the recipient or the body', async () => {
     const outbox = await mkdtemp(join(tmpdir(), 'financas-outbox-'))
     temporaryDirectories.push(outbox)

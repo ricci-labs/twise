@@ -12,12 +12,22 @@ export type MailerEnv = Pick<
   | 'EMAIL_OUTBOX_DIR'
 >
 
+export type InlineImage = {
+  cid: string
+  filename: string
+  contentType: string
+  base64: string
+}
+
 export type EmailMessage = {
   template: string
   to: string
   subject: string
   text: string
   html: string
+  fromName?: string
+  replyTo?: string
+  inlineImages?: readonly InlineImage[]
 }
 
 export type SentEmail = {

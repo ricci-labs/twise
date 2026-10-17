@@ -1,4 +1,5 @@
 import type { Clock } from '@api/core/clock.types'
+import type { WorkspaceTransaction } from '@api/core/db/db.types'
 import type { Mailer } from '@api/core/email/email.types'
 import type { Logger } from '@api/core/observability/logger'
 import type { EmailRecipient } from '@api/modules/identity'
@@ -34,11 +35,22 @@ export type NotificationEmailInput = {
   appLink: string
 }
 
+export type DeliveryReport = {
+  notificationId: string
+  kind: NotificationKind
+  payload: unknown
+  outcome: 'sent' | 'failed'
+  error: string | null
+}
+
+export type DeliveryListener = (tx: WorkspaceTransaction, report: DeliveryReport) => Promise<void>
+
 export type DeliveryDeps = {
   mailer: Mailer
   publicUrl: string
   clock: Clock
   logger: Logger
+  onDelivered?: DeliveryListener
 }
 
 export type DeliveryResult = {
