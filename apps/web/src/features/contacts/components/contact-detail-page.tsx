@@ -20,6 +20,7 @@ import {
   contactOpenItemsQueryOptions,
   contactQueryOptions,
 } from '@web/features/contacts/api/contacts.queries'
+import { ContactCharges } from '@web/features/contacts/components/contact-charges'
 import {
   contactTilesOf,
   hasSomethingToCharge,
@@ -147,6 +148,12 @@ function ContactDetailBody({
         onNewCharge={onNewCharge}
       />
       <ContactOpenSection owedCents={owedCents} items={items} />
+      <ContactCharges
+        workspaceId={workspaceId}
+        contactId={contact.id}
+        canUpdate={hasPermission(permissions, 'contacts', 'update')}
+        today={today}
+      />
       <ContactTalkTo contact={contact} />
     </ContactDetailFrame>
   )

@@ -1,7 +1,9 @@
 import type { ContactChange, IsoDate, NewContact, Permission } from '@financas/shared'
+import type { ChargeBodyItem, ChargeHistory } from '@web/components/finance/charge-body'
 import type { ContactChannel } from '@web/components/finance/contact-row'
 import type {
   fetchContactBalances,
+  fetchContactCharges,
   fetchContactOpenItems,
   fetchContacts,
 } from '@web/features/contacts/api/contacts.queries'
@@ -14,6 +16,39 @@ export type Contact = Awaited<ReturnType<typeof fetchContacts>>[number]
 export type ContactBalance = Awaited<ReturnType<typeof fetchContactBalances>>[number]
 
 export type ContactOpenItem = Awaited<ReturnType<typeof fetchContactOpenItems>>[number]
+
+export type ContactCharge = Awaited<ReturnType<typeof fetchContactCharges>>[number]
+
+export type ContactChargeView = {
+  id: string
+  createdOn: IsoDate
+  amountCents: number
+  status: ContactCharge['status']
+  itemCount: number
+  history: ChargeHistory | undefined
+  items: ChargeBodyItem[]
+  dueOn: IsoDate | null
+  isDuePast: boolean
+  isOpen: boolean
+  canCancel: boolean
+  messageText: string
+  pixPayload: string | null
+}
+
+export type ContactChargesProps = {
+  workspaceId: string
+  contactId: string
+  canUpdate: boolean
+  today: IsoDate
+}
+
+export type ContactChargeItemProps = {
+  charge: ContactChargeView
+  canUpdate: boolean
+  isOpen: boolean
+  onOpenChange: (isOpen: boolean) => void
+  onCancel: () => void
+}
 
 export type ContactOpenItems = {
   overdue: ContactOpenItem[]

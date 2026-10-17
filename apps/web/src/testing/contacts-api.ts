@@ -122,6 +122,67 @@ export const CONTACT_D_OPEN_ITEMS = [
   }),
 ]
 
+export const CHARGE_SENT = '00000000-0000-4000-8000-0000000000c1'
+export const CHARGE_PAID = '00000000-0000-4000-8000-0000000000c2'
+
+const PIX_PAYLOAD =
+  '00020126580014br.gov.bcb.pix0136a1b2c3d4-0000-4000-8000-0000000000005204000053039865406200.005802BR5908MEMBER A6009SAO PAULO6304E1F2'
+
+export const CONTACT_D_CHARGES = [
+  {
+    id: CHARGE_SENT,
+    contactId: CONTACT_D,
+    amountCents: 20000,
+    dueOn: '2026-10-10',
+    status: 'sent',
+    paidCents: 0,
+    messageText: `Oi, Member D! Member A pediu para te lembrar do que está em aberto.\n• Mercado da semana — R$ 120,00\n• Jantar de aniversário — R$ 80,00\nTotal: R$ 200,00\nPix copia e cola:\n${PIX_PAYLOAD}`,
+    pixPayload: PIX_PAYLOAD,
+    sentAt: '2026-10-20T17:32:00.000Z',
+    createdAt: '2026-10-20T17:30:00.000Z',
+    items: [
+      {
+        postingId: '00000000-0000-4000-8000-0000000000f1',
+        description: 'Mercado da semana',
+        installmentNo: null,
+        installmentCount: 1,
+        effectiveOn: '2026-10-10',
+        amountCents: 12000,
+      },
+      {
+        postingId: '00000000-0000-4000-8000-0000000000f2',
+        description: 'Jantar de aniversário',
+        installmentNo: null,
+        installmentCount: 1,
+        effectiveOn: '2026-10-10',
+        amountCents: 8000,
+      },
+    ],
+  },
+  {
+    id: CHARGE_PAID,
+    contactId: CONTACT_D,
+    amountCents: 16000,
+    dueOn: '2026-09-10',
+    status: 'paid',
+    paidCents: 16000,
+    messageText: 'Oi, Member D! Total: R$ 160,00',
+    pixPayload: null,
+    sentAt: '2026-09-12T12:00:00.000Z',
+    createdAt: '2026-09-12T12:00:00.000Z',
+    items: [
+      {
+        postingId: '00000000-0000-4000-8000-0000000000f0',
+        description: 'TV da sala',
+        installmentNo: 1,
+        installmentCount: 3,
+        effectiveOn: '2026-09-10',
+        amountCents: 16000,
+      },
+    ],
+  },
+]
+
 export function contactAnswers(contactId: string, overrides: Record<string, FakeAnswer> = {}) {
   return {
     ...contactsAnswers(),
@@ -129,6 +190,7 @@ export function contactAnswers(contactId: string, overrides: Record<string, Fake
       Response.json(CONTACTS.find((item) => item.id === contactId)),
     [`GET ${BASE}/contacts/${contactId}/open-items`]: () =>
       Response.json(contactId === CONTACT_D ? CONTACT_D_OPEN_ITEMS : []),
+    [`GET ${BASE}/charges`]: () => Response.json(contactId === CONTACT_D ? CONTACT_D_CHARGES : []),
     ...overrides,
   }
 }
