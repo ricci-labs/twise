@@ -281,7 +281,7 @@ async function chargeableItemsOf(
   return openItems(items, paidCents, { until, alreadyCharged })
 }
 
-async function viewsOf(tx: WorkspaceTransaction, rows: ChargeRow[]): Promise<ChargeView[]> {
+export async function viewsOf(tx: WorkspaceTransaction, rows: ChargeRow[]): Promise<ChargeView[]> {
   if (rows.length === 0) {
     return []
   }

@@ -44,18 +44,41 @@ export type EmailSpan = string | { strong: string } | { link: EmailLink }
 
 export type EmailParagraph = string | readonly EmailSpan[]
 
-export type EmailIllustration = 'envelope' | 'welcome' | 'key' | 'padlock' | 'invitation'
+export type EmailIllustration =
+  | 'envelope'
+  | 'welcome'
+  | 'key'
+  | 'padlock'
+  | 'invitation'
+  | 'together'
 
-export type EmailContent = {
+export type EmailItemRow = {
+  label: string
+  detail: string
+  amount: string
+}
+
+export type EmailBlock =
+  | { kind: 'items'; rows: readonly EmailItemRow[]; total: { label: string; amount: string } }
+  | { kind: 'due'; text: string; isPast: boolean }
+  | { kind: 'pix'; qrCid: string; title: string; text: EmailParagraph }
+  | { kind: 'code'; label: string; code: string }
+
+type EmailBody = {
   preheader?: string
   greeting?: string
   illustration?: EmailIllustration
   heading: string
   paragraphs: EmailParagraph[]
-  action: EmailLink
-  notes: string[]
+  blocks?: readonly EmailBlock[]
+  closing?: EmailParagraph
+  notes: EmailParagraph[]
   reason?: string
+  footerLink?: EmailLink
 }
+
+export type EmailContent = EmailBody &
+  ({ action: EmailLink; baseUrl?: string } | { action?: undefined; baseUrl: string })
 
 export type RenderedEmail = {
   text: string

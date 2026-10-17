@@ -2194,6 +2194,40 @@
           ]
         },
         {
+          "name": "Send charge by e-mail",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/workspaces/{{workspaceId}}/charges/{{chargeId}}/send-email",
+              "host": ["{{baseUrl}}"],
+              "path": [
+                "api",
+                "workspaces",
+                "{{workspaceId}}",
+                "charges",
+                "{{chargeId}}",
+                "send-email"
+              ]
+            },
+            "description": "Queues the charge e-mail for the contact (outbox) and marks it sent by e-mail. 409 CONTACT_HAS_NO_EMAIL / CONTACT_OPTED_OUT."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": ["pm.test('answers 204', () => pm.response.to.have.status(204))"]
+              }
+            }
+          ]
+        },
+        {
           "name": "Record a payment",
           "request": {
             "method": "POST",

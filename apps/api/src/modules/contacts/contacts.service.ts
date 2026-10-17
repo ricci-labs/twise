@@ -1,4 +1,8 @@
 export {
+  recordChargeEmailOutcome,
+  sendChargeEmail,
+} from '@api/modules/contacts/use-cases/charge-email'
+export {
   cancelCharge,
   chargeExists,
   createCharge,

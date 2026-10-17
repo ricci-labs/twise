@@ -13,6 +13,8 @@ const EMAIL_ROLES = [
   ['border', 'border'],
   ['mint', 'mint'],
   ['mintInk', 'mint-ink'],
+  ['mintSoft', 'mint-soft'],
+  ['danger', 'danger'],
   ['actionPrimary', 'action-primary'],
   ['onActionPrimary', 'on-action-primary'],
 ]

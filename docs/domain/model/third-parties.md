@@ -1,7 +1,7 @@
 ---
 summary: Contacts (third parties), how their share of entries is recorded (receivable postings, installments, several per entry), charges sent over WhatsApp or e-mail, the workspace's charge text, and settlements.
 read_when: Working on contacts, splitting an entry with other people, charges (cobranças) or recording that someone paid back.
-updated: 2026-10-16
+updated: 2026-10-17
 ---
 
 # Third parties: contacts, charges, settlements
@@ -157,11 +157,18 @@ that month.
 | `POST /charges/:chargeId/cancel` | `contacts:update` | `cancelCharge`: an open charge without payments → cancelled; its items can be charged again. `409 CHARGE_STATUS_REFUSED` otherwise |
 
 ### Sending a charge by e-mail
-`sendChargeEmail` enqueues the e-mail through `notification_outbox`, like the account e-mails; the
-template lives in `contacts.emails.ts` on `core/email/layout.ts` (`../../design/contacts/emails.md`):
-From "Twise · {espaço}", Reply-To the member who created the charge, the QR code a PNG of the same
-Pix payload, the opt-out link with the contact's token. The worker records `email_status: 'sent'`,
-or `failed` with `email_error` and the charge back to `draft` when the server refuses the address.
+`sendChargeEmail` (a draft or sent charge without payments; `409 CONTACT_HAS_NO_EMAIL`, `409
+CONTACT_OPTED_OUT` for any opt-out) writes the e-mail with `chargeEmail` (`contacts.emails.ts` on
+`core/email/layout.ts`, `../../design/contacts/emails.md`) and queues it whole in
+`notification_outbox` (kind `charge`, the contact as recipient, `{ chargeId, email }`), then marks the
+charge sent by e-mail (`emailStatus: 'queued'`). The e-mail: From "Twise · {espaço}" at `EMAIL_FROM`,
+Reply-To the member who created the charge, the subject, opening and closing from the workspace's
+charge text (the e-mail closing default when it is `null`), the items, the due date, and, when the
+charge has a Pix, the QR code (a GIF of the same payload, made with `qr`, sent inline as
+`cid:pix-qr`) and the copia e cola; the footer link opens the web page `/opt-out#token=…` with a new
+token for the contact. The send-notifications job passes `recordChargeEmailOutcome` as the outbox
+listener: sent → `email_status: 'sent'`; refused (SMTP 5xx) or failed for good → `failed` with
+`email_error` (≤ 200) and the charge back to `draft` while it has no payment.
 
 ### Sending a charge (direct, via the platform's WhatsApp)
 1. The user asks ("cobra o J") or a scheduled monthly charge triggers.
