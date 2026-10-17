@@ -13,6 +13,8 @@ export const avatarExamples: ComponentExamples = {
           <Avatar name="member c" size="sm" />
           <Avatar name="Member D" size="xs" />
           <Avatar name="Da casa" icon="home" tone="paper" size="sm" />
+          <Avatar name="Member E" tone="paper" size="xl" />
+          <Avatar name="Member F" tone="paper" size="2xl" />
         </div>
       ),
     },

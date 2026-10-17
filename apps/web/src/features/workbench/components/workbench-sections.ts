@@ -56,6 +56,8 @@ import { budgetRowExamples } from '@web/components/finance/budget-row'
 import { budgetSummaryExamples } from '@web/components/finance/budget-summary'
 import { cardBlockExamples } from '@web/components/finance/card-block'
 import { categoryRowExamples } from '@web/components/finance/category-row'
+import { contactHeaderExamples } from '@web/components/finance/contact-header'
+import { contactRowExamples } from '@web/components/finance/contact-row'
 import { cyclePreviewExamples } from '@web/components/finance/cycle-preview'
 import { entryDayGroupExamples } from '@web/components/finance/entry-day-group'
 import { entryHeaderExamples } from '@web/components/finance/entry-header'
@@ -75,6 +77,7 @@ import { nextDatesPreviewExamples } from '@web/components/finance/next-dates-pre
 import { nextHolidayCardExamples } from '@web/components/finance/next-holiday-card'
 import { occurrenceGroupExamples } from '@web/components/finance/occurrence-group'
 import { occurrenceRowExamples } from '@web/components/finance/occurrence-row'
+import { openItemRowExamples } from '@web/components/finance/open-item-row'
 import { planSummaryTilesExamples } from '@web/components/finance/plan-summary-tiles'
 import { recentEntriesExamples } from '@web/components/finance/recent-entries'
 import { recurrenceRowExamples } from '@web/components/finance/recurrence-row'
@@ -196,6 +199,9 @@ export const workbenchSections: readonly ComponentExamples[] = [
   entryRowExamples,
   occurrenceRowExamples,
   occurrenceGroupExamples,
+  contactRowExamples,
+  contactHeaderExamples,
+  openItemRowExamples,
   planSummaryTilesExamples,
   nextDatesPreviewExamples,
   matchQuestionExamples,
