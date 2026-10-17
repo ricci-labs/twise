@@ -1,4 +1,4 @@
-import { chargeSubject, DEFAULT_CHARGE_TEXT, formatBrl, type IsoDate } from '@financas/shared'
+import { DEFAULT_CHARGE_TEXT, formatBrl } from '@financas/shared'
 import { useQuery } from '@tanstack/react-query'
 import { Link } from '@tanstack/react-router'
 import { Button } from '@web/components/actions/button'
@@ -8,6 +8,7 @@ import { Alert } from '@web/components/feedback/alert'
 import { ConfirmDialog } from '@web/components/feedback/confirm-dialog'
 import { ListSkeleton } from '@web/components/feedback/list-skeleton'
 import { showToast } from '@web/components/feedback/toast'
+import { ChargeEmailPreview } from '@web/components/finance/charge-email-preview'
 import { ChargePreview } from '@web/components/finance/charge-preview'
 import { EmailSendSheet } from '@web/components/finance/email-send-sheet'
 import { MessageBubble } from '@web/components/finance/message-bubble'
@@ -16,15 +17,18 @@ import { PixBox } from '@web/components/finance/pix-box'
 import { SendOptions } from '@web/components/finance/send-options'
 import { UntilChips } from '@web/components/finance/until-chips'
 import { FormOverlay } from '@web/components/layout/form-overlay'
+import { Sheet } from '@web/components/layout/sheet'
 import {
   chargeQueryOptions,
   chargeTextQueryOptions,
+  pixReceiverQueryOptions,
 } from '@web/features/contacts/api/contacts.queries'
 import {
   useCreateCharge,
   useMarkChargeSent,
   useSendChargeEmail,
 } from '@web/features/contacts/api/use-charge-actions'
+import { chargeEmailPreviewOf } from '@web/features/contacts/components/charge-email-view'
 import {
   chargeableBy,
   defaultUntilOf,
@@ -44,6 +48,7 @@ import { hasPermission } from '@web/lib/permissions'
 import { useState } from 'react'
 
 const messages = contactsMessages.newCharge
+const NO_RECEIVER = { name: null, city: null }
 
 export function NewCharge(props: NewChargeProps) {
   const [chargeId, setChargeId] = useState<string | null>(props.chargeId ?? null)
@@ -141,6 +146,7 @@ function CreatedCharge({
   permissions,
   currentUser,
   chargeId,
+  today,
   isResend,
   isOpen,
   onClose,
@@ -203,6 +209,14 @@ function CreatedCharge({
               {messages.messageAs(contact.name)}
             </h2>
             <MessageBubble message={charge.data.messageText} pixPayload={charge.data.pixPayload} />
+            {hasPermission(permissions, 'settings', 'update') && (
+              <TextLink
+                className="self-start"
+                render={<Link to="/w/$workspaceId/settings/charge-text" params={{ workspaceId }} />}
+              >
+                {messages.changeText}
+              </TextLink>
+            )}
           </section>
           <ChargePix
             workspaceId={workspaceId}
@@ -221,11 +235,9 @@ function CreatedCharge({
           workspaceId={workspaceId}
           contactName={contact.name}
           currentUser={currentUser}
-          chargeId={chargeId}
+          charge={charge.data}
           email={email}
-          amountCents={charge.data.amountCents}
-          dueOn={charge.data.dueOn as IsoDate | null}
-          hasPix={charge.data.pixPayload !== null}
+          today={today}
           isOpen={isEmailOpen}
           onOpenChange={setIsEmailOpen}
           onSent={onClose}
@@ -284,42 +296,55 @@ function ChargeEmailSend({
   workspaceId,
   contactName,
   currentUser,
-  chargeId,
+  charge,
   email,
-  amountCents,
-  dueOn,
-  hasPix,
+  today,
   isOpen,
   onOpenChange,
   onSent,
 }: ChargeEmailSendProps) {
-  const chargeText = useQuery(chargeTextQueryOptions(workspaceId))
+  const text = useQuery(chargeTextQueryOptions(workspaceId)).data ?? DEFAULT_CHARGE_TEXT
+  const receiver = useQuery(pixReceiverQueryOptions(workspaceId)).data ?? NO_RECEIVER
   const sendEmail = useSendChargeEmail(workspaceId)
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false)
+  const preview = chargeEmailPreviewOf({
+    charge,
+    contactName,
+    sender: currentUser,
+    text,
+    receiver,
+    today,
+  })
   return (
-    <EmailSendSheet
-      isOpen={isOpen}
-      onOpenChange={onOpenChange}
-      to={email}
-      subject={chargeSubject((chargeText.data ?? DEFAULT_CHARGE_TEXT).subject, {
-        contactName,
-        requesterName: currentUser.name,
-        workspaceName: currentUser.workspaceName,
-        totalCents: amountCents,
-        dueOn,
-      })}
-      replyTo={{ name: currentUser.name, email: currentUser.email }}
-      hasPix={hasPix}
-      isSending={sendEmail.isPending}
-      onSend={() =>
-        sendEmail.mutate(chargeId, {
-          onSuccess: () => {
-            onOpenChange(false)
-            showToast(messages.emailSent(email), { tone: 'success' })
-            onSent()
-          },
-          onError: (error) => showToast(errorMessageFor(error), { tone: 'danger' }),
-        })
-      }
-    />
+    <>
+      <EmailSendSheet
+        isOpen={isOpen}
+        onOpenChange={onOpenChange}
+        to={email}
+        subject={preview.subject}
+        replyTo={{ name: currentUser.name, email: currentUser.email }}
+        hasPix={charge.pixPayload !== null}
+        isSending={sendEmail.isPending}
+        onPreview={() => setIsPreviewOpen(true)}
+        onSend={() =>
+          sendEmail.mutate(charge.id, {
+            onSuccess: () => {
+              onOpenChange(false)
+              showToast(messages.emailSent(email), { tone: 'success' })
+              onSent()
+            },
+            onError: (error) => showToast(errorMessageFor(error), { tone: 'danger' }),
+          })
+        }
+      />
+      <Sheet
+        title={messages.emailPreviewTitle}
+        closeLabel={messages.emailPreviewClose}
+        isOpen={isPreviewOpen}
+        onOpenChange={setIsPreviewOpen}
+      >
+        <ChargeEmailPreview {...preview} />
+      </Sheet>
+    </>
   )
 }

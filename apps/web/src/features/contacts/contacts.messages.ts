@@ -116,6 +116,13 @@ export const contactsMessages = {
     messageAs: (name: string) => `A mensagem, como ${name} vai ler`,
     noPix: 'Configure sua chave Pix para incluir o Pix copia e cola nas cobranças.',
     setUpPix: 'Configurar Pix',
+    changeText: 'Mudar o texto padrão das cobranças',
+    emailPreviewTitle: 'O e-mail como ele chega',
+    emailPreviewClose: 'Voltar',
+    emailSender: (workspaceName: string) => `Twise · ${workspaceName}`,
+    emailItem: (description: string, number: number, count: number) =>
+      `${description} (parcela ${number}/${count})`,
+    emailItemDue: (isPast: boolean, date: string) => `${isPast ? 'venceu' : 'vence'} ${date}`,
     done: 'Fechar',
     messageCopied: 'Mensagem copiada.',
     copyFailed: 'Não foi possível copiar. Selecione o texto e copie.',

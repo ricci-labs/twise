@@ -84,6 +84,14 @@ export function chargeTextQueryOptions(workspaceId: string) {
   })
 }
 
+export function pixReceiverQueryOptions(workspaceId: string) {
+  return queryOptions({
+    queryKey: [...queryKeys.workspace(workspaceId), 'settings'] as const,
+    queryFn: () => unwrap(workspaceApi.settings.$get({ param: { workspaceId } })),
+    select: (settings) => ({ name: settings.pixReceiverName, city: settings.pixReceiverCity }),
+  })
+}
+
 export function chargeQueryOptions(workspaceId: string, chargeId: string) {
   return queryOptions({
     queryKey: [...queryKeys.workspace(workspaceId), 'contacts', 'charge', chargeId] as const,
