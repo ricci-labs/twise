@@ -33,6 +33,7 @@ import { getAccount } from '@api/modules/identity'
 import {
   activeEntryIdsOf,
   readContactItems,
+  readEntryReceipts,
   readPostingDetails,
   recordEntryInTransaction,
 } from '@api/modules/ledger'
@@ -292,6 +293,11 @@ export async function viewsOf(tx: WorkspaceTransaction, rows: ChargeRow[]): Prom
     items.map((item) => item.postingId),
   )
   const paid = await paidByCharge(tx, chargeIds)
+  const payments = await selectChargePayments(tx, chargeIds)
+  const receipts = await readEntryReceipts(
+    tx,
+    payments.map((payment) => payment.entryId),
+  )
   return rows.map((row) => ({
     id: row.id,
     contactId: row.contactId,
@@ -313,5 +319,14 @@ export async function viewsOf(tx: WorkspaceTransaction, rows: ChargeRow[]): Prom
         const detail = details.get(postingId)
         return detail ? [{ ...detail, amountCents }] : []
       }),
+    payments: payments
+      .filter((payment) => payment.chargeId === row.id)
+      .flatMap(({ entryId, amountCents }) => {
+        const receipt = receipts.get(entryId)
+        return receipt
+          ? [{ entryId, amountCents, receivedOn: receipt.occurredOn, accountId: receipt.accountId }]
+          : []
+      })
+      .sort((first, second) => first.receivedOn.localeCompare(second.receivedOn)),
   }))
 }

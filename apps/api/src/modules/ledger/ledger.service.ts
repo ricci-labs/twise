@@ -44,6 +44,7 @@ export {
   readContactPostings,
   readEntryDates,
   readEntryPayments,
+  readEntryReceipts,
   readInvoiceFacts,
   readInvoicesDueBetween,
   readMatchCandidates,

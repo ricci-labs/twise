@@ -380,12 +380,21 @@ describe('payCharge', () => {
     })
     const { entryId } = await pay(2_000)
     expect(byId(await charges(), chargeId)).toMatchObject({ status: 'paid', paidCents: 3_000 })
+    expect(byId(await charges(), chargeId)?.payments).toEqual([
+      expect.objectContaining({
+        amountCents: 1_000,
+        receivedOn: '2026-10-16',
+        accountId: checking,
+      }),
+      { entryId, amountCents: 2_000, receivedOn: '2026-10-16', accountId: checking },
+    ])
 
     await deleteEntry(databases.app, { workspaceId, entryId, userId })
     expect(byId(await charges(), chargeId)).toMatchObject({
       status: 'partially_paid',
       paidCents: 1_000,
     })
+    expect(byId(await charges(), chargeId)?.payments).toHaveLength(1)
   })
 
   it('refuses paying a cancelled charge', async () => {

@@ -140,6 +140,14 @@ export type ChargeView = {
   emailError: string | null
   createdAt: Date
   items: ChargeItemView[]
+  payments: ChargePaymentView[]
+}
+
+export type ChargePaymentView = {
+  entryId: string
+  amountCents: number
+  receivedOn: IsoDate
+  accountId: string | null
 }
 
 export type ChargeRef = {

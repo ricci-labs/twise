@@ -19,6 +19,7 @@ import type {
   ContactItems,
   EntryCandidateFilter,
   EntryPayment,
+  EntryReceipt,
   InvoiceDue,
   MatchCandidateEntry,
   PostingDetails,
@@ -149,6 +150,30 @@ export async function readEntryPayments(
       {
         occurredOn,
         amountCents: entryAmountCents(postings.filter((posting) => posting.entryId === id)),
+      },
+    ]),
+  )
+}
+
+export async function readEntryReceipts(
+  tx: WorkspaceTransaction,
+  entryIds: string[],
+): Promise<ReadonlyMap<string, EntryReceipt>> {
+  if (entryIds.length === 0) {
+    return new Map()
+  }
+  const dates = await selectEntryDates(tx, entryIds)
+  const postings = await selectPostingsOfEntries(tx, entryIds)
+  return new Map(
+    dates.map(({ id, occurredOn }) => [
+      id,
+      {
+        occurredOn,
+        accountId:
+          postings.find(
+            (posting) =>
+              posting.entryId === id && posting.amountCents > 0 && posting.contactId === null,
+          )?.accountId ?? null,
       },
     ]),
   )
