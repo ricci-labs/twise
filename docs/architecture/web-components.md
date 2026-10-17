@@ -1,7 +1,7 @@
 ---
 summary: How web components are layered and built — shadcn primitives, design-system components with one folder each (variants, types, copy, tests, examples), the props contract, forms, icons, copy, the workbench, tests and lint.
 read_when: Creating, changing or using any component in apps/web; adding a shadcn component; building a form; reviewing a web PR.
-updated: 2026-10-16
+updated: 2026-10-17
 ---
 
 # Web components
@@ -40,7 +40,7 @@ where it's used.
 | `charts/` | `BarChart`, `ForecastChart`, `DonutChart`, each with its text alternative |
 | `navigation/` | `BottomBar`, `Sidebar`, `TopBar`, `WorkspaceSwitcher`, `BackLink`, `Breadcrumb`, `ScrollArrows`, `YearStepper`, `SettingsRow` |
 | `layout/` | `AppShell`, `FormOverlay`, `SidePanel`, `Page`, `PageHeader`, `Section`, `Stack`, `Grid` |
-| `finance/` | `StatHero`, `InsightCard`, `InvoiceCard`, `InvoicePreview`, `SharesList`, `RecentEntries`, `AccountRow`, `AccountGroup`, `CardBlock`, `InvoiceSummary`, `InvoiceLine`, `EntryRow`, `OccurrenceRow`, `HolidayRow`, `NextHolidayCard`, `ContactRow`, `ContactHeader`, `OpenItemRow`, `ChargeRow`, `ChargeBody`, `MessageBubble`, `PixBox`, `ChargePreview`, `AmountSplitEditor`, `AllocationStepRow`, `SplitExample` |
+| `finance/` | `StatHero`, `InsightCard`, `InvoiceCard`, `InvoicePreview`, `SharesList`, `RecentEntries`, `AccountRow`, `AccountGroup`, `CardBlock`, `InvoiceSummary`, `InvoiceLine`, `EntryRow`, `OccurrenceRow`, `HolidayRow`, `NextHolidayCard`, `ContactRow`, `ContactHeader`, `OpenItemRow`, `ChargeRow`, `ChargeBody`, `MessageBubble`, `PixBox`, `UntilChips`, `ChargePreview`, `NothingToCharge`, `AmountSplitEditor`, `AllocationStepRow`, `SplitExample` |
 | `brand/` | `Logo`, `OwlScene` (the layered owl scenes and their motion), `AppSplash` |
 | `icons/` | `TwiseIcon` and the icon registries (see Icons) |
 
@@ -1090,3 +1090,19 @@ contact form (CON-05) use them. Every number and date comes from the API; the ro
   Pix", "Observações" (counter from 80 % of 500), and on edit the "Não quer receber mensagens"
   `Switch`; errors on leaving a field; edit sends only the changed fields and "Salvar" waits for a
   change; `CONTACT_PHONE_TAKEN` and `CONTACT_EMAIL_TAKEN` land under their field.
+- `UntilChips` (`components/finance/until-chips`): "Cobrar o que vence até" of the new charge
+  (CON-03) as a required `FieldGroup` with `ChoiceChips` `pillOutline` (the selection outline):
+  "Hoje, dd/mm", "Até dd/mm · +n parcela(s)" when `next` is set (the next open due date and how
+  many installments it adds, G63; the help line shows only then) and "Outra data", which opens the
+  app calendar (`CalendarSheet`, a popover under the chip on the desktop). A picked date shows as
+  the chosen chip, "Até dd/mm", and choosing it again reopens the calendar. `value` is the date;
+  `onChange` gets the new one and the screen refetches the preview.
+- `ChargePreview` (`components/finance/charge-preview`): "Vai na cobrança · n itens" over the
+  items (description in 2 lines, "venceu dd/mm" / "vence dd/mm" under it, a dotted leader, the
+  amount that never wraps), a solid line, then the total, in a bordered card.
+- `NothingToCharge` (`components/finance/nothing-to-charge`): what replaces the preview when
+  nothing is due up to the date (`role="status"`): the loose calendar drawing, "Nada a cobrar até
+  essa data.", why ("O que venceu já está na cobrança de dd/mm." with `chargedOn`, else "Nenhum
+  item vence até essa data.", plus "A próxima parcela vence em dd/mm." with `next`) and, with
+  `next` and `onIncludeNext`, the secondary "Incluir até dd/mm · R$ X". The screen disables
+  "Criar cobrança" meanwhile.
