@@ -36,7 +36,8 @@ it and this file disagreed, the design won and this file follows it). The charge
   through the link in a charge e-mail (`optedOutVia`: `member` | `email_link`). It is shown on the
   contact; WhatsApp asks first ("Este contato pediu para não receber mensagens. Enviar mesmo
   assim?"); e-mails are never sent while it is set (`CONTACT_OPTED_OUT`); copying the message never
-  asks. A member can turn the switch off only for an opt-out a member set.
+  asks. A member can turn the switch off only for an opt-out a member set (otherwise
+  `CONTACT_OPTED_OUT_BY_LINK`: the switch is disabled with the reason).
 - **A charge** gathers the contact's open items up to a date (default today; a later date includes
   upcoming installments; when nothing is due yet, the default is the next due date) into a pt-BR
   message, plus a Pix copia e cola when the workspace has Pix receiving set up (`SET-02`). The

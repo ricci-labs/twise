@@ -20,6 +20,7 @@ function contact(id: string, name: string, extra: object = {}) {
     pixKey: null,
     notes: null,
     isOptedOut: false,
+    optedOutVia: null,
     isArchived: false,
     ...extra,
   }
@@ -37,6 +38,7 @@ export const CONTACTS = [
     phoneE164: null,
     email: 'member.e@exemplo.com',
     isOptedOut: true,
+    optedOutVia: 'member',
   }),
   contact(CONTACT_F, 'Member F'),
   contact(CONTACT_G, 'Member G', { isArchived: true }),

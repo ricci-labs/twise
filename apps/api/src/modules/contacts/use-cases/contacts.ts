@@ -16,6 +16,7 @@ import {
 import type {
   ContactBalanceItem,
   ContactItem,
+  ContactOptOut,
   ContactRef,
   ContactRow,
   ContactSummary,
@@ -147,10 +148,7 @@ export async function changeContact(
       await audited(tx, contactAuditTarget(workspaceId, contactId), 'update', () =>
         updateContact(tx, contactId, {
           ...change,
-          optedOutAt:
-            isOptedOut === undefined
-              ? current.optedOutAt
-              : optOutMoment(current, isOptedOut, clock),
+          ...(isOptedOut === undefined ? {} : optOutChange(current, isOptedOut, clock)),
           archivedAt:
             isArchived === undefined
               ? current.archivedAt
@@ -213,11 +211,20 @@ function archiveMoment(current: ContactRow, isArchived: boolean, clock: Clock): 
   return current.archivedAt ?? clock.now()
 }
 
-function optOutMoment(current: ContactRow, isOptedOut: boolean, clock: Clock): Date | null {
-  if (!isOptedOut) {
-    return null
+function optOutChange(current: ContactRow, isOptedOut: boolean, clock: Clock): ContactOptOut {
+  if (isOptedOut) {
+    return {
+      optedOutAt: current.optedOutAt ?? clock.now(),
+      optedOutVia: current.optedOutVia ?? 'member',
+    }
   }
-  return current.optedOutAt ?? clock.now()
+  if (current.optedOutVia === 'email_link') {
+    throw new ConflictError(
+      'CONTACT_OPTED_OUT_BY_LINK',
+      'The contact opted out through the email link, so members cannot undo it',
+    )
+  }
+  return { optedOutAt: null, optedOutVia: null }
 }
 
 async function refusingTakenChannels<T>(work: () => Promise<T>): Promise<T> {
@@ -245,6 +252,7 @@ function itemOf(contact: ContactRow): ContactItem {
     pixKey: contact.pixKey,
     notes: contact.notes,
     isOptedOut: contact.optedOutAt !== null,
+    optedOutVia: contact.optedOutVia,
     isArchived: contact.archivedAt !== null,
   }
 }

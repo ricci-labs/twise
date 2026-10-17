@@ -1,4 +1,4 @@
-import { emailSchema } from '@shared/identity/identity/identity.schemas'
+import { emailSchema, linkTokenSchema } from '@shared/identity/identity/identity.schemas'
 import { phoneE164Schema } from '@shared/identity/invitations/invitations.schemas'
 import { z } from 'zod'
 
@@ -34,3 +34,7 @@ export const contactChangeSchema = z
 export type ContactChange = z.infer<typeof contactChangeSchema>
 
 export const contactParamsSchema = z.object({ contactId: z.uuid() })
+
+export const contactOptOutRequestSchema = z.object({ token: linkTokenSchema })
+
+export type ContactOptOutRequest = z.infer<typeof contactOptOutRequestSchema>

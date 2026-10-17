@@ -122,6 +122,7 @@ function fetchContacts(workspaceId: string) {
         pixKey: null,
         notes: null,
         isOptedOut: false,
+        optedOutVia: null,
         isArchived: false,
       })),
     )

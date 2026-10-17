@@ -73,6 +73,7 @@ describe('contacts', () => {
       pixKey: null,
       notes: null,
       isOptedOut: false,
+      optedOutVia: null,
       isArchived: false,
     })
     expect(listed.find((contact) => contact.id === withPhone)).toMatchObject({

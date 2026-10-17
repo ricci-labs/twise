@@ -20,3 +20,4 @@ export {
   listOpenItems,
   listUpcomingContactItems,
 } from '@api/modules/contacts/use-cases/open-items'
+export { optOutByLink } from '@api/modules/contacts/use-cases/opt-out'

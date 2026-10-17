@@ -3,15 +3,20 @@ import type {
   chargeItems,
   chargePayments,
   charges,
+  contactOptOutTokens,
   contacts,
 } from '@api/modules/contacts/contacts.table'
+import type { LinkLimitDeps } from '@api/modules/identity'
 import type { PostingDetails } from '@api/modules/ledger'
 import type {
+  ChargeEmailStatus,
   ChargeMark,
+  ChargeSentVia,
   ChargeStatus,
   ChargeSummary,
   ContactBalance,
   ContactChargeState,
+  ContactOptOutVia,
 } from '@financas/shared'
 
 export type ContactRow = typeof contacts.$inferSelect
@@ -22,6 +27,8 @@ export type ContactUpdate = Partial<
   Omit<NewContactRow, 'workspaceId' | 'id' | 'createdAt' | 'updatedAt'>
 >
 
+export type ContactOptOut = Pick<NewContactRow, 'optedOutAt' | 'optedOutVia'>
+
 export type ContactItem = {
   id: string
   name: string
@@ -30,6 +37,7 @@ export type ContactItem = {
   pixKey: string | null
   notes: string | null
   isOptedOut: boolean
+  optedOutVia: ContactOptOutVia | null
   isArchived: boolean
 }
 
@@ -56,6 +64,14 @@ export type ContactRouteDeps = {
   db: Database
 }
 
+export type ContactOptOutRouteDeps = LinkLimitDeps & {
+  db: Database
+}
+
+export type OptOutTokenRow = typeof contactOptOutTokens.$inferSelect
+
+export type NewOptOutTokenRow = typeof contactOptOutTokens.$inferInsert
+
 export type ContactSummary = {
   name: string
   phoneE164: string | null
@@ -71,7 +87,17 @@ export type NewChargeRow = typeof charges.$inferInsert
 export type NewChargeItemRow = typeof chargeItems.$inferInsert
 
 export type ChargeUpdate = Partial<
-  Pick<NewChargeRow, 'status' | 'sentAt' | 'messageText' | 'pixPayload'>
+  Pick<
+    NewChargeRow,
+    | 'status'
+    | 'sentAt'
+    | 'sentVia'
+    | 'sentTo'
+    | 'emailStatus'
+    | 'emailError'
+    | 'messageText'
+    | 'pixPayload'
+  >
 >
 
 export type ChargeItemView = PostingDetails & {
@@ -104,6 +130,10 @@ export type ChargeView = {
   messageText: string
   pixPayload: string | null
   sentAt: Date | null
+  sentVia: ChargeSentVia | null
+  sentTo: string | null
+  emailStatus: ChargeEmailStatus | null
+  emailError: string | null
   createdAt: Date
   items: ChargeItemView[]
 }

@@ -22,7 +22,7 @@ afterAll(async () => {
 
 function insertContact(
   workspaceId: string,
-  values: { name?: string; phoneE164?: string | null; email?: string | null } = {},
+  values: Partial<Omit<typeof contacts.$inferInsert, 'workspaceId'>> = {},
 ) {
   return withWorkspace(databases.app, workspaceId, (tx) =>
     tx.insert(contacts).values({ workspaceId, name: 'Contact J', ...values }),
@@ -42,6 +42,18 @@ describe('contacts table', () => {
         POSTGRES_ERRORS.checkViolation,
       )
     }
+  })
+
+  it('knows who opted a contact out whenever the contact is opted out', async () => {
+    const { workspaceId } = await fixtures.createWorkspaceOwnedBy(ownerUserId, 'Opt-out checks')
+    const now = new Date()
+    for (const values of [{ optedOutAt: now }, { optedOutVia: 'member' as const }]) {
+      expect(await postgresErrorCodeOf(insertContact(workspaceId, values))).toBe(
+        POSTGRES_ERRORS.checkViolation,
+      )
+    }
+    const byLink = { optedOutAt: now, optedOutVia: 'email_link' as const }
+    expect(await postgresErrorCodeOf(insertContact(workspaceId, byLink))).toBeUndefined()
   })
 
   it('keeps one active contact per e-mail, whatever its case', async () => {

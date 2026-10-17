@@ -5,6 +5,10 @@ export const newChargeSchema = z.strictObject({ until: isoDateSchema.optional() 
 
 export type NewCharge = z.infer<typeof newChargeSchema>
 
+export const chargeSentSchema = z.strictObject({ via: z.enum(['whatsapp', 'manual']) })
+
+export type ChargeSent = z.infer<typeof chargeSentSchema>
+
 export const chargeParamsSchema = z.object({ chargeId: z.uuid() })
 
 export const chargeListQuerySchema = z.object({ contactId: z.uuid().optional() })

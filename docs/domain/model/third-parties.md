@@ -23,10 +23,18 @@ updated: 2026-10-16
 | `pix_key` | text null | Only if the household ever pays *them* (≤ 77 characters, the Pix limit) |
 | `notes` | text null | ≤ 500 characters |
 | `opted_out_at` | timestamptz null | Contact replied asking not to receive charges. Sending is blocked while set. Set again, it keeps the first moment |
-| `opted_out_via` | `member` \| `email_link` null | Who set it. E-mails are never sent while set; members can clear only a `member` opt-out |
-| `opt_out_token` | text | Per contact, in the charge e-mail's opt-out link (stored as a hash, like `auth_tokens`) |
+| `opted_out_via` | `member` \| `email_link` null | Who set it, set exactly when `opted_out_at` is (CHECK; older opt-outs became `member`). E-mails are never sent while set; members can clear only a `member` opt-out |
 | `archived_at` | | `PATCH { isArchived: true }` only when the balance is zero (`409 CONTACT_HAS_BALANCE`) |
 | soft delete, timestamps | | |
+
+### `contact_opt_out_tokens`: the opt-out links
+`contact_id`, `token_hash` (unique), `created_at`. Every charge e-mail gets a new random token
+(32 bytes, base64url) for its opt-out link, and only its SHA-256 is stored, like `auth_tokens`.
+One row per e-mail, not one per contact, because a hash can't be read back into a link: with a
+single token per contact, each new e-mail would have to replace it and break the links of the
+e-mails already sent. The tokens never expire (the link only ever opts out). The public route finds
+the workspace through `contact_opt_out_workspace_id(token_hash)` (security definer, like
+`invitation_workspace_id`), then reads the token under the workspace's RLS.
 
 One active contact per phone (`409 CONTACT_PHONE_TAKEN`) and per e-mail, in any case (`409
 CONTACT_EMAIL_TAKEN`, a partial unique index on `lower(email)` like `users.email`, so no `citext`
@@ -34,12 +42,12 @@ extension); deleting a contact frees both.
 
 | Route | Permission | Does |
 |---|---|---|
-| `GET /contacts` | `contacts:view` | `listContacts`: active contacts by name: `id`, `name`, `phoneE164`, `email`, `pixKey`, `notes`, `isOptedOut`, `isArchived` |
+| `GET /contacts` | `contacts:view` | `listContacts`: active contacts by name: `id`, `name`, `phoneE164`, `email`, `pixKey`, `notes`, `isOptedOut`, `optedOutVia` (`member` \| `email_link` \| `null`), `isArchived` |
 | `POST /contacts` | `contacts:create` | `createContact` `{ name, phoneE164?, email?, pixKey?, notes? }` → `201 { contactId }` |
 | `GET /contacts/balances` | `contacts:view` | `listContactBalances`: per active contact with postings, `{ contactId, name, phoneE164, email, owedCents, overdueCents, overdueSince, nextDueOn, nextDueCents, dueNotChargedCents, nextOpenDueOn, lastCharge }` (the phone and e-mail draw the channels line; the last three are the charge state, G63, below) |
 | `GET /contacts/upcoming?limit=` | `contacts:view` | `listUpcomingContactItems`: the next open items due **after today** across active contacts, soonest first (then by contact name), charged or not: `{ contactId, contactName, postingId, description, installmentNo, installmentCount, dueOn, remainingCents }`; `limit` 1–50, default 5 (`400 UPCOMING_CONTACT_ITEMS_QUERY_INVALID`). The desktop's "Próximos vencimentos" (G63) |
 | `GET /contacts/:contactId` | `contacts:view` | `getContact`: one active contact, as in the list; a deleted one is `404 CONTACT_NOT_FOUND` |
-| `PATCH /contacts/:contactId` | `contacts:update` | `changeContact`: only the fields sent (`null` clears `phoneE164`, `email`, `pixKey`, `notes`), plus `isOptedOut` and `isArchived` → `204` |
+| `PATCH /contacts/:contactId` | `contacts:update` | `changeContact`: only the fields sent (`null` clears `phoneE164`, `email`, `pixKey`, `notes`), plus `isOptedOut` and `isArchived` → `204`. `isOptedOut: true` keeps an existing opt-out as it is, or sets one `via: 'member'`; `false` clears a member's opt-out and is `409 CONTACT_OPTED_OUT_BY_LINK` for one the contact set by link |
 | `DELETE /contacts/:contactId` | `contacts:delete` | `deleteContact` (soft, optional `reason`) → `204` |
 
 ## `charges`
@@ -52,9 +60,9 @@ extension); deleting a contact frees both.
 | `message_text` | text | The exact text sent (audit) |
 | `pix_payload` | text null | Pix "copia e cola" with the amount, generated from the **workspace's** receiving key |
 | `sent_at`, `last_reminded_at` | timestamptz null | |
-| `sent_via` | `whatsapp` \| `email` \| `manual` null | The channel of the last send (G62) |
-| `sent_to` | text null | The phone or e-mail it went to |
-| `email_status`, `email_error` | `queued` \| `sent` \| `failed`, text null | The e-mail's outcome; a refusal puts the charge back to `draft` with the reason |
+| `sent_via` | `whatsapp` \| `email` \| `manual` null | The channel of the last send (G62); `null` on charges sent before it existed |
+| `sent_to` | text null | The phone or e-mail it went to (`null` for `manual`) |
+| `email_status`, `email_error` | `queued` \| `sent` \| `failed`, text ≤ 200 null | The e-mail's outcome, set exactly when `sent_via` is `email`; `email_error` only on `failed` (CHECKs). A refusal puts the charge back to `draft` with the reason |
 | `created_by_user_id` | | |
 
 Implemented notes: `status` starts `draft`; `sent_at` is set whenever the charge left `draft`
@@ -140,11 +148,11 @@ that month.
 |---|---|---|
 | `POST /contacts/:contactId/charges` | `contacts:create` | `createCharge` `{ until? }` (default today, workspace time zone): the contact's open items due up to that day → `201 { chargeId }` with the stored message and Pix copia e cola (when the workspace Pix is set). Nothing open is `409 NOTHING_TO_CHARGE` |
 | `GET /contacts/:contactId/open-items?until=&includeCharged=` | `contacts:view` | `listOpenItems`: what a charge created now would include (same computation, default today): each item with `postingId`, `description`, `installmentNo`, `installmentCount`, `effectiveOn`, `amountCents`, `remainingCents`, `inChargeId` and `inChargeCreatedOn`, oldest first. By default items in an open charge are left out (and both marks are `null`); `includeCharged=true` keeps them, marked with the open charge they are in and that charge's creation day ("Na cobrança de 20/10"). The contact page lists every future installment with a far `until` (`9999-12-31`) |
-| `GET /charges?contactId=` | `contacts:view` | `listCharges`: newest first, with items (`postingId`, `description`, `installmentNo`, `installmentCount`, `effectiveOn`, charged `amountCents`), `paidCents` and the derived status |
+| `GET /charges?contactId=` | `contacts:view` | `listCharges`: newest first, with items (`postingId`, `description`, `installmentNo`, `installmentCount`, `effectiveOn`, charged `amountCents`), `paidCents`, the derived status and the last send: `sentAt`, `sentVia`, `sentTo`, `emailStatus`, `emailError` |
 | `GET /charges/:chargeId` | `contacts:view` | `getCharge`: one charge, as in the list |
-| `POST /charges/:chargeId/sent` | `contacts:update` | `markChargeSent` `{ via: 'whatsapp' \| 'manual' }`: draft → sent (also when a member forwards the message by hand) |
+| `POST /charges/:chargeId/sent` | `contacts:update` | `markChargeSent` `{ via: 'whatsapp' \| 'manual' }` (required; `400 CHARGE_SENT_INVALID`): draft → sent, also when a member forwards the message by hand. Records `sentVia`, `sentTo` (the contact's phone for WhatsApp, `null` by hand) and clears the e-mail outcome |
 | `POST /charges/:chargeId/send-email` | `contacts:update` | `sendChargeEmail` (G62): queues the charge e-mail in `notification_outbox`, marks it sent with `sentVia: 'email'`, `sentTo`, `sentAt`, `emailStatus: 'queued'`; `409 CONTACT_HAS_NO_EMAIL`, `409 CONTACT_OPTED_OUT` |
-| `POST /api/public/contacts/opt-out` | public | `{ token }` → sets `opted_out_at` and `opted_out_via: 'email_link'` (no login) |
+| `POST /api/public/contacts/opt-out` | public | `optOutByLink` `{ token }` (no login) → `204`: sets `opted_out_at` (kept when already set) and `opted_out_via: 'email_link'`; again, or on a deleted contact, still `204`. An unknown or malformed token is `400 LINK_INVALID`, like the account links: tokens can't be guessed, so the answer reveals nothing about contacts, and each `LINK_INVALID` counts against the client's invalid-link limit (`429` over it) |
 | `POST /charges/:chargeId/payments` | `contacts:update` | `payCharge` `{ amountCents, receivedInAccountId, occurredOn }`: records the `settlement` entry and links it → `201 { entryId }`; a cancelled charge is `409 CHARGE_STATUS_REFUSED` |
 | `POST /charges/:chargeId/cancel` | `contacts:update` | `cancelCharge`: an open charge without payments → cancelled; its items can be charged again. `409 CHARGE_STATUS_REFUSED` otherwise |
 

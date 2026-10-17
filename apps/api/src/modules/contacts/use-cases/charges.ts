@@ -12,6 +12,7 @@ import {
   insertChargePayment,
   lockActiveContact,
   lockCharge,
+  selectActiveContact,
   selectCharge,
   selectChargeExists,
   selectChargeItems,
@@ -44,6 +45,7 @@ import {
   type ChargeStatus,
   chargeMessage,
   chargePaymentSchema,
+  chargeSentSchema,
   chargeStatusOf,
   type IsoDate,
   newChargeSchema,
@@ -157,13 +159,31 @@ export function getCharge(
 export async function markChargeSent(
   db: Database,
   ref: ChargeRef,
+  rawInput: unknown,
   clock: Clock = systemClock,
 ): Promise<void> {
-  await moveCharge(db, ref, ['draft'], { status: 'sent', sentAt: clock.now() })
+  const { via } = parseOrThrow(chargeSentSchema, rawInput, 'CHARGE_SENT_INVALID')
+  await withOpenCharge(db, ref, ['draft'], async (tx, charge) => {
+    const contact = await selectActiveContact(tx, charge.contactId)
+    await audited(tx, chargeAuditTarget(ref.workspaceId, charge.id), 'update', () =>
+      updateCharge(tx, charge.id, {
+        status: 'sent',
+        sentAt: clock.now(),
+        sentVia: via,
+        sentTo: via === 'whatsapp' ? (contact?.phoneE164 ?? null) : null,
+        emailStatus: null,
+        emailError: null,
+      }),
+    )
+  })
 }
 
 export async function cancelCharge(db: Database, ref: ChargeRef): Promise<void> {
-  await moveCharge(db, ref, OPEN_CHARGE_STATUSES, { status: 'cancelled' })
+  await withOpenCharge(db, ref, OPEN_CHARGE_STATUSES, async (tx, charge) => {
+    await audited(tx, chargeAuditTarget(ref.workspaceId, charge.id), 'update', () =>
+      updateCharge(tx, charge.id, { status: 'cancelled' }),
+    )
+  })
 }
 
 export async function payCharge(
@@ -203,11 +223,11 @@ export async function payCharge(
   })
 }
 
-async function moveCharge(
+export async function withOpenCharge(
   db: Database,
   { workspaceId, chargeId }: ChargeRef,
   from: readonly ChargeStatus[],
-  update: { status: ChargeStatus; sentAt?: Date },
+  work: (tx: WorkspaceTransaction, charge: ChargeRow) => Promise<void>,
 ): Promise<void> {
   await withWorkspace(db, workspaceId, async (tx) => {
     const charge = await lockExistingCharge(tx, chargeId)
@@ -215,9 +235,7 @@ async function moveCharge(
     if (!from.includes(charge.status) || paidCents > 0) {
       throw new ConflictError('CHARGE_STATUS_REFUSED', `Charge ${chargeId} is ${charge.status}`)
     }
-    await audited(tx, chargeAuditTarget(workspaceId, chargeId), 'update', () =>
-      updateCharge(tx, chargeId, update),
-    )
+    await work(tx, charge)
   })
 }
 
@@ -284,6 +302,10 @@ async function viewsOf(tx: WorkspaceTransaction, rows: ChargeRow[]): Promise<Cha
     messageText: row.messageText,
     pixPayload: row.pixPayload,
     sentAt: row.sentAt,
+    sentVia: row.sentVia,
+    sentTo: row.sentTo,
+    emailStatus: row.emailStatus,
+    emailError: row.emailError,
     createdAt: row.createdAt,
     items: items
       .filter((item) => item.chargeId === row.id)
