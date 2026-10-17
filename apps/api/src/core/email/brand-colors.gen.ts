@@ -7,6 +7,8 @@ export const BRAND_COLORS = {
   border: '#e6e3dc',
   mint: '#80dca5',
   mintInk: '#1d7a4c',
+  mintSoft: '#e3f7eb',
+  danger: '#b42318',
   actionPrimary: '#17191c',
   onActionPrimary: '#ffffff',
 } as const

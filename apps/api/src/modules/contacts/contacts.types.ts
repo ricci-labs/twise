@@ -1,4 +1,5 @@
 import type { Database } from '@api/core/db/db.types'
+import type { EmailMessage } from '@api/core/email/email.types'
 import type {
   chargeItems,
   chargePayments,
@@ -14,9 +15,11 @@ import type {
   ChargeSentVia,
   ChargeStatus,
   ChargeSummary,
+  ChargeText,
   ContactBalance,
   ContactChargeState,
   ContactOptOutVia,
+  IsoDate,
 } from '@financas/shared'
 
 export type ContactRow = typeof contacts.$inferSelect
@@ -62,6 +65,7 @@ export type CreatedContact = {
 
 export type ContactRouteDeps = {
   db: Database
+  publicUrl: string
 }
 
 export type ContactOptOutRouteDeps = LinkLimitDeps & {
@@ -158,3 +162,21 @@ export type ChargePaymentRow = {
 export type RecordedPayment = {
   entryId: string
 }
+
+export type ChargeEmailInput = {
+  to: string
+  replyTo: string
+  contactName: string
+  requesterName: string
+  workspaceName: string
+  items: readonly ChargeItemView[]
+  totalCents: number
+  dueOn: IsoDate | null
+  today: IsoDate
+  pix: { payload: string; receiverName: string; receiverCity: string } | null
+  text: ChargeText
+  publicUrl: string
+  optOutToken: string
+}
+
+export type ChargeEmail = Omit<EmailMessage, 'template'>

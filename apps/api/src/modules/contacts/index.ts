@@ -13,6 +13,7 @@ export {
   markChargeSent,
   payCharge,
   readContactBalanceFacts,
+  recordChargeEmailOutcome,
 } from '@api/modules/contacts/contacts.service'
 export type {
   ChargeView,

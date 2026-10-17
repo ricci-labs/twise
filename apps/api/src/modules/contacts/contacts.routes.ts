@@ -18,6 +18,7 @@ import {
   markChargeSent,
   optOutByLink,
   payCharge,
+  sendChargeEmail,
 } from '@api/modules/contacts/contacts.service'
 import type { ContactOptOutRouteDeps, ContactRouteDeps } from '@api/modules/contacts/contacts.types'
 import { limitInvalidLinks } from '@api/modules/identity'
@@ -139,7 +140,7 @@ export function contactRoutes({ db }: ContactRouteDeps) {
     )
 }
 
-export function chargeRoutes({ db }: ContactRouteDeps) {
+export function chargeRoutes({ db, publicUrl }: ContactRouteDeps) {
   const charge = pathParams(chargeParamsSchema, 'CHARGE_NOT_FOUND')
 
   return new Hono<AppEnv>()
@@ -183,6 +184,11 @@ export function chargeRoutes({ db }: ContactRouteDeps) {
         )
       },
     )
+    .post('/:chargeId/send-email', authorize('contacts', 'update'), charge, async (c) => {
+      const { workspaceId } = currentWorkspace(c)
+      await sendChargeEmail(db, { workspaceId, chargeId: c.req.valid('param').chargeId }, publicUrl)
+      return c.body(null, NO_CONTENT)
+    })
     .post('/:chargeId/cancel', authorize('contacts', 'update'), charge, async (c) => {
       const { workspaceId } = currentWorkspace(c)
       await cancelCharge(db, { workspaceId, chargeId: c.req.valid('param').chargeId })
