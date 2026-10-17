@@ -259,3 +259,5 @@ export type ContactFormFooterProps = {
   problem: string | null
   onCancel: () => void
 }
+
+export type OptOutView = 'confirming' | 'done' | 'linkInvalid' | 'paused' | 'failed'

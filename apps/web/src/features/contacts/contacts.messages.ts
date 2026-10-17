@@ -129,6 +129,29 @@ export const contactsMessages = {
     resendTitle: 'Enviar cobrança',
     failed: 'Não foi possível criar a cobrança.',
   },
+  optOut: {
+    pageTitle: 'Cobranças por e-mail',
+    confirming: 'Só um instante…',
+    retry: 'Tentar de novo',
+    views: {
+      done: {
+        title: 'Pronto, você não vai mais receber cobranças por e-mail.',
+        text: 'Quem te cobrou vai ver no app que você pediu isso. Se mudar de ideia, é só falar com essa pessoa.',
+      },
+      linkInvalid: {
+        title: 'Este link não vale mais',
+        text: 'Use o link do e-mail de cobrança mais recente, ou fale com quem te cobrou.',
+      },
+      paused: {
+        title: 'Muitas tentativas',
+        text: 'Espere alguns minutos e abra o link do e-mail de novo.',
+      },
+      failed: {
+        title: 'Não deu certo agora',
+        text: 'Confira sua conexão e tente de novo.',
+      },
+    },
+  },
   form: {
     newTitle: 'Novo contato',
     editTitle: 'Editar contato',
