@@ -9,7 +9,7 @@ import {
 
 const DEFAULT_ROWS = 3
 
-export function ListSkeleton({ rows = DEFAULT_ROWS }: ListSkeletonProps) {
+export function ListSkeleton({ rows = DEFAULT_ROWS, art = 'square' }: ListSkeletonProps) {
   return (
     <div
       data-slot="list-skeleton"
@@ -19,7 +19,7 @@ export function ListSkeleton({ rows = DEFAULT_ROWS }: ListSkeletonProps) {
     >
       {Array.from({ length: rows }, (_, row) => `row-${row}`).map((key) => (
         <div key={key} aria-hidden="true" className={listSkeletonRowVariants()}>
-          <span className={listSkeletonBlockVariants({ shape: 'art' })} />
+          <span className={listSkeletonBlockVariants({ shape: art })} />
           <span className={listSkeletonTextVariants()}>
             <span className={listSkeletonBlockVariants({ shape: 'name' })} />
             <span className={listSkeletonBlockVariants({ shape: 'detail' })} />

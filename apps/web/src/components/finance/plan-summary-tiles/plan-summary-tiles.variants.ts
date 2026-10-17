@@ -15,6 +15,7 @@ export const planSummaryValueVariants = cva(
       tone: {
         neutral: 'text-ink',
         income: 'text-mint-ink',
+        danger: 'text-danger',
       },
     },
     defaultVariants: { tone: 'neutral' },

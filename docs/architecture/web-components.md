@@ -607,9 +607,11 @@ component here, so the form, and later the account, card and planning forms, sha
   the rows; without a title it's only the card (the archived rows under `ArchivedToggle`).
 - `ArchivedToggle` (`components/display/archived-toggle`, Base UI `Collapsible`): the dashed
   "Arquivadas (n)" row at the end of a list, with the archive icon and a chevron; it opens the
-  archived items below. Nothing when none is archived.
+  archived items below. Nothing when none is archived. `gender="masculine"` says "Arquivados (n)"
+  (contacts).
 - `ListSkeleton` (`components/feedback/list-skeleton`): 64 px skeleton rows shaped like
-  `AccountRow` in the same white card, a `status` that says "Carregando…".
+  `AccountRow` in the same white card, a `status` that says "Carregando…". `art="circle"` draws the
+  art round, for lists of people (`ContactRow`).
 - `KpiSkeleton` (`components/feedback/kpi-skeleton`): one summary card while it loads (label and
   value blocks), what the carousel shows before its numbers arrive.
 - `EmptyBlock` (`components/feedback/empty-block`): a whole list with nothing in it yet: the 96 px
@@ -924,7 +926,7 @@ online with `asChild` are translated to `render`.
   "Em aberto".
 - `PlanSummaryTiles` (`components/finance/plan-summary-tiles`): two tiles ("Falta pagar" / "Falta
   receber", "Contas fixas por mês" / "Receitas fixas por mês") as a description list, each with its
-  amount (income in `mint-ink`, "≈" for an estimate) and a muted note. Side by side, each half the
+  amount (income in `mint-ink`, late in `danger`, "≈" for an estimate) and a muted note. Side by side, each half the
   row (`basis-pair`), while each amount fits its half; when one doesn't (7-digit amounts on a
   phone) the second tile drops to its own line, so an amount is never cut or wrapped. The same
   rule holds for the invoice's "Pago" / "Falta pagar" tiles and the Home's achievement tiles.

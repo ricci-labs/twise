@@ -22,7 +22,7 @@ export function ReceivablesCard({
   if (!receivables) {
     return null
   }
-  const contacts = <Link to="/w/$workspaceId/$area" params={{ workspaceId, area: 'contacts' }} />
+  const contacts = <Link to="/w/$workspaceId/contacts" params={{ workspaceId }} />
   return (
     <Card
       className={className}

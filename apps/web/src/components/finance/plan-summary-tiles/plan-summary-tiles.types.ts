@@ -1,7 +1,7 @@
 export type PlanSummaryTile = {
   label: string
   amountCents: number
-  tone?: 'neutral' | 'income'
+  tone?: 'neutral' | 'income' | 'danger'
   isEstimate?: boolean
   note?: string
 }
