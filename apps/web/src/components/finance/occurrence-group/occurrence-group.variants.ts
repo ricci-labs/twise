@@ -2,20 +2,33 @@ import { cva } from 'class-variance-authority'
 
 export const occurrenceGroupVariants = cva('flex flex-col gap-1.5')
 
-export const occurrenceGroupHeadVariants = cva('flex min-h-7 items-center justify-between gap-3')
-
-export const occurrenceGroupTitleVariants = cva(
-  'flex min-h-7 items-center gap-2 font-display text-section-title',
-  {
-    variants: {
-      tone: {
-        default: 'text-ink',
-        danger: 'text-danger',
-      },
+export const occurrenceGroupHeadVariants = cva('flex items-center justify-between gap-3', {
+  variants: {
+    heading: {
+      section: 'min-h-7',
+      label: 'mx-0.5 mt-1.5',
     },
-    defaultVariants: { tone: 'default' },
   },
-)
+  defaultVariants: { heading: 'section' },
+})
+
+export const occurrenceGroupTitleVariants = cva('flex items-center gap-2', {
+  variants: {
+    heading: {
+      section: 'min-h-7 font-display text-section-title',
+      label: 'text-overline uppercase',
+    },
+    tone: {
+      default: '',
+      danger: 'text-danger',
+    },
+  },
+  compoundVariants: [
+    { heading: 'section', tone: 'default', class: 'text-ink' },
+    { heading: 'label', tone: 'default', class: 'text-ink-muted' },
+  ],
+  defaultVariants: { heading: 'section', tone: 'default' },
+})
 
 export const occurrenceGroupAddVariants = cva(
   'inline-flex shrink-0 items-center gap-1 text-label [&_svg]:size-4 [&_svg]:no-underline',

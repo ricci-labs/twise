@@ -19,6 +19,7 @@ export function OccurrenceGroup({
   count,
   tone,
   layout,
+  heading = 'section',
   add,
   note,
   empty,
@@ -26,20 +27,25 @@ export function OccurrenceGroup({
   children,
 }: OccurrenceGroupProps) {
   const titleId = useId()
+  const Title = heading === 'label' ? 'h3' : 'h2'
   return (
     <section
       data-slot="occurrence-group"
       aria-labelledby={titleId}
       className={occurrenceGroupVariants()}
     >
-      <div className={occurrenceGroupHeadVariants()}>
-        <h2 id={titleId} className={occurrenceGroupTitleVariants({ tone })}>
+      <div className={occurrenceGroupHeadVariants({ heading })}>
+        <Title id={titleId} className={occurrenceGroupTitleVariants({ heading, tone })}>
           {title}
-          <span aria-hidden="true" className={occurrenceGroupCountVariants()}>
-            {count}
-          </span>
-          <span className="sr-only">{messages.count(count)}</span>
-        </h2>
+          {count !== undefined && (
+            <>
+              <span aria-hidden="true" className={occurrenceGroupCountVariants()}>
+                {count}
+              </span>
+              <span className="sr-only">{messages.count(count)}</span>
+            </>
+          )}
+        </Title>
         {add && (
           <TextLink
             render={add.link ?? <button type="button" />}

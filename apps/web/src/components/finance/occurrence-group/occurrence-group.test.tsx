@@ -70,4 +70,17 @@ describe('OccurrenceGroup', () => {
     await expect.element(screen.getByRole('list')).not.toBeInTheDocument()
     await expectNoAccessibilityViolations(screen.container)
   })
+
+  it('names a sub-group with a small caps label and no count', async () => {
+    const screen = await render(
+      <OccurrenceGroup title="Vencidos" heading="label">
+        {internet()}
+      </OccurrenceGroup>,
+    )
+    const heading = screen.getByRole('heading', { name: 'Vencidos', level: 3 })
+    await expect.element(heading).toBeVisible()
+    expect(getComputedStyle(heading.element()).textTransform).toBe('uppercase')
+    await expect.element(screen.getByRole('region', { name: 'Vencidos' })).toBeVisible()
+    await expectNoAccessibilityViolations(screen.container)
+  })
 })

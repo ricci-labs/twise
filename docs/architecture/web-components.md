@@ -40,7 +40,7 @@ where it's used.
 | `charts/` | `BarChart`, `ForecastChart`, `DonutChart`, each with its text alternative |
 | `navigation/` | `BottomBar`, `Sidebar`, `TopBar`, `WorkspaceSwitcher`, `BackLink`, `Breadcrumb`, `ScrollArrows`, `YearStepper`, `SettingsRow` |
 | `layout/` | `AppShell`, `FormOverlay`, `SidePanel`, `Page`, `PageHeader`, `Section`, `Stack`, `Grid` |
-| `finance/` | `StatHero`, `InsightCard`, `InvoiceCard`, `InvoicePreview`, `SharesList`, `RecentEntries`, `AccountRow`, `AccountGroup`, `CardBlock`, `InvoiceSummary`, `InvoiceLine`, `EntryRow`, `OccurrenceRow`, `HolidayRow`, `NextHolidayCard`, `ContactRow`, `ChargePreview`, `AmountSplitEditor`, `AllocationStepRow`, `SplitExample` |
+| `finance/` | `StatHero`, `InsightCard`, `InvoiceCard`, `InvoicePreview`, `SharesList`, `RecentEntries`, `AccountRow`, `AccountGroup`, `CardBlock`, `InvoiceSummary`, `InvoiceLine`, `EntryRow`, `OccurrenceRow`, `HolidayRow`, `NextHolidayCard`, `ContactRow`, `ContactHeader`, `OpenItemRow`, `ChargePreview`, `AmountSplitEditor`, `AllocationStepRow`, `SplitExample` |
 | `brand/` | `Logo`, `OwlScene` (the layered owl scenes and their motion), `AppSplash` |
 | `icons/` | `TwiseIcon` and the icon registries (see Icons) |
 
@@ -325,7 +325,9 @@ piggy bank once. `prefers-reduced-motion` zeroes all of it (`globals.css`).
 - `Avatar` (`components/display/avatar`): the initial of a name in a circle (`mint` or `paper`),
   decorative: the name is always written next to it or in the control's label. `size="stacked"` is
   the overlapping pair of the phone's top bar: 36 px with a 2 px ring of the page colour; `lg`
-  (40 px) is the person in a picker row.
+  (40 px) is the person in a picker row; `xl` (42 px) the contact row and `2xl` (48 px) the
+  contact header. The `paper` initial is `sketch-ink`, so it stays dark on the paper in the dark
+  theme too.
 
 ## Home building blocks
 `docs/design/home/` → Rules and `../design/home/components.md`. They take formatted pieces; the Home feature
@@ -916,7 +918,9 @@ online with `asChild` are translated to `render`.
   element or `onPress`, as `AccountGroup`); `footer` holds its "Mostrar
   mais". The recurrences' groups use it too, so the count reads "4 itens". `note` puts a grey line
   under the heading ("Já vêm no app e não mudam."); `empty` is the sentence in a dashed card that
-  takes the list's place when `count` is 0.
+  takes the list's place when `count` is 0. `heading="label"` turns the heading into the small caps
+  label of a sub-group (an `h3`, muted, no count), as "Vencidos" / "A vencer" under a contact's
+  "Em aberto".
 - `PlanSummaryTiles` (`components/finance/plan-summary-tiles`): two tiles ("Falta pagar" / "Falta
   receber", "Contas fixas por mês" / "Receitas fixas por mês") as a description list, each with its
   amount (income in `mint-ink`, "≈" for an estimate) and a muted note. Side by side, each half the
@@ -1013,3 +1017,30 @@ online with `asChild` are translated to `render`.
   names 2 lines at most) or "Sem feriados". The current month is outlined in ink, past months'
   titles muted, and the list sits at the bottom so cards in a row line up. The grid is hidden from
   screen readers; the list says the same.
+
+## Contacts building blocks
+`../design/contacts/components.md`; the contacts list (CON-01) and the contact detail (CON-02) use
+them. Every number and date comes from the API; the rows only word them.
+- `ContactRow` (`components/finance/contact-row`): one contact (`li`): the paper initial (42 px),
+  the name (2 lines), the second line (2 lines) starting with the badges ("Em atraso", or "Cobrado
+  em dd/mm" once the overdue amount is in an open charge, then "Não quer mensagens") and the state
+  ("R$ X vencido desde dd/mm", "Próximo: R$ X em dd/mm", "Tem crédito de R$ X", "Em dia"; `R$` is
+  kept with its number), and the 12 px channels line with icons (WhatsApp, E-mail). On the right
+  the amount, which never wraps (danger when overdue, `mint-ink` for credit, muted when settled),
+  with "deve" / "crédito" / "em dia". `owedCents` follows the API: negative is credit. The `link`
+  element opens the contact from anywhere on the row (it stretches over it, the amount included,
+  and is described by the amount); `onCharge` adds the compact dark "Cobrar" (`Button` `xs`, named
+  "Cobrar {nome}") under the amount, a button of its own. `isArchived` dims the initial and the
+  name while keeping the text at AA.
+- `ContactHeader` (`components/finance/contact-header`): the top of a contact (the ENT-03 hero,
+  option B): the 48 px initial, "Contato" over the name, "Deve" (or "Crédito de", in `mint-ink`),
+  the amount in the display face across the width (never wraps; R$ 1.256.520,00 fits at 360 px),
+  the sentence ("deve no total", with `hasUpcoming` "…, contando as parcelas que ainda vão
+  vencer"; "pagou a mais: fica de crédito para as próximas") and, with `isOptedOut`, the pill
+  "Pediu para não receber mensagens".
+- `OpenItemRow` (`components/finance/open-item-row`): one open item of a contact (`li`), like
+  `OccurrenceRow`: the `DateBlock` (danger tint when `isOverdue`; the date is read before the
+  description), the description (2 lines), the second line (2 lines) starting with "Na cobrança de
+  dd/mm" (`chargedOn`) or "Atrasado", then the card and share detail the screen words, and what is
+  still owed, which never wraps. The `link` element wraps the row. Grouped by `OccurrenceGroup`
+  `heading="label"`.
