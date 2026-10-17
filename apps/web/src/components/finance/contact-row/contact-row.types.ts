@@ -34,3 +34,19 @@ export type ContactStateFacts = {
   nextDueOn: IsoDate | null
   nextDueCents: number
 }
+
+export type ContactStateProps = ContactStateFacts & {
+  chargedOn?: IsoDate | null
+  isOptedOut?: boolean
+  className?: string
+}
+
+export type ContactChannelsProps = {
+  channels: readonly ContactChannel[]
+  className?: string
+}
+
+export type ContactOwedProps = {
+  owedCents: number
+  overdueCents?: number
+}

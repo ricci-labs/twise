@@ -1,4 +1,9 @@
-export { ContactRow } from '@web/components/finance/contact-row/contact-row'
+export {
+  ContactChannels,
+  ContactOwed,
+  ContactRow,
+  ContactState,
+} from '@web/components/finance/contact-row/contact-row'
 export { contactRowExamples } from '@web/components/finance/contact-row/contact-row.examples'
 export type {
   ContactChannel,

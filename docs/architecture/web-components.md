@@ -1041,6 +1041,8 @@ contact form (CON-05) use them. Every number and date comes from the API; the ro
   and is described by the amount); `onCharge` adds the compact dark "Cobrar" (`Button` `xs`, named
   "Cobrar {nome}") under the amount, a button of its own. `isArchived` dims the initial and the
   name while keeping the text at AA.
+  Its parts are exported for the desktop table: `ContactState` (the badges and the state line),
+  `ContactChannels` (the channels with icons) and `ContactOwed` (the amount in its tone).
 - `ContactHeader` (`components/finance/contact-header`): the top of a contact (the ENT-03 hero,
   option B): the 48 px initial, "Contato" over the name, "Deve" (or "Crédito de", in `mint-ink`),
   the amount in the display face across the width (never wraps; R$ 1.256.520,00 fits at 360 px),

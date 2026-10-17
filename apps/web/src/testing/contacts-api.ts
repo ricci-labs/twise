@@ -246,10 +246,34 @@ export function contactAnswers(contactId: string, overrides: Record<string, Fake
   }
 }
 
+export const UPCOMING_ITEMS = [
+  {
+    contactId: CONTACT_C,
+    contactName: 'Member C',
+    postingId: '00000000-0000-4000-8000-0000000000f1',
+    description: 'Cinema e pipoca',
+    installmentNo: null,
+    installmentCount: 1,
+    dueOn: '2026-10-25',
+    remainingCents: 12000,
+  },
+  {
+    contactId: CONTACT_D,
+    contactName: 'Member D',
+    postingId: '00000000-0000-4000-8000-0000000000f2',
+    description: 'TV da sala',
+    installmentNo: 2,
+    installmentCount: 3,
+    dueOn: '2026-11-10',
+    remainingCents: 16000,
+  },
+]
+
 export function contactsAnswers(overrides: Record<string, FakeAnswer> = {}) {
   return {
     [`GET ${BASE}/contacts`]: () => Response.json(CONTACTS),
     [`GET ${BASE}/contacts/balances`]: () => Response.json(CONTACT_BALANCES),
+    [`GET ${BASE}/contacts/upcoming`]: () => Response.json(UPCOMING_ITEMS),
     ...overrides,
   }
 }

@@ -13,9 +13,10 @@ import {
   workspaceAccess,
   workspaceList,
 } from '@web/testing/fake-api'
+import { NO_PIX, workspaceSettingsAnswer } from '@web/testing/settings-api'
 import type { FakeAnswer } from '@web/testing/testing.types'
-import { afterEach, describe, expect, it, vi } from 'vitest'
-import { page } from 'vitest/browser'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { page, userEvent } from 'vitest/browser'
 import { render } from 'vitest-browser-react'
 
 const BASE = `/api/workspaces/${WORKSPACE_ID}`
@@ -183,5 +184,57 @@ describe('CON-01 contacts', () => {
     await expect.element(page.getByText('Member D')).toBeVisible()
 
     await expectNoAccessibilityViolations(page.getByRole('main').element())
+  })
+
+  describe('on the desktop', () => {
+    beforeEach(async () => {
+      await page.viewport(1440, 1000)
+    })
+
+    afterEach(async () => {
+      await page.viewport(414, 896)
+    })
+
+    it('shows three indicators, the table, the next due items and how charges go out', async () => {
+      await openContacts({ answers: workspaceSettingsAnswer() })
+
+      const kpis = page.getByRole('main')
+      await expect.element(kpis.getByText('3 contatos')).toBeVisible()
+      await expect.element(kpis.getByText('Member D, desde 10/10.')).toBeVisible()
+      await expect.element(kpis.getByText('Member C, Cinema e pipoca.')).toBeVisible()
+      await expect.element(kpis.getByText('25/10')).toBeVisible()
+      const table = page.getByRole('table', { name: 'Contatos', exact: true })
+      await expect.element(table.getByRole('columnheader', { name: 'Situação' })).toBeVisible()
+      await expect.element(table.getByRole('link', { name: 'Member D' })).toBeVisible()
+      await expect.element(table.getByText(/200,00 vencido desde 10\/10/)).toBeVisible()
+      await expect.element(page.getByText('Contatos · 4')).toBeVisible()
+      const upcoming = page.getByRole('list', { name: 'Próximos vencimentos' })
+      await expect.element(upcoming.getByText('TV da sala (parcela 2/3)')).toBeVisible()
+      await expect.element(page.getByText('MEMBER A · SAO PAULO')).toBeVisible()
+      await expect
+        .element(page.getByRole('link', { name: 'Editar', exact: true }))
+        .toHaveAttribute('href', `/w/${WORKSPACE_ID}/settings/pix`)
+      await expectNoAccessibilityViolations(page.getByRole('main').element())
+    })
+
+    it('charges from the row and opens the row actions', async () => {
+      const app = await openContacts({ answers: workspaceSettingsAnswer() })
+      const table = page.getByRole('table', { name: 'Contatos', exact: true })
+
+      await table.getByRole('button', { name: 'Ações de Member C' }).click()
+      await expect.element(page.getByRole('menuitem', { name: 'Abrir contato' })).toBeVisible()
+      await expect.element(page.getByRole('menuitem', { name: 'Editar' })).toBeVisible()
+      await userEvent.keyboard('{Escape}')
+      await table.getByRole('button', { name: 'Cobrar Member D' }).click()
+      await expect
+        .poll(() => app.router.state.location.pathname)
+        .toBe(`/w/${WORKSPACE_ID}/contacts/${CONTACT_D}`)
+    })
+
+    it('offers to set up the Pix when there is none', async () => {
+      await openContacts({ answers: workspaceSettingsAnswer(NO_PIX) })
+      await expect.element(page.getByText('Não configurado')).toBeVisible()
+      await expect.element(page.getByRole('link', { name: 'Configurar' })).toBeVisible()
+    })
   })
 })

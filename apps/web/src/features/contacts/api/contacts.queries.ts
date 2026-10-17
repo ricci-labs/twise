@@ -7,6 +7,7 @@ import { queryKeys } from '@web/lib/query-keys'
 const workspaceApi = apiClient.api.workspaces[':workspaceId']
 
 const EVERY_FUTURE_ITEM = '9999-12-31'
+const UPCOMING_LIMIT = 5
 
 export function contactsQueryOptions(workspaceId: string) {
   return queryOptions({
@@ -82,6 +83,22 @@ export function chargeTextQueryOptions(workspaceId: string) {
     queryKey: [...queryKeys.workspace(workspaceId), 'settings', 'charge-text'] as const,
     queryFn: () => unwrap(workspaceApi.settings['charge-text'].$get({ param: { workspaceId } })),
   })
+}
+
+export function upcomingContactItemsQueryOptions(workspaceId: string) {
+  return queryOptions({
+    queryKey: [...queryKeys.workspace(workspaceId), 'contacts', 'upcoming'] as const,
+    queryFn: () => fetchUpcomingContactItems(workspaceId),
+  })
+}
+
+export function fetchUpcomingContactItems(workspaceId: string) {
+  return unwrap(
+    workspaceApi.contacts.upcoming.$get({
+      param: { workspaceId },
+      query: { limit: String(UPCOMING_LIMIT) },
+    }),
+  )
 }
 
 export function pixReceiverQueryOptions(workspaceId: string) {
