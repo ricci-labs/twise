@@ -94,12 +94,25 @@ export async function readContactItems(
   tx: WorkspaceTransaction,
   contactId: string,
 ): Promise<ContactItems> {
-  const lines = await selectContactItems(tx, contactId)
-  const items: ChargeableItem[] = lines.filter((line) => line.amountCents > 0)
-  const paidCents = -lines
-    .filter((line) => line.amountCents < 0)
-    .reduce((sum, line) => sum + line.amountCents, 0)
-  return { items, paidCents }
+  return (
+    (await readContactItemsByContact(tx, contactId)).get(contactId) ?? { items: [], paidCents: 0 }
+  )
+}
+
+export async function readContactItemsByContact(
+  tx: WorkspaceTransaction,
+  contactId?: string,
+): Promise<ReadonlyMap<string, ContactItems>> {
+  const linesByContact = Map.groupBy(
+    await selectContactItems(tx, contactId),
+    (line) => line.contactId,
+  )
+  return new Map(
+    [...linesByContact].map(([owner, lines]) => [
+      owner,
+      contactItemsOf(lines.map(({ contactId: _contactId, ...line }) => line)),
+    ]),
+  )
 }
 
 export async function readPostingDetails(
@@ -179,4 +192,12 @@ export async function readMatchCandidates(
       postings: own.map(({ accountId, amountCents }) => ({ accountId, amountCents })),
     }
   })
+}
+
+function contactItemsOf(lines: readonly ChargeableItem[]): ContactItems {
+  const items = lines.filter((line) => line.amountCents > 0)
+  const paidCents = -lines
+    .filter((line) => line.amountCents < 0)
+    .reduce((sum, line) => sum + line.amountCents, 0)
+  return { items, paidCents }
 }

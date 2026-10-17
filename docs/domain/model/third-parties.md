@@ -36,7 +36,8 @@ extension); deleting a contact frees both.
 |---|---|---|
 | `GET /contacts` | `contacts:view` | `listContacts`: active contacts by name: `id`, `name`, `phoneE164`, `email`, `pixKey`, `notes`, `isOptedOut`, `isArchived` |
 | `POST /contacts` | `contacts:create` | `createContact` `{ name, phoneE164?, email?, pixKey?, notes? }` → `201 { contactId }` |
-| `GET /contacts/balances` | `contacts:view` | `listContactBalances`: per active contact with postings, `{ contactId, name, phoneE164, email, owedCents, overdueCents, nextDueOn, nextDueCents }` (the phone and e-mail draw the channels line) |
+| `GET /contacts/balances` | `contacts:view` | `listContactBalances`: per active contact with postings, `{ contactId, name, phoneE164, email, owedCents, overdueCents, nextDueOn, nextDueCents, dueNotChargedCents, nextOpenDueOn, lastCharge }` (the phone and e-mail draw the channels line; the last three are the charge state, G63, below) |
+| `GET /contacts/upcoming?limit=` | `contacts:view` | `listUpcomingContactItems`: the next open items due **after today** across active contacts, soonest first (then by contact name), charged or not: `{ contactId, contactName, postingId, description, installmentNo, installmentCount, dueOn, remainingCents }`; `limit` 1–50, default 5 (`400 UPCOMING_CONTACT_ITEMS_QUERY_INVALID`). The desktop's "Próximos vencimentos" (G63) |
 | `GET /contacts/:contactId` | `contacts:view` | `getContact`: one active contact, as in the list; a deleted one is `404 CONTACT_NOT_FOUND` |
 | `PATCH /contacts/:contactId` | `contacts:update` | `changeContact`: only the fields sent (`null` clears `phoneE164`, `email`, `pixKey`, `notes`), plus `isOptedOut` and `isArchived` → `204` |
 | `DELETE /contacts/:contactId` | `contacts:delete` | `deleteContact` (soft, optional `reason`) → `204` |
@@ -99,6 +100,20 @@ that month.
 - **Open items** (`openItems`): a contact's receivable lines, with their payments applied to the
   **oldest items first** (by due date, then posting). Items still open, due up to the chosen date and
   not already in an open charge. Each carries what's left of it.
+- **Charge state** (`contactChargeState`, G63), over the same open items:
+  - `dueNotChargedCents`: what is still open, due up to today (including today) and not in an open
+    charge (draft, sent, partially paid). "Cobrar" shows only when it is above zero, which is
+    exactly when a charge created now with the default date would not be `NOTHING_TO_CHARGE`;
+  - `nextOpenDueOn`: the earliest due date **after today** among open items not in an open charge,
+    or `null`; the new charge's default date when nothing is due yet;
+  - `lastCharge { chargeId, createdOn, status }`: the newest charge whose derived status is still
+    open (draft, sent, partially paid), or `null`. A paid or cancelled charge never counts: the
+    "Cobrado em dd/mm" badge says that what is due sits in a charge still waiting to be paid.
+    `createdOn` is the creation day in the workspace time zone.
+  - Marking an item uses the stored status, like building a charge: an item stays in its charge
+    until that charge is cancelled.
+- **Upcoming items** (`upcomingItems`): the open items of every contact due after today, soonest
+  first, up to a limit.
 - **Message** (`chargeMessage`, pt-BR, the exact text is stored on the charge): the workspace's
   opening (`{quem cobra}`, `{valor}`… filled in), one line per item (`parcela n/N` when there are
   installments), the total, the due date, the Pix copia e cola, each only when there is one, and the
@@ -116,7 +131,7 @@ that month.
 | Route | Permission | Does |
 |---|---|---|
 | `POST /contacts/:contactId/charges` | `contacts:create` | `createCharge` `{ until? }` (default today, workspace time zone): the contact's open items due up to that day → `201 { chargeId }` with the stored message and Pix copia e cola (when the workspace Pix is set). Nothing open is `409 NOTHING_TO_CHARGE` |
-| `GET /contacts/:contactId/open-items?until=` | `contacts:view` | `listOpenItems`: what a charge created now would include (same computation, default today): each item with `description`, `installmentNo`, `installmentCount`, `effectiveOn`, `amountCents` and `remainingCents`, oldest first; items in an open charge are left out |
+| `GET /contacts/:contactId/open-items?until=&includeCharged=` | `contacts:view` | `listOpenItems`: what a charge created now would include (same computation, default today): each item with `postingId`, `description`, `installmentNo`, `installmentCount`, `effectiveOn`, `amountCents`, `remainingCents`, `inChargeId` and `inChargeCreatedOn`, oldest first. By default items in an open charge are left out (and both marks are `null`); `includeCharged=true` keeps them, marked with the open charge they are in and that charge's creation day ("Na cobrança de 20/10"). The contact page lists every future installment with a far `until` (`9999-12-31`) |
 | `GET /charges?contactId=` | `contacts:view` | `listCharges`: newest first, with items (`postingId`, `description`, `installmentNo`, `installmentCount`, `effectiveOn`, charged `amountCents`), `paidCents` and the derived status |
 | `GET /charges/:chargeId` | `contacts:view` | `getCharge`: one charge, as in the list |
 | `POST /charges/:chargeId/sent` | `contacts:update` | `markChargeSent` `{ via: 'whatsapp' \| 'manual' }`: draft → sent (also when a member forwards the message by hand) |

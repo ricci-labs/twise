@@ -12,6 +12,12 @@ export function openItems(
   paidCents: number,
   { until, alreadyCharged }: { until: IsoDate; alreadyCharged: ReadonlySet<string> },
 ): OpenItem[] {
+  return remainingItems(items, paidCents).filter(
+    (item) => item.effectiveOn <= until && !alreadyCharged.has(item.postingId),
+  )
+}
+
+export function remainingItems(items: readonly ChargeableItem[], paidCents: number): OpenItem[] {
   let paymentLeft = paidCents
   const oldestFirst = [...items].sort(
     (left, right) =>
@@ -23,10 +29,7 @@ export function openItems(
     paymentLeft -= covered
     return { ...item, remainingCents: item.amountCents - covered }
   })
-  return withRemaining.filter(
-    (item) =>
-      item.remainingCents > 0 && item.effectiveOn <= until && !alreadyCharged.has(item.postingId),
-  )
+  return withRemaining.filter((item) => item.remainingCents > 0)
 }
 
 export function chargeMessage(input: ChargeMessageInput): string {

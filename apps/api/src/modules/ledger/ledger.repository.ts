@@ -800,9 +800,14 @@ function frontedOnTheSameInstallment() {
   )`.mapWith(Number)
 }
 
-export function selectContactItems(tx: WorkspaceTransaction, contactId: string) {
+export function selectContactItems(tx: WorkspaceTransaction, contactId?: string) {
+  const conditions = [isNull(journalEntries.deletedAt), isNotNull(postings.contactId)]
+  if (contactId) {
+    conditions.push(eq(postings.contactId, contactId))
+  }
   return tx
     .select({
+      contactId: sql<string>`${postings.contactId}`,
       postingId: postings.id,
       description: journalEntries.description,
       installmentNo: postings.installmentNo,
@@ -812,7 +817,7 @@ export function selectContactItems(tx: WorkspaceTransaction, contactId: string) 
     })
     .from(postings)
     .innerJoin(journalEntries, eq(journalEntries.id, postings.entryId))
-    .where(and(eq(postings.contactId, contactId), isNull(journalEntries.deletedAt)))
+    .where(and(...conditions))
 }
 
 export async function selectPostingDetails(tx: WorkspaceTransaction, postingIds: string[]) {
