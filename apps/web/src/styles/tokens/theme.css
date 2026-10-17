@@ -11,6 +11,7 @@
   --font-display:
     "Bricolage Grotesque Variable", "Figtree Variable", ui-sans-serif, system-ui, sans-serif;
   --font-sans: "Figtree Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: ui-monospace, "SFMono-Regular", Menlo, monospace;
 
   --text-amount-hero: 2.75rem;
   --text-amount-hero--line-height: 3rem;
@@ -184,6 +185,9 @@
   --text-row-detail: 0.8125rem;
   --text-row-detail--line-height: 1.0625rem;
   --text-row-detail--font-weight: 400;
+  --text-code: 0.75rem;
+  --text-code--line-height: 1.0625rem;
+  --text-code--font-weight: 400;
   --text-choice: 0.9375rem;
   --text-choice--line-height: 1.25rem;
   --text-choice--font-weight: 500;
@@ -214,6 +218,8 @@
   --radius-lg: 1.25rem;
   --radius-xl: 1.75rem;
   --radius-full: 999px;
+  --radius-bubble: 1rem;
+  --radius-bubble-tail: 0.25rem;
 
   --font-weight-emphasis: 650;
   --font-weight-heavy: 750;

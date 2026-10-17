@@ -76,11 +76,13 @@ import { invoiceSummaryExamples } from '@web/components/finance/invoice-summary'
 import { invoiceYearSheetExamples } from '@web/components/finance/invoice-year-sheet'
 import { linkedItemExamples } from '@web/components/finance/linked-item'
 import { matchQuestionExamples } from '@web/components/finance/match-question'
+import { messageBubbleExamples } from '@web/components/finance/message-bubble'
 import { nextDatesPreviewExamples } from '@web/components/finance/next-dates-preview'
 import { nextHolidayCardExamples } from '@web/components/finance/next-holiday-card'
 import { occurrenceGroupExamples } from '@web/components/finance/occurrence-group'
 import { occurrenceRowExamples } from '@web/components/finance/occurrence-row'
 import { openItemRowExamples } from '@web/components/finance/open-item-row'
+import { pixBoxExamples } from '@web/components/finance/pix-box'
 import { planSummaryTilesExamples } from '@web/components/finance/plan-summary-tiles'
 import { recentEntriesExamples } from '@web/components/finance/recent-entries'
 import { recurrenceRowExamples } from '@web/components/finance/recurrence-row'
@@ -254,6 +256,8 @@ export const workbenchSections: readonly ComponentExamples[] = [
   transferFlowExamples,
   chargeRowExamples,
   chargeBodyExamples,
+  messageBubbleExamples,
+  pixBoxExamples,
   toggleChipsExamples,
   filterChipsExamples,
   listSummaryExamples,

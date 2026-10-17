@@ -40,7 +40,7 @@ where it's used.
 | `charts/` | `BarChart`, `ForecastChart`, `DonutChart`, each with its text alternative |
 | `navigation/` | `BottomBar`, `Sidebar`, `TopBar`, `WorkspaceSwitcher`, `BackLink`, `Breadcrumb`, `ScrollArrows`, `YearStepper`, `SettingsRow` |
 | `layout/` | `AppShell`, `FormOverlay`, `SidePanel`, `Page`, `PageHeader`, `Section`, `Stack`, `Grid` |
-| `finance/` | `StatHero`, `InsightCard`, `InvoiceCard`, `InvoicePreview`, `SharesList`, `RecentEntries`, `AccountRow`, `AccountGroup`, `CardBlock`, `InvoiceSummary`, `InvoiceLine`, `EntryRow`, `OccurrenceRow`, `HolidayRow`, `NextHolidayCard`, `ContactRow`, `ContactHeader`, `OpenItemRow`, `ChargeRow`, `ChargeBody`, `ChargePreview`, `AmountSplitEditor`, `AllocationStepRow`, `SplitExample` |
+| `finance/` | `StatHero`, `InsightCard`, `InvoiceCard`, `InvoicePreview`, `SharesList`, `RecentEntries`, `AccountRow`, `AccountGroup`, `CardBlock`, `InvoiceSummary`, `InvoiceLine`, `EntryRow`, `OccurrenceRow`, `HolidayRow`, `NextHolidayCard`, `ContactRow`, `ContactHeader`, `OpenItemRow`, `ChargeRow`, `ChargeBody`, `MessageBubble`, `PixBox`, `ChargePreview`, `AmountSplitEditor`, `AllocationStepRow`, `SplitExample` |
 | `brand/` | `Logo`, `OwlScene` (the layered owl scenes and their motion), `AppSplash` |
 | `icons/` | `TwiseIcon` and the icon registries (see Icons) |
 
@@ -1064,3 +1064,10 @@ them. Every number and date comes from the API; the rows only word them.
   e-mail de novo · Pelo WhatsApp · Corrigir e-mail). With no primary, a viewer's "Copiar mensagem
   · Copiar Pix", the grid is `even`. An action names its icon (`payment`, `send`, `pix`, `retry`,
   `whatsapp`, `edit`, `message`) or goes without one, as the viewer's do.
+- `MessageBubble` (`components/finance/message-bubble`): the stored charge message as the contact
+  reads it, one paragraph per line, in a `mint-soft` bubble (`rounded-bubble` with the
+  `bubble-tail` corner top left). The line equal to `pixPayload` is set in `font-mono` `text-code`
+  and shortened in the middle ("00020126…6304E1F2", `shortPix`); the stored text never changes.
+- `PixBox` (`components/finance/pix-box`): "Pix copia e cola · R$ X", the whole code in mono,
+  broken anywhere, and "Copiar Pix", which writes it to the clipboard and calls `onCopied` (the
+  screen's toast) or `onCopyFailed`.
