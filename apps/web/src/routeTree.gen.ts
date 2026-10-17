@@ -13,6 +13,7 @@ import { Route as AppRouteImport } from './routes/_app'
 import { Route as AuthRouteImport } from './routes/_auth'
 import { Route as DemoRouteImport } from './routes/demo'
 import { Route as InviteRouteImport } from './routes/invite'
+import { Route as OptOutRouteImport } from './routes/opt-out'
 import { Route as VerifyEmailRouteImport } from './routes/verify-email'
 import { Route as AppIndexRouteImport } from './routes/_app/index'
 import { Route as AuthForgotPasswordRouteImport } from './routes/_auth/forgot-password'
@@ -61,6 +62,11 @@ const DemoRoute = DemoRouteImport.update({
 const InviteRoute = InviteRouteImport.update({
   id: '/invite',
   path: '/invite',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OptOutRoute = OptOutRouteImport.update({
+  id: '/opt-out',
+  path: '/opt-out',
   getParentRoute: () => rootRouteImport,
 } as any)
 const VerifyEmailRoute = VerifyEmailRouteImport.update({
@@ -237,6 +243,7 @@ export interface FileRoutesByFullPath {
   '/': typeof AppIndexRoute
   '/demo': typeof DemoRoute
   '/invite': typeof InviteRoute
+  '/opt-out': typeof OptOutRoute
   '/verify-email': typeof VerifyEmailRoute
   '/forgot-password': typeof AuthForgotPasswordRoute
   '/login': typeof AuthLoginRoute
@@ -272,6 +279,7 @@ export interface FileRoutesByTo {
   '/': typeof AppIndexRoute
   '/demo': typeof DemoRoute
   '/invite': typeof InviteRoute
+  '/opt-out': typeof OptOutRoute
   '/verify-email': typeof VerifyEmailRoute
   '/forgot-password': typeof AuthForgotPasswordRoute
   '/login': typeof AuthLoginRoute
@@ -308,6 +316,7 @@ export interface FileRoutesById {
   '/_auth': typeof AuthRouteWithChildren
   '/demo': typeof DemoRoute
   '/invite': typeof InviteRoute
+  '/opt-out': typeof OptOutRoute
   '/verify-email': typeof VerifyEmailRoute
   '/_auth/forgot-password': typeof AuthForgotPasswordRoute
   '/_auth/login': typeof AuthLoginRoute
@@ -346,6 +355,7 @@ export interface FileRouteTypes {
     | '/'
     | '/demo'
     | '/invite'
+    | '/opt-out'
     | '/verify-email'
     | '/forgot-password'
     | '/login'
@@ -381,6 +391,7 @@ export interface FileRouteTypes {
     | '/'
     | '/demo'
     | '/invite'
+    | '/opt-out'
     | '/verify-email'
     | '/forgot-password'
     | '/login'
@@ -416,6 +427,7 @@ export interface FileRouteTypes {
     | '/_auth'
     | '/demo'
     | '/invite'
+    | '/opt-out'
     | '/verify-email'
     | '/_auth/forgot-password'
     | '/_auth/login'
@@ -454,6 +466,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRouteWithChildren
   DemoRoute: typeof DemoRoute
   InviteRoute: typeof InviteRoute
+  OptOutRoute: typeof OptOutRoute
   VerifyEmailRoute: typeof VerifyEmailRoute
   DevComponentsRoute: typeof DevComponentsRoute
 }
@@ -486,6 +499,13 @@ declare module '@tanstack/react-router' {
       path: '/invite'
       fullPath: '/invite'
       preLoaderRoute: typeof InviteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/opt-out': {
+      id: '/opt-out'
+      path: '/opt-out'
+      fullPath: '/opt-out'
+      preLoaderRoute: typeof OptOutRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/verify-email': {
@@ -797,6 +817,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRouteWithChildren,
   DemoRoute: DemoRoute,
   InviteRoute: InviteRoute,
+  OptOutRoute: OptOutRoute,
   VerifyEmailRoute: VerifyEmailRoute,
   DevComponentsRoute: DevComponentsRoute,
 }
