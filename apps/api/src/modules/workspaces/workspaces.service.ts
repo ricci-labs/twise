@@ -7,6 +7,7 @@ import {
   generateWorkspaceId,
   insertDefaultSettings,
   insertWorkspace,
+  selectChargeText,
   selectCurrentSettings,
   selectCurrentWorkspace,
   selectJobWorkspaceIds,
@@ -24,12 +25,19 @@ import type {
   WorkspaceSummary,
 } from '@api/modules/workspaces/workspaces.types'
 import {
+  type ChargeText,
+  type ChargeTextIssue,
+  type ChargeTextView,
+  chargeTextIssues,
+  chargeTextSchema,
+  DEFAULT_CHARGE_TEXT,
   pixReceivingSchema,
   workspaceNameSchema,
   workspaceSettingsChangeSchema,
 } from '@financas/shared'
 
 const SETTINGS_INVALID = 'SETTINGS_INVALID'
+const CHARGE_TEXT_INVALID = 'CHARGE_TEXT_INVALID'
 
 export function reserveWorkspaceId(db: Database): Promise<string> {
   return generateWorkspaceId(db)
@@ -143,6 +151,67 @@ export async function setPixReceiving(
       }),
     ),
   )
+}
+
+export async function currentChargeText(tx: WorkspaceTransaction): Promise<ChargeText> {
+  const { subject, opening, closing } = await currentChargeTextView(tx)
+  return { subject, opening, closing }
+}
+
+export function getChargeText(db: Database, workspaceId: string): Promise<ChargeTextView> {
+  return withWorkspace(db, workspaceId, currentChargeTextView)
+}
+
+export async function setChargeText(
+  db: Database,
+  workspaceId: string,
+  rawInput: unknown,
+): Promise<ChargeTextView> {
+  const text = parseOrThrow(chargeTextSchema, rawInput, CHARGE_TEXT_INVALID)
+  const [issue] = chargeTextIssues(text)
+  if (issue) {
+    throw chargeTextInvalid(issue)
+  }
+  await withWorkspace(db, workspaceId, (tx) =>
+    audited(tx, settingsAuditTarget(workspaceId), 'update', () =>
+      updateSettings(tx, workspaceId, {
+        chargeSubject: text.subject,
+        chargeOpening: text.opening,
+        chargeClosing: text.closing,
+      }),
+    ),
+  )
+  return { ...text, isDefault: false }
+}
+
+export async function resetChargeText(db: Database, workspaceId: string): Promise<void> {
+  await withWorkspace(db, workspaceId, (tx) =>
+    audited(tx, settingsAuditTarget(workspaceId), 'update', () =>
+      updateSettings(tx, workspaceId, {
+        chargeSubject: null,
+        chargeOpening: null,
+        chargeClosing: null,
+      }),
+    ),
+  )
+}
+
+async function currentChargeTextView(tx: WorkspaceTransaction): Promise<ChargeTextView> {
+  const { subject, opening, closing } = await selectChargeText(tx)
+  if (subject === null || opening === null) {
+    return { ...DEFAULT_CHARGE_TEXT, isDefault: true }
+  }
+  return { subject, opening, closing, isDefault: false }
+}
+
+function chargeTextInvalid(issue: ChargeTextIssue): ValidationError {
+  const details = {
+    field: issue.field,
+    reason: issue.reason,
+    ...(issue.tag === undefined ? {} : { tag: issue.tag }),
+    ...(issue.maxLength === undefined ? {} : { maxLength: String(issue.maxLength) }),
+  }
+  return new ValidationError(CHARGE_TEXT_INVALID, `${issue.field}: ${issue.reason}`, { details })
 }
 
 async function selectCurrentSettingsOrFail(tx: WorkspaceTransaction): Promise<WorkspaceSettings> {

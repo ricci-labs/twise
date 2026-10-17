@@ -150,7 +150,7 @@ message.
 | `NOTHING_TO_CHARGE` | 409 | Nothing open up to the date | "Este contato não tem nada em aberto até essa data." | form |
 | `CHARGE_STATUS_REFUSED` | 409 | Action not allowed in the charge's status | sent: "Esta cobrança já foi enviada ou tem pagamento." · cancel: "Cobranças com pagamento não podem ser canceladas." · payment: "Esta cobrança foi cancelada e não recebe pagamentos." | form / toast |
 | `CHARGE_PAYMENT_INVALID` | 400 | Payment form invalid | per field | fields |
-| `CHARGE_TEXT_INVALID` | 400 | Charge text invalid: an unknown tag, empty or too long | "Confira o texto da mensagem." · per field: unknown tag "Esta informação não existe: {apelido}. Use os botões abaixo para inserir.", length "Use até {n} caracteres.", empty "Escreva a abertura da mensagem." | field |
+| `CHARGE_TEXT_INVALID` | 400 | Charge text invalid: an unknown tag, empty or too long; `details` (`field`; `reason` `unknown_tag`, `empty` or `too_long`; `tag` or `maxLength`) names the first one (no `details` for a body of the wrong shape) | "Confira o texto da mensagem." · per field: unknown tag "Esta informação não existe: {apelido}. Use os botões abaixo para inserir.", length "Use até {n} caracteres.", empty "Escreva a abertura da mensagem." | field |
 
 ## Planning
 | Code | HTTP | When | Message | Shown as |

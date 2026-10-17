@@ -46,6 +46,8 @@ Default (option A, approved): **"{quem cobra} te enviou uma cobrança de {valor}
 | Closing (email and WhatsApp) | workspace | "Qualquer dúvida, é só responder este e-mail." (WhatsApp: none by default) | 0–300 |
 | Greeting, heading, items, total, due date, Pix, notes, footer, opt-out link | fixed | — | — |
 
+The defaults are `DEFAULT_CHARGE_TEXT` and `DEFAULT_CHARGE_CLOSINGS` in `@financas/shared`. An untouched closing is stored as `null`, which means each channel's default (the e-mail sentence above, nothing on WhatsApp); a written or emptied closing goes to both channels. The limits count the text as written; the filled subject is cut to 120 characters with "…" (`chargeSubject`).
+
 Tags: `{contato}`, `{quem cobra}`, `{valor}`, `{vencimento}`, `{espaço}`; shown as chips in the editor; an unknown tag is a field error ("Esta informação não existe: {apelido}. Use os botões abaixo para inserir."). The stored `message_text` of a charge is built when the charge is created, with the template of that moment: later edits never change charges already created.
 
 ## Opt-out

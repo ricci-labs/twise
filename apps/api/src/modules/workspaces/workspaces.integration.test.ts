@@ -124,6 +124,21 @@ describe('workspace settings', () => {
     expect(await postgresErrorCodeOf(fifthBusinessDay)).toBeUndefined()
   })
 
+  it('accept a charge text with an empty closing, and the default one', async () => {
+    const custom = updateSettingsOfA({
+      chargeSubject: 'S'.repeat(120),
+      chargeOpening: 'O'.repeat(300),
+      chargeClosing: '',
+    })
+    expect(await postgresErrorCodeOf(custom)).toBeUndefined()
+    const reset = updateSettingsOfA({
+      chargeSubject: null,
+      chargeOpening: null,
+      chargeClosing: null,
+    })
+    expect(await postgresErrorCodeOf(reset)).toBeUndefined()
+  })
+
   it.each<[string, SettingsChange]>([
     ['day of month without a day', { periodAnchor: 'day_of_month', periodAnchorValue: null }],
     ['day of month 32', { periodAnchor: 'day_of_month', periodAnchorValue: 32 }],
@@ -141,6 +156,14 @@ describe('workspace settings', () => {
     ],
     ['a negative daily cap', { contactMessagesDailyCap: -1 }],
     ['a zero-day reminder interval', { chargeReminderEveryDays: 0 }],
+    ['a charge subject without an opening', { chargeSubject: 'Assunto' }],
+    ['a charge closing without the rest', { chargeClosing: 'Até mais' }],
+    ['an empty charge opening', { chargeSubject: 'Assunto', chargeOpening: '' }],
+    ['a charge subject over 120', { chargeSubject: 'S'.repeat(121), chargeOpening: 'Oi' }],
+    [
+      'a charge closing over 300',
+      { chargeSubject: 'Assunto', chargeOpening: 'Oi', chargeClosing: 'C'.repeat(301) },
+    ],
   ])('reject %s', async (_label, change) => {
     expect(await postgresErrorCodeOf(updateSettingsOfA(change))).toBe(
       POSTGRES_ERRORS.checkViolation,

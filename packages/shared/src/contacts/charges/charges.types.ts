@@ -1,3 +1,4 @@
+import type { ChargeTagSource, ChargeText } from '@shared/contacts/charge-text/charge-text.types'
 import type { IsoDate } from '@shared/core/calendar/calendar.types'
 
 export type ChargeableItem = {
@@ -13,11 +14,8 @@ export type OpenItem = ChargeableItem & {
   remainingCents: number
 }
 
-export type ChargeMessageInput = {
-  contactName: string
-  requesterName: string
+export type ChargeMessageInput = ChargeTagSource & {
   items: readonly OpenItem[]
-  totalCents: number
-  dueOn: IsoDate | null
   pixPayload: string | null
+  text: Pick<ChargeText, 'opening' | 'closing'>
 }

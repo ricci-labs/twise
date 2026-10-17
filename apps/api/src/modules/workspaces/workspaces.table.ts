@@ -45,6 +45,9 @@ export const workspaceSettings = pgTable(
     pixReceiverCity: text(),
     contactMessagesDailyCap: smallint().notNull().default(20),
     chargeReminderEveryDays: smallint().default(3),
+    chargeSubject: text(),
+    chargeOpening: text(),
+    chargeClosing: text(),
     ...timestamps(),
   },
   (table) => [
@@ -74,6 +77,17 @@ export const workspaceSettings = pgTable(
     check(
       'workspace_settings_reminder_interval',
       sql`${table.chargeReminderEveryDays} is null or ${table.chargeReminderEveryDays} >= 1`,
+    ),
+    check(
+      'workspace_settings_charge_text_complete',
+      sql`(${table.chargeSubject} is null) = (${table.chargeOpening} is null)
+        and (${table.chargeClosing} is null or ${table.chargeSubject} is not null)`,
+    ),
+    check(
+      'workspace_settings_charge_text_lengths',
+      sql`coalesce(length(${table.chargeSubject}), 1) between 1 and 120
+        and coalesce(length(${table.chargeOpening}), 1) between 1 and 300
+        and coalesce(length(${table.chargeClosing}), 0) <= 300`,
     ),
     tenantIsolation('workspace_settings', table.workspaceId),
   ],

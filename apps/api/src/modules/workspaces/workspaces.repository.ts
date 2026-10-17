@@ -84,6 +84,20 @@ export async function selectSettings(tx: WorkspaceTransaction) {
   return settings
 }
 
+export async function selectChargeText(tx: WorkspaceTransaction) {
+  const [chargeText] = await tx
+    .select({
+      subject: workspaceSettings.chargeSubject,
+      opening: workspaceSettings.chargeOpening,
+      closing: workspaceSettings.chargeClosing,
+    })
+    .from(workspaceSettings)
+  if (!chargeText) {
+    throw new Error('The current workspace has no settings')
+  }
+  return chargeText
+}
+
 export async function updateSettings(
   tx: WorkspaceTransaction,
   workspaceId: string,

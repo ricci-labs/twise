@@ -9,6 +9,7 @@ import {
   nthBusinessDay,
   parseIsoDate,
   shiftToBusinessDay,
+  toBrazilianDate,
   todayIn,
 } from '@shared/core/calendar/dates'
 import { describe, expect, it } from 'vitest'
@@ -22,6 +23,12 @@ describe('parseIsoDate', () => {
 
   it.each(['2026-13-01', '2026-02-30', '2026-1-1', 'yesterday'])('rejects %j', (input) => {
     expect(() => parseIsoDate(input)).toThrow(RangeError)
+  })
+})
+
+describe('toBrazilianDate', () => {
+  it('writes the date as day/month/year', () => {
+    expect(toBrazilianDate('2026-03-07')).toBe('07/03/2026')
   })
 })
 

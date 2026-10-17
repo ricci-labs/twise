@@ -114,15 +114,23 @@ that month.
     until that charge is cancelled.
 - **Upcoming items** (`upcomingItems`): the open items of every contact due after today, soonest
   first, up to a limit.
-- **Message** (`chargeMessage`, pt-BR, the exact text is stored on the charge): the workspace's
-  opening (`{quem cobra}`, `{valor}`… filled in), one line per item (`parcela n/N` when there are
+- **Message** (`chargeMessage`, pt-BR, the exact text is stored on the charge): "Oi, {contact}!"
+  and the workspace's opening with its tags filled, one line per item (`parcela n/N` when there are
   installments), the total, the due date, the Pix copia e cola, each only when there is one, and the
-  workspace's closing. The web uses the same function for the live previews. The e-mail subject
-  comes from the same template.
-- **Charge text** (`GET/PUT/DELETE /settings/charge-text`, `settings:update`, G64): `{ subject,
-  opening, closing }` with the tags `{contato}`, `{quem cobra}`, `{valor}`, `{vencimento}`,
-  `{espaço}`; an unknown tag is `400 CHARGE_TEXT_INVALID`; `DELETE` goes back to the default. The
-  text in force when a charge is created is the one stored in it.
+  workspace's closing (left out when empty). This is the WhatsApp and "Copiar mensagem" text; the web
+  uses the same function for the live previews. The e-mail subject comes from `chargeSubject`
+  (filled, cut to 120 characters with "…"), and each channel's closing from `chargeClosingFor`.
+- **Charge text** (`charge-text/`, stored in `workspace_settings.charge_subject`, `charge_opening`,
+  `charge_closing`, all null until the workspace changes it, G64): `{ subject, opening, closing }`
+  with the tags `{contato}`, `{quem cobra}`, `{valor}`, `{vencimento}`, `{espaço}`. The defaults are
+  `DEFAULT_CHARGE_TEXT` in `@financas/shared` (`../../design/contacts/emails.md`). `closing: null`
+  means **each channel's default**: the e-mail ends with "Qualquer dúvida, é só responder este
+  e-mail." and WhatsApp with nothing, so an e-mail sentence never reaches WhatsApp; a written closing
+  (or `''`, none) goes to both channels. `chargeTextIssues` checks the text, trimmed: subject 1–120
+  and opening 1–300 characters, closing 0–300, counted as written (a tag counts as its own letters;
+  only the subject is cut after filling), and no `{…}` outside the five tags. The text in force when
+  a charge is created is the one stored in its `message_text`; later edits never change it. Routes:
+  `GET/PUT/DELETE /settings/charge-text` (`tenancy.md` → Workspace routes).
 - **Pix copia e cola** (`pixCopiaECola`): a static BR Code (EMV) with the amount, the workspace's key,
   receiver name (≤ 25) and city (≤ 15) without accents, the charge as the transaction id, closed by
   its CRC-16/CCITT-FALSE.

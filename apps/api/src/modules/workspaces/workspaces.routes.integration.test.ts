@@ -1,4 +1,5 @@
 import { createApp } from '@api/app'
+import type { ErrorBody, ErrorDetails } from '@api/core/http/http.types'
 import type { WorkspaceListItem } from '@api/modules/access'
 import type { WorkspaceSettings } from '@api/modules/workspaces'
 import { testAppDeps } from '@api/testing/app'
@@ -6,6 +7,7 @@ import { connectTestDatabases } from '@api/testing/database'
 import { createFixtures } from '@api/testing/fixtures'
 import { addMemberWithSystemRole, loggedInUser, requestsAs } from '@api/testing/http'
 import type { SessionRequests } from '@api/testing/testing.types'
+import { DEFAULT_CHARGE_TEXT } from '@financas/shared'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
 const databases = connectTestDatabases()
@@ -161,6 +163,75 @@ describe('PUT /settings/pix', () => {
       pixReceivingKey: null,
       pixReceiverName: null,
       pixReceiverCity: null,
+    })
+  })
+})
+
+describe('/settings/charge-text', () => {
+  const custom = {
+    subject: ' {espaço}: {valor} com {quem cobra} ',
+    opening: 'Oi! Aqui é {quem cobra}. Passando para lembrar da nossa conta do mês.',
+    closing: 'Valeu, {contato}!',
+  }
+
+  it('shows the default text to members and hides it from viewers', async () => {
+    expect((await viewer.get(`${workspacePath}/settings/charge-text`)).status).toBe(403)
+    const response = await member.get(`${workspacePath}/settings/charge-text`)
+    expect([response.status, await response.json()]).toEqual([
+      200,
+      { ...DEFAULT_CHARGE_TEXT, isDefault: true },
+    ])
+  })
+
+  it('lets admins change the text and reset it to the default', async () => {
+    expect((await member.put(`${workspacePath}/settings/charge-text`, custom)).status).toBe(403)
+    const saved = await admin.put(`${workspacePath}/settings/charge-text`, custom)
+    const stored = { ...custom, subject: '{espaço}: {valor} com {quem cobra}', isDefault: false }
+    expect([saved.status, await saved.json()]).toEqual([200, stored])
+    expect(await (await member.get(`${workspacePath}/settings/charge-text`)).json()).toEqual(stored)
+
+    expect((await member.del(`${workspacePath}/settings/charge-text`)).status).toBe(403)
+    expect((await admin.del(`${workspacePath}/settings/charge-text`)).status).toBe(204)
+    expect(await (await member.get(`${workspacePath}/settings/charge-text`)).json()).toEqual({
+      ...DEFAULT_CHARGE_TEXT,
+      isDefault: true,
+    })
+  })
+
+  it('names the unknown tag, the empty field or the limit it breaks', async () => {
+    const refused: [object, ErrorDetails][] = [
+      [
+        { ...custom, opening: 'Oi, {apelido}!' },
+        { field: 'opening', reason: 'unknown_tag', tag: '{apelido}' },
+      ],
+      [
+        { ...custom, subject: '   ' },
+        { field: 'subject', reason: 'empty' },
+      ],
+      [
+        { ...custom, closing: 'C'.repeat(301) },
+        { field: 'closing', reason: 'too_long', maxLength: '300' },
+      ],
+    ]
+    for (const [text, details] of refused) {
+      const response = await admin.put(`${workspacePath}/settings/charge-text`, text)
+      const { error } = (await response.json()) as ErrorBody
+      expect([response.status, error.code, error.details]).toEqual([
+        400,
+        'CHARGE_TEXT_INVALID',
+        details,
+      ])
+    }
+    const withoutClosing = await admin.put(`${workspacePath}/settings/charge-text`, {
+      subject: custom.subject,
+      opening: custom.opening,
+    })
+    expect([withoutClosing.status, await codeOf(withoutClosing)]).toEqual([
+      400,
+      'CHARGE_TEXT_INVALID',
+    ])
+    expect(await (await member.get(`${workspacePath}/settings/charge-text`)).json()).toMatchObject({
+      isDefault: true,
     })
   })
 })
