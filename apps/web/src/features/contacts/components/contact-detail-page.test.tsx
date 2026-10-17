@@ -4,6 +4,7 @@ import { createApp } from '@web/app/router'
 import { expectNoAccessibilityViolations } from '@web/testing/accessibility'
 import { MEMBER_A } from '@web/testing/accounts-api'
 import {
+  CHARGE_SENT,
   CONTACT_C,
   CONTACT_D,
   CONTACT_D_OPEN_ITEMS,
@@ -170,5 +171,63 @@ describe('CON-02 contact detail', () => {
     await expect.element(page.getByText('Não foi possível carregar o contato.')).toBeVisible()
     await page.getByRole('button', { name: 'Tentar de novo' }).click()
     await expect.element(page.getByText('Mercado da semana')).toBeVisible()
+  })
+
+  it('opens a charge in place with its items, message and copy actions', async () => {
+    const writeText = vi.spyOn(navigator.clipboard, 'writeText').mockResolvedValue()
+    await openContact()
+
+    await expect.element(page.getByRole('button', { name: /Cobrança de 20\/10/ })).toBeVisible()
+    await expect.element(page.getByText('Paga', { exact: true })).toBeVisible()
+    await page.getByRole('button', { name: /Cobrança de 20\/10/ }).click()
+
+    await expect.element(page.getByText('Total · venceu em 10/10')).toBeVisible()
+    await expect.element(page.getByText(/Marcada como enviada em 20\/10/)).toBeVisible()
+    await page.getByRole('button', { name: 'Copiar Pix' }).click()
+    await expect.element(page.getByText('Pix copiado.')).toBeVisible()
+    expect(writeText).toHaveBeenLastCalledWith(expect.stringContaining('br.gov.bcb.pix'))
+    await expectNoAccessibilityViolations(page.getByRole('main').element())
+  })
+
+  it('cancels an unpaid charge after asking', async () => {
+    let cancelled = ''
+    await openContact({
+      answers: {
+        [`POST ${BASE}/charges/${CHARGE_SENT}/cancel`]: () => {
+          cancelled = CHARGE_SENT
+          return new Response(null, { status: 204 })
+        },
+      },
+    })
+    await page.getByRole('button', { name: /Cobrança de 20\/10/ }).click()
+    await page.getByRole('button', { name: 'Ações da cobrança de 20/10' }).click()
+    await page.getByRole('dialog').getByRole('button', { name: 'Cancelar cobrança' }).click()
+    const confirm = page.getByRole('alertdialog', { name: 'Cancelar esta cobrança?' })
+    await expect.element(confirm).toBeVisible()
+    await confirm.getByRole('button', { name: 'Cancelar cobrança' }).click()
+
+    await expect.element(page.getByText('Cobrança cancelada.')).toBeVisible()
+    expect(cancelled).toBe(CHARGE_SENT)
+  })
+
+  it('offers no cancel on a paid charge, and only copying to a viewer', async () => {
+    await openContact()
+    await page.getByRole('button', { name: /Cobrança de 12\/09/ }).click()
+    await page.getByRole('button', { name: 'Ações da cobrança de 12/09' }).click()
+    const sheet = page.getByRole('dialog')
+    await expect.element(sheet.getByRole('button', { name: 'Copiar mensagem' })).toBeVisible()
+    await expect
+      .element(sheet.getByRole('button', { name: 'Cancelar cobrança' }))
+      .not.toBeInTheDocument()
+  })
+
+  it('lets a viewer copy a charge but not act on it', async () => {
+    await openContact({ access: () => accessAs('Leitor', VIEWER_PERMISSIONS) })
+    await page.getByRole('button', { name: /Cobrança de 20\/10/ }).click()
+
+    await expect.element(page.getByRole('button', { name: 'Copiar mensagem' })).toBeVisible()
+    await expect
+      .element(page.getByRole('button', { name: 'Ações da cobrança de 20/10' }))
+      .not.toBeInTheDocument()
   })
 })
