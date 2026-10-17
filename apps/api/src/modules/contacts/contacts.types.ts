@@ -188,3 +188,7 @@ export type ChargeEmailInput = {
 }
 
 export type ChargeEmail = Omit<EmailMessage, 'template'>
+
+export type OptOutResult = {
+  requesterName: string | null
+}

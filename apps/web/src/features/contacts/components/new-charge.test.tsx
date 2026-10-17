@@ -255,6 +255,8 @@ describe('CON-03 new charge', () => {
     await page.getByRole('button', { name: 'Registrar pagamento' }).click()
     const sheet = page.getByRole('dialog', { name: 'Registrar pagamento' })
     await expect.element(sheet.getByText(/nada recebido ainda · falta R\$\s200,00/)).toBeVisible()
+    await expect.element(sheet.getByText(/Saldo de hoje: R\$\s4\.200,00/)).toBeVisible()
+    await expect.element(sheet.getByText('Hoje, 20/10')).toBeVisible()
     await expect
       .element(sheet.getByRole('textbox', { name: /Valor recebido/ }))
       .toHaveValue('200,00')

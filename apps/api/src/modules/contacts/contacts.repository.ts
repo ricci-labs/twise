@@ -24,6 +24,8 @@ import type {
 import { OPEN_CHARGE_STATUSES } from '@financas/shared'
 import { and, asc, desc, eq, inArray, isNull, sql } from 'drizzle-orm'
 
+const EMAIL = 'email'
+
 export function selectActiveContacts(tx: WorkspaceTransaction): Promise<ContactRow[]> {
   return tx
     .select()
@@ -180,6 +182,19 @@ export function selectCharges(tx: WorkspaceTransaction, contactId?: string): Pro
     .from(charges)
     .where(contactId ? eq(charges.contactId, contactId) : undefined)
     .orderBy(desc(charges.createdAt), desc(charges.id))
+}
+
+export async function selectLatestEmailedChargeCreator(
+  tx: WorkspaceTransaction,
+  contactId: string,
+): Promise<string | undefined> {
+  const [charge] = await tx
+    .select({ createdByUserId: charges.createdByUserId })
+    .from(charges)
+    .where(and(eq(charges.contactId, contactId), eq(charges.sentVia, EMAIL)))
+    .orderBy(desc(charges.sentAt), desc(charges.id))
+    .limit(1)
+  return charge?.createdByUserId
 }
 
 export function selectOpenCharges(

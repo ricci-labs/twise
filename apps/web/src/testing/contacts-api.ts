@@ -248,6 +248,16 @@ export function contactAnswers(contactId: string, overrides: Record<string, Fake
     [`GET ${BASE}/charges/${CHARGE_SENT}`]: () => Response.json(CONTACT_D_CHARGES[0]),
     [`GET ${BASE}/entries`]: () =>
       Response.json({ items: contactId === CONTACT_D ? CONTACT_D_RECEIPTS : [], nextCursor: null }),
+    [`GET ${BASE}/balances`]: () =>
+      Response.json([
+        {
+          accountId: MONEY_ACCOUNT,
+          kind: 'checking',
+          class: 'asset',
+          balanceCents: 420000,
+          naturalBalanceCents: 420000,
+        },
+      ]),
     [`GET ${BASE}/accounts`]: () =>
       Response.json([
         {

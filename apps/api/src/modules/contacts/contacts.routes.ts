@@ -202,8 +202,7 @@ export function contactOptOutRoutes(deps: ContactOptOutRouteDeps) {
     jsonBody(contactOptOutRequestSchema, 'LINK_INVALID'),
     limitInvalidLinks(deps),
     async (c) => {
-      await optOutByLink(deps.db, c.req.valid('json'))
-      return c.body(null, NO_CONTENT)
+      return c.json(await optOutByLink(deps.db, c.req.valid('json')))
     },
   )
 }

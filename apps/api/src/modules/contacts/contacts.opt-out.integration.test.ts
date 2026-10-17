@@ -90,7 +90,8 @@ describe('POST /api/public/contacts/opt-out', () => {
     await member.patch(path, { isOptedOut: true })
     const firstMoment = await optedOutAtOf(contactId)
 
-    expect((await optOut(app, await linkTokenFor(contactId))).status).toBe(204)
+    const done = await optOut(app, await linkTokenFor(contactId))
+    expect([done.status, await done.json()]).toEqual([200, { requesterName: null }])
     expect(await contactOf(contactId)).toMatchObject({
       isOptedOut: true,
       optedOutVia: 'email_link',
@@ -117,9 +118,38 @@ describe('POST /api/public/contacts/opt-out', () => {
       [hashToken(older), hashToken(newer)].sort(),
     )
 
-    expect((await optOut(app, older)).status).toBe(204)
-    expect((await optOut(app, newer)).status).toBe(204)
+    expect((await optOut(app, older)).status).toBe(200)
+    expect((await optOut(app, newer)).status).toBe(200)
     expect(await contactOf(contactId)).toMatchObject({ isOptedOut: true })
+  })
+
+  it('names who sent the last charge e-mail, so the page can say whom', async () => {
+    const contactId = await newContact('charged-by-email')
+    const workspacePath = `/api/workspaces/${workspaceId}`
+    const accountId = async (body: object) =>
+      (
+        (await (await member.post(`${workspacePath}/accounts`, body)).json()) as {
+          accountId: string
+        }
+      ).accountId
+    await member.post(`${workspacePath}/entries`, {
+      entryType: 'expense',
+      occurredOn: '2026-10-01',
+      description: 'Jantar',
+      amountCents: 6_000,
+      paidFromAccountId: await accountId({ kind: 'checking', name: 'Conta X' }),
+      categoryId: await accountId({ kind: 'expense_category', name: 'Lazer' }),
+      shares: [{ contactId, amountCents: 3_000 }],
+    })
+    const charge = (await (
+      await member.post(`${contactsPath}/${contactId}/charges`, { until: '2026-10-31' })
+    ).json()) as { chargeId: string }
+    expect(
+      (await member.post(`${workspacePath}/charges/${charge.chargeId}/send-email`)).status,
+    ).toBe(204)
+
+    const done = await optOut(app, await linkTokenFor(contactId))
+    expect(await done.json()).toEqual({ requesterName: 'Member opt-out-member' })
   })
 
   it('answers LINK_INVALID to an unknown or malformed link, without touching anyone', async () => {

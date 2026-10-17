@@ -4368,7 +4368,7 @@
                 }
               }
             },
-            "description": "No login. optOutToken is the value after #token= in the opt-out link at the foot of a charge e-mail. 204, also when the contact had already opted out; an unknown token is 400 LINK_INVALID."
+            "description": "No login. optOutToken is the value after #token= in the opt-out link at the foot of a charge e-mail. 200 { requesterName } (who sent the last charge e-mail, or null), also when the contact had already opted out; an unknown token is 400 LINK_INVALID."
           },
           "event": [
             {

@@ -80,6 +80,13 @@ export function moneyAccountsQueryOptions(workspaceId: string) {
   })
 }
 
+export function accountBalancesQueryOptions(workspaceId: string) {
+  return queryOptions({
+    queryKey: [...queryKeys.workspace(workspaceId), 'balances'] as const,
+    queryFn: () => unwrap(workspaceApi.balances.$get({ param: { workspaceId } })),
+  })
+}
+
 export function chargeTextQueryOptions(workspaceId: string) {
   return queryOptions({
     queryKey: [...queryKeys.workspace(workspaceId), 'settings', 'charge-text'] as const,
