@@ -536,6 +536,11 @@ function entryFilterConditions(tx: WorkspaceTransaction, filter: EntryFilter): S
       ),
     )
   }
+  if (filter.contactId) {
+    conditions.push(
+      inArray(journalEntries.id, entriesTouching(tx, eq(postings.contactId, filter.contactId))),
+    )
+  }
   if (filter.shared) {
     conditions.push(
       inArray(journalEntries.entryType, SPENDING_ENTRY_TYPES),

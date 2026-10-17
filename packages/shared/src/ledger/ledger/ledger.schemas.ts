@@ -134,6 +134,7 @@ const entryFilterFields = {
   q: z.string().trim().min(ENTRY_SEARCH_MIN_LENGTH).max(ENTRY_DESCRIPTION_MAX_LENGTH).optional(),
   types: entryTypesParamSchema.optional(),
   categoryId: z.uuid().optional(),
+  contactId: z.uuid().optional(),
   spentByUserId: z.uuid().optional(),
   shared: z
     .literal('true')
