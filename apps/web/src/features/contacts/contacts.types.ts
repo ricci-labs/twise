@@ -18,6 +18,7 @@ export type ListedContact = {
   name: string
   owedCents: number
   overdueCents: number
+  overdueSince: IsoDate | null
   nextDueOn: IsoDate | null
   nextDueCents: number
   hasDueToCharge: boolean
@@ -32,6 +33,7 @@ export type ContactsSummary = {
   owingCount: number
   overdueCents: number
   overdueCount: number
+  overdueSince: IsoDate | null
 }
 
 export type ContactsPageProps = {

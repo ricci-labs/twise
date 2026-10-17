@@ -481,6 +481,7 @@ describe('receivables', () => {
     contactId,
     owedCents,
     overdueCents,
+    overdueSince: overdueCents > 0 ? '2026-10-01' : null,
     nextDueOn,
     nextDueCents: nextDueOn ? 5_000 : 0,
   })

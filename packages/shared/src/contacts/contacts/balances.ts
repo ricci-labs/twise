@@ -29,9 +29,28 @@ function balanceOf(
     contactId,
     owedCents: sum(postings),
     overdueCents: Math.max(dueByToday - paidCents, 0),
+    overdueSince: oldestUnpaidDueOn(charged, paidCents, today),
     nextDueOn,
     nextDueCents: sum(upcoming.filter((posting) => posting.effectiveOn === nextDueOn)),
   }
+}
+
+function oldestUnpaidDueOn(
+  charged: readonly ContactPosting[],
+  paidCents: number,
+  today: IsoDate,
+): IsoDate | null {
+  let paidLeft = paidCents
+  const due = charged
+    .filter((posting) => posting.effectiveOn <= today)
+    .sort((a, b) => a.effectiveOn.localeCompare(b.effectiveOn))
+  for (const posting of due) {
+    if (posting.amountCents > paidLeft) {
+      return posting.effectiveOn
+    }
+    paidLeft -= posting.amountCents
+  }
+  return null
 }
 
 function sum(postings: readonly ContactPosting[]): number {
