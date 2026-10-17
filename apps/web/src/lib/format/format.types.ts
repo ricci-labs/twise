@@ -4,3 +4,8 @@ export type DateBlock = {
   day: string
   month: string
 }
+
+export type PhoneParts = {
+  callingCode: string
+  number: string
+}

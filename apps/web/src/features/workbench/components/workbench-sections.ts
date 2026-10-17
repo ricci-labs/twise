@@ -112,6 +112,7 @@ import { filterButtonExamples } from '@web/components/inputs/filter-button'
 import { illustrationPickerExamples } from '@web/components/inputs/illustration-picker'
 import { moneyInputExamples } from '@web/components/inputs/money-input'
 import { passwordInputExamples } from '@web/components/inputs/password-input'
+import { phoneInputExamples } from '@web/components/inputs/phone-input'
 import { pickerFieldExamples } from '@web/components/inputs/picker-field'
 import { pickerSheetExamples } from '@web/components/inputs/picker-sheet'
 import { radioCardListExamples } from '@web/components/inputs/radio-card-list'
@@ -264,6 +265,7 @@ export const workbenchSections: readonly ComponentExamples[] = [
   listEndExamples,
   suggestInputExamples,
   passwordInputExamples,
+  phoneInputExamples,
   formFieldExamples,
   alertExamples,
   bannerExamples,

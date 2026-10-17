@@ -5,6 +5,7 @@ import type { ComponentProps } from 'react'
 export type SelectOption = {
   value: string
   label: string
+  fieldLabel?: string
 }
 
 export type SelectChange = { target: { value: string } }

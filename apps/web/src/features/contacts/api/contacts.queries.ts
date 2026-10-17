@@ -26,3 +26,14 @@ export function fetchContacts(workspaceId: string) {
 export function fetchContactBalances(workspaceId: string) {
   return unwrap(workspaceApi.contacts.balances.$get({ param: { workspaceId } }))
 }
+
+export function contactQueryOptions(workspaceId: string, contactId: string) {
+  return queryOptions({
+    queryKey: [...queryKeys.workspace(workspaceId), 'contacts', 'one', contactId] as const,
+    queryFn: () => fetchContact(workspaceId, contactId),
+  })
+}
+
+export function fetchContact(workspaceId: string, contactId: string) {
+  return unwrap(workspaceApi.contacts[':contactId'].$get({ param: { workspaceId, contactId } }))
+}

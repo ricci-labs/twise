@@ -40,7 +40,7 @@ export function Select({
         ref={keepButton}
       >
         <span className={selectValueVariants({ isEmpty: !chosen })}>
-          {chosen?.label ?? placeholder}
+          {chosen ? (chosen.fieldLabel ?? chosen.label) : placeholder}
         </span>
         <ChevronDown aria-hidden="true" />
       </button>

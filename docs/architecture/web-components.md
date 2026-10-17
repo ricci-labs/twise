@@ -539,7 +539,8 @@ component here, so the form, and later the account, card and planning forms, sha
   pickers and long content). Choosing closes it; `TextArea` (`components/inputs/text-area`):
   the notes field, two lines to start. Both take the `FormField` control. `Select`
   `size="inline"` is the 34 px box with the value and a small chevron that sits inside a sentence
-  ("No [5º ⌄] dia útil"), named by an `aria-label` that holds the value.
+  ("No [5º ⌄] dia útil"), named by an `aria-label` that holds the value. An option's `fieldLabel` is what the
+  closed field shows when the list needs more words ("Brasil (+55)" in the list, "+55" in the box).
 - `FormField` `warning`: an amber line under the control, with the `warn` triangle, for something
   allowed but worth a second look ("O valor é maior que o saldo da fatura."); an error replaces it.
 - `ConfirmDialog` (`components/feedback/confirm-dialog`, Base UI `AlertDialog`): the title
@@ -567,7 +568,8 @@ component here, so the form, and later the account, card and planning forms, sha
   takes the focus when it opens (the amount). `size="md"` is the one-column 560 px dialog, 60 px from
   the top and as tall as its content (up to 820 px), for the account and category forms;
   `size="wide"` is the same at 760 px, for the card form's two columns (fields side by side at the
-  same height, the days preview and the switch across both). The desktop header keeps 4 px under
+  same height, the days preview and the switch across both); `size="roomy"` is the same at 720 px,
+  for the contact form (Nome, Chave Pix and Observações across, WhatsApp | E-mail side by side). The desktop header keeps 4 px under
   the 44 px "X" row, as the design's `dlg__head`. `actions="single"` gives the phone footer of one
   button its 20 px bottom.
 - `IllustrationPicker` (`components/inputs/illustration-picker`, Base UI `RadioGroup`): the 13
@@ -1022,8 +1024,8 @@ online with `asChild` are translated to `render`.
   screen readers; the list says the same.
 
 ## Contacts building blocks
-`../design/contacts/components.md`; the contacts list (CON-01) and the contact detail (CON-02) use
-them. Every number and date comes from the API; the rows only word them.
+`../design/contacts/components.md`; the contacts list (CON-01), the contact detail (CON-02) and the
+contact form (CON-05) use them. Every number and date comes from the API; the rows only word them.
 - `ContactRow` (`components/finance/contact-row`): one contact (`li`): the paper initial (42 px),
   the name (2 lines), the second line (2 lines) starting with the badges ("Em atraso", or "Cobrado
   em dd/mm" once the overdue amount is in an open charge, then "Não quer mensagens") and the state
@@ -1073,3 +1075,18 @@ them. Every number and date comes from the API; the rows only word them.
 - `PixBox` (`components/finance/pix-box`): "Pix copia e cola · R$ X", the whole code in mono,
   broken anywhere, and "Copiar Pix", which writes it to the clipboard and calls `onCopied` (the
   screen's toast) or `onCopyFailed`.
+- `PhoneInput` (`components/inputs/phone-input`, the design's `PhoneField`): the country `Select`
+  (92 px, "+55" in the box, "Brasil (+55)" and a short list of other countries in the sheet, named
+  "País: +55") and the number (`type="tel"`), both 48 px, 8 px apart. It takes the `FormField`
+  control for the number (the label points to it) and `callingCode` / `onCallingCodeChange` for the
+  country. On blur a Brazilian number with its area code is written "(11) 99999-0000"; other
+  countries stay as typed. `lib/format/phone.ts` turns the pair into the E.164 the API stores
+  (`phoneE164Of`: a Brazilian number needs the area code, 10 or 11 digits; a number typed with
+  "+" is taken whole) and back (`phonePartsOf`, for editing).
+- `ContactEditor` (`features/contacts`): `param` `new` opens the empty form for `contacts:create`,
+  a contact id loads `GET /contacts/:id` and opens it filled for `contacts:update` (a load error
+  closes it with a toast); `onCreated` gets the new id. `contactSearchSchema` is its `?contact=`
+  param for the route that mounts it. The form: "Nome" (required), `PhoneInput`, "E-mail", "Chave
+  Pix", "Observações" (counter from 80 % of 500), and on edit the "Não quer receber mensagens"
+  `Switch`; errors on leaving a field; edit sends only the changed fields and "Salvar" waits for a
+  change; `CONTACT_PHONE_TAKEN` and `CONTACT_EMAIL_TAKEN` land under their field.
