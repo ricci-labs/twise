@@ -1,4 +1,4 @@
-import type { ContactChange, IsoDate, NewContact, Permission } from '@financas/shared'
+import type { ChargeText, ContactChange, IsoDate, NewContact, Permission } from '@financas/shared'
 import type { ChargeBodyItem, ChargeHistory } from '@web/components/finance/charge-body'
 import type { ContactChannel } from '@web/components/finance/contact-row'
 import type { FieldControlProps } from '@web/components/forms/form-field'
@@ -76,11 +76,9 @@ export type ChargeEmailSendProps = {
   workspaceId: string
   contactName: string
   currentUser: ChargeSender
-  chargeId: string
+  charge: ContactCharge
   email: string
-  amountCents: number
-  dueOn: IsoDate | null
-  hasPix: boolean
+  today: IsoDate
   isOpen: boolean
   onOpenChange: (isOpen: boolean) => void
   onSent: () => void
@@ -287,4 +285,18 @@ export type ChargePaymentFormProps = Omit<ChargePaymentSheetProps, 'charge'> & {
 
 export type PaymentAccountFieldProps = FieldControlProps & {
   accounts: readonly { id: string; name: string; icon: string | null }[]
+}
+
+export type ChargeEmailPreviewInput = {
+  charge: ContactCharge
+  contactName: string
+  sender: ChargeSender
+  text: ChargeText
+  receiver: PixReceiver
+  today: IsoDate
+}
+
+export type PixReceiver = {
+  name: string | null
+  city: string | null
 }

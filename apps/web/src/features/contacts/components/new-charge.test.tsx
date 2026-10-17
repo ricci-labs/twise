@@ -12,7 +12,15 @@ import {
   contactAnswers,
   MONEY_ACCOUNT,
 } from '@web/testing/contacts-api'
-import { fakeApi, WORKSPACE_ID, workspaceAccess, workspaceList } from '@web/testing/fake-api'
+import {
+  accessAs,
+  fakeApi,
+  VIEWER_PERMISSIONS,
+  WORKSPACE_ID,
+  workspaceAccess,
+  workspaceList,
+} from '@web/testing/fake-api'
+import { workspaceSettingsAnswer } from '@web/testing/settings-api'
 import type { FakeAnswer } from '@web/testing/testing.types'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { page } from 'vitest/browser'
@@ -144,6 +152,58 @@ describe('CON-03 new charge', () => {
 
     await expect.element(page.getByText('E-mail enviado para member.d@exemplo.com.')).toBeVisible()
     expect(requests.map(({ path }) => path)).toEqual(['create', 'send-email'])
+  })
+
+  it('leads to the default charge text from the created charge', async () => {
+    const { app } = await openNewCharge()
+    await page.getByRole('button', { name: 'Criar cobrança' }).click()
+
+    const created = page.getByRole('dialog', { name: 'Cobrança criada' })
+    await created.getByRole('link', { name: 'Mudar o texto padrão das cobranças' }).click()
+    await expect
+      .poll(() => app.router.state.location.pathname)
+      .toBe(`/w/${WORKSPACE_ID}/settings/charge-text`)
+  })
+
+  it('hides the charge text link from who cannot change settings', async () => {
+    const charger = [
+      ...VIEWER_PERMISSIONS,
+      { module: 'contacts', action: 'create' },
+      { module: 'contacts', action: 'update' },
+    ]
+    await openNewCharge({ [`GET ${BASE}`]: () => accessAs('Membro', charger) }, CHARGE_SENT)
+
+    const resend = page.getByRole('dialog', { name: 'Enviar cobrança' })
+    await expect.element(resend.getByRole('button', { name: /Enviar pelo WhatsApp/ })).toBeVisible()
+    await expect
+      .element(resend.getByRole('link', { name: 'Mudar o texto padrão das cobranças' }))
+      .not.toBeInTheDocument()
+  })
+
+  it('shows the e-mail as it lands before sending it', async () => {
+    await openNewCharge(workspaceSettingsAnswer())
+    await page.getByRole('button', { name: 'Criar cobrança' }).click()
+    await page.getByRole('button', { name: /Enviar por e-mail/ }).click()
+
+    await page.getByRole('button', { name: 'Ver o e-mail como ele chega' }).click()
+    const email = page.getByRole('article', { name: 'O e-mail como ele chega' })
+    await expect.element(email.getByText('Oi, Member D!')).toBeVisible()
+    await expect.element(email.getByText(/^R\$\s200,00 para Member A$/)).toBeVisible()
+    await expect.element(email.getByText(/^Mercado da semana/)).toBeVisible()
+    await expect.element(email.getByText('venceu 10/10').first()).toBeVisible()
+    await expect.element(email.getByText('Venceu em 10/10/2026')).toBeVisible()
+    await expect.element(email.getByText('MEMBER A · SAO PAULO')).toBeVisible()
+    await expect
+      .element(email.getByText('Qualquer dúvida, é só responder este e-mail.'))
+      .toBeVisible()
+    await page.getByRole('button', { name: 'Voltar' }).click()
+    await expect
+      .element(
+        page
+          .getByRole('dialog', { name: 'Enviar por e-mail' })
+          .getByRole('button', { name: 'Enviar e-mail' }),
+      )
+      .toBeVisible()
   })
 
   it('opens a sent charge again to send it once more', async () => {
