@@ -22,6 +22,7 @@ const INTERFACE_ICONS: readonly TwiseIconName[] = [
   'flag',
   'archive',
   'unarchive',
+  'messageOff',
   'calendar',
   'subcategory',
   'move',

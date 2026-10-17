@@ -1,8 +1,11 @@
 import { ItemActions } from '@web/components/actions/item-actions/item-actions'
 import { expectNoAccessibilityViolations } from '@web/testing/accessibility'
+import { useState } from 'react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { page } from 'vitest/browser'
 import { render } from 'vitest-browser-react'
+
+const SHEET_MOTION_MS = 500
 
 function renderActions(onArchive = vi.fn(), onDelete = vi.fn()) {
   render(
@@ -59,4 +62,39 @@ describe('ItemActions', () => {
     const screen = await render(<ItemActions title="Feira" triggerLabel="Ações" actions={[]} />)
     expect(screen.container.querySelector('button')).toBeNull()
   })
+
+  it('keeps the sheet open when a switch row changes', async () => {
+    render(<OptOutActions />)
+    await page.getByRole('button', { name: 'Ações de Member D' }).click()
+    const sheet = page.getByRole('dialog', { name: 'Member D' })
+    const toggle = sheet.getByRole('switch', { name: 'Não quer receber mensagens' })
+
+    await expect.element(toggle).not.toBeChecked()
+    await expectNoAccessibilityViolations(sheet.element())
+    await toggle.click()
+
+    await expect.element(toggle).toBeChecked()
+    await new Promise((resolve) => setTimeout(resolve, SHEET_MOTION_MS))
+    await expect.element(sheet).toBeVisible()
+    await expect.element(toggle).toBeChecked()
+  })
 })
+
+function OptOutActions() {
+  const [isOptedOut, setIsOptedOut] = useState(false)
+  return (
+    <ItemActions
+      title="Member D"
+      triggerLabel="Ações de Member D"
+      actions={[
+        {
+          key: 'opt-out',
+          label: 'Não quer receber mensagens',
+          icon: 'messageOff',
+          toggle: { isOn: isOptedOut, help: 'O app avisa antes de enviar uma cobrança' },
+          onSelect: () => setIsOptedOut((current) => !current),
+        },
+      ]}
+    />
+  )
+}

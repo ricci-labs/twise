@@ -10,6 +10,18 @@ const ACCOUNT_ACTIONS: readonly ItemAction[] = [
   { key: 'delete', label: 'Excluir', icon: 'trash', tone: 'danger' },
 ]
 
+const CONTACT_ACTIONS: readonly ItemAction[] = [
+  { key: 'edit', label: 'Editar', icon: 'edit' },
+  {
+    key: 'opt-out',
+    label: 'Não quer receber mensagens',
+    icon: 'messageOff',
+    toggle: { isOn: false, help: 'O app avisa antes de enviar uma cobrança' },
+  },
+  { key: 'archive', label: 'Arquivar', icon: 'archive' },
+  { key: 'delete', label: 'Excluir', icon: 'trash', tone: 'danger' },
+]
+
 const SUBCATEGORY_ACTIONS: readonly ItemAction[] = [
   { key: 'entries', label: 'Ver lançamentos', icon: 'list' },
   { key: 'edit', label: 'Editar', icon: 'edit' },
@@ -21,6 +33,12 @@ const SUBCATEGORY_ACTIONS: readonly ItemAction[] = [
 export const itemActionsExamples: ComponentExamples = {
   component: 'ItemActions',
   examples: [
+    {
+      name: 'Com uma chave que liga e desliga sem fechar a folha',
+      render: () => (
+        <ItemActions title="Member D" triggerLabel="Ações de Member D" actions={CONTACT_ACTIONS} />
+      ),
+    },
     {
       name: 'Ações de uma conta (folha no celular, menu no desktop)',
       render: () => (

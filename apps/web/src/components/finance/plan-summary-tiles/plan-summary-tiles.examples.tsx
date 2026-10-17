@@ -19,6 +19,20 @@ export const planSummaryTilesExamples: ComponentExamples = {
       ),
     },
     {
+      name: 'Em atraso e próximo vencimento de um contato',
+      render: () => (
+        <div className="w-full max-w-100">
+          <PlanSummaryTiles
+            label="Resumo de Member D"
+            tiles={[
+              { label: 'Em atraso', amountCents: 20000, tone: 'danger', note: 'desde 10/10' },
+              { label: 'Próximo vencimento', amountCents: 16000, note: 'em 10/11' },
+            ]}
+          />
+        </div>
+      ),
+    },
+    {
       name: 'Contas fixas e receitas fixas por mês',
       render: () => (
         <div className="w-full max-w-100">

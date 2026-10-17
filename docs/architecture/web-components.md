@@ -309,7 +309,10 @@ piggy bank once. `prefers-reduced-motion` zeroes all of it (`globals.css`).
   `danger`. The default trigger is a 36 px "⋯" (16 px dots) named by `triggerLabel` ("Ações de
   Conta X"); a `trigger` replaces it (a subcategory chip). The desktop menu opens aligned to the
   trigger's end, or its start with `align="start"` (under a chip). Renders nothing when the person
-  may do nothing.
+  may do nothing. An item with `toggle: { isOn, help }` is a setting, not a command: in the sheet it
+  is a `Switch` row (the icon, the label, the help under it) that calls `onSelect` and leaves the
+  sheet open (the contact's "Não quer receber mensagens"); in the desktop menu it is an item with
+  the help as its detail, marked current while on.
 - `Sheet` (`components/layout/sheet`, Base UI `Drawer`): a titled dialog from the bottom with a
   handle, a dimmed backdrop and the safe area; the phone's "Mais" and workspace switcher. The
   content keeps 16 px from the sides, the title 20 px; a list may bleed to 8 px (the picker rows).
@@ -758,7 +761,8 @@ component here, so the form, and later the account, card and planning forms, sha
   sheets and menus (`edit`, `flag`, `archive`, `unarchive`, `calendar`, `subcategory`, `move`,
   `more`, `grip`) keep the design's 2 (`weight` in the shape), and the sidebar's `collapse` / `expand`
   arrows its 1.5. `install` (a phone with a down arrow, for "Instalar o app") was drawn here in
-  the same style, as the design set has none.
+  the same style, as the design set has none, and so was `messageOff` (the crossed speech bubble of
+  "Não quer receber mensagens", the design's line icon).
 - `lucide-react` only for small utility glyphs (chevrons, close, the period calendar), named
   imports only (each icon is its own module). Never the `icons` namespace or
   `DynamicIcon`, which pull in the whole set.
@@ -1049,6 +1053,15 @@ contact form (CON-05) use them. Every number and date comes from the API; the ro
   dd/mm" (`chargedOn`) or "Atrasado", then the card and share detail the screen words, and what is
   still owed, which never wraps. The `link` element wraps the row. Grouped by `OccurrenceGroup`
   `heading="label"`.
+- `ListSection` (`components/display/list-section`): a page section named by its `h2`
+  (`section-title`) with an optional muted `aside` read in the heading ("Em aberto R$ 520,00",
+  "Cobranças 2"), then its content; `empty` replaces the content with the dashed sentence that
+  says why there is nothing ("Nada em aberto."). The contact page's sections use it.
+- `ContactChannels` + `ContactChannelRow` (`components/finance/contact-channels`): "Falar com
+  {nome}": a white list of rows, each with the channel's icon in a 36 px `sunken` square
+  (`whatsapp`, `email`, `pix`, `notes`), the small label, the value (`value` bold, `missing` muted
+  as in "Sem número", `note` regular for the notes; long e-mails break anywhere, never past the
+  row) and an optional `action` on the right ("Abrir", "Adicionar", the copy button).
 - `ChargeRow` (`components/finance/charge-row`, Base UI `Collapsible`): one charge in the
   contact's "Cobranças" (`li`), with no drawing. The whole header is the toggle (`aria-expanded`),
   so it opens in place: line 1 "Cobrança de dd/mm" (one line, then "…"), the amount (never wraps)

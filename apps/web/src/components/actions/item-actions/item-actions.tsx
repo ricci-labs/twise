@@ -3,14 +3,17 @@ import { itemActionsMessages as messages } from '@web/components/actions/item-ac
 import type {
   ActionSheetProps,
   ActionSheetRowProps,
+  ActionSheetToggleProps,
   ItemActionsProps,
 } from '@web/components/actions/item-actions/item-actions.types'
 import {
   actionSheetListVariants,
   actionSheetRowVariants,
+  actionSheetToggleVariants,
   itemActionsTriggerVariants,
 } from '@web/components/actions/item-actions/item-actions.variants'
 import { TwiseIcon } from '@web/components/icons/twise-icon'
+import { Switch } from '@web/components/inputs/switch'
 import { Sheet } from '@web/components/layout/sheet'
 import { useMediaQuery } from '@web/hooks/use-media-query'
 import { DESKTOP_QUERY } from '@web/lib/breakpoints'
@@ -41,13 +44,15 @@ export function ItemActions({
         align={align}
         onOpenChange={onOpenChange}
         groups={[
-          actions.map(({ key, label, icon, tone, onSelect, render }) => ({
+          actions.map(({ key, label, icon, tone, onSelect, render, toggle }) => ({
             key,
             label,
+            detail: toggle?.help,
             icon,
             tone,
             onSelect,
             render,
+            isCurrent: toggle?.isOn,
           })),
         ]}
       />
@@ -91,6 +96,9 @@ function ActionSheet({ title, description, actions, trigger, onOpenChange }: Act
 }
 
 function ActionSheetRow({ action, onDone }: ActionSheetRowProps) {
+  if (action.toggle) {
+    return <ActionSheetToggle action={action} toggle={action.toggle} />
+  }
   const className = actionSheetRowVariants({ tone: action.tone })
   const content = (
     <>
@@ -109,5 +117,20 @@ function ActionSheetRow({ action, onDone }: ActionSheetRowProps) {
     <button type="button" className={className} onClick={press}>
       {content}
     </button>
+  )
+}
+
+function ActionSheetToggle({ action, toggle }: ActionSheetToggleProps) {
+  return (
+    <div className={actionSheetToggleVariants()}>
+      <TwiseIcon name={action.icon} />
+      <Switch
+        label={action.label}
+        help={toggle.help}
+        isChecked={toggle.isOn}
+        onCheckedChange={() => action.onSelect?.()}
+        className="flex-1"
+      />
+    </div>
   )
 }

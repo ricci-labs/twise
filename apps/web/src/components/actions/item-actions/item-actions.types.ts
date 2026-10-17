@@ -6,6 +6,11 @@ export type ActionElementProps = {
   onClick?: () => void
 }
 
+export type ItemActionToggle = {
+  isOn: boolean
+  help?: string
+}
+
 export type ItemAction = {
   key: string
   label: string
@@ -13,6 +18,7 @@ export type ItemAction = {
   tone?: 'neutral' | 'danger'
   onSelect?: () => void
   render?: ReactElement<ActionElementProps>
+  toggle?: ItemActionToggle
 }
 
 export type ItemActionsProps = {
@@ -32,4 +38,9 @@ export type ActionSheetProps = Omit<ItemActionsProps, 'triggerLabel' | 'trigger'
 export type ActionSheetRowProps = {
   action: ItemAction
   onDone: () => void
+}
+
+export type ActionSheetToggleProps = {
+  action: ItemAction
+  toggle: ItemActionToggle
 }

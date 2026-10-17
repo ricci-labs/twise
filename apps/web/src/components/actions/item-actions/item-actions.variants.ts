@@ -22,3 +22,7 @@ export const actionSheetRowVariants = cva(
     defaultVariants: { tone: 'neutral' },
   },
 )
+
+export const actionSheetToggleVariants = cva(
+  'flex min-h-13 items-center gap-3.5 px-3 py-1.5 text-body font-medium text-ink [&_[data-slot=switch]_p]:text-caption [&>[data-slot=icon]]:size-5.5 [&>[data-slot=icon]]:text-ink-muted',
+)

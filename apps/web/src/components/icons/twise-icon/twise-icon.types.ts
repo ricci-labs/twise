@@ -20,6 +20,7 @@ export type TwiseIconName =
   | 'list'
   | 'lock'
   | 'menu'
+  | 'messageOff'
   | 'more'
   | 'move'
   | 'ok'
