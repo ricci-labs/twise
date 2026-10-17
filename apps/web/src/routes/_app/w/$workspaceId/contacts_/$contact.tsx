@@ -16,6 +16,9 @@ export const Route = createFileRoute('/_app/w/$workspaceId/contacts_/$contact')(
         onNewCharge={() =>
           void navigate({ to: '.', search: (previous) => ({ ...previous, charge: 'new' }) })
         }
+        onDeleted={() =>
+          void navigate({ to: '/w/$workspaceId/contacts', params: { workspaceId }, replace: true })
+        }
       />
     )
   },

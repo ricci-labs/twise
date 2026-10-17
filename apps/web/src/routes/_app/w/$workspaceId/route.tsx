@@ -8,6 +8,7 @@ import {
   categorySearchSchema,
 } from '@web/features/accounts'
 import { AccountActions, AccountMenu } from '@web/features/auth'
+import { ContactEditor, contactSearchSchema } from '@web/features/contacts'
 import { NewEntry, newEntrySearchSchema } from '@web/features/entries'
 import { openWorkspace, WorkspaceShell } from '@web/features/workspaces'
 
@@ -15,7 +16,8 @@ export const Route = createFileRoute('/_app/w/$workspaceId')({
   validateSearch: newEntrySearchSchema
     .extend(accountSearchSchema.shape)
     .extend(categorySearchSchema.shape)
-    .extend(cardSearchSchema.shape),
+    .extend(cardSearchSchema.shape)
+    .extend(contactSearchSchema.shape),
   beforeLoad: ({ context, params }) => openWorkspace(context.queryClient, params.workspaceId),
   component: function WorkspaceRoute() {
     const { workspaceId } = Route.useParams()
@@ -38,6 +40,7 @@ export const Route = createFileRoute('/_app/w/$workspaceId')({
       parent,
       kind,
       card,
+      contact,
     } = Route.useSearch()
     const { account, access } = Route.useRouteContext()
     const navigate = useNavigate()
@@ -170,6 +173,20 @@ export const Route = createFileRoute('/_app/w/$workspaceId')({
               to: '/w/$workspaceId/categories',
               params: { workspaceId },
               search: { kind: createdKind, created: accountId },
+            })
+          }
+        />
+        <ContactEditor
+          workspaceId={workspaceId}
+          permissions={access.permissions}
+          param={contact}
+          onClose={() =>
+            navigate({ to: '.', search: (previous) => ({ ...previous, contact: undefined }) })
+          }
+          onCreated={(contactId) =>
+            navigate({
+              to: '/w/$workspaceId/contacts/$contact',
+              params: { workspaceId, contact: contactId },
             })
           }
         />
