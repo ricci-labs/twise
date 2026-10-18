@@ -100,6 +100,10 @@ function openItem(postingId: string, description: string, effectiveOn: string, e
     remainingCents: 12000,
     inChargeId: null,
     inChargeCreatedOn: null,
+    paidFrom: 'Cartão X',
+    entryAmountCents: 24000,
+    partCount: 2,
+    isEvenSplit: true,
     ...extra,
   }
 }
@@ -109,17 +113,22 @@ export const CONTACT_D_OPEN_ITEMS = [
   openItem('00000000-0000-4000-8000-0000000000f2', 'Jantar de aniversário', '2026-10-10', {
     amountCents: 8000,
     remainingCents: 8000,
+    partCount: 3,
   }),
   openItem('00000000-0000-4000-8000-0000000000f3', 'TV da sala', '2026-11-10', {
     installmentNo: 2,
     installmentCount: 3,
     amountCents: 16000,
+    entryAmountCents: 48000,
+    partCount: 1,
     remainingCents: 16000,
   }),
   openItem('00000000-0000-4000-8000-0000000000f4', 'TV da sala', '2026-12-10', {
     installmentNo: 3,
     installmentCount: 3,
     amountCents: 16000,
+    entryAmountCents: 48000,
+    partCount: 1,
     remainingCents: 16000,
   }),
 ]

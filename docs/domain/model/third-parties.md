@@ -1,7 +1,7 @@
 ---
 summary: Contacts (third parties), how their share of entries is recorded (receivable postings, installments, several per entry), charges sent over WhatsApp or e-mail, the workspace's charge text, and settlements.
 read_when: Working on contacts, splitting an entry with other people, charges (cobranças) or recording that someone paid back.
-updated: 2026-10-17
+updated: 2026-10-18
 ---
 
 # Third parties: contacts, charges, settlements
@@ -147,7 +147,11 @@ that month.
 | Route | Permission | Does |
 |---|---|---|
 | `POST /contacts/:contactId/charges` | `contacts:create` | `createCharge` `{ until? }` (default today, workspace time zone): the contact's open items due up to that day → `201 { chargeId }` with the stored message and Pix copia e cola (when the workspace Pix is set). Nothing open is `409 NOTHING_TO_CHARGE` |
-| `GET /contacts/:contactId/open-items?until=&includeCharged=` | `contacts:view` | `listOpenItems`: what a charge created now would include (same computation, default today): each item with `postingId`, `description`, `installmentNo`, `installmentCount`, `effectiveOn`, `amountCents`, `remainingCents`, `inChargeId` and `inChargeCreatedOn`, oldest first. By default items in an open charge are left out (and both marks are `null`); `includeCharged=true` keeps them, marked with the open charge they are in and that charge's creation day ("Na cobrança de 20/10"). The contact page lists every future installment with a far `until` (`9999-12-31`) |
+| `GET /contacts/:contactId/open-items?until=&includeCharged=` | `contacts:view` | `listOpenItems`: what a charge created now would include (same computation, default today): each item with `postingId`, `description`, `installmentNo`, `installmentCount`, `effectiveOn`, `amountCents`, `remainingCents`, `inChargeId` and `inChargeCreatedOn`, oldest first, plus the entry's split
+(G69): `paidFrom` (the name of the money account or card the entry was paid with, `null` when none
+was), `entryAmountCents` (the whole entry, every installment), `partCount` (each contact with a share,
+plus the household's own part when it has one) and `isEvenSplit` (the parts differ by less than one
+cent per part, the rounding the even split leaves), from the shared `entrySplitOf`. By default items in an open charge are left out (and both marks are `null`); `includeCharged=true` keeps them, marked with the open charge they are in and that charge's creation day ("Na cobrança de 20/10"). The contact page lists every future installment with a far `until` (`9999-12-31`) |
 | `GET /charges?contactId=` | `contacts:view` | `listCharges`: newest first, with items (`postingId`, `description`, `installmentNo`, `installmentCount`, `effectiveOn`, charged `amountCents`), `paidCents`, the derived status and the last send: `sentAt`, `sentVia`, `sentTo`, `emailStatus`, `emailError`; and `payments` (each active settlement linked to it: `entryId`, `amountCents`, `receivedOn`, `accountId` — the money account it came into — oldest first, G66) |
 | `GET /charges/:chargeId` | `contacts:view` | `getCharge`: one charge, as in the list |
 | `POST /charges/:chargeId/sent` | `contacts:update` | `markChargeSent` `{ via: 'whatsapp' \| 'manual' }` (required; `400 CHARGE_SENT_INVALID`): draft → sent, also when a member forwards the message by hand. Records `sentVia`, `sentTo` (the contact's phone for WhatsApp, `null` by hand) and clears the e-mail outcome |

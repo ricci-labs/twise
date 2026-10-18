@@ -29,6 +29,7 @@ export {
   readEntryDates,
   readEntryPayments,
   readEntryReceipts,
+  readEntrySplits,
   readInvoiceFacts,
   readInvoicesDueBetween,
   readMatchCandidates,

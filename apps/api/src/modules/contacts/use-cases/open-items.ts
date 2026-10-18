@@ -9,14 +9,18 @@ import {
   selectChargeItems,
   selectOpenCharges,
 } from '@api/modules/contacts/contacts.repository'
-import type { OpenChargeFacts, OpenItemsRef } from '@api/modules/contacts/contacts.types'
+import type {
+  OpenChargeFacts,
+  OpenItemsRef,
+  SplitOpenItem,
+} from '@api/modules/contacts/contacts.types'
 import { paidByCharge } from '@api/modules/contacts/use-cases/charges'
-import { readContactItems, readContactItemsByContact } from '@api/modules/ledger'
+import { readContactItems, readContactItemsByContact, readEntrySplits } from '@api/modules/ledger'
 import { currentWorkspaceSettings } from '@api/modules/workspaces'
 import {
   type ChargeMark,
   chargeStatusOf,
-  type MarkedOpenItem,
+  type EntrySplit,
   markedOpenItems,
   type OpenItemsQuery,
   todayIn,
@@ -24,12 +28,19 @@ import {
   upcomingItems,
 } from '@financas/shared'
 
+const NO_SPLIT: EntrySplit = {
+  paidFrom: null,
+  entryAmountCents: 0,
+  partCount: 1,
+  isEvenSplit: true,
+}
+
 export function listOpenItems(
   db: Database,
   { workspaceId, contactId }: OpenItemsRef,
   { until, includeCharged }: OpenItemsQuery,
   clock: Clock = systemClock,
-): Promise<MarkedOpenItem[]> {
+): Promise<SplitOpenItem[]> {
   return withWorkspace(db, workspaceId, async (tx) => {
     if (!(await selectActiveContact(tx, contactId))) {
       throw new NotFoundError('CONTACT_NOT_FOUND', `Contact ${contactId} not found`)
@@ -37,11 +48,16 @@ export function listOpenItems(
     const { timezone } = await currentWorkspaceSettings(tx)
     const { items, paidCents } = await readContactItems(tx, contactId)
     const { marks } = await readOpenChargeFacts(tx, timezone, contactId)
-    return markedOpenItems(items, paidCents, {
+    const open = markedOpenItems(items, paidCents, {
       until: until ?? todayIn(timezone, clock.now()),
       marks,
       includeCharged,
     })
+    const splits = await readEntrySplits(
+      tx,
+      open.map((item) => item.postingId),
+    )
+    return open.map((item) => ({ ...item, ...(splits.get(item.postingId) ?? NO_SPLIT) }))
   })
 }
 

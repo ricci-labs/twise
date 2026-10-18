@@ -504,9 +504,26 @@ describe('GET /contacts/:contactId/open-items', () => {
     const everything = await viewer.get(
       `${contactPath}/${contactId}/open-items?until=9999-12-31&includeCharged=true`,
     )
-    expect(await everything.json()).toEqual(
+    expect(await everything.clone().json()).toEqual(
       await listOpenItems(databases.app, { workspaceId, contactId }, EVERY_INSTALLMENT),
     )
+    const items = (await everything.clone().json()) as { description: string }[]
+    const byDescription = (description: string) =>
+      items.find((item) => item.description === description)
+    expect(byDescription('TV')).toMatchObject({
+      description: 'TV',
+      paidFrom: 'Card X',
+      entryAmountCents: 120_000,
+      partCount: 2,
+      isEvenSplit: false,
+    })
+    expect(byDescription('Jantar')).toMatchObject({
+      description: 'Jantar',
+      paidFrom: 'Conta X',
+      entryAmountCents: 15_000,
+      partCount: 2,
+      isEvenSplit: false,
+    })
     const badFlag = await viewer.get(`${contactPath}/${contactId}/open-items?includeCharged=maybe`)
     expect(badFlag.status).toBe(400)
 
