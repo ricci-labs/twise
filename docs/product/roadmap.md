@@ -1,7 +1,7 @@
 ---
 summary: Phases, MVP scope, current focus and the list of open questions.
 read_when: Deciding what to build next, checking whether something is in scope, or resuming work in a new session.
-updated: 2026-10-17
+updated: 2026-10-18
 ---
 
 # Roadmap
@@ -427,8 +427,9 @@ updated: 2026-10-17
       contact picker)
   12. [x] Web: `SET-02` Recebimento por Pix and `SET-03` Mensagem das cobranças under Configurações
   13. [x] Web: the desktop versions
-  14. [x] Review of the round against every PNG (#369–#404; G65–G68 added on the way; the
-      open items' card and share detail is left to discuss with the user)
+  14. [x] Review of the round against every PNG (#369–#404; G65–G68 added on the way)
+  15. [x] The open items' card and share detail ("Cartão X · metade de R$ 240,00"), approved by the
+      user on 2026-10-18: API (G69, #405) and the contact page
 - [ ] Remaining project skills (`new-module`, `db-migration`, `domain-rule`, `pr`) and Claude Code hooks
 
 ## Phase 1: MVP

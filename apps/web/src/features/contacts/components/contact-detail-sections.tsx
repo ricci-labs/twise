@@ -5,7 +5,10 @@ import { showToast } from '@web/components/feedback/toast'
 import { ContactChannelRow, ContactChannels } from '@web/components/finance/contact-channels'
 import { OccurrenceGroup } from '@web/components/finance/occurrence-group'
 import { OpenItemRow } from '@web/components/finance/open-item-row'
-import { openItemDetail } from '@web/features/contacts/components/contact-detail-view'
+import {
+  openItemDetail,
+  openItemTitle,
+} from '@web/features/contacts/components/contact-detail-view'
 import { contactsMessages } from '@web/features/contacts/contacts.messages'
 import type {
   ContactOpenSectionProps,
@@ -36,7 +39,7 @@ export function ContactOpenSection({ owedCents, items }: ContactOpenSectionProps
               <OpenItemRow
                 key={item.postingId}
                 dueOn={item.effectiveOn}
-                description={item.description}
+                description={openItemTitle(item)}
                 detail={openItemDetail(item)}
                 amountCents={item.remainingCents}
                 isOverdue={group.isOverdue && item.inChargeId === null}
