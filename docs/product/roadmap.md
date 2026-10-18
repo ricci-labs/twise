@@ -429,7 +429,7 @@ updated: 2026-10-18
   13. [x] Web: the desktop versions
   14. [x] Review of the round against every PNG (#369–#404; G65–G68 added on the way)
   15. [x] The open items' card and share detail ("Cartão X · metade de R$ 240,00"), approved by the
-      user on 2026-10-18: API (G69, #405) and the contact page
+      user on 2026-10-18: API (G69, #405) and the contact page (#406)
 - [ ] Remaining project skills (`new-module`, `db-migration`, `domain-rule`, `pr`) and Claude Code hooks
 
 ## Phase 1: MVP
