@@ -842,6 +842,23 @@ export async function selectPostingDetails(tx: WorkspaceTransaction, postingIds:
     .where(inArray(postings.id, postingIds))
 }
 
+export function selectSplitPostings(tx: WorkspaceTransaction, postingIds: string[]) {
+  const owned = alias(postings, 'owned')
+  return tx
+    .select({
+      ownerPostingId: owned.id,
+      accountKind: postings.accountKind,
+      accountName: ledgerAccounts.name,
+      amountCents: postings.amountCents,
+      contactId: postings.contactId,
+    })
+    .from(owned)
+    .innerJoin(postings, eq(postings.entryId, owned.entryId))
+    .innerJoin(ledgerAccounts, eq(ledgerAccounts.id, postings.accountId))
+    .where(inArray(owned.id, postingIds))
+    .orderBy(asc(postings.lineNo))
+}
+
 export function selectEntryDates(tx: WorkspaceTransaction, entryIds: string[]) {
   return tx
     .select({ id: journalEntries.id, occurredOn: journalEntries.occurredOn })

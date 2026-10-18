@@ -19,7 +19,9 @@ import type {
   ContactBalance,
   ContactChargeState,
   ContactOptOutVia,
+  EntrySplit,
   IsoDate,
+  MarkedOpenItem,
 } from '@financas/shared'
 
 export type ContactRow = typeof contacts.$inferSelect
@@ -118,6 +120,8 @@ export type OpenItemsRef = {
   workspaceId: string
   contactId: string
 }
+
+export type SplitOpenItem = MarkedOpenItem & EntrySplit
 
 export type OpenChargeFacts = {
   marks: ReadonlyMap<string, ChargeMark>

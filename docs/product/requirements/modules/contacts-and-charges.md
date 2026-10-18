@@ -1,7 +1,7 @@
 ---
 summary: Functional requirements for contacts, what each owes (shares and balances), charges with the pt-BR message and Pix copia e cola, sending them (WhatsApp, e-mail or copy), recording payments and cancelling — screens CON-01..05.
 read_when: Designing or building contacts, charges or anything showing what third parties owe.
-updated: 2026-10-16
+updated: 2026-10-18
 ---
 
 # Contacts and charges
@@ -109,8 +109,11 @@ the next debt by itself.
 **RF-CON-4** "Em aberto": the contact's open items in two groups, "Vencidos" and "A vencer"
 (future installments too: `GET /contacts/:contactId/open-items?until=&includeCharged=true`, G63):
 date block, description (2 lines), the second line with the badge first ("Atrasado", "Na cobrança
-de 20/10" when `inChargeId` is set), card and share detail, what is still owed
-(`remainingCents`).
+de 20/10" when `inChargeId` is set), then where the money came from and the share (G69): an
+installment shows "(parcela 2/3)" in its description and only the card ("Cartão X"); any other item
+adds its share of the entry, "metade de R$ 240,00" for an even split in two, "1 de 3 partes" for an
+even split in more, "parte de R$ 240,00" for an uneven one, nothing when the contact owes it all;
+then what is still owed (`remainingCents`).
 **RF-CON-5** "Cobranças": the contact's charges (`GET /charges?contactId=`), newest first, with no
 drawing. Line 1 "Cobrança de dd/mm", amount, chevron; line 2 the status badge and "n itens · canal".
 Tap expands in place: the send history (channel, time, address; danger tint when the e-mail

@@ -14,6 +14,7 @@ import {
   selectPostingDetails,
   selectPostingFacts,
   selectPostingsOfEntries,
+  selectSplitPostings,
 } from '@api/modules/ledger/ledger.repository'
 import type {
   ContactItems,
@@ -34,7 +35,7 @@ import type {
   FactPosting,
   IsoDate,
 } from '@financas/shared'
-import { entryAmountCents } from '@financas/shared'
+import { type EntrySplit, entryAmountCents, entrySplitOf } from '@financas/shared'
 
 export async function readAccountFacts(tx: WorkspaceTransaction): Promise<FactAccount[]> {
   return (await selectActiveAccounts(tx)).map((account) => ({
@@ -122,6 +123,20 @@ export async function readPostingDetails(
 ): Promise<ReadonlyMap<string, PostingDetails>> {
   const details = await selectPostingDetails(tx, postingIds)
   return new Map(details.map((detail) => [detail.postingId, detail]))
+}
+
+export async function readEntrySplits(
+  tx: WorkspaceTransaction,
+  postingIds: string[],
+): Promise<ReadonlyMap<string, EntrySplit>> {
+  if (postingIds.length === 0) {
+    return new Map()
+  }
+  const byOwner = Map.groupBy(
+    await selectSplitPostings(tx, postingIds),
+    (row) => row.ownerPostingId,
+  )
+  return new Map([...byOwner].map(([postingId, rows]) => [postingId, entrySplitOf(rows)]))
 }
 
 export async function readEntryDates(

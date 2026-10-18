@@ -16,6 +16,10 @@ function item(postingId: string, effectiveOn: string, installment: number | null
     remainingCents: 1000,
     inChargeId: null,
     inChargeCreatedOn: null,
+    paidFrom: 'Cartão X',
+    entryAmountCents: 2000,
+    partCount: 2,
+    isEvenSplit: true,
   } satisfies ContactOpenItem
 }
 
