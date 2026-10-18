@@ -1,4 +1,4 @@
-import { type ChargeStatus, type IsoDate, todayIn } from '@financas/shared'
+import { type ChargeStatus, formatBrl, type IsoDate, todayIn } from '@financas/shared'
 import type { ChargeHistory, ChargeReceipt } from '@web/components/finance/charge-body'
 import type { ChargePreviewItem } from '@web/components/finance/charge-preview'
 import type { PlanSummaryTile } from '@web/components/finance/plan-summary-tiles'
@@ -16,6 +16,8 @@ import { formatShortDate } from '@web/lib/format/calendar'
 const messages = contactsMessages.detail
 const OPEN_STATUSES: readonly ChargeStatus[] = ['draft', 'sent', 'partially_paid']
 const MARKED_SENT = 'manual'
+const HALVES = 2
+const DETAIL_SEPARATOR = ' · '
 
 export function openItemsByDue(
   items: readonly ContactOpenItem[],
@@ -27,10 +29,26 @@ export function openItemsByDue(
   }
 }
 
-export function openItemDetail(item: ContactOpenItem): string {
+export function openItemTitle(item: ContactOpenItem): string {
   return item.installmentNo === null
-    ? ''
-    : messages.installment(item.installmentNo, item.installmentCount)
+    ? item.description
+    : messages.installmentTitle(item.description, item.installmentNo, item.installmentCount)
+}
+
+export function openItemDetail(item: ContactOpenItem): string {
+  const share = item.installmentNo === null ? shareOf(item) : null
+  return [item.paidFrom, share].filter(Boolean).join(DETAIL_SEPARATOR)
+}
+
+function shareOf(item: ContactOpenItem): string | null {
+  if (item.partCount <= 1) {
+    return null
+  }
+  const total = formatBrl(item.entryAmountCents)
+  if (!item.isEvenSplit) {
+    return messages.partOf(total)
+  }
+  return item.partCount === HALVES ? messages.half(total) : messages.evenPart(item.partCount)
 }
 
 export function hasSomethingToCharge(balance: ContactBalance | undefined): boolean {
@@ -135,7 +153,7 @@ export function chargeableBy(
     .filter((item) => item.inChargeId === null && item.effectiveOn <= until)
     .map((item) => ({
       key: item.postingId,
-      description: chargeItemLabel(item),
+      description: openItemTitle(item),
       dueOn: item.effectiveOn,
       isOverdue: item.effectiveOn <= today,
       amountCents: item.remainingCents,
@@ -157,10 +175,4 @@ export function defaultUntilOf(balance: ContactBalance | undefined, today: IsoDa
   return balance && balance.dueNotChargedCents === 0 && balance.nextOpenDueOn
     ? balance.nextOpenDueOn
     : today
-}
-
-function chargeItemLabel(item: ContactOpenItem): string {
-  return item.installmentNo === null
-    ? item.description
-    : `${item.description} (${messages.installment(item.installmentNo, item.installmentCount).toLowerCase()})`
 }

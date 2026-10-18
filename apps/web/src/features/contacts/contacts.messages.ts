@@ -96,6 +96,11 @@ export const contactsMessages = {
     overdueGroup: 'Vencidos',
     upcomingGroup: 'A vencer',
     installment: (number: number, count: number) => `Parcela ${number}/${count}`,
+    installmentTitle: (description: string, number: number, count: number) =>
+      `${description} (parcela ${number}/${count})`,
+    half: (total: string) => `metade de ${total}`,
+    evenPart: (count: number) => `1 de ${count} partes`,
+    partOf: (total: string) => `parte de ${total}`,
     talkTo: (name: string) => `Falar com ${name}`,
     whatsapp: 'WhatsApp',
     noPhone: 'Sem número',

@@ -75,7 +75,9 @@ describe('CON-02 contact detail', () => {
     await expect.element(page.getByRole('heading', { name: 'Vencidos' })).toBeVisible()
     await expect.element(page.getByRole('heading', { name: 'A vencer' })).toBeVisible()
     await expect.element(page.getByText('Mercado da semana')).toBeVisible()
-    await expect.element(page.getByText('Parcela 2/3')).toBeVisible()
+    await expect.element(page.getByText(/Cartão X · metade de R\$\s240,00$/)).toBeVisible()
+    await expect.element(page.getByText(/Cartão X · 1 de 3 partes$/)).toBeVisible()
+    await expect.element(page.getByText('TV da sala (parcela 2/3)')).toBeVisible()
     await expect.element(page.getByText('+55 (11) 99999-0004')).toBeVisible()
     await expect
       .element(page.getByRole('link', { name: 'Abrir o WhatsApp de Member D' }))
