@@ -1,4 +1,4 @@
-import { formatBrl, MONEY_ACCOUNT_KINDS } from '@financas/shared'
+import { FREE_MONEY_ACCOUNT_KINDS, formatBrl } from '@financas/shared'
 import { Button } from '@web/components/actions/button'
 import { RichText } from '@web/components/display/rich-text'
 import { Form } from '@web/components/forms/form'
@@ -33,7 +33,7 @@ const KINDS: readonly StepKind[] = [
   'fixed_amount',
   'rest',
 ]
-const MONEY_KINDS: readonly string[] = MONEY_ACCOUNT_KINDS
+const MONEY_KINDS: readonly string[] = FREE_MONEY_ACCOUNT_KINDS
 const DEFAULT_PERCENT = 10
 const PERCENT = 100
 const WALLET_ICON = 'wallet'

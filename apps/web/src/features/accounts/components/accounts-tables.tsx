@@ -35,6 +35,7 @@ export function AccountsTables({ workspaceId, permissions, accounts }: AccountsL
   const active = accounts.filter((account) => !account.isArchived)
   const money = active.filter((account) => account.isMoney)
   const cards = active.filter((account) => account.isCard)
+  const benefits = active.filter((account) => account.isBenefit)
   const archived = accounts.filter((account) => account.isArchived)
   const canSeeEntries = hasPermission(permissions, 'entries', 'view')
   const entriesLinkOf = (account: ListedAccount) =>
@@ -99,6 +100,16 @@ export function AccountsTables({ workspaceId, permissions, accounts }: AccountsL
                 actionsOf(account),
               ],
             }))}
+          />
+        </Card>
+      )}
+      {benefits.length > 0 && (
+        <Card title={messages.benefits} description={messages.benefitsNote}>
+          <DataTable
+            label={messages.benefits}
+            layout="accounts"
+            columns={MONEY_COLUMNS}
+            rows={benefits.map(moneyRow)}
           />
         </Card>
       )}

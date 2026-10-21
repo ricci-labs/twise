@@ -1,7 +1,7 @@
 ---
 summary: The double-entry ledger — account kinds, cards and invoices, journal entries and postings, sign convention, DB-enforced invariants, correction policy (soft delete / replace), and worked examples.
 read_when: Anything that records, edits, reverses or reports money movements, cards or invoices.
-updated: 2026-10-17
+updated: 2026-10-20
 ---
 
 # Ledger (double-entry)
@@ -41,7 +41,7 @@ Kinds, classes and system account names live in `packages/shared/src/ledger/ledg
 | `workspace_id`, `id` | | |
 | `parent_id` | FK self null | Tree: "Alimentação › Mercado". A parent must have the same `class` (composite FK on `(workspace_id, id, class)`). No cycles, no child under a deleted parent, no soft delete while children are active (triggers). |
 | `kind` | enum `account_kind` | See below. Immutable after the first posting. |
-| `class` | enum, **generated** from `kind` | `asset` / `liability` / `income` / `expense` / `equity` |
+| `class` | enum, **generated** from `kind` | `asset` / `liability` / `income` / `expense` / `equity`; the expression names the other classes and falls back to `asset`, so adding an asset kind never needs the new enum value in its own migration |
 | `name` | text | Unique among siblings of the same class, case-insensitive, among non-deleted |
 | `currency` | char(3) | Default from `workspace_settings` |
 | `institution_id` | FK institutions null | Bank/issuer (global seeded list plus custom) |
@@ -55,6 +55,7 @@ Kinds, classes and system account names live in `packages/shared/src/ledger/ledg
 | kind | class | Notes |
 |---|---|---|
 | `checking`, `savings`, `cash_wallet`, `investment` | asset | Real places where money sits |
+| `benefit` | asset | A prepaid meal or food voucher (VR/VA): money that only pays for food. It records expenses and receives income like any money account, but stays out of the money total, goals and the commission split (`FREE_MONEY_ACCOUNT_KINDS`) |
 | `receivable` | asset | **One system account per workspace.** The contact goes on the posting. |
 | `credit_card` | liability | Has `card_details` and invoices |
 | `loan` | liability | |
@@ -216,7 +217,7 @@ A malformed or unknown id, or one from another workspace, is `404 ACCOUNT_NOT_FO
 | `DELETE /accounts/:accountId` (optional `{ reason }`) | `accounts:delete` | `deleteAccount` → `204` |
 | `POST /accounts/:accountId/restore` | `accounts:delete` | `restoreAccount` → `204` |
 | `GET /accounts/trash` | `accounts:delete` | `listTrashedAccounts`: deleted accounts (cards included) with `deletedAt`, `deletedByUserId` and `deleteReason`, latest deletion first |
-| `GET /accounts/summary` | `accounts:view` | `readAccountsSummary` (G40): `moneyTotalCents` and `moneyAccountCount` over the active money accounts (system and archived out), `cardsOpenCents` and `cardCount` over the active cards, and `nextInvoice`, the first upcoming invoice with something due (`null` when none) |
+| `GET /accounts/summary` | `accounts:view` | `readAccountsSummary` (G40): `moneyTotalCents` and `moneyAccountCount` over the active money accounts (system, archived and `benefit` out), `benefitTotalCents` and `benefitAccountCount` over the active benefit accounts (G70), `cardsOpenCents` and `cardCount` over the active cards, and `nextInvoice`, the first upcoming invoice with something due (`null` when none) |
 | `GET /cards` | `cards:view` | `listCardSummaries` (G41): card accounts that aren't deleted (archived included) with their cycle, limit, holder, payment account and `createdAt` (the year sheet of `CARD-02` starts there), plus `openCents` (what the card owes, future installments included), `limitUsedPercent` (rounded, `null` without a limit) and `currentInvoice`: the invoice a purchase made today goes to (`invoiceId`, `null` while it has no line yet; `referenceMonth`, `closingOn`, `dueOn`, `status` computed for today, `totalCents`, `dueCents`) |
 | `GET /cards/invoices/upcoming?limit` | `cards:view` | `listUpcomingInvoices` (G41): for every active card, closed invoices still owing, the current invoice and the next one (the next even before it has any line: `invoiceId` `null`, zeros), the soonest due first; `limit` 1–24, default 6 |
 | `POST /cards` | `cards:create` | `createCard` → `201 { accountId }` |

@@ -1,7 +1,7 @@
 ---
 summary: Canonical terms. Maps Portuguese words used by the user and the UI to English code names.
 read_when: Naming anything, or turning a Portuguese term from the user or a WhatsApp message into code.
-updated: 2026-10-16
+updated: 2026-10-20
 ---
 
 # Glossary
@@ -14,6 +14,7 @@ updated: 2026-10-16
 | lançamento | `journal_entry` (entry) | A money movement. Always ≥ 2 postings summing to zero. **Never call it "transaction"** in code, to avoid confusion with DB transactions. |
 | linha do lançamento | `posting` | One signed line of an entry against one ledger account. |
 | conta (bancária), carteira, poupança | `ledger_account` of kind `checking` / `cash_wallet` / `savings` | Where money sits. |
+| benefício, VR, VA (vale-refeição, vale-alimentação) | `ledger_account` of kind `benefit` | A prepaid card that only pays for food, credited every month. Kept apart from the money total. |
 | categoria | `ledger_account` of kind `expense_category` / `income_category` | Categories are ledger accounts in a tree. |
 | gasto, despesa | `entry_type = expense` / `card_purchase` | |
 | receita, entrada | `entry_type = income` | |

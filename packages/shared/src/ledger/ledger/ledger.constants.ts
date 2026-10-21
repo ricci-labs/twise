@@ -3,6 +3,7 @@ export const ACCOUNT_KINDS = [
   'savings',
   'cash_wallet',
   'investment',
+  'benefit',
   'receivable',
   'credit_card',
   'loan',
@@ -76,7 +77,22 @@ export const ENTRY_SOURCES = ['web', 'whatsapp', 'job', 'import'] as const
 
 export type EntrySource = (typeof ENTRY_SOURCES)[number]
 
-export const MONEY_ACCOUNT_KINDS = ['checking', 'savings', 'cash_wallet', 'investment'] as const
+export const MONEY_ACCOUNT_KINDS = [
+  'checking',
+  'savings',
+  'cash_wallet',
+  'investment',
+  'benefit',
+] as const
+
+export const BENEFIT_ACCOUNT_KIND = 'benefit'
+
+export const FREE_MONEY_ACCOUNT_KINDS = [
+  'checking',
+  'savings',
+  'cash_wallet',
+  'investment',
+] as const
 
 export type MoneyAccountKind = (typeof MONEY_ACCOUNT_KINDS)[number]
 
@@ -85,6 +101,7 @@ export const USER_ACCOUNT_KINDS = [
   'savings',
   'cash_wallet',
   'investment',
+  'benefit',
   'loan',
   'income_category',
   'expense_category',

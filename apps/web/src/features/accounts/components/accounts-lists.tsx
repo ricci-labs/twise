@@ -23,6 +23,7 @@ function AccountsGroups({ workspaceId, permissions, accounts, highlightedId }: A
   const active = accounts.filter((account) => !account.isArchived)
   const money = active.filter((account) => account.isMoney)
   const cards = active.filter((account) => account.isCard)
+  const benefits = active.filter((account) => account.isBenefit)
   const archived = accounts.filter((account) => account.isArchived)
   const canSeeEntries = hasPermission(permissions, 'entries', 'view')
   const rowOf = (account: ListedAccount) => (
@@ -79,6 +80,11 @@ function AccountsGroups({ workspaceId, permissions, accounts, highlightedId }: A
           }
         >
           {cards.map(rowOf)}
+        </AccountGroup>
+      )}
+      {benefits.length > 0 && (
+        <AccountGroup title={messages.benefits} note={messages.benefitsNote}>
+          {benefits.map(rowOf)}
         </AccountGroup>
       )}
       <ArchivedToggle count={archived.length}>

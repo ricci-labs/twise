@@ -1,4 +1,4 @@
-import { isMoneyAccountKind } from '@financas/shared'
+import { BENEFIT_ACCOUNT_KIND, isMoneyAccountKind } from '@financas/shared'
 import { accountsMessages } from '@web/features/accounts/accounts.messages'
 import type {
   AccountBalance,
@@ -32,7 +32,8 @@ function listedMoney(account: LedgerAccount, { balances, members }: AccountsData
     ownerLabel: owner ? capitalized(owner) : null,
     amountCents: balanceOf(account.id, balances),
     isCard: false,
-    isMoney: true,
+    isMoney: account.kind !== BENEFIT_ACCOUNT_KIND,
+    isBenefit: account.kind === BENEFIT_ACCOUNT_KIND,
   }
 }
 
@@ -58,6 +59,7 @@ function listedCard(account: LedgerAccount, { balances, cards }: AccountsData): 
     amountCents: card?.openCents ?? balanceOf(account.id, balances),
     isCard: true,
     isMoney: false,
+    isBenefit: false,
   }
 }
 
@@ -97,6 +99,7 @@ export function listedCardOf(card: CardSummary): ListedAccount {
     amountCents: card.openCents,
     isCard: true,
     isMoney: false,
+    isBenefit: false,
     isArchived: card.archivedAt !== null,
   }
 }

@@ -30,6 +30,8 @@ export const accountsMessages = {
   groups: {
     money: 'Dinheiro',
     cards: 'Cartões',
+    benefits: 'Benefícios',
+    benefitsNote: 'Vale-refeição e vale-alimentação ficam fora do total em dinheiro.',
     newAccount: 'Nova conta',
     newCard: 'Novo cartão',
     cardsNote: 'Nos cartões, o total em aberto inclui as parcelas futuras.',
@@ -50,6 +52,7 @@ export const accountsMessages = {
     checking: 'Conta corrente',
     savings: 'Poupança',
     cash_wallet: 'Carteira (dinheiro)',
+    benefit: 'Benefício (VR/VA)',
     investment: 'Investimento',
     credit_card: 'Cartão de crédito',
   },

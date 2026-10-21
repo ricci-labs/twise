@@ -1,4 +1,4 @@
-import { formatBrl, MONEY_ACCOUNT_KINDS } from '@financas/shared'
+import { FREE_MONEY_ACCOUNT_KINDS, formatBrl } from '@financas/shared'
 import { useQuery } from '@tanstack/react-query'
 import { Link, useNavigate, useSearch } from '@tanstack/react-router'
 import { Button } from '@web/components/actions/button'
@@ -48,7 +48,7 @@ import { useEffect, useState } from 'react'
 const messages = planningMessages.commission
 const SKELETON_ROWS = 4
 const TO_SPLIT = 'variable_income_to_split'
-const MONEY_KINDS: readonly string[] = MONEY_ACCOUNT_KINDS
+const MONEY_KINDS: readonly string[] = FREE_MONEY_ACCOUNT_KINDS
 const CHECKING = 'checking'
 const AMOUNT_DELAY_MS = 300
 

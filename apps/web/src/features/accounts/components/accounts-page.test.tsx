@@ -9,6 +9,7 @@ import {
   CHECKING,
   MEMBER_A,
   SAVINGS,
+  withMealVoucher,
 } from '@web/testing/accounts-api'
 import {
   accessAs,
@@ -20,7 +21,7 @@ import {
   workspaceList,
 } from '@web/testing/fake-api'
 import type { FakeAnswer } from '@web/testing/testing.types'
-import { afterEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { page } from 'vitest/browser'
 import { render } from 'vitest-browser-react'
 
@@ -50,6 +51,10 @@ async function openAccounts({
 }
 
 describe('ACC-01 accounts', () => {
+  beforeEach(async () => {
+    await page.viewport(414, 896)
+  })
+
   afterEach(() => {
     vi.restoreAllMocks()
   })
@@ -68,6 +73,23 @@ describe('ACC-01 accounts', () => {
     await page.getByRole('button', { name: 'Arquivadas (1)' }).click()
 
     await expect.element(page.getByText('Conta antiga')).toBeVisible()
+  })
+
+  it('keeps a meal voucher in its own group, out of the money', async () => {
+    await openAccounts({ answers: withMealVoucher() })
+    const benefits = page.getByRole('region', { name: 'Benefícios' })
+    await expect.element(benefits.getByText('VR')).toBeVisible()
+    await expect.element(benefits.getByText('Benefício (VR/VA) · da casa')).toBeVisible()
+    await expect
+      .element(page.getByText('Vale-refeição e vale-alimentação ficam fora do total em dinheiro.'))
+      .toBeVisible()
+    await expect
+      .element(page.getByRole('region', { name: 'Dinheiro' }).getByText('VR'))
+      .not.toBeInTheDocument()
+    await page.viewport(1280, 900)
+    await expect
+      .element(page.getByRole('table', { name: 'Benefícios' }).getByText('VR'))
+      .toBeVisible()
   })
 
   it('draws a card without its own illustration with the card drawing', async () => {

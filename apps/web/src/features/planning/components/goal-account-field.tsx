@@ -1,4 +1,4 @@
-import { formatBrl, MONEY_ACCOUNT_KINDS } from '@financas/shared'
+import { FREE_MONEY_ACCOUNT_KINDS, formatBrl } from '@financas/shared'
 import { useQuery } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
 import { FormField } from '@web/components/forms/form-field'
@@ -15,7 +15,7 @@ import type {
 } from '@web/features/planning/planning.types'
 
 const messages = planningMessages.goals.form
-const MONEY_KINDS: readonly string[] = MONEY_ACCOUNT_KINDS
+const MONEY_KINDS: readonly string[] = FREE_MONEY_ACCOUNT_KINDS
 const WALLET_ICON = 'wallet'
 const ACCOUNT_FOR_FORM = 'form'
 

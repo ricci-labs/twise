@@ -30,16 +30,16 @@ import { workspaceToday } from '@api/modules/planning/use-cases/occurrences'
 import {
   type AccountKind,
   type FactGoal,
+  FREE_MONEY_ACCOUNT_KINDS,
   type GoalPreviewQuery,
   goalChangeSchema,
   goalNumbers,
   type IsoDate,
-  MONEY_ACCOUNT_KINDS,
   newGoalSchema,
 } from '@financas/shared'
 
 const GOAL_INVALID = 'GOAL_INVALID'
-const MONEY_KINDS: ReadonlySet<AccountKind> = new Set(MONEY_ACCOUNT_KINDS)
+const MONEY_KINDS: ReadonlySet<AccountKind> = new Set(FREE_MONEY_ACCOUNT_KINDS)
 const CONFLICT_OF_CONSTRAINT: Record<string, [string, string]> = {
   goals_one_per_account: ['GOAL_ACCOUNT_TAKEN', 'Another goal already uses this account'],
   goals_one_reserve: ['RESERVE_ALREADY_SET', 'The workspace already has a reserve'],

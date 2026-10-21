@@ -17,10 +17,10 @@ import {
   type AllocationStepInput,
   allocationStepOf,
   allocationStepsSchema,
-  MONEY_ACCOUNT_KINDS,
+  FREE_MONEY_ACCOUNT_KINDS,
 } from '@financas/shared'
 
-const MONEY_KINDS: ReadonlySet<AccountKind> = new Set(MONEY_ACCOUNT_KINDS)
+const MONEY_KINDS: ReadonlySet<AccountKind> = new Set(FREE_MONEY_ACCOUNT_KINDS)
 
 const ALLOCATION_STEPS_TABLE = 'allocation_steps'
 

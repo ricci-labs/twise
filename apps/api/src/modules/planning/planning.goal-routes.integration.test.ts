@@ -127,6 +127,12 @@ describe('goals', () => {
       accountId: category,
     })
     expect([onCategory.status, await codeOf(onCategory)]).toEqual([400, 'GOAL_ACCOUNT_INVALID'])
+    const onBenefit = await member.post(goalsPath, {
+      name: 'X',
+      targetCents: 1,
+      accountId: await account('benefit', 'VR'),
+    })
+    expect([onBenefit.status, await codeOf(onBenefit)]).toEqual([400, 'GOAL_ACCOUNT_INVALID'])
 
     await created(member.post(goalsPath, { name: 'Carro', targetCents: 1, accountId: savings }))
     const shared = await member.post(goalsPath, {
