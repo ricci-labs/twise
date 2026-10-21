@@ -1,6 +1,7 @@
-import type { Period } from '@shared/core/calendar/calendar.types'
+import type { IsoDate, Period } from '@shared/core/calendar/calendar.types'
 import { daysBetween } from '@shared/core/calendar/dates'
 import { isInPeriod } from '@shared/core/calendar/period'
+import { invoiceForPurchase } from '@shared/ledger/cards/billing-cycle'
 import type { AccountClass, IncomeNature } from '@shared/ledger/ledger/ledger.constants'
 import type { RecurringEntryType } from '@shared/planning/recurrence/recurrence.constants'
 import type {
@@ -12,6 +13,8 @@ import type {
 } from '@shared/reports/metrics/metrics.types'
 
 const FULL_PERCENT = 100
+const CARD_PURCHASE = 'card_purchase'
+const PURCHASE_MONTH = 'purchase_month'
 
 export function postingsCounted(
   facts: PeriodFacts,
@@ -49,8 +52,16 @@ export function pendingInPeriod(
     (occurrence) =>
       occurrence.status === 'pending' &&
       entryTypes.includes(occurrence.entryType) &&
-      isInPeriod(occurrence.dueOn, facts.period),
+      isInPeriod(occurrenceCountedOn(facts, occurrence), facts.period),
   )
+}
+
+export function occurrenceCountedOn(facts: PeriodFacts, occurrence: FactOccurrence): IsoDate {
+  if (occurrence.entryType !== CARD_PURCHASE || facts.installmentBudgetView === PURCHASE_MONTH) {
+    return occurrence.dueOn
+  }
+  const card = facts.cards.find((candidate) => candidate.accountId === occurrence.sourceAccountId)
+  return card ? invoiceForPurchase(occurrence.dueOn, card).dueOn : occurrence.dueOn
 }
 
 export function incomeNatureOf(facts: PeriodFacts, accountId: string): IncomeNature | null {

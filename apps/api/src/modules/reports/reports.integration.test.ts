@@ -269,6 +269,28 @@ describe('getPeriodOverview', () => {
     ])
   })
 
+  it('commits a card subscription in the period its invoice is due, even charged before it', async () => {
+    const { workspaceId, context, card, groceries } = await household()
+    const earlySeptember = { now: () => new Date('2026-09-01T12:00:00Z') }
+    await createRecurrenceRule(
+      databases.app,
+      context,
+      {
+        description: 'Música',
+        entryType: 'card_purchase',
+        amountCents: 2_000,
+        sourceAccountId: card,
+        categoryAccountId: groceries,
+        schedule: { frequency: 'monthly', dayOfMonth: 5, startsOn: '2026-09-05' },
+      },
+      earlySeptember,
+    )
+    const { metrics } = await getPeriodOverview(databases.app, workspaceId, {}, MID_OCTOBER)
+
+    expect(metrics.committed).toBe(200_000 + 2_000)
+    expect(metrics.committedAhead[0]?.plannedCents).toBe(200_000 + 3_990 + 2_000)
+  })
+
   it('puts the ledger, the plan and the settings together for the current period', async () => {
     const { workspaceId, groceries, card, checking } = await household()
     const overview = await getPeriodOverview(databases.app, workspaceId, {}, MID_OCTOBER)
@@ -279,10 +301,10 @@ describe('getPeriodOverview', () => {
       fixedIncome: 900_000,
       variableIncome: 120_000,
       budgetIncome: 900_000,
-      committed: 203_990,
+      committed: 200_000,
     })
     const { spent, freeToSpend, dailyAllowance } = overview.metrics
-    expect(freeToSpend).toBe(900_000 - spent - 203_990)
+    expect(freeToSpend).toBe(900_000 - spent - 200_000)
     expect(dailyAllowance).toBe(Math.floor(freeToSpend / 17))
     expect(overview.metrics.committedAhead.map((period) => period.label)).toEqual([
       '2026-11',

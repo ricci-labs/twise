@@ -19,7 +19,7 @@ import {
   readOccurrenceFacts,
   workspaceToday,
 } from '@api/modules/planning'
-import type { PeriodTimeline } from '@api/modules/reports/reports.types'
+import type { PeriodTimeline, PeriodWindow } from '@api/modules/reports/reports.types'
 import { currentWorkspaceSettings } from '@api/modules/workspaces'
 import {
   type AccountKind,
@@ -31,6 +31,7 @@ import {
   computeMetrics,
   type FactAllocation,
   type FactCard,
+  type FactOccurrence,
   type IsoDate,
   MONEY_ACCOUNT_KINDS,
   type OverviewQuery,
@@ -54,6 +55,8 @@ const MONEY_KINDS: ReadonlySet<AccountKind> = new Set(MONEY_ACCOUNT_KINDS)
 const RECENT_PERIODS = 6
 const UPCOMING_PERIODS = 6
 const DAYS_IN_A_CARD_CYCLE = 31
+const DAYS_FROM_CARD_CHARGE_TO_DUE = 62
+const CARD_PURCHASE = 'card_purchase'
 const MONTHS_OF_A_YEAR = Array.from({ length: 12 }, (_, index) => index + 1)
 const DECEMBER = 12
 const JANUARY = 1
@@ -174,7 +177,6 @@ async function loadPeriodFacts(
   const earliest = recentPeriods[0]?.start ?? period.start
   const latest = upcomingPeriods.at(-1)?.end ?? period.end
   const cycleStart = addDays(today, -DAYS_IN_A_CARD_CYCLE)
-  const occurrencesFrom = cycleStart < period.start ? cycleStart : period.start
   return {
     today,
     period,
@@ -184,7 +186,7 @@ async function loadPeriodFacts(
     budgetBase: settings.budgetBase,
     accounts: await readAccountFacts(tx),
     postings: await readPostingFacts(tx, earliest, latest),
-    occurrences: await readOccurrenceFacts(tx, { from: occurrencesFrom, to: latest }, today),
+    occurrences: await readPeriodOccurrences(tx, { period, today, latest }),
     budgets: await readBudgetFacts(tx, period.label),
     goals: await readGoalFacts(tx),
     cards: await readCardFacts(tx),
@@ -193,6 +195,23 @@ async function loadPeriodFacts(
     balances: await readBalanceFacts(tx),
     contactBalances: await readContactBalanceFacts(tx, today),
   }
+}
+
+async function readPeriodOccurrences(
+  tx: WorkspaceTransaction,
+  { period, today, latest }: PeriodWindow,
+): Promise<FactOccurrence[]> {
+  const cycleStart = addDays(today, -DAYS_IN_A_CARD_CYCLE)
+  const from = cycleStart < period.start ? cycleStart : period.start
+  const cardChargesFrom = addDays(period.start, -DAYS_FROM_CARD_CHARGE_TO_DUE)
+  const occurrences = await readOccurrenceFacts(
+    tx,
+    { from: cardChargesFrom < from ? cardChargesFrom : from, to: latest },
+    today,
+  )
+  return occurrences.filter(
+    (occurrence) => occurrence.dueOn >= from || occurrence.entryType === CARD_PURCHASE,
+  )
 }
 
 async function loadAllocationFact(tx: WorkspaceTransaction): Promise<FactAllocation | null> {
