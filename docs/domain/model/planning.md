@@ -139,7 +139,9 @@ the budgets in force (`planning.readBudgetFacts`), the goals with their deadline
 cards with their payment account (`ledger.readCardFacts`), the invoices closing from a month ago on
 with the part fronted for contacts (`ledger.readInvoiceFacts`), the account balances (`ledger.readBalanceFacts`) and the commission
 waterfall's destinations. Occurrences also load from a month before today when the period starts
-later, so the open invoice's subscriptions are there.
+later, so the open invoice's subscriptions are there, and card subscriptions also from 62 days
+before the period starts (`DAYS_FROM_CARD_CHARGE_TO_DUE`), since one charged then can still be
+due inside it.
 Postings are loaded from the start of the oldest previous period to the end of the last coming
 one, and occurrences from the start of the period to that same end. The plan reaches 6 months past
 today, so a coming period beyond it only shows what is already posted.
@@ -154,7 +156,10 @@ variable_income   = variable-income postings in the period (never an occurrence:
 budget_income     = fixed_income, or fixed + variable when budget_base = all_income
 spent             = expense postings in the period (refunds reduce it)
 committed         = pending expense and card-subscription occurrences due in the period, overdue
-                    ones included (installments are already postings, so they are in `spent`)
+                    ones included (installments are already postings, so they are in `spent`). A
+                    card subscription counts where its posting will: on the due date of the invoice
+                    its charge day falls in (`invoiceForPurchase`), or on the charge day under
+                    `purchase_month`, so confirming it never moves it to another period (G72)
 free_to_spend     = budget_income − spent − committed
 daily_allowance   = max(free_to_spend, 0) ÷ days left, today included (the whole period before it
                     starts, null after it ends). Planned items of the remaining days are already

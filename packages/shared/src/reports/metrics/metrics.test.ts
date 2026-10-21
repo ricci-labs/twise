@@ -245,9 +245,9 @@ describe('computeMetrics', () => {
       variableIncome: 120_000,
       budgetIncome: 900_000,
       spent: 60_000,
-      committed: 204_000,
-      freeToSpend: 636_000,
-      dailyAllowance: 37_411,
+      committed: 200_000,
+      freeToSpend: 640_000,
+      dailyAllowance: 37_647,
     })
   })
 
@@ -262,9 +262,9 @@ describe('computeMetrics', () => {
 
   it('spreads what is free over the whole period before it starts, and gives nothing after it', () => {
     expect(computeMetrics(household({ today: '2026-09-20' })).dailyAllowance).toBe(
-      Math.floor(636_000 / 31),
+      Math.floor(640_000 / 31),
     )
-    expect(computeMetrics(household({ today: '2026-10-31' })).dailyAllowance).toBe(636_000)
+    expect(computeMetrics(household({ today: '2026-10-31' })).dailyAllowance).toBe(640_000)
     expect(computeMetrics(household({ today: '2026-11-01' })).dailyAllowance).toBeNull()
   })
 
@@ -272,7 +272,7 @@ describe('computeMetrics', () => {
     const overspent = household({
       postings: [...household().postings, moved('groceries', 1_000_000, '2026-10-14')],
     })
-    expect(computeMetrics(overspent).freeToSpend).toBe(-364_000)
+    expect(computeMetrics(overspent).freeToSpend).toBe(-360_000)
     expect(computeMetrics(overspent).dailyAllowance).toBe(0)
   })
 })
@@ -373,8 +373,8 @@ describe('incomeShare', () => {
   it('splits the budget income into spent, committed and free, in whole percent', () => {
     expect(computeMetrics(household()).incomeShare).toEqual({
       spentPercent: 7,
-      committedPercent: 23,
-      freePercent: 70,
+      committedPercent: 22,
+      freePercent: 71,
     })
   })
 
@@ -385,7 +385,7 @@ describe('incomeShare', () => {
     })
     expect(computeMetrics(overspent).incomeShare).toEqual({
       spentPercent: 107,
-      committedPercent: 23,
+      committedPercent: 22,
       freePercent: 0,
     })
   })
@@ -398,9 +398,9 @@ describe('incomeShare', () => {
 describe('periodPace', () => {
   it('compares the income used with the time gone, in points', () => {
     expect(computeMetrics(household()).periodPace).toEqual({
-      usedPercent: 30,
+      usedPercent: 29,
       elapsedPercent: 48,
-      pointsAhead: -18,
+      pointsAhead: -19,
     })
   })
 
@@ -748,16 +748,44 @@ describe('reserveCoverage', () => {
   })
 })
 
+describe('committed card subscriptions', () => {
+  const tv = (dueOn: string) => ({
+    id: `tv-${dueOn}`,
+    description: 'Streaming',
+    sourceAccountId: 'card',
+    dueOn,
+    amountCents: 5_000,
+    entryType: 'card_purchase' as const,
+    status: 'pending' as const,
+    paidOn: null,
+    categoryAccountId: 'electronics',
+  })
+
+  it('counts a subscription in the period its invoice is due, as its posting will be', () => {
+    const base = household({ occurrences: [tv('2026-10-02'), tv('2026-10-20')] })
+    expect(computeMetrics(base).committed).toBe(5_000)
+    expect(computeMetrics(base).committedAhead[0]?.plannedCents).toBe(5_000)
+  })
+
+  it('counts it on the charge day when the budget follows the purchase month', () => {
+    const byPurchase = household({
+      installmentBudgetView: 'purchase_month',
+      occurrences: [tv('2026-10-02'), tv('2026-10-20')],
+    })
+    expect(computeMetrics(byPurchase).committed).toBe(10_000)
+  })
+})
+
 describe('committedAhead', () => {
   it('shows how much of each coming period installments and bills already take', () => {
     expect(computeMetrics(household()).committedAhead).toEqual([
       {
         label: '2026-11',
         installmentsCents: 30_000,
-        plannedCents: 200_000,
-        committedCents: 230_000,
+        plannedCents: 204_000,
+        committedCents: 234_000,
         fixedIncomeCents: 400_000,
-        percentOfIncome: 58,
+        percentOfIncome: 59,
       },
       {
         label: '2026-12',
