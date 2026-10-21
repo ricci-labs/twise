@@ -142,6 +142,25 @@ export function manyInvoiceLines(count: number) {
   )
 }
 
+export const MEAL_VOUCHER = '00000000-0000-4000-8000-0000000000c9'
+
+export function withMealVoucher(): Record<string, FakeAnswer> {
+  return {
+    [`GET ${BASE}/accounts`]: () =>
+      Response.json([...ACCOUNTS, ledgerAccount(MEAL_VOUCHER, 'benefit', 'VR')]),
+    [`GET ${BASE}/balances`]: () =>
+      Response.json([
+        {
+          accountId: MEAL_VOUCHER,
+          kind: 'benefit',
+          class: 'asset',
+          balanceCents: 64000,
+          naturalBalanceCents: 64000,
+        },
+      ]),
+  }
+}
+
 export function accountsAnswers(overrides: Record<string, FakeAnswer> = {}) {
   return {
     [`GET ${BASE}/accounts`]: () => Response.json(ACCOUNTS),
@@ -159,6 +178,8 @@ export function accountsAnswers(overrides: Record<string, FakeAnswer> = {}) {
       Response.json({
         moneyTotalCents: 1620000,
         moneyAccountCount: 2,
+        benefitTotalCents: 0,
+        benefitAccountCount: 0,
         cardsOpenCents: 289000,
         cardCount: 1,
         nextInvoice: { ...INVOICE, cardAccountId: CARD },

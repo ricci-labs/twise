@@ -20,11 +20,12 @@ import type {
 import { currentWorkspaceDefaults } from '@api/modules/workspaces'
 import {
   addDays,
+  BENEFIT_ACCOUNT_KIND,
   type InvoiceRef,
   type IsoDate,
   invoiceForPurchase,
   invoiceStatusOn,
-  isMoneyAccountKind,
+  isFreeMoneyAccountKind,
   parseIsoDate,
   todayIn,
   toYearMonthLabel,
@@ -77,9 +78,11 @@ export function readAccountsSummary(
 ): Promise<AccountsSummary> {
   return withWorkspace(db, workspaceId, async (tx) => {
     const today = await todayOf(tx, clock)
-    const moneyAccounts = (await selectActiveAccounts(tx)).filter(
-      (account) => isMoneyAccountKind(account.kind) && !account.isSystem && !account.archivedAt,
+    const usable = (await selectActiveAccounts(tx)).filter(
+      (account) => !account.isSystem && !account.archivedAt,
     )
+    const moneyAccounts = usable.filter((account) => isFreeMoneyAccountKind(account.kind))
+    const benefitAccounts = usable.filter((account) => account.kind === BENEFIT_ACCOUNT_KIND)
     const cards = usableCards(await selectActiveCards(tx))
     const balances = await selectAccountBalances(tx)
     const upcoming = await upcomingInvoicesOf(tx, cards, today)
@@ -89,6 +92,11 @@ export function readAccountsSummary(
         balances,
       ),
       moneyAccountCount: moneyAccounts.length,
+      benefitTotalCents: sumOpenCents(
+        benefitAccounts.map((account) => account.id),
+        balances,
+      ),
+      benefitAccountCount: benefitAccounts.length,
       cardsOpenCents: sumOpenCents(
         cards.map((card) => card.accountId),
         balances,

@@ -13,6 +13,7 @@ export const ACCOUNT_CLASS_BY_KIND: Readonly<Record<AccountKind, AccountClass>> 
   savings: 'asset',
   cash_wallet: 'asset',
   investment: 'asset',
+  benefit: 'asset',
   receivable: 'asset',
   credit_card: 'liability',
   loan: 'liability',

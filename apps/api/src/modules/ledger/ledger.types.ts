@@ -212,6 +212,8 @@ export type StoredInvoiceTotal = {
 export type AccountsSummary = {
   moneyTotalCents: number
   moneyAccountCount: number
+  benefitTotalCents: number
+  benefitAccountCount: number
   cardsOpenCents: number
   cardCount: number
   nextInvoice: UpcomingInvoice | null

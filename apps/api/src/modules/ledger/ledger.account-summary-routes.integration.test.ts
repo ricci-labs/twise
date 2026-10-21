@@ -46,12 +46,14 @@ beforeAll(async () => {
   const checking = await createdId(owner.post(`${workspacePath}/accounts`, account('checking')))
   const savings = await createdId(owner.post(`${workspacePath}/accounts`, account('savings')))
   const wallet = await createdId(owner.post(`${workspacePath}/accounts`, account('cash_wallet')))
+  const mealVoucher = await createdId(owner.post(`${workspacePath}/accounts`, account('benefit')))
   const groceries = await createdId(
     owner.post(`${workspacePath}/accounts`, account('expense_category')),
   )
   await openWith(checking, 420_000)
   await openWith(savings, 1_200_000)
   await openWith(wallet, 15_000)
+  await openWith(mealVoucher, 80_000)
   await owner.post(`${workspacePath}/accounts/${wallet}/archive`)
 
   cardX = await createdId(
@@ -143,6 +145,8 @@ describe('GET /accounts/summary', () => {
     expect(summary).toMatchObject({
       moneyTotalCents: 1_620_000,
       moneyAccountCount: 2,
+      benefitTotalCents: 80_000,
+      benefitAccountCount: 1,
       cardsOpenCents: openX + openY,
       cardCount: 2,
     })

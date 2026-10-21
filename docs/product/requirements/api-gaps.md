@@ -1,7 +1,7 @@
 ---
 summary: API gaps and defects found while writing the web requirements (2026-09-29), the Home design (2026-10-09), the new-entry design (2026-10-10), the accounts design (2026-10-14) the entries list design (2026-10-14), the planning designs (2026-10-15) and the contacts design (2026-10-16) — errors that surface as 500, reads the screens need, overview fields the Home needs, and behaviours to decide — with the proposed fix and when.
 read_when: Planning the web work, fixing the API before a screen, or wondering why a requirement works around something.
-updated: 2026-10-18
+updated: 2026-10-20
 ---
 
 # API gaps found by the requirements
@@ -60,6 +60,7 @@ matching screen would be wrong or fragile without it.
 | G67 | Contacts design (`Contato-desktop`): the contact's "Pagamentos recebidos" lists the contact's settlement entries. | `GET /entries` filters by account, category, who spent and shared, not by contact. | `GET /entries?contactId=` → the entries with a posting of that contact. **Done:** `contactId` (uuid) in the entry filters (`GET /entries` and `GET /entries/summary`): entries touching the contact through any posting (its share of a split, a settlement, an opening balance); with `types=settlement` only what the contact paid back. | Contacts round |
 | G68 | Contacts design (`Email-descadastro`): the opt-out page says whose charges stop ("…por e-mail de Member A."). | `POST /api/public/contacts/opt-out` answered `204`, so the page could name no one. | **Done:** it answers `200 { requesterName }`, the display name of who created the last charge sent to the contact by e-mail (already shown in that e-mail), or `null` when none was; nothing about the contact. | Contacts round |
 | G69 | Contacts design (`Contato`, `Cobranca-*`): each open item says where the money came from and the contact's share ("Cartão X · metade de R$ 240,00", "Cartão X · 1 de 3 partes"). | `open-items` had the description and the installment only. | **Done:** `GET /contacts/:contactId/open-items` items add `paidFrom` (the money account or card that paid the entry, `null` when none), `entryAmountCents` (the whole entry), `partCount` (contacts with a share plus the household's own part) and `isEvenSplit`, from the shared `entrySplitOf`. | Contacts round |
+| G70 | The user's meal voucher (VR), asked on 2026-10-20: a prepaid card credited every month that only pays for food. As a wallet it would count in "Total em dinheiro" and could hold a goal. | No kind for it. | **Done:** account kind `benefit` (asset; migration 0070 adds the enum value and makes `asset` the class by default, so the new value isn't used in the transaction that adds it); `GET /accounts/summary` adds `benefitTotalCents` and `benefitAccountCount` and leaves benefits out of `moneyTotalCents`; goals and allocation steps refuse a benefit account (`GOAL_ACCOUNT_INVALID`, `ALLOCATION_ACCOUNT_INVALID`). | Benefit account |
 
 ## Overview fields the Home needs
 From the Home design (`../../design/home/data.md`), approved by the user on 2026-10-09. The web

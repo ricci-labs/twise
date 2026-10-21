@@ -6,6 +6,7 @@ import {
 } from '@shared/ledger/installments/installments'
 import {
   type AccountKind,
+  FREE_MONEY_ACCOUNT_KINDS,
   MAX_INSTALLMENTS,
   MONEY_ACCOUNT_KINDS,
   type MoneyAccountKind,
@@ -24,6 +25,10 @@ import type {
 
 export function isMoneyAccountKind(kind: AccountKind): kind is MoneyAccountKind {
   return (MONEY_ACCOUNT_KINDS as readonly AccountKind[]).includes(kind)
+}
+
+export function isFreeMoneyAccountKind(kind: AccountKind): boolean {
+  return (FREE_MONEY_ACCOUNT_KINDS as readonly AccountKind[]).includes(kind)
 }
 
 export function planPostings(plan: EntryPlan): PostingsPlan {

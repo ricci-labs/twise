@@ -20,6 +20,7 @@ let stepsPath: string
 let reserveGoalId: string
 let tripAccountId: string
 let categoryId: string
+let mealVoucherId: string
 
 beforeAll(async () => {
   const ownerSession = await loggedInUser(app, databases.app, fixtures.runId, 'split-owner')
@@ -46,6 +47,7 @@ beforeAll(async () => {
   const reserveAccount = await account('savings', 'Reserva')
   tripAccountId = await account('savings', 'Viagem')
   categoryId = await account('expense_category', 'Lazer')
+  mealVoucherId = await account('benefit', 'VR')
   reserveGoalId = (
     (await (
       await owner.post(`${workspacePath}/goals`, {
@@ -140,6 +142,10 @@ describe('allocation steps', () => {
       400,
       'ALLOCATION_ACCOUNT_INVALID',
     ])
+    const toBenefit = await member.put(stepsPath, {
+      steps: [{ kind: 'rest', accountId: mealVoucherId }],
+    })
+    expect([toBenefit.status, await codeOf(toBenefit)]).toEqual([400, 'ALLOCATION_ACCOUNT_INVALID'])
 
     const unknownGoal = await member.put(stepsPath, {
       steps: [{ kind: 'fill_goal', goalId: UNKNOWN_ID }],

@@ -97,6 +97,7 @@ export type ListedAccount = {
   amountCents: number
   isCard: boolean
   isMoney: boolean
+  isBenefit: boolean
   isArchived: boolean
 }
 

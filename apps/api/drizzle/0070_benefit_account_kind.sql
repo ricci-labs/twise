@@ -1,0 +1,2 @@
+ALTER TYPE "public"."account_kind" ADD VALUE 'benefit' BEFORE 'receivable';--> statement-breakpoint
+ALTER TABLE "ledger_accounts" ALTER COLUMN "class" SET EXPRESSION AS (case kind when 'credit_card' then 'liability'::account_class when 'loan' then 'liability'::account_class when 'payable' then 'liability'::account_class when 'income_category' then 'income'::account_class when 'expense_category' then 'expense'::account_class when 'opening_balance' then 'equity'::account_class else 'asset'::account_class end);

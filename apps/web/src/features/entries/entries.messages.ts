@@ -119,6 +119,7 @@ export const entriesMessages = {
       savings: 'Poupança',
       cash_wallet: 'Carteira (dinheiro)',
       investment: 'Investimento',
+      benefit: 'Benefício (VR/VA)',
     },
     empty: {
       title: 'Vocês ainda não têm uma conta de dinheiro.',

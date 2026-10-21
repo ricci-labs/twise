@@ -1,7 +1,7 @@
 ---
 summary: Functional requirements for accounts, categories, balances, cards and invoices — screens ACC-01..04 and CARD-01..04, with fields, actions, states, rules and errors.
 read_when: Designing or building accounts, categories, cards or invoice screens.
-updated: 2026-10-15
+updated: 2026-10-20
 ---
 
 # Accounts and cards
@@ -19,6 +19,7 @@ follows). Standards: `../ui-standards.md`. Messages per code: `../error-messages
   | `savings` | "Poupança" | Money |
   | `cash_wallet` | "Carteira (dinheiro)" | Money |
   | `investment` | "Investimento" | Money |
+  | `benefit` | "Benefício (VR/VA)" | Benefits: a prepaid meal or food voucher. Pays expenses and receives income like any money account; out of "Total em dinheiro", goals and the commission split |
   | `loan` | "Empréstimo" | Debts. Not offered in the UI yet: no entry type moves money in or out of it (`../api-gaps.md` G15) |
   | `expense_category` | "Categoria de despesa" | Categories |
   | `income_category` | "Categoria de receita", with nature "Renda fixa" (salário) or "Renda variável" (comissão) | Categories |
@@ -71,7 +72,9 @@ name, "Vence em {dd/mm} · fecha {dd/mm}"). On the phone a carousel with dots (t
 16 px margin, the next one peeking); on the desktop a row of three KPI cards, a third of the width
 each. Then the groups, each with its add link in the header: "Dinheiro" (checking, savings,
 wallet, investment; "+ Nova conta") and "Cartões" ("+ Novo cartão", opens `CARD-04`), with a
-note under the cards "Nos cartões, o total em aberto inclui as parcelas futuras." A row: the loose
+note under the cards "Nos cartões, o total em aberto inclui as parcelas futuras." "Benefícios"
+only when a benefit account exists, after the cards, with the note "Vale-refeição e
+vale-alimentação ficam fora do total em dinheiro." (G70). A row: the loose
 drawing, the name with the colour dot, the second line "{tipo} · {dono}" ("Conta corrente ·
 Member A", "Poupança · da casa"; for a card "Em aberto · fecha {dd/mm} · vence {dd/mm}"), today's
 balance (`naturalBalanceCents`) on the right, and "⋯". "Dívidas" only when one exists (loans have

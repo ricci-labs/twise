@@ -52,16 +52,17 @@ export const invoiceStatus = pgEnum('invoice_status', INVOICE_STATUSES)
 const ACCOUNT_KINDS_OWED_BY_CONTACTS = ['receivable', 'payable'] as const
 
 const CARD_KIND = sql.raw(`'credit_card'`)
+const CLASS_BY_DEFAULT = 'asset'
 
 function quoted(values: readonly string[]): SQL {
   return sql.raw(values.map((value) => `'${value}'`).join(', '))
 }
 
 function classFromKind(): SQL {
-  const branches = Object.entries(ACCOUNT_CLASS_BY_KIND).map(
-    ([kind, accountClassName]) => `when '${kind}' then '${accountClassName}'::account_class`,
-  )
-  return sql.raw(`case kind ${branches.join(' ')} end`)
+  const branches = Object.entries(ACCOUNT_CLASS_BY_KIND)
+    .filter(([, accountClassName]) => accountClassName !== CLASS_BY_DEFAULT)
+    .map(([kind, accountClassName]) => `when '${kind}' then '${accountClassName}'::account_class`)
+  return sql.raw(`case kind ${branches.join(' ')} else '${CLASS_BY_DEFAULT}'::account_class end`)
 }
 
 export const ledgerAccounts = pgTable(
