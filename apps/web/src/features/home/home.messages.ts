@@ -231,6 +231,17 @@ export const homeMessages = {
     charge: 'Cobrar',
     seeContacts: 'Ver contatos',
   },
+  benefit: {
+    description: 'Vale-refeição ou vale-alimentação.',
+    left: 'restantes',
+    lastsToCredit: (pace: string) => `No ritmo de ${pace} por dia, dura até o próximo crédito.`,
+    lastsUntil: (pace: string, day: string) => `No ritmo de ${pace} por dia, dura até ${day}.`,
+    noSpending: (day: string) => `Nenhum gasto desde ${day}.`,
+    empty: 'Acabou o saldo.',
+    nextCredit: 'Próximo crédito: **{amount}** em **{day}**',
+    noCredit: 'Cadastre o crédito do mês como receita fixa para ver quando ele entra.',
+    seeEntries: 'Ver lançamentos',
+  },
   achievements: {
     title: (month: string) => `Conquistas de ${month}`,
     description: 'O que deu certo neste período.',

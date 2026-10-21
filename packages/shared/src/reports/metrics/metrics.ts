@@ -1,5 +1,6 @@
 import { balanceForecast } from '@shared/reports/metrics/balance-forecast'
 import { balanceForecastAll } from '@shared/reports/metrics/balance-forecast-all'
+import { benefitBalances } from '@shared/reports/metrics/benefit-balances'
 import { billsDue } from '@shared/reports/metrics/bills-due'
 import { budgetIncome } from '@shared/reports/metrics/budget-income'
 import { budgetPace } from '@shared/reports/metrics/budget-pace'
@@ -52,6 +53,7 @@ export const METRICS = {
   balanceForecastAll,
   billsDue,
   receivables,
+  benefitBalances,
   periodSummary,
 } as const
 

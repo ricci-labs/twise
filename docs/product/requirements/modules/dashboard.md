@@ -1,7 +1,7 @@
 ---
 summary: Functional requirements for the home screens — the period overview (four indicators, insights, bills due, balance forecast, pace, budgets, coming months, where income goes, invoices, reserve and goals, commissions, receivables, achievements of a closed period, first run), "posso comprar?" and the commission split suggestion (HOME-01..03).
 read_when: Designing or building HOME-01, HOME-02 or HOME-03, or writing the pt-BR text of an insight.
-updated: 2026-10-16
+updated: 2026-10-21
 ---
 
 # Dashboard
@@ -144,11 +144,21 @@ commission (`entries:create`).
 cartões de vocês." "R$ X de {n} contatos · R$ Y em atraso", "Próximo a receber: {contato}, R$ Z em
 {dd/mm}", "Cobrar" (`charges:create`) and "Ver contatos" → `CON-01`. Hidden when nobody owes.
 
+**RF-HOME-20 Meal voucher** (`benefitBalances`, G71), one card per benefit account, built without
+a design from the other cards: the account name, "Vale-refeição ou vale-alimentação.", the balance
+"R$ X restantes", then the pace: "No ritmo de R$ Y por dia, dura até o próximo crédito." (mint),
+"No ritmo de R$ Y por dia, dura até {dd/mm}." (amber when the next credit comes later, muted
+without one), "Nenhum gasto desde {dd/mm}." or "Acabou o saldo." (amber); the next credit "Próximo
+crédito: R$ Z em {dd/mm}" or "Cadastre o crédito do mês como receita fixa para ver quando ele
+entra."; "Ver lançamentos" → `ENT-01` filtered by the account. Hidden without a benefit account.
+Free to spend is unchanged: the voucher's income and the food paid with it count like any other.
+
 **Layout.** Mobile: indicators, "Posso comprar?", insights, bills due, forecast, pace, budgets,
-coming months, where income goes, invoices, reserve and goals, commissions, receivables. Desktop
+coming months, where income goes, invoices, reserve and goals, commissions, receivables, meal
+voucher. Desktop
 (12 columns, equal-height rows): indicators (4×3) · forecast (8) + insights (4) · budgets (8) +
 pace (4) · coming months (8) + where income goes (4) · bills due, invoices, reserve and goals (4
-each) · commissions and receivables (6 each).
+each) · commissions and receivables (6 each) · meal voucher (6).
 
 **States.** Skeletons per section in the shape of the cards (header, period and menu appear at
 once); changing the period keeps the old numbers until the new ones arrive (200 ms fade); each

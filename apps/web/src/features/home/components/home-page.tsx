@@ -11,6 +11,7 @@ import {
   setupQueryOptions,
 } from '@web/features/home/api/home.queries'
 import { AchievementsCard } from '@web/features/home/components/achievements-card'
+import { BenefitCards } from '@web/features/home/components/benefit-card'
 import { BillsDueCard } from '@web/features/home/components/bills-due-card'
 import { BudgetsCard } from '@web/features/home/components/budgets-card'
 import { CanIBuyCard } from '@web/features/home/components/can-i-buy-card'
@@ -288,6 +289,12 @@ function HomeContent({
           nameOf={nameOf}
           canCharge={hasPermission(permissions, 'contacts', 'create')}
           className="lg:order-11 lg:col-span-6"
+        />
+        <BenefitCards
+          workspaceId={workspaceId}
+          overview={data}
+          nameOf={nameOf}
+          className="lg:order-12 lg:col-span-6"
         />
       </div>
     </PageFrame>

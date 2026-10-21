@@ -273,3 +273,18 @@ export type BalanceMove = {
   on: IsoDate
   amountCents: number
 }
+
+export type BenefitCredit = {
+  dueOn: IsoDate
+  amountCents: number
+}
+
+export type BenefitBalance = {
+  accountId: string
+  balanceCents: number
+  spentSince: IsoDate
+  spentCents: number
+  dailySpendCents: number
+  lastsUntil: IsoDate | null
+  nextCredit: BenefitCredit | null
+}
