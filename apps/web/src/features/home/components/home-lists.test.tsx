@@ -2,7 +2,7 @@ import { createMemoryHistory } from '@tanstack/react-router'
 import { AppProviders } from '@web/app/providers'
 import { createApp } from '@web/app/router'
 import { expectNoAccessibilityViolations } from '@web/testing/accessibility'
-import { demoAnswers } from '@web/testing/demo-api'
+import { DEMO_MEAL_VOUCHER, demoAnswers, demoWithBenefits } from '@web/testing/demo-api'
 import {
   accessAs,
   account,
@@ -16,13 +16,13 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import { page } from 'vitest/browser'
 import { render } from 'vitest-browser-react'
 
-async function openHome(access = workspaceAccess) {
+async function openHome(access = workspaceAccess, answers = demoAnswers()) {
   await page.viewport(1440, 900)
   fakeApi({
     'GET /api/auth/me': account,
     'GET /api/workspaces': () => workspaceList(),
     [`GET /api/workspaces/${WORKSPACE_ID}`]: access,
-    ...demoAnswers(),
+    ...answers,
   })
   const app = createApp(createMemoryHistory({ initialEntries: [`/w/${WORKSPACE_ID}`] }))
   const screen = await render(<AppProviders app={app} />)
@@ -63,6 +63,69 @@ describe('HOME-01 lists', () => {
 
     await expect.element(commissions.getByText('+25% acima da média')).toBeVisible()
     await expect.element(commissions.getByRole('link', { name: 'Dividir' })).toBeVisible()
+  })
+
+  it('shows what is left on the meal voucher and whether it lasts to the next credit', async () => {
+    const voucher = {
+      accountId: DEMO_MEAL_VOUCHER,
+      balanceCents: 64_000,
+      spentSince: '2026-10-06',
+      spentCents: 35_000,
+      dailySpendCents: 3500,
+      lastsUntil: '2026-11-07',
+      nextCredit: { dueOn: '2026-11-06', amountCents: 100_000 },
+    }
+    const screen = await openHome(workspaceAccess, demoWithBenefits([voucher]))
+    const card = screen.getByRole('region', { name: 'VR' })
+
+    await expect.element(card.getByText(/^R\$\s640,00$/)).toBeVisible()
+    await expect
+      .element(card.getByText(/No ritmo de R\$\s35,00 por dia, dura até o próximo crédito\./))
+      .toBeVisible()
+    await expect
+      .element(card.getByText(/Próximo crédito:\s*R\$\s1\.000,00 em 06\/11/))
+      .toBeVisible()
+    await expect
+      .element(card.getByRole('link', { name: 'Ver lançamentos' }))
+      .toHaveAttribute('href', `/w/${WORKSPACE_ID}/entries?accountId=${DEMO_MEAL_VOUCHER}`)
+    await expectNoAccessibilityViolations(screen.container)
+  })
+
+  it('warns when the meal voucher runs out before the credit, and asks for the credit', async () => {
+    const short = {
+      accountId: DEMO_MEAL_VOUCHER,
+      balanceCents: 10_000,
+      spentSince: '2026-10-06',
+      spentCents: 70_000,
+      dailySpendCents: 7000,
+      lastsUntil: '2026-10-21',
+    }
+    const screen = await openHome(
+      workspaceAccess,
+      demoWithBenefits([{ ...short, nextCredit: { dueOn: '2026-11-06', amountCents: 100_000 } }]),
+    )
+    await expect
+      .element(screen.getByText(/No ritmo de R\$\s70,00 por dia, dura até 21\/10\./))
+      .toBeVisible()
+    vi.restoreAllMocks()
+    const withoutCredit = await openHome(
+      workspaceAccess,
+      demoWithBenefits([{ ...short, nextCredit: null }]),
+    )
+    await expect
+      .element(
+        withoutCredit.getByText(
+          'Cadastre o crédito do mês como receita fixa para ver quando ele entra.',
+        ),
+      )
+      .toBeVisible()
+  })
+
+  it('shows no meal voucher card when the household has none', async () => {
+    const screen = await openHome()
+    await expect
+      .element(screen.getByText('Vale-refeição ou vale-alimentação.'))
+      .not.toBeInTheDocument()
   })
 
   it('adds up what contacts owe and names the next one to pay', async () => {

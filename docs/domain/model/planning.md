@@ -1,7 +1,7 @@
 ---
 summary: Planning tables — recurrence rules and planned occurrences (forecast, reminders, matching to real entries), financial period calculation, budgets, goals, holidays — and the dashboard metrics, insights, commission split, balance forecast and purchase simulation built on them.
 read_when: Working on projections, fixed bills, salaries/commission forecasts, reminders, budgets, goals, or the financial period.
-updated: 2026-10-16
+updated: 2026-10-21
 ---
 
 # Planning: forecast, periods, budgets, goals
@@ -187,6 +187,12 @@ next_invoice      = per card, the invoice a purchase made today goes to (`invoic
                     `GET /cards/:id/invoices`)
 receivables       = what contacts owe (only those with a positive balance): total, overdue, how
                     many, and the next due amount among them → null when nobody owes
+benefit_balances  = one per benefit account (VR/VA, G71): today's balance; what it spent since its
+                    last credit (or the period start when none came yet) and the daily pace over
+                    those days, today included; the day the balance lasts to at that pace (null
+                    without spending or balance); the next pending income occurrence into it
+                    → { accountId, balanceCents, spentSince, spentCents, dailySpendCents,
+                    lastsUntil, nextCredit: { dueOn, amountCents } | null }
 period_summary    = only for a closed period (today after its end): what was left (`free_to_spend`)
                     and the streak of periods that closed positive, this one included, going back
                     through the 6 loaded ones and stopping at the first negative or idle one;

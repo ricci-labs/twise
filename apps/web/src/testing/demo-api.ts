@@ -33,6 +33,23 @@ export function demoAnswers(scenario: DemoScenario = 'current'): Record<string, 
   }
 }
 
+export const DEMO_MEAL_VOUCHER = '00000000-0000-4000-8000-0000000000b1'
+
+export function demoWithBenefits(benefitBalances: readonly object[]): Record<string, FakeAnswer> {
+  const base = `/api/workspaces/${WORKSPACE_ID}`
+  const overview = demoOverview('current')
+  return {
+    ...demoAnswers(),
+    [`GET ${base}/overview`]: () =>
+      Response.json({ ...overview, metrics: { ...overview.metrics, benefitBalances } }),
+    [`GET ${base}/accounts`]: () =>
+      Response.json([
+        ...demoAccounts(),
+        { ...demoAccounts()[0], id: DEMO_MEAL_VOUCHER, kind: 'benefit', name: 'VR', icon: null },
+      ]),
+  }
+}
+
 function demoAccounts() {
   return demoFacts('current').accounts.map((account, sortOrder) => ({
     ...account,

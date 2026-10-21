@@ -154,6 +154,15 @@ export type ReceivablesCardProps = HomeSectionProps & {
 
 export type AchievementsCardProps = HomeSectionProps
 
+export type BenefitCardProps = HomeSectionProps & {
+  nameOf: NameLookup
+}
+
+export type BenefitPace = {
+  text: string
+  tone: 'good' | 'warning' | 'muted'
+}
+
 export type AchievementTile = {
   key: string
   icon: TwiseIconName

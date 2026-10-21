@@ -92,7 +92,7 @@ export function horizonOf(facts: PeriodFacts, accountId: string): IsoDate {
   return nextSalary && nextSalary > facts.period.end ? nextSalary : facts.period.end
 }
 
-function balanceToday(facts: PeriodFacts, accountId: string): number {
+export function balanceToday(facts: PeriodFacts, accountId: string): number {
   const balance =
     facts.balances.find((candidate) => candidate.accountId === accountId)?.balanceCents ?? 0
   const later = futurePostings(facts, accountId).map((move) => move.amountCents)
