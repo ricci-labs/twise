@@ -1,5 +1,4 @@
 import { useQuery } from '@tanstack/react-query'
-import { Link } from '@tanstack/react-router'
 import { Alert } from '@web/components/feedback/alert'
 import { SectionSkeleton } from '@web/components/feedback/section-skeleton'
 import { showToast } from '@web/components/feedback/toast'
@@ -8,7 +7,6 @@ import { SubmitButton } from '@web/components/forms/submit-button'
 import { Select } from '@web/components/inputs/select'
 import { Switch } from '@web/components/inputs/switch'
 import { PageFrame } from '@web/components/layout/page-frame'
-import { SettingsFormPage } from '@web/components/layout/settings-form-page'
 import { userPreferencesQueryOptions } from '@web/features/auth/api/auth.queries'
 import { useChangeQuietHours } from '@web/features/auth/api/use-change-quiet-hours'
 import { authMessages } from '@web/features/auth/auth.messages'
@@ -19,6 +17,7 @@ import type {
   QuietHoursInput,
   TimeSelectProps,
 } from '@web/features/auth/auth.types'
+import { AccountGroupFrame } from '@web/features/auth/components/account-group-frame'
 import { usePageTitle } from '@web/hooks/use-page-title'
 import { errorMessageFor } from '@web/lib/errors/error-message'
 import { useSchemaForm } from '@web/lib/forms/use-schema-form'
@@ -48,6 +47,7 @@ export function AccountQuietPage({ workspaceId }: AccountPageProps) {
   return (
     <PageFrame edge="bleed">
       <QuietHoursForm
+        layout="page"
         workspaceId={workspaceId}
         start={preferences.data.quietHoursStart}
         end={preferences.data.quietHoursEnd}
@@ -56,7 +56,7 @@ export function AccountQuietPage({ workspaceId }: AccountPageProps) {
   )
 }
 
-function QuietHoursForm({ workspaceId, start, end }: QuietHoursFormProps) {
+export function QuietHoursForm({ workspaceId, start, end, layout }: QuietHoursFormProps) {
   const change = useChangeQuietHours()
   const [problem, setProblem] = useState<string | null>(null)
   const form = useSchemaForm({
@@ -86,12 +86,17 @@ function QuietHoursForm({ workspaceId, start, end }: QuietHoursFormProps) {
 
   return (
     <Form form={form} onSubmit={save}>
-      <SettingsFormPage
-        back={<Link to="/w/$workspaceId/account" params={{ workspaceId }} />}
-        backLabel={messages.back}
+      <AccountGroupFrame
+        layout={layout}
+        workspaceId={workspaceId}
+        description={copy.cardDescription}
         title={copy.title}
         footer={
-          <SubmitButton requiresChange loadingLabel={messages.saving} width="full">
+          <SubmitButton
+            requiresChange
+            loadingLabel={messages.saving}
+            width={layout === 'page' ? 'full' : 'auto'}
+          >
             {copy.save}
           </SubmitButton>
         }
@@ -119,10 +124,12 @@ function QuietHoursForm({ workspaceId, start, end }: QuietHoursFormProps) {
               <TimeSelect name="start" label={copy.start} />
               <TimeSelect name="end" label={copy.end} />
             </div>
-            <p className="text-body-sm text-ink-muted">{copy.help}</p>
+            <p className="text-body-sm text-ink-muted">
+              {layout === 'page' ? copy.help : copy.cardHelp}
+            </p>
           </div>
         )}
-      </SettingsFormPage>
+      </AccountGroupFrame>
     </Form>
   )
 }

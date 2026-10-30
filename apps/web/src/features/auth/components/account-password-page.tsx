@@ -1,5 +1,4 @@
 import { PASSWORD_MAX_LENGTH } from '@financas/shared'
-import { Link } from '@tanstack/react-router'
 import { Alert } from '@web/components/feedback/alert'
 import { showToast } from '@web/components/feedback/toast'
 import { Form } from '@web/components/forms/form'
@@ -7,15 +6,16 @@ import { FormField } from '@web/components/forms/form-field'
 import { SubmitButton } from '@web/components/forms/submit-button'
 import { PasswordInput } from '@web/components/inputs/password-input'
 import { PageFrame } from '@web/components/layout/page-frame'
-import { SettingsFormPage } from '@web/components/layout/settings-form-page'
 import { useChangePassword } from '@web/features/auth/api/use-change-password'
 import { authMessages } from '@web/features/auth/auth.messages'
 import { passwordChangeFormSchema } from '@web/features/auth/auth.schemas'
 import type {
+  AccountFormProps,
   AccountPageProps,
   PasswordChangeInput,
   PasswordProblem,
 } from '@web/features/auth/auth.types'
+import { AccountGroupFrame } from '@web/features/auth/components/account-group-frame'
 import { usePageTitle } from '@web/hooks/use-page-title'
 import { ApiError } from '@web/lib/api/api-error'
 import { errorMessageFor } from '@web/lib/errors/error-message'
@@ -30,6 +30,14 @@ const EMPTY = { currentPassword: '', newPassword: '', confirmation: '' }
 
 export function AccountPasswordPage({ workspaceId }: AccountPageProps) {
   usePageTitle(messages.pageTitle)
+  return (
+    <PageFrame edge="bleed">
+      <PasswordForm workspaceId={workspaceId} layout="page" />
+    </PageFrame>
+  )
+}
+
+export function PasswordForm({ workspaceId, layout }: AccountFormProps) {
   const change = useChangePassword()
   const [problem, setProblem] = useState<PasswordProblem | null>(null)
   const form = useSchemaForm({
@@ -61,28 +69,29 @@ export function AccountPasswordPage({ workspaceId }: AccountPageProps) {
   }
 
   return (
-    <PageFrame edge="bleed">
-      <Form form={form} onSubmit={save}>
-        <SettingsFormPage
-          back={<Link to="/w/$workspaceId/account" params={{ workspaceId }} />}
-          backLabel={authMessages.myAccount.back}
-          title={messages.title}
-          footer={
-            <SubmitButton
-              width="full"
-              loadingLabel={messages.saving}
-              waitUntil={problem?.retryAt ?? null}
-              waitLabel={messages.retryIn}
-            >
-              {messages.save}
-            </SubmitButton>
-          }
-        >
-          {problem && (
-            <Alert tone={problem.retryAt ? 'warning' : 'danger'} isUrgent>
-              {problem.message}
-            </Alert>
-          )}
+    <Form form={form} onSubmit={save}>
+      <AccountGroupFrame
+        layout={layout}
+        workspaceId={workspaceId}
+        description={messages.cardDescription}
+        title={layout === 'card' ? authMessages.myAccount.passwordRow : messages.title}
+        footer={
+          <SubmitButton
+            width={layout === 'page' ? 'full' : 'auto'}
+            loadingLabel={messages.saving}
+            waitUntil={problem?.retryAt ?? null}
+            waitLabel={messages.retryIn}
+          >
+            {messages.save}
+          </SubmitButton>
+        }
+      >
+        {problem && (
+          <Alert tone={problem.retryAt ? 'warning' : 'danger'} isUrgent>
+            {problem.message}
+          </Alert>
+        )}
+        <div className="flex flex-col gap-5 lg:grid lg:grid-cols-3 lg:items-start lg:gap-4">
           <FormField<PasswordChangeInput>
             name="currentPassword"
             label={messages.current}
@@ -94,7 +103,7 @@ export function AccountPasswordPage({ workspaceId }: AccountPageProps) {
           <FormField<PasswordChangeInput>
             name="newPassword"
             label={messages.next}
-            help={messages.nextHelp}
+            help={layout === 'page' ? messages.nextHelp : undefined}
             isRequired
             maxLength={PASSWORD_MAX_LENGTH}
           >
@@ -108,9 +117,9 @@ export function AccountPasswordPage({ workspaceId }: AccountPageProps) {
           >
             {(control) => <PasswordInput autoComplete="new-password" {...control} />}
           </FormField>
-        </SettingsFormPage>
-      </Form>
-    </PageFrame>
+        </div>
+      </AccountGroupFrame>
+    </Form>
   )
 }
 

@@ -196,6 +196,13 @@ export type AccountHeaderProps = {
 export type AccountNameFormProps = {
   workspaceId: string
   displayName: string
+  email: string
+  layout: AccountLayout
+}
+
+export type AccountFormProps = {
+  workspaceId: string
+  layout: AccountLayout
 }
 
 export type DisplayNameInput = { displayName: string }
@@ -213,6 +220,7 @@ export type QuietHoursFormProps = {
   workspaceId: string
   start: string | null
   end: string | null
+  layout: AccountLayout
 }
 
 export type TimeSelectProps = {
@@ -229,6 +237,7 @@ export type AccountNoticesPageProps = {
 
 export type NoticesFormProps = AccountNoticesPageProps & {
   daysBefore: number
+  layout: AccountLayout
 }
 
 export type NoticeExampleProps = {
@@ -239,4 +248,16 @@ export type NoticeExampleProps = {
 export type AccountHubProps = {
   workspaceId: string
   workspaceName: string
+}
+
+export type AccountLayout = 'page' | 'card'
+
+export type AccountGroupFrameProps = {
+  layout: AccountLayout
+  workspaceId: string
+  title: string
+  description?: string
+  footer?: ReactNode
+  className?: string
+  children: ReactNode
 }
