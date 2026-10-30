@@ -9,6 +9,7 @@ import type {
   fetchWorkspaceSettings,
 } from '@web/features/settings/api/settings.queries'
 import type {
+  budgetFormSchema,
   chargeTextFormSchema,
   holidayFormSchemaFor,
   holidaysSearchSchema,
@@ -284,5 +285,22 @@ export type PeriodChoiceFieldProps = {
 }
 
 export type WatchedPeriodPreviewProps = {
+  workspaceId: string
+}
+
+export type BudgetFormInput = z.input<typeof budgetFormSchema>
+
+export type BudgetPageProps = {
+  workspaceId: string
+  permissions: readonly Permission[]
+}
+
+export type BudgetFormProps = {
+  workspaceId: string
+  settings: WorkspaceSettings
+  canUpdate: boolean
+}
+
+export type BudgetRowProps = {
   workspaceId: string
 }

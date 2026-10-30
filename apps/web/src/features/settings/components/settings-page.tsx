@@ -15,6 +15,7 @@ import {
 import { holidaySummaryText } from '@web/features/settings/components/holiday-views'
 import { settingsMessages as messages } from '@web/features/settings/settings.messages'
 import type {
+  BudgetRowProps,
   ChargeTextRowProps,
   HolidaysRowProps,
   NameRowProps,
@@ -27,8 +28,9 @@ import { usePageTitle } from '@web/hooks/use-page-title'
 import { formatRange } from '@web/lib/format/calendar'
 import { hasPermission } from '@web/lib/permissions'
 
-const NAME_ART = 'home'
+const NAME_ART = 'house'
 const PERIOD_ART = 'calendar'
+const BUDGET_ART = 'wallet'
 const HOLIDAYS_ART = 'calendar'
 const PIX_ART = 'coin'
 const CHARGE_TEXT_ART = 'list'
@@ -48,6 +50,7 @@ export function SettingsPage({ workspaceId, workspaceName, permissions }: Settin
           >
             <NameRow workspaceId={workspaceId} workspaceName={workspaceName} />
             <PeriodRow workspaceId={workspaceId} />
+            <BudgetRow workspaceId={workspaceId} />
           </AccountGroup>
         )}
         {hasPermission(permissions, 'planning', 'view') && (
@@ -103,6 +106,22 @@ function PeriodRow({ workspaceId }: PeriodRowProps) {
       }
       icon={PERIOD_ART}
       link={<Link to="/w/$workspaceId/settings/period" params={{ workspaceId }} />}
+    />
+  )
+}
+
+function BudgetRow({ workspaceId }: BudgetRowProps) {
+  const settings = useQuery(workspaceSettingsQueryOptions(workspaceId)).data
+  const row = messages.budgetRow
+  return (
+    <SettingsRow
+      title={row.title}
+      detail={
+        settings &&
+        row.detail(row.bases[settings.budgetBase], row.views[settings.installmentBudgetView])
+      }
+      icon={BUDGET_ART}
+      link={<Link to="/w/$workspaceId/settings/budget" params={{ workspaceId }} />}
     />
   )
 }

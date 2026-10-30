@@ -42,6 +42,7 @@ import { Route as AppWWorkspaceIdPlanningTabRouteImport } from './routes/_app/w/
 import { Route as AppWWorkspaceIdPlanningHolidaysRouteImport } from './routes/_app/w/$workspaceId/planning/holidays'
 import { Route as AppWWorkspaceIdPlanningSplitRouteImport } from './routes/_app/w/$workspaceId/planning/split'
 import { Route as AppWWorkspaceIdSettingsIndexRouteImport } from './routes/_app/w/$workspaceId/settings/index'
+import { Route as AppWWorkspaceIdSettingsBudgetRouteImport } from './routes/_app/w/$workspaceId/settings/budget'
 import { Route as AppWWorkspaceIdSettingsChargeTextRouteImport } from './routes/_app/w/$workspaceId/settings/charge-text'
 import { Route as AppWWorkspaceIdSettingsHolidaysRouteImport } from './routes/_app/w/$workspaceId/settings/holidays'
 import { Route as AppWWorkspaceIdSettingsNameRouteImport } from './routes/_app/w/$workspaceId/settings/name'
@@ -223,6 +224,12 @@ const AppWWorkspaceIdSettingsIndexRoute =
     path: '/settings/',
     getParentRoute: () => AppWWorkspaceIdRouteRoute,
   } as any)
+const AppWWorkspaceIdSettingsBudgetRoute =
+  AppWWorkspaceIdSettingsBudgetRouteImport.update({
+    id: '/settings/budget',
+    path: '/settings/budget',
+    getParentRoute: () => AppWWorkspaceIdRouteRoute,
+  } as any)
 const AppWWorkspaceIdSettingsChargeTextRoute =
   AppWWorkspaceIdSettingsChargeTextRouteImport.update({
     id: '/settings/charge-text',
@@ -290,6 +297,7 @@ export interface FileRoutesByFullPath {
   '/w/$workspaceId/planning/$tab': typeof AppWWorkspaceIdPlanningTabRoute
   '/w/$workspaceId/planning/holidays': typeof AppWWorkspaceIdPlanningHolidaysRoute
   '/w/$workspaceId/planning/split': typeof AppWWorkspaceIdPlanningSplitRoute
+  '/w/$workspaceId/settings/budget': typeof AppWWorkspaceIdSettingsBudgetRoute
   '/w/$workspaceId/settings/charge-text': typeof AppWWorkspaceIdSettingsChargeTextRoute
   '/w/$workspaceId/settings/holidays': typeof AppWWorkspaceIdSettingsHolidaysRoute
   '/w/$workspaceId/settings/name': typeof AppWWorkspaceIdSettingsNameRoute
@@ -328,6 +336,7 @@ export interface FileRoutesByTo {
   '/w/$workspaceId/planning/$tab': typeof AppWWorkspaceIdPlanningTabRoute
   '/w/$workspaceId/planning/holidays': typeof AppWWorkspaceIdPlanningHolidaysRoute
   '/w/$workspaceId/planning/split': typeof AppWWorkspaceIdPlanningSplitRoute
+  '/w/$workspaceId/settings/budget': typeof AppWWorkspaceIdSettingsBudgetRoute
   '/w/$workspaceId/settings/charge-text': typeof AppWWorkspaceIdSettingsChargeTextRoute
   '/w/$workspaceId/settings/holidays': typeof AppWWorkspaceIdSettingsHolidaysRoute
   '/w/$workspaceId/settings/name': typeof AppWWorkspaceIdSettingsNameRoute
@@ -370,6 +379,7 @@ export interface FileRoutesById {
   '/_app/w/$workspaceId/planning/$tab': typeof AppWWorkspaceIdPlanningTabRoute
   '/_app/w/$workspaceId/planning/holidays': typeof AppWWorkspaceIdPlanningHolidaysRoute
   '/_app/w/$workspaceId/planning/split': typeof AppWWorkspaceIdPlanningSplitRoute
+  '/_app/w/$workspaceId/settings/budget': typeof AppWWorkspaceIdSettingsBudgetRoute
   '/_app/w/$workspaceId/settings/charge-text': typeof AppWWorkspaceIdSettingsChargeTextRoute
   '/_app/w/$workspaceId/settings/holidays': typeof AppWWorkspaceIdSettingsHolidaysRoute
   '/_app/w/$workspaceId/settings/name': typeof AppWWorkspaceIdSettingsNameRoute
@@ -411,6 +421,7 @@ export interface FileRouteTypes {
     | '/w/$workspaceId/planning/$tab'
     | '/w/$workspaceId/planning/holidays'
     | '/w/$workspaceId/planning/split'
+    | '/w/$workspaceId/settings/budget'
     | '/w/$workspaceId/settings/charge-text'
     | '/w/$workspaceId/settings/holidays'
     | '/w/$workspaceId/settings/name'
@@ -449,6 +460,7 @@ export interface FileRouteTypes {
     | '/w/$workspaceId/planning/$tab'
     | '/w/$workspaceId/planning/holidays'
     | '/w/$workspaceId/planning/split'
+    | '/w/$workspaceId/settings/budget'
     | '/w/$workspaceId/settings/charge-text'
     | '/w/$workspaceId/settings/holidays'
     | '/w/$workspaceId/settings/name'
@@ -490,6 +502,7 @@ export interface FileRouteTypes {
     | '/_app/w/$workspaceId/planning/$tab'
     | '/_app/w/$workspaceId/planning/holidays'
     | '/_app/w/$workspaceId/planning/split'
+    | '/_app/w/$workspaceId/settings/budget'
     | '/_app/w/$workspaceId/settings/charge-text'
     | '/_app/w/$workspaceId/settings/holidays'
     | '/_app/w/$workspaceId/settings/name'
@@ -743,6 +756,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppWWorkspaceIdSettingsIndexRouteImport
       parentRoute: typeof AppWWorkspaceIdRouteRoute
     }
+    '/_app/w/$workspaceId/settings/budget': {
+      id: '/_app/w/$workspaceId/settings/budget'
+      path: '/settings/budget'
+      fullPath: '/w/$workspaceId/settings/budget'
+      preLoaderRoute: typeof AppWWorkspaceIdSettingsBudgetRouteImport
+      parentRoute: typeof AppWWorkspaceIdRouteRoute
+    }
     '/_app/w/$workspaceId/settings/charge-text': {
       id: '/_app/w/$workspaceId/settings/charge-text'
       path: '/settings/charge-text'
@@ -805,6 +825,7 @@ interface AppWWorkspaceIdRouteRouteChildren {
   AppWWorkspaceIdPlanningTabRoute: typeof AppWWorkspaceIdPlanningTabRoute
   AppWWorkspaceIdPlanningHolidaysRoute: typeof AppWWorkspaceIdPlanningHolidaysRoute
   AppWWorkspaceIdPlanningSplitRoute: typeof AppWWorkspaceIdPlanningSplitRoute
+  AppWWorkspaceIdSettingsBudgetRoute: typeof AppWWorkspaceIdSettingsBudgetRoute
   AppWWorkspaceIdSettingsChargeTextRoute: typeof AppWWorkspaceIdSettingsChargeTextRoute
   AppWWorkspaceIdSettingsHolidaysRoute: typeof AppWWorkspaceIdSettingsHolidaysRoute
   AppWWorkspaceIdSettingsNameRoute: typeof AppWWorkspaceIdSettingsNameRoute
@@ -832,6 +853,7 @@ const AppWWorkspaceIdRouteRouteChildren: AppWWorkspaceIdRouteRouteChildren = {
   AppWWorkspaceIdPlanningTabRoute: AppWWorkspaceIdPlanningTabRoute,
   AppWWorkspaceIdPlanningHolidaysRoute: AppWWorkspaceIdPlanningHolidaysRoute,
   AppWWorkspaceIdPlanningSplitRoute: AppWWorkspaceIdPlanningSplitRoute,
+  AppWWorkspaceIdSettingsBudgetRoute: AppWWorkspaceIdSettingsBudgetRoute,
   AppWWorkspaceIdSettingsChargeTextRoute:
     AppWWorkspaceIdSettingsChargeTextRoute,
   AppWWorkspaceIdSettingsHolidaysRoute: AppWWorkspaceIdSettingsHolidaysRoute,

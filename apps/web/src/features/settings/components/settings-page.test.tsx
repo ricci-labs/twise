@@ -77,6 +77,10 @@ describe('Configurações', () => {
     await expect
       .element(period.getByText('Dia 1 (mês do calendário) · Período atual: 1 out – 31 out'))
       .toBeVisible()
+    const budget = workspace.getByRole('link', { name: /Orçamento/ })
+    await expect
+      .element(budget.getByText('Só a renda fixa · Parcelas na fatura em que caem'))
+      .toBeVisible()
     await name.click()
     await expect
       .poll(() => app.router.state.location.pathname)

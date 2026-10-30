@@ -1,8 +1,10 @@
 import {
+  BUDGET_BASES,
   CHARGE_TEXT_LIMITS,
   type ChargeTextField,
   HOLIDAY_YEAR_MAX,
   HOLIDAY_YEAR_MIN,
+  INSTALLMENT_BUDGET_VIEWS,
   type IsoDate,
   nationalHolidays,
   newHolidaySchema,
@@ -70,4 +72,9 @@ export const periodFormSchema = z.object({
   periodAnchor: z.enum(PERIOD_ANCHORS),
   dayOfMonth: z.string(),
   businessDay: z.string(),
+})
+
+export const budgetFormSchema = z.object({
+  budgetBase: z.enum(BUDGET_BASES),
+  installmentBudgetView: z.enum(INSTALLMENT_BUDGET_VIEWS),
 })

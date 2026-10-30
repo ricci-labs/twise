@@ -51,6 +51,33 @@ export const settingsMessages = {
     previewFailed: 'Não foi possível mostrar o período agora.',
     save: 'Salvar período',
   },
+  budgetRow: {
+    title: 'Orçamento',
+    bases: { fixed_income: 'Só a renda fixa', all_income: 'Toda a renda' },
+    views: {
+      per_installment: 'Parcelas na fatura em que caem',
+      purchase_month: 'Parcelas inteiras no mês da compra',
+    },
+    detail: (base: string, view: string) => `${base} · ${view}`,
+  },
+  budget: {
+    pageTitle: 'Orçamento',
+    title: 'Orçamento',
+    back: 'Voltar para Configurações',
+    baseLabel: 'O orçamento considera',
+    baseHelp: 'Comissões variam; contar com elas no orçamento pode deixar o mês apertado.',
+    bases: {
+      fixed_income: 'Só a renda fixa',
+      all_income: 'Toda a renda, incluindo comissões',
+    },
+    viewLabel: 'Compras parceladas contam',
+    views: {
+      per_installment: 'Em cada parcela, na fatura em que ela cai',
+      purchase_month: 'Inteiras, no mês da compra',
+    },
+    recommended: 'recomendado',
+    save: 'Salvar orçamento',
+  },
   workspaceName: {
     pageTitle: 'Nome e moeda',
     title: 'Nome e moeda',
