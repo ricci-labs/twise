@@ -1,6 +1,7 @@
 import { SettingsRow } from '@web/components/navigation/settings-row/settings-row'
 import { expectNoAccessibilityViolations } from '@web/testing/accessibility'
 import { expectClampedToTwoLines, supportLineOf } from '@web/testing/long-text'
+import { CalendarDays } from 'lucide-react'
 import { describe, expect, it } from 'vitest'
 import { page } from 'vitest/browser'
 import { render } from 'vitest-browser-react'
@@ -15,7 +16,7 @@ describe('SettingsRow', () => {
         <SettingsRow
           title="Feriados"
           detail="15 em 2026 · próximo: Finados, 02/11"
-          icon="calendar"
+          icon={<CalendarDays />}
           link={<a href="#feriados" />}
         />
       </ul>,
@@ -33,7 +34,7 @@ describe('SettingsRow', () => {
         <SettingsRow
           title="Feriados"
           detail={LONG_DETAIL}
-          icon="calendar"
+          icon={<CalendarDays />}
           link={<a href="#feriados" />}
         />
       </ul>,

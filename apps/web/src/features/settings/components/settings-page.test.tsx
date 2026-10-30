@@ -55,6 +55,9 @@ describe('Configurações', () => {
     await expect
       .element(page.getByRole('heading', { name: 'Configurações', level: 1 }))
       .toBeVisible()
+    await expect
+      .element(page.getByText('Do espaço Casa. Valem para todos os membros.'))
+      .toBeVisible()
     const planning = page.getByRole('region', { name: 'Planejamento' })
     const holidays = planning.getByRole('link', { name: /Feriados/ })
     await expect.element(holidays.getByText('15 em 2026 · próximo: Finados, 02/11')).toBeVisible()
@@ -110,11 +113,11 @@ describe('Configurações', () => {
     await expect.element(page.getByRole('heading', { name: 'Feriados', level: 1 })).toBeVisible()
   })
 
-  it('lists the Pix under Recebimentos with who receives it and opens it', async () => {
+  it('lists the Pix under Cobranças with who receives it and opens it', async () => {
     const app = await openSettings()
-    const receiving = page.getByRole('region', { name: 'Recebimentos' })
+    const receiving = page.getByRole('region', { name: 'Cobranças' })
     const pix = receiving.getByRole('link', { name: /Recebimento por Pix/ })
-    await expect.element(pix.getByText('Chave cadastrada · MEMBER A')).toBeVisible()
+    await expect.element(pix.getByText('MEMBER A · SAO PAULO')).toBeVisible()
     await pix.click()
     await expect
       .poll(() => app.router.state.location.pathname)
@@ -131,10 +134,10 @@ describe('Configurações', () => {
       .toBeVisible()
   })
 
-  it('lists the charge text under Recebimentos and opens it', async () => {
+  it('lists the charge text under Cobranças and opens it', async () => {
     const app = await openSettings()
     const text = page
-      .getByRole('region', { name: 'Recebimentos' })
+      .getByRole('region', { name: 'Cobranças' })
       .getByRole('link', { name: /Mensagem das cobranças/ })
     await expect.element(text.getByText('Texto padrão')).toBeVisible()
     await text.click()

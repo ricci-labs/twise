@@ -1,5 +1,6 @@
 import { SettingsRow } from '@web/components/navigation/settings-row/settings-row'
 import type { ComponentExamples } from '@web/lib/examples.types'
+import { CalendarDays, Target } from 'lucide-react'
 import type { ReactNode } from 'react'
 
 function Card({ children }: { children: ReactNode }) {
@@ -20,13 +21,13 @@ export const settingsRowExamples: ComponentExamples = {
           <SettingsRow
             title="Feriados"
             detail="15 em 2026 · próximo: Finados, 02/11"
-            icon="calendar"
+            icon={<CalendarDays />}
             link={<a href="#feriados" />}
           />
           <SettingsRow
             title="Base dos orçamentos"
             detail="Período financeiro"
-            icon="piggy-bank"
+            icon={<Target />}
             link={<a href="#orcamentos" />}
           />
         </Card>

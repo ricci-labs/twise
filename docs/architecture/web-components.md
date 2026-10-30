@@ -376,7 +376,8 @@ passes the overview's numbers.
   `artName` when the drawing comes from something else (an entry's category). A row whose menu is open (`data-popup-open` in its last cell) gets the `page`
   highlight; an `isOpen` row (a category showing all its chips) gets it too, top-aligned.
 - `PageHeader` (`components/layout/page-header`): a screen's title (`form-title-lg` on the phone,
-  `display` from 1024 px), its description on the desktop only and the actions on the right.
+  `display` from 1024 px), its description on the desktop only (`descriptionOn="always"` keeps it on
+  the phone, as the Configurações hub's "Do espaço Casa. …") and the actions on the right.
 - `KpiCard` + `KpiBadge` (`components/display/kpi-card`): label (`h3`) with an optional help
   slot, the value, a badge and the foot lines (`children`); `tone` `plain`, `mint` (the first
   card) or `danger` (passed the plan); `art` sits at the bottom right and the foot keeps clear of
@@ -1032,8 +1033,9 @@ online with `asChild` are translated to `render`.
   year at a time between `min` and `max` (the arrow at the limit is disabled), a `nav` named by
   `label`; the year is announced as it changes.
 - `SettingsRow` (`components/navigation/settings-row`): one row of Configurações (`li`): a link with
-  the loose drawing (44 px), the title, one line of state ("15 em 2026 · próximo: Finados, 02/11",
-  2 lines at most) and a chevron, inside an `AccountGroup` titled by the group ("Planejamento").
+  the line icon in a 36 px sunken tile (`icon`, a lucide element; settings design), the title, the
+  current value ("15 em 2026 · próximo: Finados, 02/11", through `MetaLine`, 2 lines at most) and a
+  chevron, inside an `AccountGroup` titled by the group ("Espaço", "Cobranças", "Planejamento").
 - `NextHolidayCard` (`components/finance/next-holiday-card`, PLAN-07 desktop): "Próximo feriado",
   the large ink `DateBlock`, the name in the display face (2 lines), "Segunda-feira · daqui a 18
   dias" ("amanhã", "hoje"), and at the bottom the amber box with what it moves in the fixed bills

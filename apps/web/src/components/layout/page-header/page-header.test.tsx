@@ -22,4 +22,17 @@ describe('PageHeader', () => {
     await page.viewport(390, 844)
     await expect.element(screen.getByText(/Faturas, limites/)).not.toBeVisible()
   })
+
+  it('keeps the explanation on the phone when asked', async () => {
+    await page.viewport(390, 844)
+    const screen = await render(
+      <PageHeader
+        title="Configurações"
+        description="Do espaço Casa. Valem para todos os membros."
+        descriptionOn="always"
+      />,
+    )
+
+    await expect.element(screen.getByText(/Valem para todos os membros/)).toBeVisible()
+  })
 })

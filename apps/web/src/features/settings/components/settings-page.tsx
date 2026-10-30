@@ -29,14 +29,7 @@ import type {
 import { usePageTitle } from '@web/hooks/use-page-title'
 import { formatRange } from '@web/lib/format/calendar'
 import { hasPermission } from '@web/lib/permissions'
-
-const NAME_ART = 'house'
-const PERIOD_ART = 'calendar'
-const BUDGET_ART = 'wallet'
-const CALENDAR_ART = 'travel'
-const HOLIDAYS_ART = 'calendar'
-const PIX_ART = 'coin'
-const CHARGE_TEXT_ART = 'list'
+import { CalendarDays, Flag, Globe, House, MessageCircle, QrCode, Target } from 'lucide-react'
 
 export function SettingsPage({ workspaceId, workspaceName, permissions }: SettingsPageProps) {
   usePageTitle(messages.pageTitle)
@@ -44,7 +37,11 @@ export function SettingsPage({ workspaceId, workspaceName, permissions }: Settin
   const canUpdate = hasPermission(permissions, 'settings', 'update')
   return (
     <PageFrame className="gap-4 lg:gap-6">
-      <PageHeader title={messages.title} />
+      <PageHeader
+        title={messages.title}
+        description={messages.lead(workspaceName)}
+        descriptionOn="always"
+      />
       <div className="flex flex-col gap-5 lg:max-w-160">
         {canView && (
           <AccountGroup
@@ -57,15 +54,15 @@ export function SettingsPage({ workspaceId, workspaceName, permissions }: Settin
             <CalendarRow workspaceId={workspaceId} />
           </AccountGroup>
         )}
-        {hasPermission(permissions, 'planning', 'view') && (
-          <AccountGroup title={messages.groups.planning}>
-            <HolidaysRow workspaceId={workspaceId} />
-          </AccountGroup>
-        )}
         {canView && (
           <AccountGroup title={messages.groups.receiving}>
             <PixRow workspaceId={workspaceId} />
             <ChargeTextRow workspaceId={workspaceId} />
+          </AccountGroup>
+        )}
+        {hasPermission(permissions, 'planning', 'view') && (
+          <AccountGroup title={messages.groups.planning}>
+            <HolidaysRow workspaceId={workspaceId} />
           </AccountGroup>
         )}
       </div>
@@ -80,7 +77,7 @@ function NameRow({ workspaceId, workspaceName }: NameRowProps) {
     <SettingsRow
       title={messages.nameRow.title}
       detail={currency ? messages.nameRow.detail(workspaceName, currency) : undefined}
-      icon={NAME_ART}
+      icon={<House />}
       link={<Link to="/w/$workspaceId/settings/name" params={{ workspaceId }} />}
     />
   )
@@ -108,7 +105,7 @@ function PeriodRow({ workspaceId }: PeriodRowProps) {
             )
           : undefined
       }
-      icon={PERIOD_ART}
+      icon={<CalendarDays />}
       link={<Link to="/w/$workspaceId/settings/period" params={{ workspaceId }} />}
     />
   )
@@ -124,7 +121,7 @@ function BudgetRow({ workspaceId }: BudgetRowProps) {
         settings &&
         row.detail(row.bases[settings.budgetBase], row.views[settings.installmentBudgetView])
       }
-      icon={BUDGET_ART}
+      icon={<Target />}
       link={<Link to="/w/$workspaceId/settings/budget" params={{ workspaceId }} />}
     />
   )
@@ -142,7 +139,7 @@ function CalendarRow({ workspaceId }: CalendarRowProps) {
           ? row.detail(week, timezoneText(settings.timezone, new Date()).label)
           : undefined
       }
-      icon={CALENDAR_ART}
+      icon={<Globe />}
       link={<Link to="/w/$workspaceId/settings/calendar" params={{ workspaceId }} />}
     />
   )
@@ -171,7 +168,7 @@ function HolidaysRow({ workspaceId }: HolidaysRowProps) {
       detail={
         holidays.data && year !== null ? holidaySummaryText(holidays.data.summary, year) : undefined
       }
-      icon={HOLIDAYS_ART}
+      icon={<Flag />}
       link={<Link to="/w/$workspaceId/settings/holidays" params={{ workspaceId }} />}
     />
   )
@@ -182,8 +179,10 @@ function PixRow({ workspaceId }: PixRowProps) {
   return (
     <SettingsRow
       title={messages.pixRow.title}
-      detail={settings ? pixRowDetail(settings.pixReceiverName) : undefined}
-      icon={PIX_ART}
+      detail={
+        settings ? pixRowDetail(settings.pixReceiverName, settings.pixReceiverCity) : undefined
+      }
+      icon={<QrCode />}
       link={<Link to="/w/$workspaceId/settings/pix" params={{ workspaceId }} />}
     />
   )
@@ -196,7 +195,7 @@ function ChargeTextRow({ workspaceId }: ChargeTextRowProps) {
     <SettingsRow
       title={row.title}
       detail={text && chargeTextRowDetail(text.isDefault)}
-      icon={CHARGE_TEXT_ART}
+      icon={<MessageCircle />}
       link={<Link to="/w/$workspaceId/settings/charge-text" params={{ workspaceId }} />}
     />
   )
@@ -206,6 +205,8 @@ function chargeTextRowDetail(isDefault: boolean): string {
   return isDefault ? messages.chargeTextRow.standard : messages.chargeTextRow.custom
 }
 
-function pixRowDetail(receiverName: string | null): string {
-  return receiverName === null ? messages.pixRow.missing : messages.pixRow.configured(receiverName)
+function pixRowDetail(receiverName: string | null, receiverCity: string | null): string {
+  return receiverName === null || receiverCity === null
+    ? messages.pixRow.missing
+    : messages.pixRow.configured(receiverName, receiverCity)
 }
