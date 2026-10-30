@@ -62,6 +62,7 @@ export async function readCardFacts(tx: WorkspaceTransaction): Promise<FactCard[
     closingDay: card.closingDay,
     dueDay: card.dueDay,
     purchaseOnClosingDayGoesNext: card.purchaseOnClosingDayGoesNext,
+    limitCents: card.limitCents,
   }))
 }
 

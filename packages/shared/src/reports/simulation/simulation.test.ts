@@ -6,6 +6,7 @@ import { describe, expect, it } from 'vitest'
 const CARD = {
   accountId: 'card',
   paymentAccountId: 'checking',
+  limitCents: 500_000,
   closingDay: 3,
   dueDay: 10,
   purchaseOnClosingDayGoesNext: true,
@@ -138,6 +139,53 @@ describe('simulatePurchase', () => {
     expect(small).toMatchObject({
       verdict: 'fits',
       verdictReason: { code: 'free_left', leftCents: 400_000, until: '2026-10-31' },
+    })
+  })
+
+  it('shows the card free limit before and after, and alerts when the purchase passes it', () => {
+    const owing = household({ balances: [{ accountId: 'card', balanceCents: -100_000 }] })
+    const impact = simulatePurchase(owing, TV_IN_THREE)
+    expect(impact.card).toEqual({
+      accountId: 'card',
+      limitCents: 500_000,
+      freeBeforeCents: 400_000,
+      freeAfterCents: 100_000,
+    })
+    expect(impact.account).toBeNull()
+
+    const tooBig = simulatePurchase(owing, { ...TV_IN_THREE, amountCents: 450_000 })
+    expect(tooBig).toMatchObject({
+      card: { freeAfterCents: -50_000 },
+      verdict: 'over',
+      verdictReason: { code: 'card_limit_exceeded', exceededCents: 50_000 },
+    })
+    expect(tooBig.newInsights).toContainEqual({
+      code: 'card_limit_exceeded',
+      severity: 'alert',
+      subject: 'card',
+      values: { limitCents: 500_000, exceededCents: 50_000 },
+    })
+  })
+
+  it('shows the account balance today before and after, unchanged for a later date', () => {
+    const fromChecking = {
+      amountCents: 50_000,
+      installmentCount: 1,
+      occurredOn: '2026-10-15',
+      card: null,
+      paidFromAccountId: 'checking',
+    }
+    const today = simulatePurchase(household(), fromChecking)
+    expect(today.account).toEqual({
+      accountId: 'checking',
+      balanceTodayBeforeCents: 300_000,
+      balanceTodayAfterCents: 250_000,
+    })
+    expect(today.card).toBeNull()
+    const later = simulatePurchase(household(), { ...fromChecking, occurredOn: '2026-10-20' })
+    expect(later.account).toMatchObject({
+      balanceTodayBeforeCents: 300_000,
+      balanceTodayAfterCents: 300_000,
     })
   })
 

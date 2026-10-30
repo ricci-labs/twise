@@ -64,6 +64,7 @@ pt-BR sentence below, and an action.
 | `budget_ahead` | warning | "{categoria} está gastando acima do ritmo: {spentCents} até agora, o esperado era {expectedCents}." | "Ver orçamento" |
 | `period_heavily_committed` | warning | "{mês} já tem {percentOfIncome}% da renda fixa comprometida ({committedCents})." | "Ver próximos meses" |
 | `contact_overdue` | warning | "{contato} está com {overdueCents} em atraso." | "Cobrar" → `CON-03` |
+| `card_limit_exceeded` | alert | "{cartão} passou do limite em {exceededCents}." In "Posso comprar?": "A compra passaria do limite do {cartão} em {exceededCents}." | "Ver cartão" → `CARD-02` |
 | `variable_income_to_split` | info | "Ainda há {amountCents} de comissão para dividir neste período." | "Ver sugestão" → `HOME-03` |
 Names come from other lists already loaded (categories, accounts, contacts); the overdue
 occurrence carries its own description (G9). Unknown codes are skipped. None: "Tudo em ordem por

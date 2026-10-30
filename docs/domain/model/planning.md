@@ -241,6 +241,7 @@ the order of `INSIGHTS`.
 
 | `balance_going_negative` | alert | account | the balance forecast dips below zero → `{ lowestCents, lowestOn }` |
 | `contact_overdue` | warning | contact | a contact has items past due (`contacts.readContactBalanceFacts`) → `{ overdueCents, owedCents }` |
+| `card_limit_exceeded` | alert | card | the card owes more than its limit (every open installment counts; a card without a limit never fires) → `{ limitCents, exceededCents }` |
 
 ### Commission split (suggested, never automatic)
 `allocation_steps` holds the household's waterfall, in order. When variable income arrives, the pure
@@ -309,15 +310,23 @@ adds a hypothetical purchase to the facts and recomputes the same metrics and in
 - **from an account** (1×): the expense on its date and the money out of the account (today or later).
 
 → `{ verdict, verdictReason, committedReferencePercent, period: { label, freeToSpend before/after,
-dailyAllowance before/after }, coming: [{ label, committed before/after, percentOfIncome
-before/after }], newInsights }`, where `newInsights` are only the alerts the purchase would bring
-(e.g. `period_heavily_committed`, `balance_going_negative`).
+dailyAllowance before/after }, card, account, coming: [{ label, committed before/after,
+percentOfIncome before/after }], newInsights }`, where `newInsights` are only the alerts the purchase
+would bring (e.g. `period_heavily_committed`, `balance_going_negative`, `card_limit_exceeded`).
+
+The payment method's effect (G77), one of the two is `null`:
+- `card: { accountId, limitCents, freeBeforeCents, freeAfterCents }`: free limit = the limit minus
+  what the card owes, every open installment included, so a purchase in 10× takes its whole amount
+  from the limit; `null` values when the card has no limit;
+- `account: { accountId, balanceTodayBeforeCents, balanceTodayAfterCents }`: the balance without
+  postings dated after today (`balanceToday`), so a purchase dated later leaves it unchanged.
 
 The verdict (`purchaseVerdictOf`, G76) is decided here so the web and WhatsApp say the same thing.
 The first rule that matches wins:
 
 | Verdict | When | `verdictReason` | E.g. |
 |---|---|---|---|
+| `over` | the card would owe more than its limit (G77) | `{ code: 'card_limit_exceeded', exceededCents }` | "Passaria do limite do cartão em R$ 160,00." |
 | `over` | free to spend after the purchase is below zero (also when the period was already overspent) | `{ code: 'period_overspent', overspentCents }` | "O período passaria R$ 460,00 do planejado." |
 | `over` | a coming month the purchase adds to passes 100% of the fixed income | `{ code: 'month_overcommitted', label, percentOfIncome }` | 60% → 101% |
 | `tight` | a coming month the purchase adds to reaches the 70% line (`HEAVILY_COMMITTED_PERCENT`) | `{ code: 'month_heavily_committed', label, percentOfIncome }` | "Dezembro chegaria a 70% da renda fixa comprometida." |

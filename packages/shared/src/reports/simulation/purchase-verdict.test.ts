@@ -67,6 +67,27 @@ describe('purchaseVerdictOf', () => {
     })
   })
 
+  it('is over when the card would pass its limit, before anything else', () => {
+    const card = { accountId: 'card', limitCents: 500_000, freeBeforeCents: 20_000 }
+    expect(
+      purchaseVerdictOf(period(40_000, -46_000), [], PERIOD_END, {
+        ...card,
+        freeAfterCents: -16_000,
+      }),
+    ).toEqual({
+      verdict: 'over',
+      verdictReason: { code: 'card_limit_exceeded', exceededCents: 16_000 },
+    })
+    expect(
+      purchaseVerdictOf(period(250_000, 250_000), [], PERIOD_END, { ...card, freeAfterCents: 0 })
+        .verdict,
+    ).toBe('fits')
+    const noLimit = { ...card, limitCents: null, freeBeforeCents: null, freeAfterCents: null }
+    expect(purchaseVerdictOf(period(250_000, 250_000), [], PERIOD_END, noLimit).verdict).toBe(
+      'fits',
+    )
+  })
+
   it('has no month verdict without a fixed income to compare with', () => {
     const coming = [
       { ...month('2026-11', 0, 0), committedAfter: 9_000, percentOfIncomeAfter: null },

@@ -11,6 +11,7 @@ export const INSIGHT_CODES = [
   'variable_income_to_split',
   'balance_going_negative',
   'contact_overdue',
+  'card_limit_exceeded',
 ] as const
 
 export type InsightCode = (typeof INSIGHT_CODES)[number]
