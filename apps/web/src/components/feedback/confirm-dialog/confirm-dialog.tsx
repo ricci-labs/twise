@@ -20,6 +20,7 @@ export function ConfirmDialog({
   isOpen,
   onOpenChange,
   onConfirm,
+  children,
 }: ConfirmDialogProps) {
   return (
     <AlertDialog.Root open={isOpen} onOpenChange={(open) => onOpenChange(open)}>
@@ -30,6 +31,7 @@ export function ConfirmDialog({
           <AlertDialog.Description className={confirmDescriptionVariants()}>
             {description}
           </AlertDialog.Description>
+          {children}
           <div className={confirmActionsVariants()}>
             <AlertDialog.Close render={<Button variant="secondary" />}>
               {cancelLabel}

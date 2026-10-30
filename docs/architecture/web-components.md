@@ -562,7 +562,8 @@ component here, so the form, and later the account, card and planning forms, sha
 - `FormField` `warning`: an amber line under the control, with the `warn` triangle, for something
   allowed but worth a second look ("O valor é maior que o saldo da fatura."); an error replaces it.
 - `ConfirmDialog` (`components/feedback/confirm-dialog`, Base UI `AlertDialog`): the title
-  (`dialog-title`), what will happen (`dialog-text`), the secondary "keep" action and the danger one side by side (keep on the left; they
+  (`dialog-title`), what will happen (`dialog-text`), optional `children` under it (the optional
+  "Motivo" of removing a member), the secondary "keep" action and the danger one side by side (keep on the left; they
   share the width on the phone and sit at the right, 440 px wide, on the desktop), as
   `../product/requirements/ui-standards.md` → Destructive actions and the discard rule ask
   ("Descartar as alterações?").
