@@ -154,11 +154,11 @@ describe('SHELL-01 workspace shell', () => {
 
   it('opens an area not built yet on a calm page inside the shell', async () => {
     await page.viewport(1440, 900)
-    const { screen } = await openWorkspace({}, `${HOME}/members`)
+    const { screen } = await openWorkspace({}, `${HOME}/history`)
 
     await expect.element(screen.getByRole('heading', { name: 'Em breve' })).toBeVisible()
     await expect
-      .element(screen.getByRole('link', { name: 'Membros' }))
+      .element(screen.getByRole('link', { name: 'Histórico' }))
       .toHaveAttribute('aria-current', 'page')
   })
 })
