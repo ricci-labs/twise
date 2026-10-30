@@ -76,7 +76,8 @@ in the last column).
 | `attachments` | `ledger`, `contacts` | Attach only to an active entry (`activeEntryIdsOf`) or an existing charge (`chargeExists`) |
 | every module | `workspaces` | Current workspace settings |
 | every module that writes tenant data | `audit` | `recordAudit` in the same transaction (ADR 0026) |
-| `audit` | `identity` | The name of who did each change in `GET /audit` |
+| `audit` | `identity` | The name of who did each change in `GET /audit`, and of the member a membership event is about |
+| `app.ts` | `ledger`, `contacts`, `planning`, `access` | Hands `audit` their name lookups (`readAccountNames`, …) for `entityLabel`, so `audit` never imports a module that writes to it |
 | `onboarding` | `workspaces`, `ledger`, `access`, `members` | Creating a workspace: the workspace and its settings, the system accounts, the system roles, the creator as owner |
 | `onboarding` | `identity` | Registering an owner: the user, then their first workspace |
 | `access` | `members` | Loading the caller's active membership to authorize a request; managing members (role changes, removals) with the owner rules; how many members and invitations use each role |

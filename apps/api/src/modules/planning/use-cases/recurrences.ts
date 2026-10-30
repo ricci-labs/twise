@@ -3,7 +3,7 @@ import type { Clock } from '@api/core/clock.types'
 import type { Database, WorkspaceTransaction } from '@api/core/db/db.types'
 import { withWorkspace } from '@api/core/db/tx'
 import { NotFoundError, parseOrThrow, ValidationError } from '@api/core/http/errors'
-import { auditCreation, audited } from '@api/modules/audit'
+import { type AuditName, auditCreation, audited, namesById } from '@api/modules/audit'
 import { loadUsableAccounts } from '@api/modules/ledger'
 import {
   insertRule,
@@ -11,6 +11,7 @@ import {
   ruleAuditTarget,
   selectActiveRules,
   selectNextPendingDueDates,
+  selectRuleNames,
   updateRule,
 } from '@api/modules/planning/planning.repository'
 import type {
@@ -177,4 +178,11 @@ function itemOf(
     nextIsOverdue: nextOn !== null && nextOn < today,
     monthlyCents: monthlyEquivalentCents(row.amountCents, row),
   }
+}
+
+export async function readRuleNames(
+  tx: WorkspaceTransaction,
+  ruleIds: string[],
+): Promise<ReadonlyMap<string, AuditName>> {
+  return namesById(ruleIds.length === 0 ? [] : await selectRuleNames(tx, ruleIds))
 }

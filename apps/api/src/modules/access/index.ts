@@ -17,6 +17,7 @@ export {
   listRoles,
   listWorkspacesOfUser,
   loadWorkspaceAccess,
+  readRoleNames,
   removeMember,
 } from '@api/modules/access/access.service'
 export type {

@@ -21,6 +21,7 @@ export {
   loadUsableAccounts,
   readAccountBalances,
   readAccountFacts,
+  readAccountNames,
   readBalanceFacts,
   readCardFacts,
   readContactItems,

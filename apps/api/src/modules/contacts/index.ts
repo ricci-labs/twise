@@ -12,7 +12,9 @@ export {
   listUpcomingContactItems,
   markChargeSent,
   payCharge,
+  readChargeNames,
   readContactBalanceFacts,
+  readContactNames,
   recordChargeEmailOutcome,
 } from '@api/modules/contacts/contacts.service'
 export type {

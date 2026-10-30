@@ -53,4 +53,5 @@ export {
   createRecurrenceRule,
   deleteRecurrenceRule,
   listRecurrenceRules,
+  readRuleNames,
 } from '@api/modules/planning/use-cases/recurrences'

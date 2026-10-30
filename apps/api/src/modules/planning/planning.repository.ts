@@ -32,7 +32,7 @@ import type {
   WorkspaceHoliday,
 } from '@api/modules/planning/planning.types'
 import type { IsoDate } from '@financas/shared'
-import { and, asc, between, desc, eq, gte, isNotNull, isNull, lte, min } from 'drizzle-orm'
+import { and, asc, between, desc, eq, gte, inArray, isNotNull, isNull, lte, min } from 'drizzle-orm'
 
 export function selectHolidaysBetween(
   tx: WorkspaceTransaction,
@@ -430,4 +430,11 @@ export async function insertAllocationPart(
   part: NewAllocationPartRow,
 ): Promise<void> {
   await tx.insert(allocationParts).values(part)
+}
+
+export function selectRuleNames(tx: WorkspaceTransaction, ruleIds: string[]) {
+  return tx
+    .select({ id: recurrenceRules.id, name: recurrenceRules.description })
+    .from(recurrenceRules)
+    .where(inArray(recurrenceRules.id, ruleIds))
 }

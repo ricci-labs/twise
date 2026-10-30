@@ -1,7 +1,7 @@
 ---
 summary: Functional requirements for attachments (receipts on entries and charges), the audit history screen, and what the user experiences from notifications (reminder emails).
 read_when: Designing or building ATT-01, AUD-01, or anything about receipts, history or reminders.
-updated: 2026-10-29
+updated: 2026-10-30
 ---
 
 # Attachments, history and notifications
@@ -62,10 +62,10 @@ Tapping an event opens the change in a sheet (phone) or the right pane (desktop)
 before and after field by field with the changed fields highlighted, labels and formatted money and
 dates from the API (G75), the reference sentence, "Ver lançamento", and "Neste lançamento" (the
 item's other changes).
-**RF-AUD-2** Filters: area (mapped from `tableName`: "Lançamentos" = `journal_entries`, "Contas" =
+**RF-AUD-2** Filters: area (the API's `area`, also on each event: "Lançamentos" = `journal_entries`, "Contas" =
 `ledger_accounts`, "Cartões" = `card_details`, "Contatos" = `contacts`, "Cobranças" = `charges`,
 "Planejamento" = recurrences, occurrences, budgets, goals, allocation and holidays, "Membros e
-acesso" = memberships, roles, invitations, "Configurações" = workspaces and settings); and a
+acesso" = memberships, roles, invitations, "Configurações" = workspaces and settings, shared `AUDIT_AREAS`); and a
 single item (from "Histórico" links in other screens, e.g. `ENT-03` passes the entry id: the item
 sits on top with an X to see everything); "Quem", a member or "Automático" (`actorId`, G75), next to
 "Área" (`MEM-01` → "Ver no histórico" opens it filtered).

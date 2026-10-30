@@ -13,10 +13,18 @@ import type {
   AuditChange,
   AuditEvent,
   AuditItem,
+  AuditName,
+  AuditNames,
   AuditTarget,
+  NamedRow,
 } from '@api/modules/audit/audit.types'
+import {
+  entityLabelOf,
+  readReferencedNames,
+  referencedIds,
+} from '@api/modules/audit/use-cases/labels'
 import { listAccounts } from '@api/modules/identity'
-import { type AuditAction, type AuditQuery, type Page, pageOf } from '@financas/shared'
+import { type AuditAction, type AuditQuery, auditAreaOf, type Page, pageOf } from '@financas/shared'
 
 export async function recordAudit(tx: WorkspaceTransaction, change: AuditChange): Promise<void> {
   const { traceId, source, actorUserId } = currentOperation()
@@ -61,21 +69,26 @@ export async function audited<T>(
 
 export async function listAuditEvents(
   db: Database,
+  names: AuditNames,
   workspaceId: string,
   query: AuditQuery,
 ): Promise<Page<AuditItem>> {
-  const page = await withWorkspace(db, workspaceId, async (tx) =>
-    pageOf(await selectAuditRows(tx, query), query.limit, (event) => ({
+  const { page, referenced } = await withWorkspace(db, workspaceId, async (tx) => {
+    const found = pageOf(await selectAuditRows(tx, query), query.limit, (event) => ({
       key: event.at.toISOString(),
       id: event.id,
-    })),
-  )
-  const actors = await actorsOf(db, page.items)
+    }))
+    return { page: found, referenced: await readReferencedNames(tx, names, found.items) }
+  })
+  const users = await userNamesOf(db, page.items)
+  const allNames = new Map([...referenced, ['user', users] as const])
   return {
     ...page,
     items: page.items.map((event) => ({
       ...event,
-      actor: event.actorUserId ? (actors.get(event.actorUserId) ?? null) : null,
+      actor: actorOf(event, users),
+      area: auditAreaOf(event.tableName),
+      entityLabel: entityLabelOf(event, allNames),
     })),
   }
 }
@@ -85,10 +98,23 @@ export async function readLatestActivity(tx: WorkspaceTransaction): Promise<Map<
   return new Map(activity.map(({ actorUserId, at }) => [actorUserId, at]))
 }
 
-async function actorsOf(db: Database, events: AuditEvent[]): Promise<Map<string, AuditActor>> {
-  const actorIds = [...new Set(events.flatMap((event) => event.actorUserId ?? []))]
-  const accounts = await listAccounts(db, actorIds)
+async function userNamesOf(
+  db: Database,
+  events: AuditEvent[],
+): Promise<ReadonlyMap<string, AuditName>> {
+  const actorIds = events.flatMap((event) => event.actorUserId ?? [])
+  const userIds = [...new Set([...actorIds, ...referencedIds(events, 'user')])]
+  const accounts = await listAccounts(db, userIds)
+  return namesById(accounts.map((account) => ({ id: account.userId, name: account.displayName })))
+}
+
+function actorOf(event: AuditEvent, users: ReadonlyMap<string, AuditName>): AuditActor | null {
+  const name = event.actorUserId ? users.get(event.actorUserId)?.name : undefined
+  return event.actorUserId && name ? { id: event.actorUserId, name } : null
+}
+
+export function namesById(rows: NamedRow[]): ReadonlyMap<string, AuditName> {
   return new Map(
-    accounts.map((account) => [account.userId, { id: account.userId, name: account.displayName }]),
+    rows.map(({ id, name, parentName }) => [id, { name, parentName: parentName ?? null }]),
   )
 }

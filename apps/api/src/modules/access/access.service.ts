@@ -84,6 +84,7 @@ export {
   createRole,
   deleteRole,
   listRoles,
+  readRoleNames,
 } from '@api/modules/access/use-cases/roles'
 
 export function listRolePermissions(db: Database, { workspaceId, roleId }: RoleRef) {

@@ -515,9 +515,18 @@ describe('workspace, roles, invitations and members', () => {
     await ok(owner.patch(`${home}/members/${membershipId}`, { roleId: await viewerRoleOf(home) }))
     expect((await auditOf('memberships', membershipId))[0]).toMatchObject({ action: 'update' })
     await ok(owner.del(`${home}/members/${membershipId}`, { reason: 'Saiu' }))
-    expect((await auditOf('memberships', membershipId))[0]).toMatchObject({ action: 'delete' })
+    expect((await auditOf('memberships', membershipId))[0]).toMatchObject({
+      action: 'delete',
+      entityLabel: 'Member New',
+      area: 'members',
+    })
     await ok(owner.del(`${home}/roles/${roleId}`, {}))
-    expect((await auditOf('roles', roleId))[0]).toMatchObject({ action: 'delete' })
+    expect((await auditOf('roles', roleId))[0]).toMatchObject({
+      action: 'delete',
+      entityLabel: 'Lançador',
+    })
+    expect((await auditOf('role_permissions', roleId))[0]?.entityLabel).toBe('Lançador')
+    expect((await auditOf('invitations', invitationId))[0]?.entityLabel).toBe('+5511900005555')
 
     const revoked = (
       (await (
@@ -535,7 +544,87 @@ describe('workspace, roles, invitations and members', () => {
       action: 'update',
       before: { notifyBillsDaysBefore: 3 },
       after: { notifyBillsDaysBefore: 5 },
+      entityLabel: 'Member audit-owner',
     })
+    expect((await auditOf('workspace_settings', homeId))[0]).toMatchObject({
+      area: 'settings',
+      entityLabel: null,
+    })
+  })
+})
+
+describe('labels in GET /audit', () => {
+  it('name each item, even after it is deleted, and group the events by area', async () => {
+    const base = workspacePath
+    const today = todayIn('America/Sao_Paulo', new Date())
+    const ok = async (response: Promise<Response>) =>
+      expect((await response).status).toBeLessThan(300)
+    const latestOf = async (tableName: string, rowId: string) =>
+      (await auditAt(`?tableName=${tableName}&rowId=${rowId}&limit=1`)).items[0]
+
+    const walletId = await idOf(
+      owner.post(`${base}/accounts`, { kind: 'cash_wallet', name: 'Carteira' }),
+    )
+    await ok(owner.del(`${base}/accounts/${walletId}`, {}))
+    expect(await latestOf('ledger_accounts', walletId)).toMatchObject({
+      action: 'delete',
+      entityLabel: 'Carteira',
+      area: 'accounts',
+    })
+
+    const cardId = await idOf(
+      owner.post(`${base}/cards`, { name: 'Card Z', closingDay: 3, dueDay: 10 }),
+    )
+    expect(await latestOf('card_details', cardId)).toMatchObject({
+      entityLabel: 'Card Z',
+      area: 'cards',
+    })
+
+    const contactId = await idOf(owner.post(`${base}/contacts`, { name: 'Contact L' }))
+    await ok(
+      owner.post(`${base}/entries`, {
+        ...expense('Pizza'),
+        occurredOn: addDays(today, -2),
+        shares: [{ contactId, amountCents: 1500 }],
+      }),
+    )
+    const chargeId = await idOf(owner.post(`${base}/contacts/${contactId}/charges`, {}))
+    await ok(owner.del(`${base}/contacts/${contactId}`, {}))
+    expect(await latestOf('charges', chargeId)).toMatchObject({
+      entityLabel: 'Contact L',
+      area: 'charges',
+    })
+
+    const ruleId = await idOf(
+      owner.post(`${base}/recurrences`, {
+        description: 'Faxina',
+        entryType: 'expense',
+        amountCents: 9000,
+        sourceAccountId: checkingId,
+        categoryAccountId: groceriesId,
+        schedule: { frequency: 'weekly', startsOn: today },
+      }),
+    )
+    const { items: occurrences } = (await (
+      await owner.get(`${base}/occurrences?from=${today}&to=${addDays(today, 6)}`)
+    ).json()) as { items: { id: string; ruleId: string }[] }
+    const occurrenceId = occurrences.find((item) => item.ruleId === ruleId)?.id ?? ''
+    await ok(owner.post(`${base}/occurrences/${occurrenceId}/skip`))
+    expect(await latestOf('planned_occurrences', occurrenceId)).toMatchObject({
+      entityLabel: 'Faxina',
+      area: 'planning',
+    })
+
+    await ok(
+      owner.put(`${base}/budgets/${groceriesId}`, { limitCents: 70_000, fromPeriod: '2026-11' }),
+    )
+    const [budget] = (await auditAt('?tableName=budget_lines&limit=1')).items
+    expect(budget?.entityLabel).toBe('Mercado')
+
+    const planning = (await auditAt('?area=planning&limit=50')).items
+    expect(planning.length).toBeGreaterThan(0)
+    expect(new Set(planning.map((event) => event.area))).toEqual(new Set(['planning']))
+    expect((await owner.get(`${base}/audit?area=somewhere`)).status).toBe(400)
   })
 })
 

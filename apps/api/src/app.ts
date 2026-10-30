@@ -3,14 +3,16 @@ import { createBaseApp } from '@api/core/http/base-app'
 import type { AppEnv } from '@api/core/http/http.types'
 import { sameOriginWrites } from '@api/core/http/middleware/same-origin-writes'
 import { requireSession } from '@api/core/http/middleware/session'
-import { workspaceAccess } from '@api/modules/access'
+import { readRoleNames, workspaceAccess } from '@api/modules/access'
 import { accessRoutes, workspaceListRoutes } from '@api/modules/access/access.routes'
 import {
   ATTACHMENT_UPLOAD_PATH,
   attachmentRoutes,
   uploadBodyLimitOf,
 } from '@api/modules/attachments/attachments.routes'
+import type { AuditNames } from '@api/modules/audit'
 import { auditRoutes } from '@api/modules/audit/audit.routes'
+import { readChargeNames, readContactNames } from '@api/modules/contacts'
 import {
   chargeRoutes,
   contactOptOutRoutes,
@@ -20,12 +22,14 @@ import {
 import { healthRoutes, PUBLIC_HEALTH_ROUTES } from '@api/modules/health/health.routes'
 import { resolveSession } from '@api/modules/identity'
 import { identityRoutes, PUBLIC_AUTH_ROUTES } from '@api/modules/identity/identity.routes'
+import { readAccountNames } from '@api/modules/ledger'
 import { ledgerRoutes } from '@api/modules/ledger/ledger.routes'
 import {
   invitationResponseRoutes,
   invitationRoutes,
   PUBLIC_INVITATION_ROUTES,
 } from '@api/modules/onboarding/onboarding.routes'
+import { readRuleNames } from '@api/modules/planning'
 import { planningRoutes } from '@api/modules/planning/planning.routes'
 import { reportRoutes } from '@api/modules/reports/reports.routes'
 import {
@@ -40,6 +44,14 @@ export const PUBLIC_ROUTES: ReadonlySet<string> = new Set([
   ...PUBLIC_INVITATION_ROUTES,
   ...PUBLIC_CONTACT_ROUTES,
 ])
+
+const AUDIT_NAMES: AuditNames = {
+  account: readAccountNames,
+  contact: readContactNames,
+  charge: readChargeNames,
+  rule: readRuleNames,
+  role: readRoleNames,
+}
 
 export function createApp(deps: AppDeps) {
   return createBaseApp(deps.logger, {
@@ -76,7 +88,7 @@ function workspaceScopedRoutes(deps: AppDeps) {
     .route('/contacts', contactRoutes(deps))
     .route('/charges', chargeRoutes(deps))
     .route('/invitations', invitationRoutes(deps))
-    .route('/audit', auditRoutes(deps))
+    .route('/audit', auditRoutes({ ...deps, names: AUDIT_NAMES }))
 }
 
 export type AppType = ReturnType<typeof createApp>

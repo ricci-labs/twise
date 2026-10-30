@@ -3,7 +3,7 @@ import { rolePermissions, roles } from '@api/modules/access/access.table'
 import type { NewSystemRole, RoleDeletion, RoleDetails } from '@api/modules/access/access.types'
 import type { AuditTarget } from '@api/modules/audit'
 import type { Permission } from '@financas/shared'
-import { and, asc, eq, isNull } from 'drizzle-orm'
+import { and, asc, eq, inArray, isNull } from 'drizzle-orm'
 
 export async function insertSystemRole(tx: WorkspaceTransaction, role: NewSystemRole) {
   const [inserted] = await tx.insert(roles).values(role).returning({ id: roles.id })
@@ -125,4 +125,8 @@ export async function markRoleDeleted(
 
 export function roleAuditTarget(workspaceId: string, roleId: string): AuditTarget {
   return { workspaceId, table: roles, key: roles.id, rowId: roleId }
+}
+
+export function selectRoleNames(tx: WorkspaceTransaction, roleIds: string[]) {
+  return tx.select({ id: roles.id, name: roles.name }).from(roles).where(inArray(roles.id, roleIds))
 }

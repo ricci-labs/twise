@@ -149,9 +149,20 @@ Implemented (`modules/audit`, ADR 0026):
   its owner, and joining by invitation sign-up as the new user.
 - Not audited: system bookkeeping nobody did by hand (occurrences the nightly job plans, the system
   accounts and roles of a new workspace).
-- `GET /audit?tableName=&rowId=&actorId=&cursor=&limit=` (`audit:view`: owner and admin) pages
-  newest first. Each event carries `actor { id, name }`, or `null` for automatic changes (jobs,
-  system); `actorId` filters by a member's user id, or `automatic` for those (G75).
+- `GET /audit?area=&tableName=&rowId=&actorId=&cursor=&limit=` (`audit:view`: owner and admin)
+  pages newest first. Each event carries (G75):
+  - `actor { id, name }`, or `null` for automatic changes (jobs, system); `actorId` filters by a
+    member's user id, or `automatic` for those;
+  - `area`, the history's filter group (shared `AUDIT_AREAS`: entries, accounts, cards, contacts,
+    charges, planning, members, settings); `area` filters by it;
+  - `entityLabel`, the item's name, also once it is deleted: from the event's own snapshot
+    (description of entries and recurrences, the name of accounts, contacts, goals, holidays, roles,
+    the workspace and files, the email or phone of invitations), or looked up by id for rows without
+    a name (a card → its account, a charge or payment → its contact, an occurrence → its rule, a
+    budget line → its category, role permissions → the role, a membership or preferences → the
+    member). Settings and the commission split have none (`null`). The lookups (`AuditNames`)
+    come from each owning module's index and are wired in `app.ts`, so `audit` imports none of
+    the modules that write to it.
 - `readLatestActivity(tx)` gives each user's latest event; `GET /members` shows it as
   `lastActivityAt` (null if they never changed anything).
 
