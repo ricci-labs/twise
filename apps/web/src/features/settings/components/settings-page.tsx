@@ -16,28 +16,40 @@ import { settingsMessages as messages } from '@web/features/settings/settings.me
 import type {
   ChargeTextRowProps,
   HolidaysRowProps,
+  NameRowProps,
   PixRowProps,
   SettingsPageProps,
 } from '@web/features/settings/settings.types'
 import { usePageTitle } from '@web/hooks/use-page-title'
 import { hasPermission } from '@web/lib/permissions'
 
+const NAME_ART = 'home'
 const HOLIDAYS_ART = 'calendar'
 const PIX_ART = 'coin'
 const CHARGE_TEXT_ART = 'list'
 
-export function SettingsPage({ workspaceId, permissions }: SettingsPageProps) {
+export function SettingsPage({ workspaceId, workspaceName, permissions }: SettingsPageProps) {
   usePageTitle(messages.pageTitle)
+  const canView = hasPermission(permissions, 'settings', 'view')
+  const canUpdate = hasPermission(permissions, 'settings', 'update')
   return (
     <PageFrame className="gap-4 lg:gap-6">
       <PageHeader title={messages.title} />
       <div className="flex flex-col gap-5 lg:max-w-160">
+        {canView && (
+          <AccountGroup
+            title={messages.groups.workspace}
+            note={canUpdate ? undefined : messages.hubReadOnly}
+          >
+            <NameRow workspaceId={workspaceId} workspaceName={workspaceName} />
+          </AccountGroup>
+        )}
         {hasPermission(permissions, 'planning', 'view') && (
           <AccountGroup title={messages.groups.planning}>
             <HolidaysRow workspaceId={workspaceId} />
           </AccountGroup>
         )}
-        {hasPermission(permissions, 'settings', 'view') && (
+        {canView && (
           <AccountGroup title={messages.groups.receiving}>
             <PixRow workspaceId={workspaceId} />
             <ChargeTextRow workspaceId={workspaceId} />
@@ -45,6 +57,19 @@ export function SettingsPage({ workspaceId, permissions }: SettingsPageProps) {
         )}
       </div>
     </PageFrame>
+  )
+}
+
+function NameRow({ workspaceId, workspaceName }: NameRowProps) {
+  const settings = useQuery(workspaceSettingsQueryOptions(workspaceId)).data
+  const currency = settings && (messages.currencyNames[settings.currency] ?? settings.currency)
+  return (
+    <SettingsRow
+      title={messages.nameRow.title}
+      detail={currency ? messages.nameRow.detail(workspaceName, currency) : undefined}
+      icon={NAME_ART}
+      link={<Link to="/w/$workspaceId/settings/name" params={{ workspaceId }} />}
+    />
   )
 }
 

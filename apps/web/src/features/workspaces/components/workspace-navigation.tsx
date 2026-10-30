@@ -19,6 +19,8 @@ const COMMISSION_SPLIT_PAGE = 'commission-split'
 
 const SETTINGS_AREA = 'settings'
 
+const SETTINGS_FORM_PAGES: ReadonlySet<string> = new Set(['name', 'period', 'budget', 'calendar'])
+
 const AREA_OF_PAGE: Readonly<Record<string, string>> = { categories: 'accounts' }
 
 const TAB_OF_AREA: Readonly<Record<string, string>> = { [TRASH_PAGE]: ENTRIES_AREA }
@@ -78,6 +80,11 @@ export function hasNewEntryButton(pathname: string): boolean {
     return false
   }
   return !(area === ENTRIES_AREA && item !== undefined && item !== '')
+}
+
+export function hasTabBar(pathname: string): boolean {
+  const [, , , area, item] = pathname.split('/')
+  return !(area === SETTINGS_AREA && item !== undefined && SETTINGS_FORM_PAGES.has(item))
 }
 
 export function currentAreaOf(pathname: string): string | null {

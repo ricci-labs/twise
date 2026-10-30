@@ -3,8 +3,10 @@ import { AppProviders } from '@web/app/providers'
 import { createApp } from '@web/app/router'
 import { expectNoAccessibilityViolations } from '@web/testing/accessibility'
 import {
+  accessAs,
   account,
   fakeApi,
+  VIEWER_PERMISSIONS,
   WORKSPACE_ID,
   workspaceAccess,
   workspaceList,
@@ -21,11 +23,16 @@ import { beforeEach, describe, expect, it } from 'vitest'
 import { page } from 'vitest/browser'
 import { render } from 'vitest-browser-react'
 
-async function openSettings(answers: Record<string, FakeAnswer> = {}) {
+const MEMBER_PERMISSIONS = [...VIEWER_PERMISSIONS, { module: 'settings', action: 'view' }]
+
+async function openSettings(
+  answers: Record<string, FakeAnswer> = {},
+  access: FakeAnswer = workspaceAccess,
+) {
   fakeApi({
     'GET /api/auth/me': account,
     'GET /api/workspaces': () => workspaceList(),
-    [`GET /api/workspaces/${WORKSPACE_ID}`]: workspaceAccess,
+    [`GET /api/workspaces/${WORKSPACE_ID}`]: access,
     ...holidaysAnswer(),
     ...workspaceSettingsAnswer(),
     ...chargeTextAnswer(),
@@ -56,6 +63,28 @@ describe('Configurações', () => {
       .element(page.getByRole('link', { name: 'Novo lançamento' }))
       .not.toBeInTheDocument()
     await expectNoAccessibilityViolations(page.getByRole('main').element())
+  })
+
+  it('lists the name and currency under Espaço and opens them', async () => {
+    const app = await openSettings()
+    const workspace = page.getByRole('region', { name: 'Espaço' })
+    const name = workspace.getByRole('link', { name: /Nome e moeda/ })
+    await expect.element(name.getByText('Casa · Real (R$)')).toBeVisible()
+    expect(workspace.getByText(/Você pode ver/).query()).toBeNull()
+    await name.click()
+    await expect
+      .poll(() => app.router.state.location.pathname)
+      .toBe(`/w/${WORKSPACE_ID}/settings/name`)
+    await expect
+      .element(page.getByRole('heading', { name: 'Nome e moeda', level: 1 }))
+      .toBeVisible()
+  })
+
+  it('tells a member they can only look', async () => {
+    await openSettings({}, () => accessAs('Membro', MEMBER_PERMISSIONS))
+    await expect
+      .element(page.getByText('Só donos e admins mudam as configurações. Você pode ver.'))
+      .toBeVisible()
   })
 
   it('opens the holidays from the row', async () => {

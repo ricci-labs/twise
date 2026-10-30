@@ -15,6 +15,7 @@ import { MoreSheet } from '@web/features/workspaces/components/more-sheet'
 import {
   currentAreaOf,
   hasNewEntryButton,
+  hasTabBar,
   tabAreaOf,
   workspaceNavigation,
 } from '@web/features/workspaces/components/workspace-navigation'
@@ -94,7 +95,9 @@ export function WorkspaceShell({
         banner={<OfflineBanner message={messages.offline} aside={<LastUpdated />} />}
         bottomBar={
           <>
-            <BottomTabBar items={[...tabs.main.slice(0, MAIN_TABS), moreTab]} />
+            {hasTabBar(pathname) && (
+              <BottomTabBar items={[...tabs.main.slice(0, MAIN_TABS), moreTab]} />
+            )}
             <MoreSheet
               items={moreItems}
               accountActions={accountActions}

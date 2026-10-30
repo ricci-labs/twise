@@ -5,6 +5,12 @@ export const Route = createFileRoute('/_app/w/$workspaceId/settings/')({
   component: function SettingsRoute() {
     const { workspaceId } = Route.useParams()
     const { access } = Route.useRouteContext()
-    return <SettingsPage workspaceId={workspaceId} permissions={access.permissions} />
+    return (
+      <SettingsPage
+        workspaceId={workspaceId}
+        workspaceName={access.workspace.name}
+        permissions={access.permissions}
+      />
+    )
   },
 })

@@ -178,7 +178,8 @@ React Hook Form v7 + `zodResolver` with the **schemas from `@financas/shared`** 
   buttons.
 
 ## Feedback
-- `Alert` (`tone`: info, success, warning, danger; always with its icon): form errors above the
+- `Alert` (`tone`: info, success, warning, danger, neutral; always with its icon; `neutral` is the
+  grey lock note of a read-only settings screen): form errors above the
   main button with `isUrgent` (`role="alert"`), arrival messages under the title without it
   (`role="status"`); an `action` slot takes a small `subtle` button or the message holds a
   `TextLink` with `tone="inherit"`.
@@ -662,6 +663,12 @@ component here, so the form, and later the account, card and planning forms, sha
   40 px "‹" back link (named "Voltar para {page}"), the title in `form-title-lg`, a grey
   `sub-page` description under it, and an optional `actions` slot on the right (a card's "⋯";
   several actions sit side by side, as the entry detail's pencil and "⋯").
+- `SettingsFormPage` (`components/layout/settings-form-page`): one settings group on its own screen
+  (settings design, `SET-01`): the `SubPageHeader`, the fields, and a `footer` with the one "Salvar
+  …" fixed to the bottom of the phone (white, top border, as a form over a screen; the shell hides
+  the tab bar on these routes, `hasTabBar`), after the fields on the desktop. With `readOnlyNote`
+  the grey lock `Alert` sits on top and the footer is not rendered. The feature wraps it in its
+  `Form`, so the footer's `SubmitButton` belongs to the form.
 - The refused action is a `ConfirmDialog` with `confirmVariant="primary"` and `confirmIcon`: the
   title names the item ("Não dá para excluir a Conta Y"), the text says why, "Cancelar" and the way
   out ("Arquivar"). The undo is a toast with "Desfazer"; a refusal that needs an answer, a `danger`
