@@ -233,4 +233,35 @@ describe('ME-01 Minha conta', () => {
       document.documentElement.style.colorScheme = ''
     }
   })
+
+  it('shows every group as a card on the desktop, each saving alone', async () => {
+    await page.viewport(1440, 1300)
+    const sent: unknown[] = []
+    await openAccount(ACCOUNT_PATH, {
+      'PATCH /api/auth/me': async (request) => {
+        sent.push(await request.json())
+        return new Response(null, { status: NO_CONTENT })
+      },
+    })
+    await expect
+      .element(page.getByText('Seus dados e preferências. Sair desconecta só este aparelho.'))
+      .toBeVisible()
+    await expect.element(page.getByRole('button', { name: 'Sair' })).toBeVisible()
+    const profile = page.getByRole('region', { name: 'Perfil' })
+    await expect.element(profile.getByText('member.a@exemplo.com')).toBeVisible()
+    const theme = page.getByRole('region', { name: 'Tema' })
+    const [profileBox, themeBox] = [profile, theme].map((card) =>
+      card.element().getBoundingClientRect(),
+    )
+    expect(profileBox?.height).toBe(themeBox?.height)
+    await expect.element(page.getByRole('region', { name: 'Horário de silêncio' })).toBeVisible()
+    await expect.element(page.getByRole('region', { name: 'Avisos do espaço Casa' })).toBeVisible()
+    await expect.element(page.getByRole('region', { name: 'Senha' })).toBeVisible()
+    await userEvent.fill(profile.getByRole('textbox', { name: 'Nome' }), 'Member Alpha')
+    await profile.getByRole('button', { name: 'Salvar nome' }).click()
+
+    await expect.element(page.getByText('Nome atualizado.')).toBeVisible()
+    expect(sent).toEqual([{ displayName: 'Member Alpha' }])
+    await expectNoAccessibilityViolations(page.getByRole('main').element())
+  })
 })

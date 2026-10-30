@@ -16,8 +16,11 @@ import {
 import { useLogOut } from '@web/features/auth/api/use-log-out'
 import { authMessages } from '@web/features/auth/auth.messages'
 import type { AccountHeaderProps, AccountHubProps } from '@web/features/auth/auth.types'
+import { AccountDesktop } from '@web/features/auth/components/account-desktop'
+import { useMediaQuery } from '@web/hooks/use-media-query'
 import { usePageTitle } from '@web/hooks/use-page-title'
 import { ApiError } from '@web/lib/api/api-error'
+import { DESKTOP_QUERY } from '@web/lib/breakpoints'
 import { storedTheme } from '@web/lib/theme'
 import { Bell, KeyRound, LogOut, Mail, Moon, Sun, User } from 'lucide-react'
 
@@ -26,6 +29,14 @@ const SKELETON_LINES = 8
 
 export function AccountPage({ workspaceId, workspaceName }: AccountHubProps) {
   usePageTitle(messages.pageTitle)
+  const isDesktop = useMediaQuery(DESKTOP_QUERY)
+  if (isDesktop) {
+    return <AccountDesktop workspaceId={workspaceId} workspaceName={workspaceName} />
+  }
+  return <AccountPhone workspaceId={workspaceId} workspaceName={workspaceName} />
+}
+
+function AccountPhone({ workspaceId, workspaceName }: AccountHubProps) {
   const me = useQuery(meQueryOptions())
   const logOut = useLogOut()
   return (

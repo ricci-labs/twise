@@ -234,6 +234,7 @@ export const authMessages = {
     emailLocked: 'Não muda por enquanto',
     logOut: 'Sair',
     readFailed: 'Não foi possível carregar sua conta.',
+    desktopLead: 'Seus dados e preferências. Sair desconecta só este aparelho.',
     quietRow: 'Horário de silêncio',
     quietRowOn: (start: string, end: string) => `Das ${start} às ${end}, em todos os espaços`,
     quietRowOff: 'Desligado',
@@ -253,6 +254,8 @@ export const authMessages = {
       end: 'Até',
       help: 'Pode passar da meia-noite. Vale para todos os seus espaços.',
       save: 'Salvar horário',
+      cardDescription: 'Vale para todos os seus espaços.',
+      cardHelp: 'Pode passar da meia-noite.',
     },
     notices: {
       title: (workspace: string) => `Avisos do espaço ${workspace}`,
@@ -267,6 +270,7 @@ export const authMessages = {
       exampleSameDay:
         '{conta} vence em {vencimento}: o aviso chega **no dia**, por e-mail, uma vez.',
       save: 'Salvar preferências',
+      cardDescription: 'Chegam por e-mail. Cada espaço tem os seus.',
     },
     themeRow: 'Tema',
     themeRowDetail: (theme: string) => `${theme} · Só neste aparelho`,
@@ -276,6 +280,7 @@ export const authMessages = {
       title: 'Tema',
       label: 'Tema',
       help: 'Fica guardado só neste aparelho.',
+      cardDescription: 'Muda na hora e fica guardado só neste aparelho.',
     },
     passwordRow: 'Senha',
     passwordRowDetail: 'Trocar a senha',
@@ -295,6 +300,8 @@ export const authMessages = {
       saving: 'Trocando senha…',
       retryIn: (seconds: number) => `Tente de novo em ${formatMinutesAndSeconds(seconds)}`,
       changed: 'Senha trocada. Saímos dos outros aparelhos.',
+      cardDescription:
+        'De 12 a 128 caracteres; uma frase fácil de lembrar funciona bem. Depois de trocar, saímos dos outros aparelhos. Este continua conectado.',
     },
     saving: 'Salvando…',
     name: {
@@ -305,6 +312,8 @@ export const authMessages = {
       required: { displayName: 'Informe seu nome (até 80 caracteres).' },
       save: 'Salvar nome',
       saved: 'Nome atualizado.',
+      cardTitle: 'Perfil',
+      cardDescription: 'Como você aparece para quem divide o espaço com você.',
     },
   },
 } as const

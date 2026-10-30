@@ -1,6 +1,5 @@
 import { addDays, MAX_NOTIFY_DAYS_BEFORE, todayIn } from '@financas/shared'
 import { useQuery } from '@tanstack/react-query'
-import { Link } from '@tanstack/react-router'
 import { CategoryArt } from '@web/components/display/category-art'
 import { RichText } from '@web/components/display/rich-text'
 import { Alert } from '@web/components/feedback/alert'
@@ -11,7 +10,6 @@ import { Form } from '@web/components/forms/form'
 import { SubmitButton } from '@web/components/forms/submit-button'
 import { Stepper } from '@web/components/inputs/stepper'
 import { PageFrame } from '@web/components/layout/page-frame'
-import { SettingsFormPage } from '@web/components/layout/settings-form-page'
 import {
   memberPreferencesQueryOptions,
   upcomingBillsQueryOptions,
@@ -25,6 +23,7 @@ import type {
   NoticesFormProps,
   NoticesInput,
 } from '@web/features/auth/auth.types'
+import { AccountGroupFrame } from '@web/features/auth/components/account-group-frame'
 import { usePageTitle } from '@web/hooks/use-page-title'
 import { errorMessageFor } from '@web/lib/errors/error-message'
 import { formatShortDate } from '@web/lib/format/calendar'
@@ -52,6 +51,7 @@ export function AccountNoticesPage({ workspaceId, workspaceName }: AccountNotice
   return (
     <PageFrame edge="bleed">
       <NoticesForm
+        layout="page"
         workspaceId={workspaceId}
         workspaceName={workspaceName}
         daysBefore={preferences.data.notifyBillsDaysBefore}
@@ -60,7 +60,7 @@ export function AccountNoticesPage({ workspaceId, workspaceName }: AccountNotice
   )
 }
 
-function NoticesForm({ workspaceId, workspaceName, daysBefore }: NoticesFormProps) {
+export function NoticesForm({ workspaceId, workspaceName, daysBefore, layout }: NoticesFormProps) {
   const change = useChangeMemberPreferences(workspaceId)
   const [problem, setProblem] = useState<string | null>(null)
   const form = useSchemaForm({
@@ -83,17 +83,24 @@ function NoticesForm({ workspaceId, workspaceName, daysBefore }: NoticesFormProp
 
   return (
     <Form form={form} onSubmit={save}>
-      <SettingsFormPage
-        back={<Link to="/w/$workspaceId/account" params={{ workspaceId }} />}
-        backLabel={messages.back}
+      <AccountGroupFrame
+        layout={layout}
+        workspaceId={workspaceId}
+        description={copy.cardDescription}
         title={copy.title(workspaceName)}
         footer={
-          <SubmitButton requiresChange loadingLabel={messages.saving} width="full">
+          <SubmitButton
+            requiresChange
+            loadingLabel={messages.saving}
+            width={layout === 'page' ? 'full' : 'auto'}
+          >
             {copy.save}
           </SubmitButton>
         }
       >
-        <p className="-mt-2 text-body-sm text-ink-muted">{copy.lead(workspaceName)}</p>
+        {layout === 'page' && (
+          <p className="-mt-2 text-body-sm text-ink-muted">{copy.lead(workspaceName)}</p>
+        )}
         {problem && (
           <Alert tone="danger" isUrgent>
             {problem}
@@ -117,7 +124,7 @@ function NoticesForm({ workspaceId, workspaceName, daysBefore }: NoticesFormProp
           />
         </FieldGroup>
         <NoticeExample workspaceId={workspaceId} daysBefore={days} />
-      </SettingsFormPage>
+      </AccountGroupFrame>
     </Form>
   )
 }
