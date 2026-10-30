@@ -168,6 +168,7 @@ export type AchievementTile = {
   icon: TwiseIconName
   value: string
   label: string
+  before?: string
 }
 
 export type SetupStepKey = 'accounts' | 'cards' | 'income' | 'entries'

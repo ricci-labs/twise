@@ -256,7 +256,8 @@ export const homeMessages = {
     reserve: (amount: string) => `+${amount}`,
     reserveLabel: (months: string | null) =>
       months ? `na reserva, que agora cobre ${months} meses` : 'na reserva',
-    goal: (start: number, end: number) => `${start}% → ${end}%`,
+    goal: (percent: number) => `${percent}%`,
+    goalBefore: (percent: number) => `antes ${percent}%`,
     goalLabel: (name: string) => `da meta ${name}`,
   },
   firstRun: {
