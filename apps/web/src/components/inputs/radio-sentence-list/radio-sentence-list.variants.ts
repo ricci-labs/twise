@@ -1,6 +1,6 @@
 import { cva } from 'class-variance-authority'
 
-export const radioSentenceListVariants = cva('flex flex-col gap-2')
+export const radioSentenceListVariants = cva('flex flex-col gap-2 data-disabled:opacity-60')
 
 export const radioSentenceVariants = cva([
   'relative flex min-h-13 items-center gap-3 rounded-md border border-border-control bg-surface px-3.5 py-2 text-choice text-ink',

@@ -1,4 +1,4 @@
-import type { ChargeTextField, IsoDate, Permission } from '@financas/shared'
+import type { ChargeTextField, IsoDate, PeriodAnchor, Permission } from '@financas/shared'
 import type { UseQueryResult } from '@tanstack/react-query'
 import type { MiniMonthHoliday } from '@web/components/display/mini-month-calendar'
 import type { ChargeEmailPreviewProps } from '@web/components/finance/charge-email-preview'
@@ -12,6 +12,7 @@ import type {
   chargeTextFormSchema,
   holidayFormSchemaFor,
   holidaysSearchSchema,
+  periodFormSchema,
   pixFormSchema,
 } from '@web/features/settings/settings.schemas'
 import type { ReactNode } from 'react'
@@ -250,3 +251,38 @@ export type WorkspaceNameFormProps = {
 }
 
 export type WorkspaceNameInput = { name: string }
+
+export type PeriodAnchorChoice = {
+  anchor: PeriodAnchor
+  value: number | null
+}
+
+export type PeriodFormInput = z.input<typeof periodFormSchema>
+
+export type PeriodRowProps = {
+  workspaceId: string
+}
+
+export type PeriodPageProps = {
+  workspaceId: string
+  permissions: readonly Permission[]
+}
+
+export type PeriodFormProps = {
+  workspaceId: string
+  settings: WorkspaceSettings
+  canUpdate: boolean
+}
+
+export type PeriodPreviewProps = {
+  workspaceId: string
+  choice: PeriodAnchorChoice
+}
+
+export type PeriodChoiceFieldProps = {
+  isDisabled: boolean
+}
+
+export type WatchedPeriodPreviewProps = {
+  workspaceId: string
+}

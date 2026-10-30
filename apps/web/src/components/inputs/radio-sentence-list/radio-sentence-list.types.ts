@@ -14,5 +14,6 @@ export type RadioSentenceListProps = {
   value: string
   onSelect: (value: string) => void
   onBlur?: () => void
+  disabled?: boolean
   className?: string
 }

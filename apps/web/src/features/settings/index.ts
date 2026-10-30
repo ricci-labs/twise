@@ -1,5 +1,6 @@
 export { ChargeTextPage } from '@web/features/settings/components/charge-text-page'
 export { HolidaysPage } from '@web/features/settings/components/holidays-page'
+export { PeriodPage } from '@web/features/settings/components/period-page'
 export { PixPage } from '@web/features/settings/components/pix-page'
 export { SettingsPage } from '@web/features/settings/components/settings-page'
 export { WorkspaceNamePage } from '@web/features/settings/components/workspace-name-page'

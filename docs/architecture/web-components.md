@@ -737,6 +737,8 @@ component here, so the form, and later the account, card and planning forms, sha
   radio is named by the whole sentence (`label`); its card answers a press anywhere but on the
   picker, which sits above it and keeps its own press. The chosen card gets the ink outline and
   the 650 weight. The screen owns the pickers and picks their card when they change.
+  `disabled` (a read-only settings screen) dims the whole list and refuses presses; the screen
+  disables its pickers too.
 - `CyclePreview` (`components/finance/cycle-preview`): the sunken box with the calendar drawing
   that says where purchases land ("…vence em **04/11**."), live while the days change.
 
