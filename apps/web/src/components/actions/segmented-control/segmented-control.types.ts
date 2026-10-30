@@ -7,6 +7,7 @@ import type { VariantProps } from 'class-variance-authority'
 export type SegmentedOption = {
   value: string
   label: string
+  badge?: string
 }
 
 export type SegmentedControlProps = VariantProps<typeof segmentedControlVariants> &

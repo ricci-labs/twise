@@ -29,3 +29,7 @@ export const segmentedOptionVariants = cva(
     defaultVariants: { width: 'auto', selection: 'raised' },
   },
 )
+
+export const segmentedBadgeVariants = cva(
+  'ml-1.5 inline-grid min-w-5 place-items-center rounded-full bg-ink px-1.5 text-badge-tiny font-semibold text-on-action-primary',
+)

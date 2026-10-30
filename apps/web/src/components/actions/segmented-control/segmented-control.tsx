@@ -2,6 +2,7 @@ import { Toggle } from '@base-ui/react/toggle'
 import { ToggleGroup } from '@base-ui/react/toggle-group'
 import type { SegmentedControlProps } from '@web/components/actions/segmented-control/segmented-control.types'
 import {
+  segmentedBadgeVariants,
   segmentedControlVariants,
   segmentedOptionVariants,
 } from '@web/components/actions/segmented-control/segmented-control.variants'
@@ -38,6 +39,7 @@ export function SegmentedControl({
           className={segmentedOptionVariants({ width, selection })}
         >
           {option.label}
+          {option.badge && <span className={segmentedBadgeVariants()}>{option.badge}</span>}
         </Toggle>
       ))}
     </ToggleGroup>

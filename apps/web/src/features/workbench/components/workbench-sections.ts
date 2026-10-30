@@ -26,6 +26,7 @@ import { dateBlockExamples } from '@web/components/display/date-block'
 import { detailSectionExamples } from '@web/components/display/detail-section'
 import { dividerExamples } from '@web/components/display/divider'
 import { filterChipsExamples } from '@web/components/display/filter-chips'
+import { invitationRowExamples } from '@web/components/display/invitation-row'
 import { kpiCardExamples } from '@web/components/display/kpi-card'
 import { kpiCarouselExamples } from '@web/components/display/kpi-carousel'
 import { listSectionExamples } from '@web/components/display/list-section'
@@ -224,6 +225,7 @@ export const workbenchSections: readonly ComponentExamples[] = [
   permissionRowsExamples,
   memberRowExamples,
   roleCardExamples,
+  invitationRowExamples,
   pageHeaderExamples,
   cyclePreviewExamples,
   entryDayGroupExamples,
