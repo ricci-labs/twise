@@ -1,7 +1,7 @@
 ---
 summary: Functional requirements for attachments (receipts on entries and charges), the audit history screen, and what the user experiences from notifications (reminder emails).
 read_when: Designing or building ATT-01, AUD-01, or anything about receipts, history or reminders.
-updated: 2026-09-29
+updated: 2026-10-29
 ---
 
 # Attachments, history and notifications
@@ -46,22 +46,32 @@ este comprovante do lançamento?" → toast "Comprovante removido." Error `ATTAC
 
 ## AUD-01 History (MVP)
 Route `/historico`. Permission `audit:view` (owners and admins by default). `GET /audit`, paged,
-newest first; filters `tableName` and `rowId`.
+newest first; filters `tableName`, `rowId` and `actorId` (G75). Design: `../../../design/settings/`
+(screens "Historico*").
 
-**RF-AUD-1** A timeline: when, who (member name, or "Automático" for jobs, "WhatsApp" source
-marked), and a sentence built from the event, e.g.:
+**RF-AUD-1** A timeline grouped by day, like Lançamentos. Each event: the member's avatar (or the
+bolt for "Automático"), a sentence built from the event with the item in **bold**, and below it a
+support line (`../ui-standards.md` → Support lines) with the time, the area and "ref. xxxxxxxx",
+"pelo WhatsApp" as a badge first. The names come from the API (`actor`, `entityLabel`, also for
+deleted items, G75). E.g.:
 - "Member A registrou o lançamento Mercado (R$ 87,50)";
 - "Member B editou o lançamento Padaria: valor de R$ 25,00 para R$ 31,00";
 - "Member A excluiu a conta Carteira";
 - "Member A mudou o papel de Member B para Membro".
-Tapping an event shows before and after, field by field, with the changed fields highlighted and
-money and dates formatted.
+Tapping an event opens the change in a sheet (phone) or the right pane (desktop): who, when and how,
+before and after field by field with the changed fields highlighted, labels and formatted money and
+dates from the API (G75), the reference sentence, "Ver lançamento", and "Neste lançamento" (the
+item's other changes).
 **RF-AUD-2** Filters: area (mapped from `tableName`: "Lançamentos" = `journal_entries`, "Contas" =
 `ledger_accounts`, "Cartões" = `card_details`, "Contatos" = `contacts`, "Cobranças" = `charges`,
 "Planejamento" = recurrences, occurrences, budgets, goals, allocation and holidays, "Membros e
 acesso" = memberships, roles, invitations, "Configurações" = workspaces and settings); and a
-single item (from "Histórico" links in other screens, e.g. `ENT-03` passes the entry id).
-**RF-AUD-3** Paging with `nextCursor` ("Carregar mais"). Empty: "Nada registrado ainda." Error
+single item (from "Histórico" links in other screens, e.g. `ENT-03` passes the entry id: the item
+sits on top with an X to see everything); "Quem", a member or "Automático" (`actorId`, G75), next to
+"Área" (`MEM-01` → "Ver no histórico" opens it filtered).
+**RF-AUD-3** Paging with `nextCursor`, 50 per load ("Carregar mais"). Desktop is a work screen
+(`../ui-standards.md` → Work screens): the list on the left, the change on the right, the next 50
+loading on their own near the end. Empty: "Nada registrado ainda." Error
 `AUDIT_QUERY_INVALID` resets the filters.
 **RF-AUD-4** Each event shows its reference (first 8 characters of `traceId`), so a problem report
 can be traced.

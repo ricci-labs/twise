@@ -1,7 +1,7 @@
 ---
 summary: Phases, MVP scope, current focus and the list of open questions.
 read_when: Deciding what to build next, checking whether something is in scope, or resuming work in a new session.
-updated: 2026-10-18
+updated: 2026-10-29
 ---
 
 # Roadmap
@@ -430,6 +430,29 @@ updated: 2026-10-18
   14. [x] Review of the round against every PNG (#369–#404; G65–G68 added on the way)
   15. [x] The open items' card and share detail ("Cartão X · metade de R$ 240,00"), approved by the
       user on 2026-10-18: API (G69, #405) and the contact page (#406)
+- [ ] **Settings, "Posso comprar?" and phone system bars round: SET-01, MEM-01..03, ME-01, AUD-01,
+  HOME-02** (designs `../design/settings/`, `../design/purchase/`, `../design/system-bars/`,
+  exported and approved 2026-10-29; one PR per step, every screen checked side by side with its PNG
+  and run through the long-text test):
+  1. [ ] Design package; requirements (`requirements/modules/workspace-and-members.md`,
+     `requirements/modules/auth-and-account.md`, `requirements/modules/attachments-and-audit.md`,
+     `requirements/modules/dashboard.md`), the seven app-wide rules and the system bars in
+     `requirements/ui-standards.md`, API gaps G73–G78
+  2. [ ] Web: the phone system bars (manifest colours, `theme-color` for light and dark, the iPhone
+     status bar and safe areas), checked on an installed Android and on an iPhone
+  3. [ ] Web: the app-wide rules on the screens already built (`MetaLine` support lines, paired
+     desktop cards, lists on the full row, the desktop offline bar edge to edge, before and after
+     blocks), each desktop screen checked at 1440 and 1920 px
+  4. [ ] API: the period preview (G73) and role usage (G74)
+  5. [ ] API: the readable history, the `actorId` filter and the members' last activity (G75)
+  6. [ ] API: the purchase simulation's verdict, payment method effect and period (G76–G78)
+  7. [ ] Web: the Configurações hub and its screens (`SET-01`)
+  8. [ ] Web: Membros, Papéis and Convites as tabs (`MEM-01..03`)
+  9. [ ] Web: Minha conta (`ME-01`)
+  10. [ ] Web: Histórico (`AUD-01`), with `WorkScreen` on the desktop
+  11. [ ] Web: "Posso comprar?" (`HOME-02`): the form, the live result, the states and the desktop
+      work screen
+  12. [ ] Review of the round against every PNG
 - [ ] Remaining project skills (`new-module`, `db-migration`, `domain-rule`, `pr`) and Claude Code hooks
 
 ## Phase 1: MVP

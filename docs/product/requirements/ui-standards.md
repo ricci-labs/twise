@@ -1,7 +1,7 @@
 ---
 summary: Rules every web screen follows — field and form validation, the button contract, feedback, loading/empty/error states, money and date inputs, permissions in the UI, destructive actions and how API errors become messages.
 read_when: Designing or building any form, button, list or screen, or reviewing one before merge.
-updated: 2026-10-16
+updated: 2026-10-29
 ---
 
 # UI standards
@@ -248,6 +248,50 @@ long names ("Internet fibra 1 giga com TV e telefone", "Conta Conjunta do Banco 
 - **Desktop table cells** are one line with "…"; the name column may take 2 lines. The full text
   is in the detail.
 - **Cards with a coloured border** (overdue) get a larger inner padding than plain lists.
+
+## Layout, quantities and results
+Decided with the settings design and the "Posso comprar?" design (2026-10-29,
+`../../design/settings/decisions.md`, `../../design/purchase/decisions.md`), for every screen, built
+or to be built.
+
+- **Support lines break by whole pieces** (`MetaLine`). A second line made of pieces joined by
+  " · " never breaks inside a piece: a piece that does not fit drops whole to the next line, without
+  its dot, starting with a capital letter. Never "19/10 · link" with the rest below.
+- **Desktop: paired cards** (`PairedCardGrid`). Fixed-content cards (forms, settings) sit in two
+  columns, paired by similar height; cards in a row share their height and keep the save button at
+  the foot. A card without a pair takes the full row. Never a lone card beside an empty space; never
+  one stretched sheet across a wide screen. Every desktop screen is checked at 1440 and 1920 px.
+- **Quantities.** A list is never placed side by side with something else: it takes the full row
+  and grows (50 per load and the "Mostrar mais" of Lists that grow over time). Side-by-side cards
+  only for fixed content. A summary of a list shows its first 4–6 items + "Ver todos os {n}". Grids
+  of tiles wrap into as many columns as fit, with no holes (5 tiles become 3 + 2 wider ones). Every
+  list is designed with 1, 6 and many items.
+- **Work screens (desktop)** (`WorkScreen`). A list with a detail beside it (Histórico now;
+  Lançamentos and Contatos when revisited; "Posso comprar?" with its form and result) uses the
+  whole window: the page does not scroll, each column scrolls on its own, the filters stay pinned
+  at the top of the list, and the next 50 load on their own about 300 px before the end (skeleton
+  rows + "Carregando mais…"). An error keeps what loaded and shows "Tentar de novo" at the end (no
+  automatic retry loop); the end says "Isso é tudo…". Below 700 px of window height it falls back to
+  a scrolling page with "Mostrar mais" and the detail pinned. Each pane is focusable and named for
+  screen readers. The phone does not change.
+- **Offline bar on desktop.** The dark "Sem conexão" bar is glued to the top of the content area
+  and runs edge to edge (from the sidebar to the right edge), outside the content margins; the
+  content starts 24 px below it.
+- **Before and after values are blocks** (`BeforeAfterTiles`), never "old › new" on one line.
+  Phone: the label (up to 2 lines) and "antes R$ X" in small text on the left, the new value large on
+  the right (never wraps, danger when negative). Desktop: tiles side by side (3–4 per row) with the
+  new value large and "antes" below. Nothing changed: the current value and "sem mudança". Applies
+  wherever a screen shows an effect (simulations, edits with before and after, the history's change
+  when it fits).
+- **Offline or error where a result appears** (`ResultState`). The app's dark "Sem conexão" bar at
+  the top (desktop: as above) and, in the result area, a centred notice: icon, title, one sentence,
+  "Tentar de novo". An old result is never kept on screen. A server error adds the code and the
+  reference. On the desktop the notice fills the pane, never a card inside a card.
+- **Phone system bars take the screen's colour** (installed app, decided on 2026-10-29,
+  `../../design/system-bars/README.md`). The status bar matches what sits right under it (the page
+  background by default, the dark background in the dark theme) and the Android navigation bar the
+  tab bar's white; never the brand mint. The manifest colours are the page background, and the
+  splash shows the owl on cream.
 
 ## Permissions in the UI
 - The member's permissions come from `GET /api/workspaces/:workspaceId`. Each action in a screen

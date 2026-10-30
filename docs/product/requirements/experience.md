@@ -1,7 +1,7 @@
 ---
 summary: The idea of the web app — promise, people, design principles, key journeys, navigation and the screen inventory with IDs used by every module requirement.
 read_when: Starting the design system or any screen, deciding where a feature lives in the navigation, or looking up a screen ID.
-updated: 2026-10-16
+updated: 2026-10-29
 ---
 
 # Experience
@@ -105,10 +105,10 @@ Priority MVP unless marked Later. Module files hold the full spec of each screen
 |---|---|
 | `SHELL-01` | App shell: navigation, workspace switcher, session expiry handling |
 | `WS-01` | Create a workspace (first run, or from the switcher) |
-| `SET-01` | Workspace settings: name, financial period, budget base, installment view, time zone |
+| `SET-01` | Workspace settings: a hub on the phone (name, financial period, budget base, installment view, time zone, and the entries for Pix, the charge text and holidays), paired cards on the desktop |
 | `SET-02` | Pix receiving (key and receiver shown on charges) |
 | `SET-03` | Charge text: e-mail subject, opening and closing of every charge |
-| `MEM-01` | Members: list, change role, remove, leave |
+| `MEM-01` | Members: list, change role, remove, leave; tabs Membros, Papéis and Convites |
 | `MEM-02` | Roles: list, create and edit custom roles |
 | `MEM-03` | Invitations: invite by email or phone, pending list, revoke |
 
@@ -116,7 +116,7 @@ Priority MVP unless marked Later. Module files hold the full spec of each screen
 | ID | Screen |
 |---|---|
 | `HOME-01` | Period overview: free to spend, per day, spent, committed, budgets, next invoice, balance forecast, insights |
-| `HOME-02` | "Posso comprar?": purchase simulation |
+| `HOME-02` | "Posso comprar?": live purchase simulation with a verdict |
 | `HOME-03` | Commission split suggestion |
 
 **Accounts and cards** — `modules/accounts-and-cards.md`

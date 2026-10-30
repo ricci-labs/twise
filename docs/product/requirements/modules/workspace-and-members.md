@@ -1,7 +1,7 @@
 ---
 summary: Functional requirements for the app shell and workspaces — switcher, creating a workspace, settings (financial period, budget base, installment view, time zone), Pix receiving, the charge text, members, roles and permissions, invitations (SHELL-01, WS-01, SET-01..03, MEM-01..03).
 read_when: Designing or building the shell, workspace settings, members, roles or invitations.
-updated: 2026-10-17
+updated: 2026-10-29
 ---
 
 # Workspace and members
@@ -75,20 +75,34 @@ workspace's home in the first-run state (`HOME-01`); the creator becomes the own
 
 ## SET-01 Workspace settings (MVP)
 Route `/configuracoes`. View `settings:view` (not for viewers); change `settings:update`.
-`GET/PATCH /settings`, `PATCH /api/workspaces/:id` (name).
+`GET/PATCH /settings`, `PATCH /api/workspaces/:id` (name). Design: `../../../design/settings/`
+(README → Layouts, screens "Config-*" and "Configuracoes-*").
+
+**RF-WS-12** Layout:
+- **Mobile: a hub.** A list in groups; each row has an icon tile, the title and the current value in
+  one or two lines, so nothing needs opening to be read. Espaço: "Nome e moeda", "Mês financeiro",
+  "Orçamento", "Calendário e fuso". Cobranças: "Recebimento por Pix" (`SET-02`), "Mensagem das
+  cobranças" (`SET-03`). Planejamento: "Feriados" (`PLAN-07`). Each row opens its own screen with
+  the group's fields and one "Salvar …" in the sticky footer.
+- **Desktop: paired cards** (`../ui-standards.md` → Paired cards), one save at the foot of each card:
+  [Nome e moeda | Calendário e fuso], [Mês financeiro | Orçamento], then "Cobranças e planejamento"
+  on the full row with Pix, Mensagem and Feriados side by side.
+- **Read only:** a member with `settings:view` but not `settings:update` sees the hub with the note
+  "Só donos e admins mudam as configurações. Você pode ver."; each screen shows its controls dimmed,
+  a lock note and no save button.
 
 | Field | Label | Input | Rules / help |
 |---|---|---|---|
 | name | "Nome do espaço" | text | 1–80 |
-| periodAnchor + periodAnchorValue | "Seu mês financeiro começa" | radio "No dia 1 (mês do calendário)", "Todo dia {n}" (1–31), "No {n}º dia útil" (1–10) | help "Use o dia em que o salário costuma cair. Os números do início passam a seguir esse período." Preview: "Período atual: 5 out – 4 nov." |
+| periodAnchor + periodAnchorValue | "Seu mês financeiro começa" | three choice cards "No dia 1 (mês do calendário)", "Todo dia {n}" (1–31), "No {n}º dia útil" (1–10), the number inside the sentence (the app's picker) | help "Use o dia em que o salário costuma cair. Os números do início passam a seguir esse período." Preview of the current **and** the next period ("Período atual: 5 out – 4 nov."), from the API (G73); the web never computes period dates |
 | budgetBase | "O orçamento considera" | radio "Só a renda fixa (recomendado)", "Toda a renda, incluindo comissões" | help "Comissões variam; contar com elas no orçamento pode deixar o mês apertado." |
 | installmentBudgetView | "Compras parceladas contam" | radio "Em cada parcela, na fatura em que ela cai (recomendado)", "Inteiras, no mês da compra" | |
 | weekStartsOn | "A semana começa no" | "Domingo" / "Segunda-feira" | |
-| timezone | "Fuso horário" | select of Brazilian zones first, then all | valid IANA zone |
+| timezone | "Fuso horário" | the app's picker: Brazilian zones with the cities they cover, a search, "Outros países" for the rest | valid IANA zone |
 Read only: currency ("Real (R$)"); "Limite diário de mensagens a contatos" and "Lembrar
 cobranças a cada {n} dias" appear later, when editable.
 **RF-WS-5** Each group saves on its own ("Salvar período", …), enabled when changed; toast
-"Configurações salvas." Errors `SETTINGS_INVALID` (form: "Não foi possível salvar. Confira os
+"Configurações salvas." On an error the values stay as the person left them. Errors `SETTINGS_INVALID` (form: "Não foi possível salvar. Confira os
 valores."), `WORKSPACE_NAME_INVALID`.
 
 ## SET-02 Pix receiving (MVP)
@@ -129,16 +143,27 @@ desktop the fields and the WhatsApp preview on the left, the inbox and the full 
 is stored.
 
 ## MEM-01 Members (MVP)
-Route `/membros`. `members:view` (not for viewers). `GET /members`, `GET /roles`.
+Route `/membros`. `members:view` (not for viewers). `GET /members`, `GET /roles`. Design:
+`../../../design/settings/` (screens "Membros*", "Membro-*").
 
-**RF-WS-7** List: name, e-mail, role, "Desde {data}"; the current user marked "Você".
+**RF-WS-13** Members, Roles and Invitations are **tabs** inside "Membros" ("Membros | Papéis |
+Convites", the pending invitations as a small badge), each keeping its route (`/membros`,
+`/membros/papeis`, `/membros/convites`). "Convidar" sits in the page header (`members:create`).
+
+**RF-WS-7** List, 50 per load + "Carregar mais". Row: initial, name (up to 2 lines) with a "você"
+pill; the e-mail alone on line 2 (up to 2 lines, breaks anywhere); line 3 starts with the role
+badge, then "Desde {data}". "⋯" holds the actions below; on your own row "Minha conta" and "Sair do
+espaço". A member without `members:update`/`members:delete` sees no "⋯" on other rows. Desktop: a
+table on the full row (Pessoa | Papel | Desde | Última atividade | ⋯), "Última atividade" from the
+member's latest history event (G75); then the 4 newest pending invitations + "Ver todos os N
+convites", then the roles as tiles (up to 6 + "Ver todos").
 | Action | Permission | Rule |
 |---|---|---|
-| "Mudar papel" | `members:update` | role picker; owner options only for owners; `OWNER_ONLY` "Só um dono pode mudar outro dono ou dar o papel de dono."; `PERMISSION_ESCALATION` "Você não pode dar permissões que não tem."; `LAST_OWNER` "O espaço precisa de pelo menos um dono. Promova outra pessoa antes." |
+| "Mudar papel" | `members:update` | a tall sheet with the roles as choice cards, each with what it can do in one sentence; "Dono" enabled only for owners, roles holding permissions the editor lacks disabled, so `OWNER_ONLY` ("Só um dono pode mudar outro dono ou dar o papel de dono.") and `PERMISSION_ESCALATION` ("Você não pode dar permissões que não tem.") don't happen in practice; `LAST_OWNER` is a dialog that explains and offers the way out ("Tornar {nome} dono") |
+| "Ver no histórico" | `audit:view` | opens `AUD-01` filtered by that person (G75) |
 | "Remover do espaço" | `members:delete` | dialog "Remover {nome} do espaço? A pessoa perde o acesso na hora." with optional "Motivo" (up to 200) |
-| "Sair do espaço" (own row) | any member | dialog "Sair do espaço {nome}? Você perde o acesso aos dados dele."; `LAST_OWNER` explained as above; success returns to the switcher |
+| "Sair do espaço" (own row) | any member | dialog "Sair do espaço {nome}? Você perde o acesso aos dados dele."; `LAST_OWNER` as the dialog above; success returns to the switcher |
 | "Convidar" | `members:create` | `MEM-03` |
-| "Papéis" | `members:view` | `MEM-02` |
 Errors: `MEMBER_NOT_FOUND` ("Essa pessoa não está mais no espaço."), `ROLE_NOT_AVAILABLE`,
 `MEMBER_ROLE_INVALID`, `DELETION_INVALID`.
 
@@ -146,26 +171,31 @@ Errors: `MEMBER_NOT_FOUND` ("Essa pessoa não está mais no espaço."), `ROLE_NO
 Route `/membros/papeis`. `members:view`; create `members:create`; edit `members:update`; delete
 `members:delete`.
 
-**RF-WS-8** List roles with name, description, number of members using it (from the members list)
-and "Sistema" badge on system roles. The owner role shows "Não pode ser alterado".
+**RF-WS-8** One card per role: name, "Sistema" or "Do espaço" badge, how many use it, people **and**
+invitations ("1 pessoa", "1 convite", "Ninguém", from the API, G74), and what it can do in one
+sentence. The owner role shows a lock and "Não pode ser alterado". Desktop: the roles as a table
+(Papel | Tipo | Quem usa) and "O que cada papel pode", one column per role (above 6 roles it scrolls
+sideways with the "Área" column fixed).
 **RF-WS-9** Role editor (create or edit):
 | Field | Label | Required | Rules |
 |---|---|---|---|
 | name | "Nome do papel" | yes | 1–60; unique without case among roles, system names included: `ROLE_NAME_TAKEN` "Já existe um papel com esse nome." |
 | description | "Descrição" | no | up to 200 |
 | permissions | "Permissões" | yes | a matrix modules × "Ver", "Criar", "Editar", "Excluir", showing only the valid actions per module; ticking any action ticks "Ver"; unticking "Ver" unticks the rest; permissions the editor doesn't hold are disabled with the tooltip "Você não tem essa permissão para dar." |
-Quick presets: copy from an existing role. Actions "Criar papel" / "Salvar papel", "Excluir papel"
+Presets: "Começar a partir de" with three equal buttons, "Admin", "Membro" and "Leitor", which copy
+that role's permissions. Desktop: a page with a breadcrumb; name, description, presets and "Quem
+usa" on the left, the permission matrix with checkboxes on the right. Actions "Criar papel" / "Salvar papel", "Excluir papel"
 (custom only; dialog). Errors: `ROLE_INVALID`, `PERMISSION_ESCALATION`, `OWNER_ROLE_LOCKED`,
-`ROLE_NOT_FOUND`, `SYSTEM_ROLE` ("Papéis do sistema não podem ser excluídos."), `ROLE_IN_USE`
-("Este papel está em uso por membros ou convites. Troque o papel deles ou revogue os convites
-antes.").
+`ROLE_NOT_FOUND`, `SYSTEM_ROLE` ("Papéis do sistema não podem ser excluídos."; system roles show no
+"Excluir"). `ROLE_IN_USE` is a dialog that explains and offers the way out ("Ver convites" or the
+members).
 
 ## MEM-03 Invitations (MVP)
 Route `/membros/convites`. List `members:view`; invite `members:create`; revoke `members:delete`.
 
 **RF-WS-10** Pending invitations, newest first: e-mail or phone, role, who invited, "Vale até
 {data}". Action "Revogar" (dialog "Revogar o convite para {contato}? O link deixa de funcionar.").
-**RF-WS-11** Invite form:
+**RF-WS-11** Invite form (desktop: a 560 px dialog over Membros):
 | Field | Label | Required | Rules |
 |---|---|---|---|
 | channel | "Convidar por" | yes | "E-mail" or "Telefone" |

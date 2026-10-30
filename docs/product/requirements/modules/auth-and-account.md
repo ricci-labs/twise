@@ -1,7 +1,7 @@
 ---
 summary: Functional requirements for log in, sign-up, email verification, password reset and change, invitations answered by the invitee, session handling, and my account (profile, preferences, notification settings).
 read_when: Designing or building AUTH-*, INV-01 or ME-01, or anything about sessions and login.
-updated: 2026-10-02
+updated: 2026-10-29
 ---
 
 # Auth and my account
@@ -204,7 +204,16 @@ warn before (they can't be saved without a session).
 `AUTH-01` with "Você saiu.". No confirmation.
 
 ## ME-01 My account (MVP)
-Route `/conta`. Sections:
+Route `/conta`, from Mais › Minha conta and the account menu. Design: `../../../design/settings/`
+(screens "Conta*").
+
+**RF-AUTH-18 Layout.** A header with the initial, the name and the e-mail. On the phone, a hub like
+Configurações: Você ("Nome", "E-mail" read only with a lock, "Senha" with "Trocada em …"), Avisos
+("Horário de silêncio", "Avisos do espaço {nome}"), Aparência ("Tema", "só neste aparelho"), and
+"Sair" at the end (no confirmation); each row opens its own screen. Desktop: paired cards
+(`../ui-standards.md` → Paired cards), [Perfil | Tema], [Horário de silêncio | Avisos do espaço],
+"Senha" on the full row with its three fields side by side and the password rule at the top of the
+card; "Sair" in the page header.
 
 **RF-AUTH-12 Profile.** Shows the email (read only; it can't be changed yet) and the display name.
 | Field | Label | Required | Rules |
@@ -217,11 +226,12 @@ Route `/conta`. Sections:
 | Field | Label | Required | Rules |
 |---|---|---|---|
 | currentPassword | "Senha atual" | yes | 1–128 |
-| newPassword | "Nova senha" | yes | 12–128 |
+| newPassword | "Nova senha" | yes | 12–128; the show/hide eye button sits **inside** the field |
 | confirmation | "Repita a nova senha" | yes | equal to the new one |
 "Trocar senha" → toast "Senha trocada. Saímos dos outros aparelhos." Errors:
 `CURRENT_PASSWORD_WRONG` (field "Senha atual": "A senha atual está incorreta."),
-`PASSWORD_INVALID`, `TOO_MANY_ATTEMPTS` (5 wrong attempts in 15 min).
+`PASSWORD_INVALID`, `TOO_MANY_ATTEMPTS` (5 wrong attempts in 15 min: a notice and the button with a
+countdown, as in log in).
 
 **RF-AUTH-14 Quiet hours** ("Horário de silêncio", no reminders in this window, for every
 workspace).
@@ -230,7 +240,8 @@ workspace).
 | quiet hours on | "Não enviar lembretes à noite" | — | switch |
 | quietHoursStart | "Das" | when on | `HH:MM`, 00:00–23:59 |
 | quietHoursEnd | "Até" | when on | `HH:MM`; may cross midnight (22:00 → 07:00) |
-Both times are sent together, or both `null` when switched off. Help: "Lembretes que cairiam nesse
+The switch sits next to the section label; when on, "Das" and "Até" sit side by side (same height,
+one help line below), with the app's time picker. Both times are sent together, or both `null` when switched off. Help: "Lembretes que cairiam nesse
 horário chegam no fim dele." Error `PREFERENCES_INVALID`. The language stays pt-BR (no selector in
 the MVP).
 
@@ -242,7 +253,9 @@ what works:
 |---|---|---|---|---|
 | notifyBillsDaysBefore | "Avisar contas e faturas com quantos dias de antecedência" | yes | integer 0–30 ("0" = só no dia do vencimento) | 3 |
 
-Help under it: "Os lembretes chegam por e-mail, uma vez por conta ou fatura." "Salvar preferências"
+A stepper (0–30) with a real example under it, built from one of the workspace's bills ("A
+Internet vence em 18/11: o aviso chega em 15/11, por e-mail, uma vez."). Help under it: "Os
+lembretes chegam por e-mail, uma vez por conta ou fatura." "Salvar preferências"
 is enabled when the value changed; success toast "Preferências salvas." Error
 `PREFERENCES_INVALID`.
 
@@ -250,7 +263,7 @@ is enabled when the value changed; success toast "Preferências salvas." Error
 e-mail, when the WhatsApp channel exists), "Avisar quando um orçamento chegar a {80}%", "Resumo
 diário", "Sugerir divisão quando entrar comissão". They appear when their feature exists.
 
-**RF-AUTH-16 Theme** ("Tema": "Claro" (default), "Escuro", "Automático"), stored on the device
-only. "Automático" follows the system; nothing follows it by default (RNF-RESP-3).
+**RF-AUTH-16 Theme** ("Tema": "Claro" (default), "Escuro", "Automático"), three cards with a
+miniature of the app; it changes at once, with no save, and is stored on the device only. "Automático" follows the system; nothing follows it by default (RNF-RESP-3).
 
 **RF-AUTH-17 Sessions** (Later): list and end sessions on other devices. No API yet.
