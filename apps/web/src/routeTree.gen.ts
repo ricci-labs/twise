@@ -51,6 +51,8 @@ import { Route as AppWWorkspaceIdSettingsHolidaysRouteImport } from './routes/_a
 import { Route as AppWWorkspaceIdSettingsNameRouteImport } from './routes/_app/w/$workspaceId/settings/name'
 import { Route as AppWWorkspaceIdSettingsPeriodRouteImport } from './routes/_app/w/$workspaceId/settings/period'
 import { Route as AppWWorkspaceIdSettingsPixRouteImport } from './routes/_app/w/$workspaceId/settings/pix'
+import { Route as AppWWorkspaceIdMembersRolesRoleRouteImport } from './routes/_app/w/$workspaceId/members/roles_/$role'
+import { Route as AppWWorkspaceIdMembersRolesNewRouteImport } from './routes/_app/w/$workspaceId/members/roles_/new'
 import { Route as AppWWorkspaceIdCardsCardInvoicesInvoiceRouteImport } from './routes/_app/w/$workspaceId/cards_/$card_/invoices/$invoice'
 
 const AppRoute = AppRouteImport.update({
@@ -281,6 +283,18 @@ const AppWWorkspaceIdSettingsPixRoute =
     path: '/settings/pix',
     getParentRoute: () => AppWWorkspaceIdRouteRoute,
   } as any)
+const AppWWorkspaceIdMembersRolesRoleRoute =
+  AppWWorkspaceIdMembersRolesRoleRouteImport.update({
+    id: '/members/roles_/$role',
+    path: '/members/roles/$role',
+    getParentRoute: () => AppWWorkspaceIdRouteRoute,
+  } as any)
+const AppWWorkspaceIdMembersRolesNewRoute =
+  AppWWorkspaceIdMembersRolesNewRouteImport.update({
+    id: '/members/roles_/new',
+    path: '/members/roles/new',
+    getParentRoute: () => AppWWorkspaceIdRouteRoute,
+  } as any)
 const AppWWorkspaceIdCardsCardInvoicesInvoiceRoute =
   AppWWorkspaceIdCardsCardInvoicesInvoiceRouteImport.update({
     id: '/cards_/$card_/invoices/$invoice',
@@ -329,6 +343,8 @@ export interface FileRoutesByFullPath {
   '/w/$workspaceId/members/': typeof AppWWorkspaceIdMembersIndexRoute
   '/w/$workspaceId/planning/': typeof AppWWorkspaceIdPlanningIndexRoute
   '/w/$workspaceId/settings/': typeof AppWWorkspaceIdSettingsIndexRoute
+  '/w/$workspaceId/members/roles/$role': typeof AppWWorkspaceIdMembersRolesRoleRoute
+  '/w/$workspaceId/members/roles/new': typeof AppWWorkspaceIdMembersRolesNewRoute
   '/w/$workspaceId/cards/$card/invoices/$invoice': typeof AppWWorkspaceIdCardsCardInvoicesInvoiceRoute
 }
 export interface FileRoutesByTo {
@@ -371,6 +387,8 @@ export interface FileRoutesByTo {
   '/w/$workspaceId/members': typeof AppWWorkspaceIdMembersIndexRoute
   '/w/$workspaceId/planning': typeof AppWWorkspaceIdPlanningIndexRoute
   '/w/$workspaceId/settings': typeof AppWWorkspaceIdSettingsIndexRoute
+  '/w/$workspaceId/members/roles/$role': typeof AppWWorkspaceIdMembersRolesRoleRoute
+  '/w/$workspaceId/members/roles/new': typeof AppWWorkspaceIdMembersRolesNewRoute
   '/w/$workspaceId/cards/$card/invoices/$invoice': typeof AppWWorkspaceIdCardsCardInvoicesInvoiceRoute
 }
 export interface FileRoutesById {
@@ -417,6 +435,8 @@ export interface FileRoutesById {
   '/_app/w/$workspaceId/members/': typeof AppWWorkspaceIdMembersIndexRoute
   '/_app/w/$workspaceId/planning/': typeof AppWWorkspaceIdPlanningIndexRoute
   '/_app/w/$workspaceId/settings/': typeof AppWWorkspaceIdSettingsIndexRoute
+  '/_app/w/$workspaceId/members/roles_/$role': typeof AppWWorkspaceIdMembersRolesRoleRoute
+  '/_app/w/$workspaceId/members/roles_/new': typeof AppWWorkspaceIdMembersRolesNewRoute
   '/_app/w/$workspaceId/cards_/$card_/invoices/$invoice': typeof AppWWorkspaceIdCardsCardInvoicesInvoiceRoute
 }
 export interface FileRouteTypes {
@@ -462,6 +482,8 @@ export interface FileRouteTypes {
     | '/w/$workspaceId/members/'
     | '/w/$workspaceId/planning/'
     | '/w/$workspaceId/settings/'
+    | '/w/$workspaceId/members/roles/$role'
+    | '/w/$workspaceId/members/roles/new'
     | '/w/$workspaceId/cards/$card/invoices/$invoice'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -504,6 +526,8 @@ export interface FileRouteTypes {
     | '/w/$workspaceId/members'
     | '/w/$workspaceId/planning'
     | '/w/$workspaceId/settings'
+    | '/w/$workspaceId/members/roles/$role'
+    | '/w/$workspaceId/members/roles/new'
     | '/w/$workspaceId/cards/$card/invoices/$invoice'
   id:
     | '__root__'
@@ -549,6 +573,8 @@ export interface FileRouteTypes {
     | '/_app/w/$workspaceId/members/'
     | '/_app/w/$workspaceId/planning/'
     | '/_app/w/$workspaceId/settings/'
+    | '/_app/w/$workspaceId/members/roles_/$role'
+    | '/_app/w/$workspaceId/members/roles_/new'
     | '/_app/w/$workspaceId/cards_/$card_/invoices/$invoice'
   fileRoutesById: FileRoutesById
 }
@@ -858,6 +884,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppWWorkspaceIdSettingsPixRouteImport
       parentRoute: typeof AppWWorkspaceIdRouteRoute
     }
+    '/_app/w/$workspaceId/members/roles_/$role': {
+      id: '/_app/w/$workspaceId/members/roles_/$role'
+      path: '/members/roles/$role'
+      fullPath: '/w/$workspaceId/members/roles/$role'
+      preLoaderRoute: typeof AppWWorkspaceIdMembersRolesRoleRouteImport
+      parentRoute: typeof AppWWorkspaceIdRouteRoute
+    }
+    '/_app/w/$workspaceId/members/roles_/new': {
+      id: '/_app/w/$workspaceId/members/roles_/new'
+      path: '/members/roles/new'
+      fullPath: '/w/$workspaceId/members/roles/new'
+      preLoaderRoute: typeof AppWWorkspaceIdMembersRolesNewRouteImport
+      parentRoute: typeof AppWWorkspaceIdRouteRoute
+    }
     '/_app/w/$workspaceId/cards_/$card_/invoices/$invoice': {
       id: '/_app/w/$workspaceId/cards_/$card_/invoices/$invoice'
       path: '/cards/$card/invoices/$invoice'
@@ -896,6 +936,8 @@ interface AppWWorkspaceIdRouteRouteChildren {
   AppWWorkspaceIdMembersIndexRoute: typeof AppWWorkspaceIdMembersIndexRoute
   AppWWorkspaceIdPlanningIndexRoute: typeof AppWWorkspaceIdPlanningIndexRoute
   AppWWorkspaceIdSettingsIndexRoute: typeof AppWWorkspaceIdSettingsIndexRoute
+  AppWWorkspaceIdMembersRolesRoleRoute: typeof AppWWorkspaceIdMembersRolesRoleRoute
+  AppWWorkspaceIdMembersRolesNewRoute: typeof AppWWorkspaceIdMembersRolesNewRoute
   AppWWorkspaceIdCardsCardInvoicesInvoiceRoute: typeof AppWWorkspaceIdCardsCardInvoicesInvoiceRoute
 }
 
@@ -928,6 +970,8 @@ const AppWWorkspaceIdRouteRouteChildren: AppWWorkspaceIdRouteRouteChildren = {
   AppWWorkspaceIdMembersIndexRoute: AppWWorkspaceIdMembersIndexRoute,
   AppWWorkspaceIdPlanningIndexRoute: AppWWorkspaceIdPlanningIndexRoute,
   AppWWorkspaceIdSettingsIndexRoute: AppWWorkspaceIdSettingsIndexRoute,
+  AppWWorkspaceIdMembersRolesRoleRoute: AppWWorkspaceIdMembersRolesRoleRoute,
+  AppWWorkspaceIdMembersRolesNewRoute: AppWWorkspaceIdMembersRolesNewRoute,
   AppWWorkspaceIdCardsCardInvoicesInvoiceRoute:
     AppWWorkspaceIdCardsCardInvoicesInvoiceRoute,
 }

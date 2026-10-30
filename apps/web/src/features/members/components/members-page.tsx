@@ -1,6 +1,7 @@
 import { todayIn } from '@financas/shared'
 import { useQuery } from '@tanstack/react-query'
-import { useNavigate } from '@tanstack/react-router'
+import { Link, useNavigate } from '@tanstack/react-router'
+import { Button } from '@web/components/actions/button'
 import { SegmentedControl } from '@web/components/actions/segmented-control'
 import { ShowMoreButton } from '@web/components/actions/show-more-button'
 import { MemberRow } from '@web/components/display/member-row'
@@ -23,6 +24,7 @@ import type {
 import { usePageTitle } from '@web/hooks/use-page-title'
 import { ApiError } from '@web/lib/api/api-error'
 import { hasPermission } from '@web/lib/permissions'
+import { ChevronRight, Plus } from 'lucide-react'
 import { useState } from 'react'
 
 const PAGE_SIZE = 50
@@ -40,10 +42,29 @@ export function MembersPage({
   usePageTitle(messages.pageTitle)
   return (
     <PageFrame className="gap-4 lg:gap-6">
-      <PageHeader title={messages.title} />
+      <PageHeader
+        title={messages.title}
+        actions={
+          tab === 'roles' &&
+          hasPermission(permissions, 'members', 'create') && (
+            <Button
+              variant="secondary"
+              size="sm"
+              render={<Link to="/w/$workspaceId/members/roles/new" params={{ workspaceId }} />}
+            >
+              <Plus aria-hidden="true" />
+              {messages.newRole}
+            </Button>
+          )
+        }
+      />
       <MembersTabs workspaceId={workspaceId} value={tab} />
       {tab === 'roles' ? (
-        <RolesList workspaceId={workspaceId} workspaceName={workspaceName} />
+        <RolesList
+          workspaceId={workspaceId}
+          workspaceName={workspaceName}
+          canEdit={hasPermission(permissions, 'members', 'update')}
+        />
       ) : (
         <MembersList
           workspaceId={workspaceId}
@@ -79,7 +100,7 @@ function MembersTabs({ workspaceId, value }: MembersTabsProps) {
   )
 }
 
-function RolesList({ workspaceId, workspaceName }: RolesListProps) {
+function RolesList({ workspaceId, workspaceName, canEdit }: RolesListProps) {
   const roles = useQuery(rolesQueryOptions(workspaceId))
   if (roles.isError) {
     return (
@@ -107,6 +128,23 @@ function RolesList({ workspaceId, workspaceName }: RolesListProps) {
             isLocked={role.systemKey === OWNER}
             memberCount={role.memberCount}
             invitationCount={role.invitationCount}
+            actions={
+              (canEdit || role.systemKey === OWNER) && (
+                <Button
+                  aria-label={messages.openRole(role.name)}
+                  variant="quiet"
+                  size="icon"
+                  render={
+                    <Link
+                      to="/w/$workspaceId/members/roles/$role"
+                      params={{ workspaceId, role: role.roleId }}
+                    />
+                  }
+                >
+                  <ChevronRight aria-hidden="true" />
+                </Button>
+              )
+            }
           />
         ))}
       </AccountGroup>
