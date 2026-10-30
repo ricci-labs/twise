@@ -140,6 +140,7 @@ import { suggestInputExamples } from '@web/components/inputs/suggest-input'
 import { switchExamples } from '@web/components/inputs/switch'
 import { textAreaExamples } from '@web/components/inputs/text-area'
 import { textInputExamples } from '@web/components/inputs/text-input'
+import { themeCardsExamples } from '@web/components/inputs/theme-cards'
 import { toggleChipsExamples } from '@web/components/inputs/toggle-chips'
 import { authLayoutExamples } from '@web/components/layout/auth-layout'
 import { formOverlayExamples } from '@web/components/layout/form-overlay'
@@ -223,6 +224,7 @@ export const workbenchSections: readonly ComponentExamples[] = [
   settingsFormPageExamples,
   pairedCardGridExamples,
   permissionRowsExamples,
+  themeCardsExamples,
   memberRowExamples,
   roleCardExamples,
   invitationRowExamples,

@@ -18,7 +18,8 @@ import { authMessages } from '@web/features/auth/auth.messages'
 import type { AccountHeaderProps, AccountHubProps } from '@web/features/auth/auth.types'
 import { usePageTitle } from '@web/hooks/use-page-title'
 import { ApiError } from '@web/lib/api/api-error'
-import { Bell, KeyRound, LogOut, Mail, Moon, User } from 'lucide-react'
+import { storedTheme } from '@web/lib/theme'
+import { Bell, KeyRound, LogOut, Mail, Moon, Sun, User } from 'lucide-react'
 
 const messages = authMessages.myAccount
 const SKELETON_LINES = 8
@@ -64,6 +65,14 @@ export function AccountPage({ workspaceId, workspaceName }: AccountHubProps) {
             />
           </AccountGroup>
           <AccountNoticesGroup workspaceId={workspaceId} workspaceName={workspaceName} />
+          <AccountGroup title={messages.groups.looks}>
+            <SettingsRow
+              title={messages.themeRow}
+              detail={messages.themeRowDetail(messages.themeNames[storedTheme()])}
+              icon={<Sun />}
+              link={<Link to="/w/$workspaceId/account/theme" params={{ workspaceId }} />}
+            />
+          </AccountGroup>
           <Button variant="secondary" width="full" onClick={() => logOut.mutate()}>
             <LogOut aria-hidden="true" />
             {messages.logOut}

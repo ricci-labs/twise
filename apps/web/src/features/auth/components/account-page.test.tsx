@@ -215,4 +215,22 @@ describe('ME-01 Minha conta', () => {
     expect(sent).toEqual([{ notifyBillsDaysBefore: 2 }])
     await expectNoAccessibilityViolations(page.getByRole('main').element())
   })
+
+  it('changes the theme at once and keeps it on this device', async () => {
+    try {
+      await openAccount(`${ACCOUNT_PATH}/theme`)
+      await expect.element(page.getByText('Fica guardado só neste aparelho.')).toBeVisible()
+      await page.getByRole('radio', { name: 'Escuro' }).click()
+
+      await expect.poll(() => document.documentElement.classList.contains('dark')).toBe(true)
+      expect(localStorage.getItem('theme')).toBe('dark')
+      expect(page.getByRole('button', { name: /Salvar/ }).query()).toBeNull()
+      await page.getByRole('link', { name: 'Voltar para Minha conta' }).click()
+      await expect.element(page.getByText('Escuro · Só neste aparelho')).toBeVisible()
+    } finally {
+      localStorage.removeItem('theme')
+      document.documentElement.classList.remove('dark')
+      document.documentElement.style.colorScheme = ''
+    }
+  })
 })
