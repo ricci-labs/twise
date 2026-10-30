@@ -75,7 +75,7 @@ describe('ENT-01 entries list', () => {
       .element(
         page
           .getByRole('region', { name: 'Ontem · seg, 19 out' })
-          .getByText('Mercado · Conta X · por Member B'),
+          .getByText('Mercado · Conta X · Por Member B'),
       )
       .toBeVisible()
     await expect.element(page.getByText('Conta X → Poupança')).toBeVisible()

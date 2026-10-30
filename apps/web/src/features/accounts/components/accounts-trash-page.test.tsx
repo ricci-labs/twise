@@ -62,7 +62,7 @@ describe('ACC-04 accounts trash', () => {
     await expect.element(page.getByRole('heading', { name: 'Lixeira' })).toBeVisible()
     await expect.element(page.getByText('Excluída em 12/10/2026 por Member A')).toBeVisible()
     await expect.element(page.getByText('Motivo: conta encerrada no banco.')).toBeVisible()
-    await expect.element(page.getByText('Categoria de despesa · dentro de Saúde')).toBeVisible()
+    await expect.element(page.getByText('Categoria de despesa · Dentro de Saúde')).toBeVisible()
     await expect.element(page.getByText('Excluída em 01/10/2026', { exact: true })).toBeVisible()
     await expect
       .element(page.getByRole('link', { name: 'Voltar para Contas' }))

@@ -1,6 +1,7 @@
 import { Radio } from '@base-ui/react/radio'
 import { RadioGroup } from '@base-ui/react/radio-group'
 import { Button } from '@web/components/actions/button'
+import { MetaLine } from '@web/components/display/meta-line'
 import { RichText } from '@web/components/display/rich-text'
 import { Alert } from '@web/components/feedback/alert'
 import type {
@@ -63,7 +64,9 @@ export function MatchQuestion({
                 className={matchOptionVariants({ isChoice: true })}
               >
                 <span className={matchOptionTitleVariants()}>{option.title}</span>
-                <span className={matchOptionDetailVariants()}>{option.detail}</span>
+                <span className={matchOptionDetailVariants()}>
+                  <MetaLine text={option.detail} />
+                </span>
               </Radio.Root>
             ))}
           </RadioGroup>
@@ -90,7 +93,9 @@ function OptionCard({ option }: MatchOptionCardProps) {
   return (
     <div className={matchOptionVariants()}>
       <span className={matchOptionTitleVariants()}>{option.title}</span>
-      <span className={matchOptionDetailVariants()}>{option.detail}</span>
+      <span className={matchOptionDetailVariants()}>
+        <MetaLine text={option.detail} />
+      </span>
     </div>
   )
 }

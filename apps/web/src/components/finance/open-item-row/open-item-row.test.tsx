@@ -44,7 +44,7 @@ describe('OpenItemRow', () => {
     const badge = screen.getByText('Atrasado').element()
     const detail = detailOf(badge)
     expect(detail.firstElementChild).toBe(badge)
-    expect(detail.textContent).toBe('AtrasadoCartão X · metade de R$ 240,00')
+    expect(detail.textContent).toBe('AtrasadoCartão X · Metade de R$ 240,00')
     const block = screen.container.querySelector('[data-slot=date-block]') as HTMLElement
     const plain = await inList({ description: 'TV da sala' })
     const plainBlock = plain.container.querySelector('[data-slot=date-block]') as HTMLElement

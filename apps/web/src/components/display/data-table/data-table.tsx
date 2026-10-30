@@ -20,6 +20,7 @@ import {
   dataTableRowVariants,
   dataTableVariants,
 } from '@web/components/display/data-table/data-table.variants'
+import { MetaLine } from '@web/components/display/meta-line'
 import { ColorSwatch } from '@web/components/inputs/color-swatch'
 import { cloneElement } from 'react'
 
@@ -101,7 +102,11 @@ export function DataTableName({
         ) : (
           <span className={dataTableNameLabelVariants()}>{name}</span>
         )}
-        {detail && <span className={dataTableNameDetailVariants()}>{detail}</span>}
+        {detail && (
+          <span className={dataTableNameDetailVariants()}>
+            <MetaLine text={detail} />
+          </span>
+        )}
       </span>
       <ColorSwatch color={color} />
     </>

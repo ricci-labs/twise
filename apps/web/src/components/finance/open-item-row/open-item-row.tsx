@@ -1,6 +1,7 @@
 import { Amount } from '@web/components/display/amount'
 import { Badge } from '@web/components/display/badge'
 import { DateBlock } from '@web/components/display/date-block'
+import { MetaLine } from '@web/components/display/meta-line'
 import { openItemRowMessages as messages } from '@web/components/finance/open-item-row/open-item-row.messages'
 import type { OpenItemRowProps } from '@web/components/finance/open-item-row/open-item-row.types'
 import {
@@ -40,7 +41,7 @@ export function OpenItemRow({
               {messages.overdue}
             </Badge>
           )}
-          {detail}
+          <MetaLine text={detail} />
         </span>
       </span>
       <Amount cents={amountCents} size="inherit" className={openItemRowAmountVariants()} />

@@ -1,6 +1,11 @@
 import { CardBlock } from '@web/components/finance/card-block/card-block'
 import { expectNoAccessibilityViolations } from '@web/testing/accessibility'
-import { expectClampedToTwoLines, expectWholeAmount, LONG_TEXT } from '@web/testing/long-text'
+import {
+  expectClampedToTwoLines,
+  expectWholeAmount,
+  LONG_TEXT,
+  supportLineOf,
+} from '@web/testing/long-text'
 import { describe, expect, it } from 'vitest'
 import { render } from 'vitest-browser-react'
 
@@ -59,7 +64,7 @@ describe('CardBlock', () => {
 
     expect(block.getBoundingClientRect().width).toBeLessThanOrEqual(320)
     expectClampedToTwoLines(screen.getByText(LONG_TEXT.description, { exact: false }).element())
-    expectClampedToTwoLines(screen.getByText(LONG_TEXT.person, { exact: false }).element())
+    expectClampedToTwoLines(supportLineOf(block))
     expectWholeAmount(invoice.querySelector('[data-slot=amount]') as HTMLElement, invoice)
   })
 })

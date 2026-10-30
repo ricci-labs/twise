@@ -1,5 +1,6 @@
 import { Amount } from '@web/components/display/amount'
 import { CategoryArt } from '@web/components/display/category-art'
+import { MetaLine } from '@web/components/display/meta-line'
 import type { AccountRowProps } from '@web/components/finance/account-row/account-row.types'
 import {
   accountRowActionsVariants,
@@ -41,7 +42,9 @@ export function AccountRow({
             </span>
           )}
         </span>
-        <span className={accountRowDetailVariants()}>{detail}</span>
+        <span className={accountRowDetailVariants()}>
+          <MetaLine text={detail} />
+        </span>
       </span>
     </>
   )

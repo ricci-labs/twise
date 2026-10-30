@@ -1,5 +1,6 @@
 import { Button } from '@web/components/actions/button'
 import { CategoryArt } from '@web/components/display/category-art'
+import { MetaLine } from '@web/components/display/meta-line'
 import type { TrashRowProps } from '@web/components/finance/trash-row/trash-row.types'
 import {
   trashRowMainVariants,
@@ -33,7 +34,9 @@ export function TrashRow({
             {amount}
           </p>
           {details.map((detail) => (
-            <p key={detail}>{detail}</p>
+            <p key={detail}>
+              <MetaLine text={detail} />
+            </p>
           ))}
           {note && <p className={trashRowNoteVariants()}>{note}</p>}
         </div>

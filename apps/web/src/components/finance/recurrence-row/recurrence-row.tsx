@@ -1,5 +1,6 @@
 import { Amount } from '@web/components/display/amount'
 import { CategoryArt } from '@web/components/display/category-art'
+import { MetaLine } from '@web/components/display/meta-line'
 import { recurrenceRowMessages as messages } from '@web/components/finance/recurrence-row/recurrence-row.messages'
 import type { RecurrenceRowProps } from '@web/components/finance/recurrence-row/recurrence-row.types'
 import {
@@ -30,7 +31,9 @@ export function RecurrenceRow({
       <CategoryArt name={art.name} icon={art.icon} size="md" />
       <span className={recurrenceTextVariants()}>
         <span className={recurrenceTitleVariants()}>{description}</span>
-        <span className={recurrenceDetailVariants()}>{detail}</span>
+        <span className={recurrenceDetailVariants()}>
+          <MetaLine text={detail} />
+        </span>
         {next && (
           <span className={recurrenceNextVariants({ tone: next.tone })}>
             {next.tone === 'overdue' && <TwiseIcon name="alert" tone="danger" size="sm" />}

@@ -1,7 +1,7 @@
 ---
 summary: How web components are layered and built — shadcn primitives, design-system components with one folder each (variants, types, copy, tests, examples), the props contract, forms, icons, copy, the workbench, tests and lint.
 read_when: Creating, changing or using any component in apps/web; adding a shadcn component; building a form; reviewing a web PR.
-updated: 2026-10-17
+updated: 2026-10-30
 ---
 
 # Web components
@@ -107,6 +107,12 @@ from outside.
   row has a "Texto longo" example and a test with the long placeholders and 7-digit amount of
   `testing/long-text.ts` (`expectClampedToTwoLines`, `expectWholeAmount`). The Home's budget
   rows become the desktop table only from 1280 px (`xl`), where "R$ X de R$ Y" fits on one line.
+- **Support lines** (`../product/requirements/ui-standards.md` → Layout, quantities and results):
+  a row's second line made of pieces joined by " · " renders through `MetaLine`
+  (`components/display/meta-line`) inside the clamped detail span. It measures the pieces with a
+  canvas in the line's font and breaks before a piece that doesn't fit, which then starts its line
+  without the dot and with a capital letter; the dot stays for screen readers (`sr-only`). Tests
+  measure the line's box with `supportLineOf(container)` from `testing/long-text.ts`, not a piece.
 
 ## Forms
 React Hook Form v7 + `zodResolver` with the **schemas from `@financas/shared`** (ADR 0005,

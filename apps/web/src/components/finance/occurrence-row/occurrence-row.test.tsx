@@ -4,6 +4,7 @@ import type {
   OccurrenceRowProps,
 } from '@web/components/finance/occurrence-row/occurrence-row.types'
 import { expectNoAccessibilityViolations } from '@web/testing/accessibility'
+import { supportLineOf } from '@web/testing/long-text'
 import { describe, expect, it, vi } from 'vitest'
 import { render } from 'vitest-browser-react'
 
@@ -109,7 +110,8 @@ describe('OccurrenceRow', () => {
         </ul>
       </div>,
     )
-    for (const text of screen.getByText(long.trim()).elements()) {
+    const title = screen.getByText(long.trim()).first().element()
+    for (const text of [title, supportLineOf(screen.container)]) {
       const lineHeight = Number.parseFloat(getComputedStyle(text).lineHeight)
       expect(text.getBoundingClientRect().height).toBeLessThanOrEqual(lineHeight * 2 + 1)
     }

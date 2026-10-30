@@ -137,7 +137,7 @@ export const dataTableNameLabelVariants = cva(
   'line-clamp-2 min-w-0 text-choice font-semibold break-words whitespace-normal',
 )
 
-export const dataTableNameDetailVariants = cva('truncate text-fine text-ink-muted')
+export const dataTableNameDetailVariants = cva('line-clamp-2 text-fine break-words text-ink-muted')
 
 export const dataTableAmountVariants = cva('text-choice font-bold text-ink')
 
