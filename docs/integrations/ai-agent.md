@@ -1,7 +1,7 @@
 ---
 summary: Design of the Claude agent — responsibilities, tools, confirmation flow, context/prompt caching, model choice, cost tracking, safety, evals.
 read_when: Working on apps/api/src/agent, adding a tool, changing prompts, or changing the model.
-updated: 2026-09-26
+updated: 2026-10-30
 ---
 
 # AI agent
@@ -32,7 +32,7 @@ One file per tool in `agent/tools/`. Each tool has a Zod input schema from `pack
 | `confirm_pending` / `cancel_pending` | write | `agent.pendingActions` → the target service |
 | `undo_last` | write → pending | `ledger.previewDelete` (soft delete of the user's last entry) |
 | `period_overview` | read | `reports.getPeriodOverview` ("quanto ainda posso gastar?"): the same metrics and insights as the dashboard (ADR 0024) |
-| `simulate_purchase` | read | `reports.simulatePurchaseImpact` ("posso comprar uma TV de 3 mil em 10x?"). Decided with the household (2026-09-26): the agent answers with the same before/after as `GET /simulations/purchase`: free to spend this month, the committed share of each coming month and only the new alerts. Card or account and installments come from the message; ask when the card is ambiguous |
+| `simulate_purchase` | read | `reports.simulatePurchaseImpact` ("posso comprar uma TV de 3 mil em 10x?"). Decided with the household (2026-09-26): the agent answers with the same before/after as `GET /simulations/purchase`: the verdict ("Cabe no orçamento." / "Cabe, mas aperta." / "Não cabe sem estourar." from `verdict` and `verdictReason`, never decided by the model), free to spend this month, the committed share of each coming month and only the new alerts. Card or account and installments come from the message; ask when the card is ambiguous |
 | `invoice_summary` | read | `reports.getInvoiceSummary` (own vs fronted for others) |
 | `contact_balance` | read | `reports.getContactBalances` |
 | `upcoming_bills` | read | `planning.listUpcoming` |

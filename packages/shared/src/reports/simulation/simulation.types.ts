@@ -1,6 +1,7 @@
 import type { IsoDate } from '@shared/core/calendar/calendar.types'
 import type { Insight } from '@shared/reports/insights/insights.types'
 import type { FactCard } from '@shared/reports/metrics/metrics.types'
+import type { PURCHASE_VERDICTS } from '@shared/reports/simulation/simulation.constants'
 
 export type SimulatedPurchase = {
   amountCents: number
@@ -26,7 +27,21 @@ export type ComingPeriodImpact = {
   percentOfIncomeAfter: number | null
 }
 
-export type PurchaseImpact = {
+export type PurchaseVerdict = (typeof PURCHASE_VERDICTS)[number]
+
+export type PurchaseVerdictReason =
+  | { code: 'free_left'; leftCents: number; until: IsoDate }
+  | { code: 'period_overspent'; overspentCents: number }
+  | { code: 'month_overcommitted'; label: string; percentOfIncome: number }
+  | { code: 'month_heavily_committed'; label: string; percentOfIncome: number }
+
+export type PurchaseVerdictOf = {
+  verdict: PurchaseVerdict
+  verdictReason: PurchaseVerdictReason
+}
+
+export type PurchaseImpact = PurchaseVerdictOf & {
+  committedReferencePercent: number
   period: PeriodImpact
   coming: ComingPeriodImpact[]
   newInsights: Insight[]

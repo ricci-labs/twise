@@ -127,6 +127,20 @@ describe('simulatePurchase', () => {
     ])
   })
 
+  it('gives the verdict and the 70% line the months are drawn against', () => {
+    const impact = simulatePurchase(household(), TV_IN_THREE)
+    expect(impact).toMatchObject({
+      verdict: 'tight',
+      verdictReason: { code: 'month_heavily_committed', label: '2026-11', percentOfIncome: 75 },
+      committedReferencePercent: 70,
+    })
+    const small = simulatePurchase(household(), { ...TV_IN_THREE, amountCents: 30_000 })
+    expect(small).toMatchObject({
+      verdict: 'fits',
+      verdictReason: { code: 'free_left', leftCents: 400_000, until: '2026-10-31' },
+    })
+  })
+
   it('counts the whole purchase now when the household budgets by purchase month', () => {
     const impact = simulatePurchase(
       household({ installmentBudgetView: 'purchase_month' }),

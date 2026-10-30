@@ -1,7 +1,7 @@
 ---
 summary: Planning tables — recurrence rules and planned occurrences (forecast, reminders, matching to real entries), financial period calculation, budgets, goals, holidays — and the dashboard metrics, insights, commission split, balance forecast and purchase simulation built on them.
 read_when: Working on projections, fixed bills, salaries/commission forecasts, reminders, budgets, goals, or the financial period.
-updated: 2026-10-21
+updated: 2026-10-30
 ---
 
 # Planning: forecast, periods, budgets, goals
@@ -308,9 +308,24 @@ adds a hypothetical purchase to the facts and recomputes the same metrics and in
   invoice's total (or a new invoice);
 - **from an account** (1×): the expense on its date and the money out of the account (today or later).
 
-→ `{ period: { label, freeToSpend before/after, dailyAllowance before/after }, coming: [{ label,
-committed before/after, percentOfIncome before/after }], newInsights }`, where `newInsights` are only
-the alerts the purchase would bring (e.g. `period_heavily_committed`, `balance_going_negative`).
+→ `{ verdict, verdictReason, committedReferencePercent, period: { label, freeToSpend before/after,
+dailyAllowance before/after }, coming: [{ label, committed before/after, percentOfIncome
+before/after }], newInsights }`, where `newInsights` are only the alerts the purchase would bring
+(e.g. `period_heavily_committed`, `balance_going_negative`).
+
+The verdict (`purchaseVerdictOf`, G76) is decided here so the web and WhatsApp say the same thing.
+The first rule that matches wins:
+
+| Verdict | When | `verdictReason` | E.g. |
+|---|---|---|---|
+| `over` | free to spend after the purchase is below zero (also when the period was already overspent) | `{ code: 'period_overspent', overspentCents }` | "O período passaria R$ 460,00 do planejado." |
+| `over` | a coming month the purchase adds to passes 100% of the fixed income | `{ code: 'month_overcommitted', label, percentOfIncome }` | 60% → 101% |
+| `tight` | a coming month the purchase adds to reaches the 70% line (`HEAVILY_COMMITTED_PERCENT`) | `{ code: 'month_heavily_committed', label, percentOfIncome }` | "Dezembro chegaria a 70% da renda fixa comprometida." |
+| `fits` | none of the above | `{ code: 'free_left', leftCents, until }` (`until` = the period's end) | "Sobram R$ 1.940,00 para gastar até 4 nov." |
+
+A month the purchase doesn't add to never decides the verdict, even when it's already above the
+line; a month without fixed income (`percentOfIncome` null) neither. `committedReferencePercent` is
+the 70% line the coming months are drawn against.
 
 | Route | Permission | Does |
 |---|---|---|
