@@ -99,6 +99,13 @@ export function selectAccountNames(tx: WorkspaceTransaction, accountIds: string[
     .where(inArray(ledgerAccounts.id, accountIds))
 }
 
+export function selectEntryNames(tx: WorkspaceTransaction, entryIds: string[]) {
+  return tx
+    .select({ id: journalEntries.id, name: journalEntries.description })
+    .from(journalEntries)
+    .where(inArray(journalEntries.id, entryIds))
+}
+
 export function findUsableAccounts(tx: WorkspaceTransaction, accountIds: string[]) {
   return tx
     .select({ id: ledgerAccounts.id, kind: ledgerAccounts.kind })

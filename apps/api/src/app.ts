@@ -22,7 +22,7 @@ import {
 import { healthRoutes, PUBLIC_HEALTH_ROUTES } from '@api/modules/health/health.routes'
 import { resolveSession } from '@api/modules/identity'
 import { identityRoutes, PUBLIC_AUTH_ROUTES } from '@api/modules/identity/identity.routes'
-import { readAccountNames } from '@api/modules/ledger'
+import { readAccountNames, readEntryNames } from '@api/modules/ledger'
 import { ledgerRoutes } from '@api/modules/ledger/ledger.routes'
 import {
   invitationResponseRoutes,
@@ -48,6 +48,7 @@ export const PUBLIC_ROUTES: ReadonlySet<string> = new Set([
 const AUDIT_NAMES: AuditNames = {
   account: readAccountNames,
   contact: readContactNames,
+  entry: readEntryNames,
   charge: readChargeNames,
   rule: readRuleNames,
   role: readRoleNames,

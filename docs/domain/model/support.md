@@ -162,7 +162,16 @@ Implemented (`modules/audit`, ADR 0026):
     budget line → its category, role permissions → the role, a membership or preferences → the
     member). Settings and the commission split have none (`null`). The lookups (`AuditNames`)
     come from each owning module's index and are wired in `app.ts`, so `audit` imports none of
-    the modules that write to it.
+    the modules that write to it;
+  - `changes`, the change field by field (shared `auditChangesOf` over `AUDIT_FIELDS`, the
+    fields worth showing per table, in display order): `{ field, kind, reference, before, after,
+    changed }`. `kind` is `text`, `money` (cents), `date`, `datetime`, `number`, `boolean`,
+    `choice` (an enum key) or `reference`; references (`account`, `contact`, `rule`, `role`,
+    `user`, `entry`) come as `{ name, parentName }` (a subcategory's parent, so the web shows
+    "Mercado › Padaria"), or `null` when not set. An entry's amount, category and account are read
+    from its postings. Ids, timestamps, lists (role permissions, the commission split) and empty
+    fields are left out. The API sends keys, kinds and names; the web owns the pt-BR labels and the
+    money and date formats, like it does for error codes.
 - `readLatestActivity(tx)` gives each user's latest event; `GET /members` shows it as
   `lastActivityAt` (null if they never changed anything).
 

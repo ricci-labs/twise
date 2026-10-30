@@ -28,6 +28,7 @@ export {
   readContactItemsByContact,
   readContactPostings,
   readEntryDates,
+  readEntryNames,
   readEntryPayments,
   readEntryReceipts,
   readEntrySplits,

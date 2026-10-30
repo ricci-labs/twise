@@ -55,6 +55,7 @@ export {
 export {
   loadAccounts as loadUsableAccounts,
   readAccountNames,
+  readEntryNames,
 } from '@api/modules/ledger/use-cases/lookups'
 export {
   listEntrySuggestions,
