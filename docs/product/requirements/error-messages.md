@@ -71,7 +71,7 @@ message.
 | `ROLE_NOT_AVAILABLE` | 400 | The role was deleted meanwhile | "Esse papel não existe mais. Escolha outro." | field role |
 | `OWNER_ONLY` | 403 | Touching an owner without being one | "Só um dono pode mudar outro dono ou dar o papel de dono." | form |
 | `PERMISSION_ESCALATION` | 403 | Granting permissions one doesn't hold | "Você não pode dar permissões que não tem." | form |
-| `LAST_OWNER` | 409 | The change would leave no owner | "O espaço precisa de pelo menos um dono. Dê o papel de dono a {nome} antes de sair.", in a dialog titled "Você é o único dono do {espaço}" with "Tornar {nome} dono" (without another member: "Promova outra pessoa antes.") | dialog |
+| `LAST_OWNER` | 409 | The change would leave no owner | "O espaço precisa de pelo menos um dono. Promova outra pessoa antes."; in Membros, a dialog titled "Você é o único dono do {espaço}" that names who could take it ("…Dê o papel de dono a {nome} antes de sair.") with "Tornar {nome} dono" | dialog |
 | `ROLE_INVALID` | 400 | Role form invalid | per field; "Toda área com alguma ação precisa de 'Ver'." | fields |
 | `ROLE_NAME_TAKEN` | 409 | Name used by another role | "Já existe um papel com esse nome." | field name |
 | `ROLE_NOT_FOUND` | 404 | Role deleted | "Este papel não existe mais." | toast |
