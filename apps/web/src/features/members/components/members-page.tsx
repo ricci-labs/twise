@@ -17,6 +17,7 @@ import { hasPermission } from '@web/lib/permissions'
 import { useState } from 'react'
 
 const PAGE_SIZE = 50
+const OWNER = 'owner'
 const SKELETON_LINES = 6
 const TIME_ZONE = 'America/Sao_Paulo'
 
@@ -42,6 +43,7 @@ export function MembersPage({
 
 function MembersList({ workspaceId, workspaceName, membershipId, permissions }: MembersListProps) {
   const canRemove = hasPermission(permissions, 'members', 'delete')
+  const canChangeRole = hasPermission(permissions, 'members', 'update')
   const members = useQuery(membersQueryOptions(workspaceId))
   const [shownCount, setShownCount] = useState(PAGE_SIZE)
   if (members.isError) {
@@ -58,6 +60,9 @@ function MembersList({ workspaceId, workspaceName, membershipId, permissions }: 
     return <SectionSkeleton lines={SKELETON_LINES} />
   }
   const hiddenCount = members.data.length - shownCount
+  const isActorOwner = members.data.some(
+    (member) => member.membershipId === membershipId && member.role.systemKey === OWNER,
+  )
   return (
     <div className="flex flex-col gap-3 lg:max-w-160">
       <AccountGroup title={messages.people(members.data.length)} note={messages.ownersRule}>
@@ -77,6 +82,9 @@ function MembersList({ workspaceId, workspaceName, membershipId, permissions }: 
                 members={members.data}
                 isYou={member.membershipId === membershipId}
                 canRemove={canRemove}
+                canChangeRole={canChangeRole}
+                actorPermissions={permissions}
+                isActorOwner={isActorOwner}
               />
             }
           />

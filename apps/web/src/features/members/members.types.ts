@@ -1,7 +1,9 @@
 import type { Permission } from '@financas/shared'
-import type { fetchMembers } from '@web/features/members/api/members.queries'
+import type { fetchMembers, fetchRoles } from '@web/features/members/api/members.queries'
 
 export type Member = Awaited<ReturnType<typeof fetchMembers>>[number]
+
+export type Role = Awaited<ReturnType<typeof fetchRoles>>[number]
 
 export type MembersPageProps = {
   workspaceId: string
@@ -34,6 +36,18 @@ export type MemberActionsProps = {
   members: readonly Member[]
   isYou: boolean
   canRemove: boolean
+  canChangeRole: boolean
+  actorPermissions: readonly Permission[]
+  isActorOwner: boolean
 }
 
-export type MemberDialog = 'remove' | 'leave' | 'lastOwner' | null
+export type MemberDialog = 'remove' | 'leave' | 'lastOwner' | 'role' | null
+
+export type RoleSheetProps = {
+  workspaceId: string
+  member: Member
+  actorPermissions: readonly Permission[]
+  isActorOwner: boolean
+  isOpen: boolean
+  onOpenChange: (isOpen: boolean) => void
+}

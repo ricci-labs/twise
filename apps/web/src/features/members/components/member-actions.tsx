@@ -7,6 +7,7 @@ import { TextArea } from '@web/components/inputs/text-area'
 import { useChangeMemberRole } from '@web/features/members/api/use-change-member-role'
 import { useLeaveWorkspace } from '@web/features/members/api/use-leave-workspace'
 import { useRemoveMember } from '@web/features/members/api/use-remove-member'
+import { RoleSheet } from '@web/features/members/components/role-sheet'
 import { membersMessages } from '@web/features/members/members.messages'
 import type { MemberActionsProps, MemberDialog } from '@web/features/members/members.types'
 import { ApiError } from '@web/lib/api/api-error'
@@ -15,6 +16,7 @@ import { useId, useState } from 'react'
 
 const messages = membersMessages
 const LAST_OWNER = 'LAST_OWNER'
+const OWNER = 'owner'
 
 export function MemberActions({
   workspaceId,
@@ -23,6 +25,9 @@ export function MemberActions({
   members,
   isYou,
   canRemove,
+  canChangeRole,
+  actorPermissions,
+  isActorOwner,
 }: MemberActionsProps) {
   const [dialog, setDialog] = useState<MemberDialog>(null)
   const [reason, setReason] = useState('')
@@ -84,6 +89,7 @@ export function MemberActions({
     }
   }
 
+  const mayChangeRole = canChangeRole && (member.role.systemKey !== OWNER || isActorOwner)
   const actions = isYou
     ? [
         {
@@ -95,18 +101,32 @@ export function MemberActions({
         },
       ]
     : [
-        {
-          key: 'remove',
-          label: messages.actions.remove,
-          icon: 'trash' as const,
-          tone: 'danger' as const,
-          onSelect: () => {
-            setReason('')
-            setDialog('remove')
-          },
-        },
+        ...(mayChangeRole
+          ? [
+              {
+                key: 'role',
+                label: messages.actions.changeRole,
+                icon: 'users' as const,
+                onSelect: () => setDialog('role'),
+              },
+            ]
+          : []),
+        ...(canRemove
+          ? [
+              {
+                key: 'remove',
+                label: messages.actions.remove,
+                icon: 'trash' as const,
+                tone: 'danger' as const,
+                onSelect: () => {
+                  setReason('')
+                  setDialog('remove')
+                },
+              },
+            ]
+          : []),
       ]
-  if (!isYou && !canRemove) {
+  if (actions.length === 0) {
     return null
   }
 
@@ -117,6 +137,14 @@ export function MemberActions({
         title={member.displayName}
         triggerLabel={messages.actions.trigger(member.displayName)}
         actions={actions}
+      />
+      <RoleSheet
+        workspaceId={workspaceId}
+        member={member}
+        actorPermissions={actorPermissions}
+        isActorOwner={isActorOwner}
+        isOpen={dialog === 'role'}
+        onOpenChange={close}
       />
       <ConfirmDialog
         title={messages.remove.title(member.displayName)}
