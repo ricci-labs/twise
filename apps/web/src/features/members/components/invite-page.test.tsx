@@ -146,4 +146,27 @@ describe('MEM-03 Convidar', () => {
     await expect.element(sheet.getByRole('button', { name: /Contador/ })).toBeDisabled()
     await expect.element(sheet.getByRole('button', { name: /Membro/ })).toBeEnabled()
   })
+
+  it('opens as a dialog over Membros on the desktop', async () => {
+    await page.viewport(1440, 900)
+    const sent: unknown[] = []
+    const app = await openInvite(recordInvites(sent, null))
+    const dialog = page.getByRole('dialog', { name: 'Convidar para o espaço Casa' })
+    await expect.element(dialog).toBeVisible()
+    await expect
+      .poll(() => document.body.textContent)
+      .toContain('Quem participa do espaço Casa e o que cada um pode fazer.')
+    await userEvent.fill(dialog.getByRole('textbox', { name: 'E-mail' }), 'member.c@exemplo.com')
+    await dialog.getByRole('button', { name: 'Enviar convite' }).click()
+
+    await expect.poll(() => app.router.state.location.pathname).toBe(INVITATIONS_PATH)
+    expect(sent).toEqual([{ email: 'member.c@exemplo.com', roleId: 'role-member' }])
+  })
+
+  it('closes the dialog back to Membros on "Cancelar"', async () => {
+    await page.viewport(1440, 900)
+    const app = await openInvite()
+    await page.getByRole('dialog').getByRole('button', { name: 'Cancelar' }).click()
+    await expect.poll(() => app.router.state.location.pathname).toBe(`/w/${WORKSPACE_ID}/members`)
+  })
 })

@@ -148,6 +148,7 @@ export type InvitePageProps = {
 export type InviteFormProps = InvitePageProps & {
   roles: readonly Role[]
   isActorOwner: boolean
+  isDialog: boolean
 }
 
 export type InvitedLink = {
