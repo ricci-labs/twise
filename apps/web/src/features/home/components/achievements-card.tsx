@@ -66,6 +66,7 @@ export function AchievementsCard({ overview, className }: AchievementsCardProps)
               </span>
               <span className="font-display text-title whitespace-nowrap">{tile.value}</span>
               <span className="text-body-sm text-ink-muted">{tile.label}</span>
+              {tile.before && <span className="text-note text-ink-muted">{tile.before}</span>}
             </li>
           ))}
         </ul>
@@ -108,12 +109,15 @@ function tilesOf({ metrics }: Overview): AchievementTile[] {
         )
       : null,
     movedGoal
-      ? tile(
-          'goal',
-          'bag',
-          messages.goal(movedGoal.startPercent, movedGoal.endPercent),
-          messages.goalLabel(goalNames.get(movedGoal.goalId) ?? ''),
-        )
+      ? {
+          ...tile(
+            'goal',
+            'bag',
+            messages.goal(movedGoal.endPercent),
+            messages.goalLabel(goalNames.get(movedGoal.goalId) ?? ''),
+          ),
+          before: messages.goalBefore(movedGoal.startPercent),
+        }
       : null,
   ]
   return tiles.filter((candidate): candidate is AchievementTile => candidate !== null)

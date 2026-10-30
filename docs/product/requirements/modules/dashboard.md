@@ -1,7 +1,7 @@
 ---
 summary: Functional requirements for the home screens — the period overview (four indicators, insights, bills due, balance forecast, pace, budgets, coming months, where income goes, invoices, reserve and goals, commissions, receivables, achievements of a closed period, first run), "posso comprar?" and the commission split suggestion (HOME-01..03).
 read_when: Designing or building HOME-01, HOME-02 or HOME-03, or writing the pt-BR text of an insight.
-updated: 2026-10-29
+updated: 2026-10-30
 ---
 
 # Dashboard
@@ -132,8 +132,8 @@ balance forecast: "Conquistas de {mês}" · "O que deu certo neste período." A 
 "Fecharam {mês} no azul · Sobrou R$ X · {n}º mês seguido" (`periodSummary.positiveStreak`; "{n}+ meses seguidos" when `streakCapped`)
 and four tiles: "{a} de {b} orçamentos dentro do limite" (`budgetsWithin` / `budgetsTotal`), "{a} de
 {b} contas pagas em dia" (`billsOnTime` / `billsTotal`), "+R$ X na reserva, que agora cobre {m}
-meses" (`reserveAddedCents`, `reserveCoverage.months`), "{p}% → {q}% da meta {nome}" (the first of
-`goals`, the biggest move). A tile without data (total 0, nothing added, no goal moved) is left out. A period that closed negative shows no highlight.
+meses" (`reserveAddedCents`, `reserveCoverage.months`), "{q}% da meta {nome}" with "antes {p}%" below
+(the first of `goals`, the biggest move; a before-and-after value as a block, ui-standards rule). A tile without data (total 0, nothing added, no goal moved) is left out. A period that closed negative shows no highlight.
 
 **RF-HOME-18 Commissions** (`variableIncome`, `variableAverage`): "Renda variável deste período."
 "Este período R$ X", "Média dos últimos meses R$ Y" ("—" when null) and "+{p}% acima da média" /
