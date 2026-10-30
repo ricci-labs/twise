@@ -3,13 +3,15 @@ import babel from '@rolldown/plugin-babel'
 import tailwindcss from '@tailwindcss/vite'
 import { tanstackRouter } from '@tanstack/router-plugin/vite'
 import react, { reactCompilerPreset } from '@vitejs/plugin-react'
-import { defineConfig } from 'vite'
+import { defineConfig, type Plugin } from 'vite'
 import { VitePWA } from 'vite-plugin-pwa'
 import { readThemeValues, resolveColor } from '../../scripts/tokens/semantic-tokens.mjs'
 
 const API_DEV_SERVER = 'http://localhost:3100'
 const TOKENS_FILE = fileURLToPath(new URL('./src/styles/tokens/semantic.css', import.meta.url))
-const MINT = resolveColor(readThemeValues(TOKENS_FILE).light, 'mint')
+const THEME_VALUES = readThemeValues(TOKENS_FILE)
+const PAGE_LIGHT = resolveColor(THEME_VALUES.light, 'bg-page')
+const PAGE_DARK = resolveColor(THEME_VALUES.dark, 'bg-page')
 const API_PATHS = /^\/api\//
 
 const pwa = VitePWA({
@@ -23,8 +25,8 @@ const pwa = VitePWA({
     start_url: '/',
     scope: '/',
     display: 'standalone',
-    background_color: MINT,
-    theme_color: MINT,
+    background_color: PAGE_LIGHT,
+    theme_color: PAGE_LIGHT,
     icons: [
       { src: '/icons/icon-192.png', sizes: '192x192', type: 'image/png' },
       { src: '/icons/icon-512.png', sizes: '512x512', type: 'image/png' },
@@ -40,8 +42,22 @@ const pwa = VitePWA({
   },
 })
 
+const CHARSET_META = '<meta charset="UTF-8" />'
+const THEME_COLOR_META = `<meta name="theme-color" content="${PAGE_LIGHT}" data-dark="${PAGE_DARK}" />`
+
+const systemBarColor: Plugin = {
+  name: 'twise-system-bar-color',
+  transformIndexHtml: (html) => {
+    if (!html.includes(CHARSET_META)) {
+      throw new Error(`index.html has no ${CHARSET_META}, which the theme-color meta follows`)
+    }
+    return html.replace(CHARSET_META, `${CHARSET_META}\n    ${THEME_COLOR_META}`)
+  },
+}
+
 export default defineConfig({
   plugins: [
+    systemBarColor,
     tanstackRouter({ target: 'react', autoCodeSplitting: true }),
     react(),
     babel({ presets: [reactCompilerPreset()] }),

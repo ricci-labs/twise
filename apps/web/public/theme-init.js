@@ -22,3 +22,8 @@ function shouldUseDarkTheme(storedTheme) {
 const usesDarkTheme = shouldUseDarkTheme(readStoredTheme())
 document.documentElement.classList.toggle(DARK_THEME, usesDarkTheme)
 document.documentElement.style.colorScheme = usesDarkTheme ? DARK_THEME : LIGHT_THEME
+
+const systemBarColor = document.querySelector('meta[name="theme-color"]')
+if (usesDarkTheme && systemBarColor?.dataset.dark) {
+  systemBarColor.content = systemBarColor.dataset.dark
+}
