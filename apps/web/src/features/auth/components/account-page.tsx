@@ -8,18 +8,22 @@ import { AccountGroup } from '@web/components/finance/account-group'
 import { PageFrame } from '@web/components/layout/page-frame'
 import { PageHeader } from '@web/components/layout/page-header'
 import { SettingsRow } from '@web/components/navigation/settings-row'
-import { meQueryOptions } from '@web/features/auth/api/auth.queries'
+import {
+  memberPreferencesQueryOptions,
+  meQueryOptions,
+  userPreferencesQueryOptions,
+} from '@web/features/auth/api/auth.queries'
 import { useLogOut } from '@web/features/auth/api/use-log-out'
 import { authMessages } from '@web/features/auth/auth.messages'
-import type { AccountHeaderProps, AccountPageProps } from '@web/features/auth/auth.types'
+import type { AccountHeaderProps, AccountHubProps } from '@web/features/auth/auth.types'
 import { usePageTitle } from '@web/hooks/use-page-title'
 import { ApiError } from '@web/lib/api/api-error'
-import { KeyRound, LogOut, Mail, User } from 'lucide-react'
+import { Bell, KeyRound, LogOut, Mail, Moon, User } from 'lucide-react'
 
 const messages = authMessages.myAccount
 const SKELETON_LINES = 8
 
-export function AccountPage({ workspaceId }: AccountPageProps) {
+export function AccountPage({ workspaceId, workspaceName }: AccountHubProps) {
   usePageTitle(messages.pageTitle)
   const me = useQuery(meQueryOptions())
   const logOut = useLogOut()
@@ -59,6 +63,7 @@ export function AccountPage({ workspaceId }: AccountPageProps) {
               link={<Link to="/w/$workspaceId/account/password" params={{ workspaceId }} />}
             />
           </AccountGroup>
+          <AccountNoticesGroup workspaceId={workspaceId} workspaceName={workspaceName} />
           <Button variant="secondary" width="full" onClick={() => logOut.mutate()}>
             <LogOut aria-hidden="true" />
             {messages.logOut}
@@ -84,4 +89,29 @@ function AccountHeader({ name, email }: AccountHeaderProps) {
       <p className="text-body-sm wrap-anywhere text-ink-muted">{email}</p>
     </section>
   )
+}
+
+function AccountNoticesGroup({ workspaceId, workspaceName }: AccountHubProps) {
+  const quiet = useQuery(userPreferencesQueryOptions()).data
+  const notices = useQuery(memberPreferencesQueryOptions(workspaceId)).data
+  return (
+    <AccountGroup title={messages.groups.notices} note={messages.noticesNote}>
+      <SettingsRow
+        title={messages.quietRow}
+        detail={quiet && quietDetailOf(quiet.quietHoursStart, quiet.quietHoursEnd)}
+        icon={<Moon />}
+        link={<Link to="/w/$workspaceId/account/quiet-hours" params={{ workspaceId }} />}
+      />
+      <SettingsRow
+        title={messages.noticesRow(workspaceName)}
+        detail={notices && messages.noticesRowDetail(notices.notifyBillsDaysBefore)}
+        icon={<Bell />}
+        link={<Link to="/w/$workspaceId/account/notices" params={{ workspaceId }} />}
+      />
+    </AccountGroup>
+  )
+}
+
+function quietDetailOf(start: string | null, end: string | null): string {
+  return start && end ? messages.quietRowOn(start, end) : messages.quietRowOff
 }

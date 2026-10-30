@@ -7,7 +7,9 @@ import type {
   LOGIN_NOTICES,
   loginSearchSchema,
   newPasswordSchema,
+  noticesFormSchema,
   passwordChangeFormSchema,
+  quietHoursFormSchema,
 } from '@web/features/auth/auth.schemas'
 import type { ReactElement, ReactNode } from 'react'
 import type { z } from 'zod'
@@ -203,4 +205,38 @@ export type PasswordChangeInput = z.input<typeof passwordChangeFormSchema>
 export type PasswordProblem = {
   message: string
   retryAt: number | null
+}
+
+export type QuietHoursInput = z.input<typeof quietHoursFormSchema>
+
+export type QuietHoursFormProps = {
+  workspaceId: string
+  start: string | null
+  end: string | null
+}
+
+export type TimeSelectProps = {
+  name: 'start' | 'end'
+  label: string
+}
+
+export type NoticesInput = z.input<typeof noticesFormSchema>
+
+export type AccountNoticesPageProps = {
+  workspaceId: string
+  workspaceName: string
+}
+
+export type NoticesFormProps = AccountNoticesPageProps & {
+  daysBefore: number
+}
+
+export type NoticeExampleProps = {
+  workspaceId: string
+  daysBefore: number
+}
+
+export type AccountHubProps = {
+  workspaceId: string
+  workspaceName: string
 }
