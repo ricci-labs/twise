@@ -1061,7 +1061,8 @@ online with `asChild` are translated to `render`.
   the line icon in a 36 px sunken tile (`icon`, a lucide element; settings design), the title, the
   current value ("15 em 2026 · próximo: Finados, 02/11", through `MetaLine`, 2 lines at most) and a
   chevron, inside an `AccountGroup` titled by the group ("Espaço", "Cobranças", "Planejamento").
-  `variant="tile"` draws it as a bordered tile, side by side on the desktop hub.
+  `variant="tile"` draws it as a bordered tile, side by side on the desktop hub. `isLocked` swaps the
+  chevron for a lock (a read-only row such as Minha conta's e-mail, given a non-link element).
 - `NextHolidayCard` (`components/finance/next-holiday-card`, PLAN-07 desktop): "Próximo feriado",
   the large ink `DateBlock`, the name in the display face (2 lines), "Segunda-feira · daqui a 18
   dias" ("amanhã", "hoje"), and at the bottom the amber box with what it moves in the fixed bills
