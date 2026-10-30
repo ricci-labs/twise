@@ -1,5 +1,6 @@
 export const membersMessages = {
   pageTitle: 'Membros',
+  you: 'você',
   title: 'Membros',
   people: (count: number) => (count === 1 ? '1 pessoa' : `${count} pessoas`),
   ownersRule:
@@ -10,6 +11,41 @@ export const membersMessages = {
     members: 'Membros',
     roles: 'Papéis',
     invitations: 'Convites',
+  },
+  desktop: {
+    lead: (workspace: string) =>
+      `Quem participa do espaço ${workspace} e o que cada um pode fazer.`,
+    members: (count: number) => `Membros · ${count}`,
+    membersNote:
+      'Só um dono dá o papel de dono ou muda outro dono. Até 50 por vez; depois, "Mostrar mais".',
+    columns: {
+      person: 'Pessoa',
+      role: 'Papel',
+      since: 'Desde',
+      lastActivity: 'Última atividade',
+      actions: 'Ações',
+      invitedContact: 'Convite para',
+      validUntil: 'Vale até',
+      invitedBy: 'Convidado por',
+    },
+    invitations: (count: number) => `Convites pendentes · ${count}`,
+    invitationsNote:
+      'Valem por 7 dias. Aqui aparecem os 4 mais novos; a lista inteira fica na aba Convites.',
+    seeAllInvitations: (count: number) => `Ver todos os ${count} convites`,
+    invitedOn: (date: string) => `em ${date}`,
+    roles: (count: number) => `Papéis · ${count}`,
+    rolesNote: 'Quantas pessoas e convites usam cada um. O que cada papel pode fica na aba Papéis.',
+    seeAllRoles: 'Ver todos os papéis',
+    roleUsage: {
+      system: 'Sistema',
+      custom: 'Do espaço',
+      nobody: 'Ninguém',
+      people: (count: number) => (count === 1 ? '1 pessoa' : `${count} pessoas`),
+      invitations: (count: number) => (count === 1 ? '1 convite' : `${count} convites`),
+    },
+    noActivity: '—',
+    today: (time: string) => `hoje, ${time}`,
+    yesterday: (time: string) => `ontem, ${time}`,
   },
   invite: {
     open: 'Convidar',

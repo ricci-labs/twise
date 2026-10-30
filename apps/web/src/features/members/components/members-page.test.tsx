@@ -280,4 +280,32 @@ describe('MEM-01 Membros', () => {
     await expect.element(page.getByText('Nenhum convite pendente.')).toBeVisible()
     await expect.element(page.getByRole('button', { name: 'Convites', exact: true })).toBeVisible()
   })
+
+  it('shows members, the newest invitations and the roles as cards on the desktop', async () => {
+    await page.viewport(1440, 1100)
+    await openMembers({ ...membersAnswer(), ...rolesAnswer(), ...invitationsAnswer() })
+    await expect
+      .element(page.getByText('Quem participa do espaço Casa e o que cada um pode fazer.'))
+      .toBeVisible()
+    await expect.element(page.getByRole('link', { name: 'Convidar' })).toBeVisible()
+    const members = page.getByRole('region', { name: 'Membros · 2' })
+    const memberRows = members.getByRole('row')
+    await expect
+      .element(members.getByRole('columnheader', { name: 'Última atividade' }))
+      .toBeVisible()
+    await expect.element(memberRows.nth(1).getByText('você')).toBeVisible()
+    await expect.element(memberRows.nth(1).getByText('02/10/2026')).toBeVisible()
+    await expect.element(memberRows.nth(2).getByText('—')).toBeVisible()
+    await expect
+      .element(memberRows.nth(2).getByRole('button', { name: 'Ações de Member B' }))
+      .toBeVisible()
+    const invitations = page.getByRole('region', { name: 'Convites pendentes · 2' })
+    await expect.element(invitations.getByText('member.c@exemplo.com')).toBeVisible()
+    await expect.element(invitations.getByText('em 17/10')).toBeVisible()
+    const roles = page.getByRole('region', { name: 'Papéis · 4' })
+    await expect
+      .element(roles.getByRole('link', { name: /Contador/ }).getByText('Do espaço · Ninguém'))
+      .toBeVisible()
+    await expectNoAccessibilityViolations(page.getByRole('main').element())
+  })
 })

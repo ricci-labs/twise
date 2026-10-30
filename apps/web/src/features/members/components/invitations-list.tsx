@@ -83,7 +83,7 @@ export function InvitationsList({ workspaceId, canRevoke }: InvitationsListProps
   )
 }
 
-function InvitationActions({ workspaceId, contact, invitationId }: InvitationActionsProps) {
+export function InvitationActions({ workspaceId, contact, invitationId }: InvitationActionsProps) {
   const [isConfirming, setIsConfirming] = useState(false)
   const revoke = useRevokeInvitation(workspaceId)
 
@@ -125,6 +125,6 @@ function InvitationActions({ workspaceId, contact, invitationId }: InvitationAct
   )
 }
 
-function contactOf(invitation: Invitation): string {
+export function contactOf(invitation: Invitation): string {
   return invitation.email ?? formatPhone(invitation.phoneE164 ?? '')
 }

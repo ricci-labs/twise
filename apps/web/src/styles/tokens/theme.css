@@ -244,6 +244,8 @@
   --grid-template-columns-table-budgets: minmax(0, 1.7fr) minmax(0, 2fr) 11.875rem 10rem 3rem;
   --grid-template-columns-table-contacts: minmax(0, 1.4fr) minmax(0, 1.3fr) minmax(0, 2.4fr) 8.75rem
     5.5rem 3rem;
+  --grid-template-columns-table-people: minmax(0, 2.6fr) minmax(0, 1.1fr) minmax(0, 0.9fr)
+    minmax(0, 1.2fr) 3rem;
   --grid-template-columns-table-unbudgeted: minmax(0, 1fr) 11.875rem 8.75rem;
   --grid-template-columns-table-trash: minmax(0, 2.4fr) minmax(0, 1.4fr) minmax(0, 1.2fr) 9.375rem
     8.75rem;

@@ -10,6 +10,6 @@ export type SettingsRowLinkProps = {
 export type SettingsRowProps = VariantProps<typeof settingsRowVariants> & {
   title: string
   detail?: string
-  icon: ReactNode
+  icon?: ReactNode
   link: ReactElement<SettingsRowLinkProps>
 }

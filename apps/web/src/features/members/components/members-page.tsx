@@ -18,17 +18,22 @@ import {
 } from '@web/features/members/api/members.queries'
 import { InvitationsList } from '@web/features/members/components/invitations-list'
 import { MemberActions } from '@web/features/members/components/member-actions'
+import { MembersDesktop } from '@web/features/members/components/members-desktop'
 import { roleSentence } from '@web/features/members/components/role-views'
 import { membersMessages as messages } from '@web/features/members/members.messages'
 import type {
+  HeaderActionProps,
   MembersListProps,
   MembersPageProps,
   MembersTab,
+  MembersTabBodyProps,
   MembersTabsProps,
   RolesListProps,
 } from '@web/features/members/members.types'
+import { useMediaQuery } from '@web/hooks/use-media-query'
 import { usePageTitle } from '@web/hooks/use-page-title'
 import { ApiError } from '@web/lib/api/api-error'
+import { DESKTOP_QUERY } from '@web/lib/breakpoints'
 import { hasPermission } from '@web/lib/permissions'
 import { ChevronRight, Plus, UserPlus } from 'lucide-react'
 import { useState } from 'react'
@@ -43,77 +48,98 @@ const OWNER = 'owner'
 const SKELETON_LINES = 6
 const TIME_ZONE = 'America/Sao_Paulo'
 
-export function MembersPage({
+export function MembersPage(props: MembersPageProps) {
+  usePageTitle(messages.pageTitle)
+  const isDesktop = useMediaQuery(DESKTOP_QUERY)
+  const { tab, workspaceId, workspaceName, permissions } = props
+  return (
+    <PageFrame className="gap-4 lg:gap-6">
+      <PageHeader
+        title={messages.title}
+        description={messages.desktop.lead(workspaceName)}
+        actions={
+          hasPermission(permissions, 'members', 'create') && (
+            <HeaderAction tab={tab} workspaceId={workspaceId} isDesktop={isDesktop} />
+          )
+        }
+      />
+      <MembersTabs workspaceId={workspaceId} value={tab} isDesktop={isDesktop} />
+      <MembersTabBody {...props} isDesktop={isDesktop} />
+    </PageFrame>
+  )
+}
+
+function HeaderAction({ tab, workspaceId, isDesktop }: HeaderActionProps) {
+  const look = {
+    variant: isDesktop ? 'primary' : 'secondary',
+    size: isDesktop ? 'md' : 'sm',
+  } as const
+  if (tab === 'roles') {
+    return (
+      <Button
+        {...look}
+        render={<Link to="/w/$workspaceId/members/roles/new" params={{ workspaceId }} />}
+      >
+        <Plus aria-hidden="true" />
+        {messages.newRole}
+      </Button>
+    )
+  }
+  return (
+    <Button
+      {...look}
+      render={<Link to="/w/$workspaceId/members/invitations/new" params={{ workspaceId }} />}
+    >
+      <UserPlus aria-hidden="true" />
+      {messages.invite.open}
+    </Button>
+  )
+}
+
+function MembersTabBody({
   tab,
   workspaceId,
   workspaceName,
   membershipId,
   permissions,
-}: MembersPageProps) {
-  usePageTitle(messages.pageTitle)
-  return (
-    <PageFrame className="gap-4 lg:gap-6">
-      <PageHeader
-        title={messages.title}
-        actions={
-          hasPermission(permissions, 'members', 'create') &&
-          (tab === 'roles' ? (
-            <Button
-              variant="secondary"
-              size="sm"
-              render={<Link to="/w/$workspaceId/members/roles/new" params={{ workspaceId }} />}
-            >
-              <Plus aria-hidden="true" />
-              {messages.newRole}
-            </Button>
-          ) : (
-            <Button
-              variant="secondary"
-              size="sm"
-              render={
-                <Link to="/w/$workspaceId/members/invitations/new" params={{ workspaceId }} />
-              }
-            >
-              <UserPlus aria-hidden="true" />
-              {messages.invite.open}
-            </Button>
-          ))
-        }
+  isDesktop,
+}: MembersTabBodyProps) {
+  if (tab === 'invitations') {
+    return (
+      <InvitationsList
+        workspaceId={workspaceId}
+        canRevoke={hasPermission(permissions, 'members', 'delete')}
       />
-      <MembersTabs workspaceId={workspaceId} value={tab} />
-      {tab === 'invitations' && (
-        <InvitationsList
-          workspaceId={workspaceId}
-          canRevoke={hasPermission(permissions, 'members', 'delete')}
-        />
-      )}
-      {tab === 'roles' && (
-        <RolesList
-          workspaceId={workspaceId}
-          workspaceName={workspaceName}
-          canEdit={hasPermission(permissions, 'members', 'update')}
-        />
-      )}
-      {tab === 'members' && (
-        <MembersList
-          workspaceId={workspaceId}
-          workspaceName={workspaceName}
-          membershipId={membershipId}
-          permissions={permissions}
-        />
-      )}
-    </PageFrame>
+    )
+  }
+  if (tab === 'roles') {
+    return (
+      <RolesList
+        workspaceId={workspaceId}
+        workspaceName={workspaceName}
+        canEdit={hasPermission(permissions, 'members', 'update')}
+      />
+    )
+  }
+  const List = isDesktop ? MembersDesktop : MembersList
+  return (
+    <List
+      workspaceId={workspaceId}
+      workspaceName={workspaceName}
+      membershipId={membershipId}
+      permissions={permissions}
+    />
   )
 }
 
-function MembersTabs({ workspaceId, value }: MembersTabsProps) {
+function MembersTabs({ workspaceId, value, isDesktop }: MembersTabsProps) {
   const navigate = useNavigate()
   const pending = useQuery(invitationsQueryOptions(workspaceId)).data?.length ?? 0
   return (
     <SegmentedControl
       label={messages.tabs.label}
-      width="full"
-      className="lg:max-w-160"
+      width={isDesktop ? 'auto' : 'full'}
+      className="lg:self-start"
       value={value}
       options={[
         { value: 'members', label: messages.tabs.members },
