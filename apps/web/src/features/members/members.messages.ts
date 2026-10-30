@@ -5,8 +5,23 @@ export const membersMessages = {
   ownersRule:
     'Só um dono dá o papel de dono ou muda outro dono. O espaço sempre precisa de pelo menos um dono.',
   failed: 'Não foi possível carregar os membros.',
+  systemRoles: {
+    owner: 'Tudo, inclusive membros, papéis e configurações. Não pode ser alterado.',
+    admin: 'Tudo, menos remover membros, excluir papéis e revogar convites.',
+    member: 'Lança, edita e planeja. Só vê contas, orçamentos e configurações.',
+    viewer: 'Só vê lançamentos, contas, cartões e planejamento. Não vê membros nem configurações.',
+  },
+  roleSheet: {
+    title: (name: string) => `Papel de ${name}`,
+    label: 'Papel',
+    cancel: 'Cancelar',
+    confirm: 'Mudar papel',
+    done: (name: string, role: string) => `${name} agora é ${role}.`,
+    failed: 'Não foi possível carregar os papéis.',
+  },
   actions: {
     trigger: (name: string) => `Ações de ${name}`,
+    changeRole: 'Mudar papel',
     remove: 'Remover do espaço',
     leave: 'Sair do espaço',
   },

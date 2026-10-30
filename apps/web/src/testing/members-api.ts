@@ -47,3 +47,57 @@ export function membersAnswer(
 ): Record<string, FakeAnswer> {
   return { [`GET ${BASE}/members`]: () => Response.json(members) }
 }
+
+const ALL_ACTIONS = ['view', 'create', 'update', 'delete']
+
+function allOf(modules: readonly string[]) {
+  return modules.flatMap((module) => ALL_ACTIONS.map((action) => ({ module, action })))
+}
+
+export const HOUSEHOLD_ROLES = [
+  {
+    ...OWNER_ROLE,
+    description: null,
+    permissions: allOf(['members', 'settings']),
+    memberCount: 1,
+    invitationCount: 0,
+  },
+  {
+    ...ADMIN_ROLE,
+    description: null,
+    permissions: [
+      ...allOf(['settings']),
+      { module: 'members', action: 'view' },
+      { module: 'members', action: 'update' },
+    ],
+    memberCount: 1,
+    invitationCount: 0,
+  },
+  {
+    ...MEMBER_ROLE,
+    description: null,
+    permissions: [{ module: 'settings', action: 'view' }],
+    memberCount: 0,
+    invitationCount: 1,
+  },
+  {
+    roleId: 'role-accountant',
+    name: 'Contador',
+    systemKey: null,
+    description: 'Vê tudo e anexa comprovantes. Não muda valores.',
+    permissions: [{ module: 'members', action: 'delete' }],
+    memberCount: 0,
+    invitationCount: 0,
+  },
+]
+
+export function rolesAnswer(
+  roles: readonly unknown[] = HOUSEHOLD_ROLES,
+): Record<string, FakeAnswer> {
+  return { [`GET ${BASE}/roles`]: () => Response.json(roles) }
+}
+
+export const ADMIN_HOUSEHOLD = HOUSEHOLD_MEMBERS.map((member, index) => ({
+  ...member,
+  role: index === 0 ? ADMIN_ROLE : MEMBER_ROLE,
+}))

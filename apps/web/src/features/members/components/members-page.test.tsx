@@ -12,7 +12,7 @@ import {
   workspaceAccess,
   workspaceList,
 } from '@web/testing/fake-api'
-import { manyMembers, membersAnswer } from '@web/testing/members-api'
+import { ADMIN_HOUSEHOLD, manyMembers, membersAnswer, rolesAnswer } from '@web/testing/members-api'
 import type { FakeAnswer } from '@web/testing/testing.types'
 import { beforeEach, describe, expect, it } from 'vitest'
 import { page, userEvent } from 'vitest/browser'
@@ -145,5 +145,50 @@ describe('MEM-01 Membros', () => {
     await openMembers(membersAnswer(), () => accessAs('Membro', MEMBER_PERMISSIONS))
     await expect.element(page.getByRole('button', { name: 'Ações de Member A' })).toBeVisible()
     expect(page.getByRole('button', { name: 'Ações de Member B' }).query()).toBeNull()
+  })
+
+  it("changes someone's role from the role cards", async () => {
+    const patched: unknown[] = []
+    await openMembers({
+      ...membersAnswer(),
+      ...rolesAnswer(),
+      [`PATCH /api/workspaces/${WORKSPACE_ID}/members/membership-b`]: async (request) => {
+        patched.push(await request.json())
+        return new Response(null, { status: NO_CONTENT })
+      },
+    })
+    await page.getByRole('button', { name: 'Ações de Member B' }).click()
+    await page.getByRole('dialog').getByRole('button', { name: 'Mudar papel' }).click()
+    const sheet = page.getByRole('dialog', { name: 'Papel de Member B' })
+    await expect
+      .element(sheet.getByRole('radio', { name: /Admin/ }))
+      .toHaveAttribute('aria-checked', 'true')
+    await expect
+      .element(sheet.getByText('Lança, edita e planeja. Só vê contas, orçamentos e configurações.'))
+      .toBeVisible()
+    await sheet.getByRole('radio', { name: /Membro/ }).click()
+    await sheet.getByRole('button', { name: 'Mudar papel' }).click()
+
+    await expect.element(page.getByText('Member B agora é Membro.')).toBeVisible()
+    expect(patched).toEqual([{ roleId: 'role-member' }])
+  })
+
+  it("keeps the owner role and roles beyond the admin's own permissions out of reach", async () => {
+    const adminPermissions = [
+      ...VIEWER_PERMISSIONS,
+      ...['view', 'create', 'update', 'delete'].map((action) => ({ module: 'settings', action })),
+      { module: 'members', action: 'view' },
+      { module: 'members', action: 'update' },
+    ]
+    await openMembers({ ...membersAnswer(ADMIN_HOUSEHOLD), ...rolesAnswer() }, () =>
+      accessAs('Admin', adminPermissions),
+    )
+    await page.getByRole('button', { name: 'Ações de Member B' }).click()
+    await page.getByRole('dialog').getByRole('button', { name: 'Mudar papel' }).click()
+    const sheet = page.getByRole('dialog', { name: 'Papel de Member B' })
+
+    await expect.element(sheet.getByRole('radio', { name: /Dono/ })).toBeDisabled()
+    await expect.element(sheet.getByRole('radio', { name: /Contador/ })).toBeDisabled()
+    await expect.element(sheet.getByRole('radio', { name: /Admin/ })).toBeEnabled()
   })
 })

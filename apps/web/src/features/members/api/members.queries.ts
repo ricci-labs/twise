@@ -15,3 +15,14 @@ export function membersQueryOptions(workspaceId: string) {
 export function fetchMembers(workspaceId: string) {
   return unwrap(workspaceApi.members.$get({ param: { workspaceId } }))
 }
+
+export function rolesQueryOptions(workspaceId: string) {
+  return queryOptions({
+    queryKey: [...queryKeys.workspace(workspaceId), 'roles'] as const,
+    queryFn: () => fetchRoles(workspaceId),
+  })
+}
+
+export function fetchRoles(workspaceId: string) {
+  return unwrap(workspaceApi.roles.$get({ param: { workspaceId } }))
+}
