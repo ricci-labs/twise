@@ -431,6 +431,11 @@ describe('simulatePurchaseImpact', () => {
     )
     expect(debit.period.freeToSpendAfter).toBe(overview.metrics.freeToSpend - 50_000)
     expect(debit.committedReferencePercent).toBe(70)
+    expect(debit).toMatchObject({
+      period: overview.period,
+      landsIn: overview.period,
+      affectsCurrentPeriod: true,
+    })
     expect(debit.card).toBeNull()
     expect(debit.account).toMatchObject({ accountId: checking })
     expect(debit.account?.balanceTodayAfterCents).toBe(

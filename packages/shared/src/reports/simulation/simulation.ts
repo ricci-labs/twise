@@ -13,17 +13,17 @@ import type {
   PeriodFacts,
 } from '@shared/reports/metrics/metrics.types'
 import { accountImpactOf, cardImpactOf } from '@shared/reports/simulation/payment-effect'
+import { purchasePeriodOf } from '@shared/reports/simulation/purchase-period'
 import { purchaseVerdictOf } from '@shared/reports/simulation/purchase-verdict'
+import { SIMULATED_CATEGORY_ID } from '@shared/reports/simulation/simulation.constants'
 import type { PurchaseImpact, SimulatedPurchase } from '@shared/reports/simulation/simulation.types'
-
-export const SIMULATED_CATEGORY_ID = 'simulated-purchase'
 
 export function simulatePurchase(facts: PeriodFacts, purchase: SimulatedPurchase): PurchaseImpact {
   const after = withPurchase(facts, purchase)
   const metricsBefore = computeMetrics(facts)
   const metricsAfter = computeMetrics(after)
   const period = {
-    label: facts.period.label,
+    ...facts.period,
     freeToSpendBefore: metricsBefore.freeToSpend,
     freeToSpendAfter: metricsAfter.freeToSpend,
     dailyAllowanceBefore: metricsBefore.dailyAllowance,
@@ -41,6 +41,7 @@ export function simulatePurchase(facts: PeriodFacts, purchase: SimulatedPurchase
     ...purchaseVerdictOf(period, coming, facts.period.end, card),
     committedReferencePercent: HEAVILY_COMMITTED_PERCENT,
     period,
+    ...purchasePeriodOf(after),
     card,
     account: accountImpactOf(facts, after, purchase),
     coming,

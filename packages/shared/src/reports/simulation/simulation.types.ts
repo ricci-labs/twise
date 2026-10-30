@@ -1,4 +1,4 @@
-import type { IsoDate } from '@shared/core/calendar/calendar.types'
+import type { IsoDate, Period } from '@shared/core/calendar/calendar.types'
 import type { Insight } from '@shared/reports/insights/insights.types'
 import type { FactCard } from '@shared/reports/metrics/metrics.types'
 import type { PURCHASE_VERDICTS } from '@shared/reports/simulation/simulation.constants'
@@ -11,8 +11,7 @@ export type SimulatedPurchase = {
   paidFromAccountId: string | null
 }
 
-export type PeriodImpact = {
-  label: string
+export type PeriodImpact = Period & {
   freeToSpendBefore: number
   freeToSpendAfter: number
   dailyAllowanceBefore: number | null
@@ -54,11 +53,17 @@ export type PurchaseVerdictOf = {
   verdictReason: PurchaseVerdictReason
 }
 
-export type PurchaseImpact = PurchaseVerdictOf & {
-  committedReferencePercent: number
-  period: PeriodImpact
-  card: CardImpact | null
-  account: AccountImpact | null
-  coming: ComingPeriodImpact[]
-  newInsights: Insight[]
+export type PurchasePeriod = {
+  landsIn: Period | null
+  affectsCurrentPeriod: boolean
 }
+
+export type PurchaseImpact = PurchaseVerdictOf &
+  PurchasePeriod & {
+    committedReferencePercent: number
+    period: PeriodImpact
+    card: CardImpact | null
+    account: AccountImpact | null
+    coming: ComingPeriodImpact[]
+    newInsights: Insight[]
+  }

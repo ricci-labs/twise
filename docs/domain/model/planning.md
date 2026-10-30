@@ -309,10 +309,17 @@ adds a hypothetical purchase to the facts and recomputes the same metrics and in
   invoice's total (or a new invoice);
 - **from an account** (1×): the expense on its date and the money out of the account (today or later).
 
-→ `{ verdict, verdictReason, committedReferencePercent, period: { label, freeToSpend before/after,
-dailyAllowance before/after }, card, account, coming: [{ label, committed before/after,
-percentOfIncome before/after }], newInsights }`, where `newInsights` are only the alerts the purchase
+→ `{ verdict, verdictReason, committedReferencePercent, period: { label, start, end, freeToSpend
+before/after, dailyAllowance before/after }, landsIn, affectsCurrentPeriod, card, account, coming: [{
+label, committed before/after, percentOfIncome before/after }], newInsights }`, where `newInsights` are only the alerts the purchase
 would bring (e.g. `period_heavily_committed`, `balance_going_negative`, `card_limit_exceeded`).
+
+Where the purchase lands (G78): `period` is always the current period; `landsIn` (`{ label, start,
+end }`) is the period of the purchase's first counted date, by the same rule as the metrics (the
+purchase date with `installmentBudgetView = purchase_month`, else each installment's invoice due
+date; a purchase from an account counts on its date), `null` beyond the 6 coming periods.
+`affectsCurrentPeriod` says whether any of it counts in the current period; when false, "Neste
+período" doesn't change.
 
 The payment method's effect (G77), one of the two is `null`:
 - `card: { accountId, limitCents, freeBeforeCents, freeAfterCents }`: free limit = the limit minus

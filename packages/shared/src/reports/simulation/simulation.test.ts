@@ -97,6 +97,8 @@ describe('simulatePurchase', () => {
     const impact = simulatePurchase(household(), TV_IN_THREE)
     expect(impact.period).toEqual({
       label: '2026-10',
+      start: '2026-10-01',
+      end: '2026-10-31',
       freeToSpendBefore: 400_000,
       freeToSpendAfter: 400_000,
       dailyAllowanceBefore: Math.floor(400_000 / 17),
@@ -186,6 +188,29 @@ describe('simulatePurchase', () => {
     expect(later.account).toMatchObject({
       balanceTodayBeforeCents: 300_000,
       balanceTodayAfterCents: 300_000,
+    })
+  })
+
+  it('says which period the purchase lands in, by the same rule the metrics count it', () => {
+    const november = { label: '2026-11', start: '2026-11-01', end: '2026-11-30' }
+    expect(simulatePurchase(household(), TV_IN_THREE)).toMatchObject({
+      landsIn: november,
+      affectsCurrentPeriod: false,
+    })
+    const byPurchaseMonth = household({ installmentBudgetView: 'purchase_month' })
+    expect(simulatePurchase(byPurchaseMonth, TV_IN_THREE)).toMatchObject({
+      landsIn: { label: '2026-10' },
+      affectsCurrentPeriod: true,
+    })
+    const fromChecking = { ...TV_IN_THREE, installmentCount: 1, card: null }
+    const later = { ...fromChecking, paidFromAccountId: 'checking', occurredOn: '2026-11-20' }
+    expect(simulatePurchase(household(), later)).toMatchObject({
+      landsIn: november,
+      affectsCurrentPeriod: false,
+    })
+    expect(simulatePurchase(household(), { ...later, occurredOn: '2027-06-01' })).toMatchObject({
+      landsIn: null,
+      affectsCurrentPeriod: false,
     })
   })
 
