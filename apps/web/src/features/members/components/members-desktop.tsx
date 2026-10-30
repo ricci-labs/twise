@@ -19,13 +19,13 @@ import {
 import { contactOf, InvitationActions } from '@web/features/members/components/invitations-list'
 import { MemberActions } from '@web/features/members/components/member-actions'
 import { dayOf, lastActivityText } from '@web/features/members/components/member-views'
+import { roleTypeText, roleUsageText } from '@web/features/members/components/role-views'
 import { membersMessages } from '@web/features/members/members.messages'
 import type {
   InvitationsCardProps,
   MembersCardProps,
   MembersDesktopProps,
   PersonCellProps,
-  Role,
   RolesCardProps,
 } from '@web/features/members/members.types'
 import { ApiError } from '@web/lib/api/api-error'
@@ -257,7 +257,7 @@ function RolesCard({ workspaceId }: RolesCardProps) {
             key={role.roleId}
             variant="tile"
             title={role.name}
-            detail={roleUsageText(role)}
+            detail={`${roleTypeText(role)} · ${roleUsageText(role)}`}
             link={
               <Link
                 to="/w/$workspaceId/members/roles/$role"
@@ -269,14 +269,4 @@ function RolesCard({ workspaceId }: RolesCardProps) {
       </TileGrid>
     </Card>
   )
-}
-
-function roleUsageText(role: Role): string {
-  const usage = messages.roleUsage
-  const parts = [
-    role.memberCount > 0 ? usage.people(role.memberCount) : null,
-    role.invitationCount > 0 ? usage.invitations(role.invitationCount) : null,
-  ].filter((part) => part !== null)
-  const who = parts.length === 0 ? usage.nobody : parts.join(' · ')
-  return `${role.systemKey === null ? usage.custom : usage.system} · ${who}`
 }
