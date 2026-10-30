@@ -4,6 +4,7 @@ import { authorize, authorizeAnyMember, currentWorkspace } from '@api/modules/ac
 import {
   getPeriodOverview,
   listPeriodsOfYear,
+  previewPeriods,
   simulatePurchaseImpact,
   suggestAllocation,
 } from '@api/modules/reports/reports.service'
@@ -11,6 +12,7 @@ import type { ReportRouteDeps } from '@api/modules/reports/reports.types'
 import {
   allocationSuggestionQuerySchema,
   overviewQuerySchema,
+  periodPreviewQuerySchema,
   periodsQuerySchema,
   purchaseSimulationQuerySchema,
 } from '@financas/shared'
@@ -34,6 +36,15 @@ export function reportRoutes({ db }: ReportRouteDeps) {
       async (c) => {
         const { workspaceId } = currentWorkspace(c)
         return c.json(await listPeriodsOfYear(db, workspaceId, c.req.valid('query')))
+      },
+    )
+    .get(
+      '/settings/period-preview',
+      authorize('settings', 'view'),
+      queryParams(periodPreviewQuerySchema, 'PERIOD_PREVIEW_INVALID'),
+      async (c) => {
+        const { workspaceId } = currentWorkspace(c)
+        return c.json(await previewPeriods(db, workspaceId, c.req.valid('query')))
       },
     )
     .get(

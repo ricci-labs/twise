@@ -37,6 +37,8 @@ import {
   type OverviewQuery,
   type PeriodFacts,
   type PeriodOverview,
+  type PeriodPreview,
+  type PeriodPreviewQuery,
   type PeriodSettings,
   type PeriodsOfYear,
   type PeriodsQuery,
@@ -60,6 +62,7 @@ const CARD_PURCHASE = 'card_purchase'
 const MONTHS_OF_A_YEAR = Array.from({ length: 12 }, (_, index) => index + 1)
 const DECEMBER = 12
 const JANUARY = 1
+const PREVIEW_HOLIDAY_MONTHS = 2
 
 export function getPeriodOverview(
   db: Database,
@@ -103,6 +106,27 @@ export function listPeriodsOfYear(
         periodStartingIn({ year, month }, periodSettings, holidays),
       ),
     }
+  })
+}
+
+export function previewPeriods(
+  db: Database,
+  workspaceId: string,
+  { anchor, value }: PeriodPreviewQuery,
+  clock: Clock = systemClock,
+): Promise<PeriodPreview> {
+  return withWorkspace(db, workspaceId, async (tx) => {
+    const today = await workspaceToday(tx, clock)
+    const settings = periodSettingsOf(anchor, value ?? null)
+    const todayMonth = parseIsoDate(today)
+    const holidays = await holidayDatesOf(
+      tx,
+      clampedDate(addMonths(todayMonth, -PREVIEW_HOLIDAY_MONTHS), 1),
+      clampedDate(addMonths(todayMonth, PREVIEW_HOLIDAY_MONTHS), LAST_DAY),
+    )
+    const current = periodOf(today, settings, holidays)
+    const nextMonth = addMonths(parseIsoDate(`${current.label}-01`), 1)
+    return { current, next: periodStartingIn(nextMonth, settings, holidays) }
   })
 }
 
