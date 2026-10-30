@@ -3,6 +3,7 @@ import type { UseQueryResult } from '@tanstack/react-query'
 import type { MiniMonthHoliday } from '@web/components/display/mini-month-calendar'
 import type { ChargeEmailPreviewProps } from '@web/components/finance/charge-email-preview'
 import type { HolidayStatus } from '@web/components/finance/holiday-row'
+import type { SettingsRowProps } from '@web/components/navigation/settings-row'
 import type {
   fetchChargeText,
   fetchHolidays,
@@ -71,10 +72,12 @@ export type NameRowProps = {
 
 export type HolidaysRowProps = {
   workspaceId: string
+  variant?: SettingsRowVariant
 }
 
 export type PixRowProps = {
   workspaceId: string
+  variant?: SettingsRowVariant
 }
 
 export type PixPageProps = {
@@ -170,6 +173,7 @@ export type HolidaySheetProps = {
 
 export type ChargeTextRowProps = {
   workspaceId: string
+  variant?: SettingsRowVariant
 }
 
 export type ChargeTextPageProps = {
@@ -246,6 +250,7 @@ export type WorkspaceNamePageProps = {
 }
 
 export type WorkspaceNameFormProps = {
+  layout: SettingsLayout
   workspaceId: string
   workspaceName: string
   currency: string
@@ -271,6 +276,7 @@ export type PeriodPageProps = {
 }
 
 export type PeriodFormProps = {
+  layout: SettingsLayout
   workspaceId: string
   settings: WorkspaceSettings
   canUpdate: boolean
@@ -283,6 +289,7 @@ export type PeriodPreviewProps = {
 
 export type PeriodChoiceFieldProps = {
   isDisabled: boolean
+  hasHelp: boolean
 }
 
 export type WatchedPeriodPreviewProps = {
@@ -297,6 +304,7 @@ export type BudgetPageProps = {
 }
 
 export type BudgetFormProps = {
+  layout: SettingsLayout
   workspaceId: string
   settings: WorkspaceSettings
   canUpdate: boolean
@@ -319,6 +327,7 @@ export type CalendarPageProps = {
 }
 
 export type CalendarFormProps = {
+  layout: SettingsLayout
   workspaceId: string
   settings: WorkspaceSettings
   canUpdate: boolean
@@ -326,6 +335,7 @@ export type CalendarFormProps = {
 
 export type TimezoneFieldProps = {
   isDisabled: boolean
+  hasHelp: boolean
 }
 
 export type CalendarRowProps = {
@@ -333,3 +343,23 @@ export type CalendarRowProps = {
 }
 
 export type ZoneSheet = 'brazil' | 'others'
+
+export type SettingsLayout = 'page' | 'card'
+
+export type SettingsGroupFrameProps = {
+  layout: SettingsLayout
+  workspaceId: string
+  title: string
+  description: string
+  readOnlyNote?: string
+  saveLabel: string
+  children: ReactNode
+}
+
+export type SettingsRowVariant = SettingsRowProps['variant']
+
+export type WorkspaceCardsProps = {
+  workspaceId: string
+  workspaceName: string
+  canUpdate: boolean
+}

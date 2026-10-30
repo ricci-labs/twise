@@ -1,6 +1,5 @@
 import { WORKSPACE_NAME_MAX_LENGTH, workspaceNameRequestSchema } from '@financas/shared'
 import { useQuery } from '@tanstack/react-query'
-import { Link } from '@tanstack/react-router'
 import { Alert } from '@web/components/feedback/alert'
 import { SectionError } from '@web/components/feedback/section-error'
 import { SectionSkeleton } from '@web/components/feedback/section-skeleton'
@@ -8,12 +7,11 @@ import { showToast } from '@web/components/feedback/toast'
 import { Form } from '@web/components/forms/form'
 import { FormField } from '@web/components/forms/form-field'
 import { LockedField } from '@web/components/forms/locked-field'
-import { SubmitButton } from '@web/components/forms/submit-button'
 import { TextInput } from '@web/components/inputs/text-input'
 import { PageFrame } from '@web/components/layout/page-frame'
-import { SettingsFormPage } from '@web/components/layout/settings-form-page'
 import { workspaceSettingsQueryOptions } from '@web/features/settings/api/settings.queries'
 import { useRenameWorkspace } from '@web/features/settings/api/use-rename-workspace'
+import { SettingsGroupFrame } from '@web/features/settings/components/settings-group-frame'
 import { settingsMessages } from '@web/features/settings/settings.messages'
 import type {
   WorkspaceNameFormProps,
@@ -43,6 +41,7 @@ export function WorkspaceNamePage({
     return (
       <PageFrame edge="bleed">
         <WorkspaceNameForm
+          layout="page"
           workspaceId={workspaceId}
           workspaceName={workspaceName}
           currency={settings.data.currency}
@@ -67,11 +66,12 @@ export function WorkspaceNamePage({
   )
 }
 
-function WorkspaceNameForm({
+export function WorkspaceNameForm({
   workspaceId,
   workspaceName,
   currency,
   canUpdate,
+  layout,
 }: WorkspaceNameFormProps) {
   const rename = useRenameWorkspace(workspaceId)
   const [problem, setProblem] = useState<string | null>(null)
@@ -102,16 +102,13 @@ function WorkspaceNameForm({
 
   return (
     <Form form={form} onSubmit={save}>
-      <SettingsFormPage
-        back={<Link to="/w/$workspaceId/settings" params={{ workspaceId }} />}
-        backLabel={messages.back}
+      <SettingsGroupFrame
+        layout={layout}
+        workspaceId={workspaceId}
         title={messages.title}
+        description={messages.cardDescription}
         readOnlyNote={canUpdate ? undefined : settingsMessages.readOnly}
-        footer={
-          <SubmitButton requiresChange loadingLabel={settingsMessages.saving} width="full">
-            {messages.save}
-          </SubmitButton>
-        }
+        saveLabel={messages.save}
       >
         {problem && (
           <Alert tone="danger" isUrgent>
@@ -132,7 +129,7 @@ function WorkspaceNameForm({
           value={settingsMessages.currencyNames[currency] ?? currency}
           detail={messages.currencyLocked}
         />
-      </SettingsFormPage>
+      </SettingsGroupFrame>
     </Form>
   )
 }

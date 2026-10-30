@@ -142,6 +142,7 @@ import { formOverlayExamples } from '@web/components/layout/form-overlay'
 import { momentScreenExamples } from '@web/components/layout/moment-screen'
 import { pageFrameExamples } from '@web/components/layout/page-frame'
 import { pageHeaderExamples } from '@web/components/layout/page-header'
+import { pairedCardGridExamples } from '@web/components/layout/paired-card-grid'
 import { settingsFormPageExamples } from '@web/components/layout/settings-form-page'
 import { sheetExamples } from '@web/components/layout/sheet'
 import { sidePanelExamples } from '@web/components/layout/side-panel'
@@ -216,6 +217,7 @@ export const workbenchSections: readonly ComponentExamples[] = [
   pageFrameExamples,
   tileGridExamples,
   settingsFormPageExamples,
+  pairedCardGridExamples,
   pageHeaderExamples,
   cyclePreviewExamples,
   entryDayGroupExamples,

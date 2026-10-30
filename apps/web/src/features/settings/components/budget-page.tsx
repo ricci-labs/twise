@@ -1,18 +1,16 @@
 import type { BudgetBase, InstallmentBudgetView } from '@financas/shared'
 import { useQuery } from '@tanstack/react-query'
-import { Link } from '@tanstack/react-router'
 import { Alert } from '@web/components/feedback/alert'
 import { SectionError } from '@web/components/feedback/section-error'
 import { SectionSkeleton } from '@web/components/feedback/section-skeleton'
 import { showToast } from '@web/components/feedback/toast'
 import { FieldGroup } from '@web/components/forms/field-group'
 import { Form } from '@web/components/forms/form'
-import { SubmitButton } from '@web/components/forms/submit-button'
 import { RadioCardList } from '@web/components/inputs/radio-card-list'
 import { PageFrame } from '@web/components/layout/page-frame'
-import { SettingsFormPage } from '@web/components/layout/settings-form-page'
 import { workspaceSettingsQueryOptions } from '@web/features/settings/api/settings.queries'
 import { useChangeSettings } from '@web/features/settings/api/use-change-settings'
+import { SettingsGroupFrame } from '@web/features/settings/components/settings-group-frame'
 import { settingsMessages } from '@web/features/settings/settings.messages'
 import { budgetFormSchema } from '@web/features/settings/settings.schemas'
 import type {
@@ -42,6 +40,7 @@ export function BudgetPage({ workspaceId, permissions }: BudgetPageProps) {
     return (
       <PageFrame edge="bleed">
         <BudgetForm
+          layout="page"
           workspaceId={workspaceId}
           settings={settings.data}
           canUpdate={hasPermission(permissions, 'settings', 'update')}
@@ -65,7 +64,7 @@ export function BudgetPage({ workspaceId, permissions }: BudgetPageProps) {
   )
 }
 
-function BudgetForm({ workspaceId, settings, canUpdate }: BudgetFormProps) {
+export function BudgetForm({ workspaceId, settings, canUpdate, layout }: BudgetFormProps) {
   const change = useChangeSettings(workspaceId)
   const [problem, setProblem] = useState<string | null>(null)
   const form = useSchemaForm({
@@ -91,16 +90,13 @@ function BudgetForm({ workspaceId, settings, canUpdate }: BudgetFormProps) {
   const recommended = { label: messages.recommended, tone: 'neutral' as const }
   return (
     <Form form={form} onSubmit={save}>
-      <SettingsFormPage
-        back={<Link to="/w/$workspaceId/settings" params={{ workspaceId }} />}
-        backLabel={messages.back}
+      <SettingsGroupFrame
+        layout={layout}
+        workspaceId={workspaceId}
         title={messages.title}
+        description={messages.cardDescription}
         readOnlyNote={canUpdate ? undefined : settingsMessages.readOnly}
-        footer={
-          <SubmitButton requiresChange loadingLabel={settingsMessages.saving} width="full">
-            {messages.save}
-          </SubmitButton>
-        }
+        saveLabel={messages.save}
       >
         {problem && (
           <Alert tone="danger" isUrgent>
@@ -147,7 +143,7 @@ function BudgetForm({ workspaceId, settings, canUpdate }: BudgetFormProps) {
             )}
           />
         </FieldGroup>
-      </SettingsFormPage>
+      </SettingsGroupFrame>
     </Form>
   )
 }

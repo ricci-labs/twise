@@ -449,7 +449,7 @@ updated: 2026-10-30
      `area` filters and the members' last activity (G75, #425–#427)
   6. [x] API: the purchase simulation's verdict, payment method effect and period (G76–G78,
      #428, #429, #430)
-  7. [ ] Web: the Configurações hub and its screens (`SET-01`)
+  7. [x] Web: the Configurações hub and its screens (`SET-01`, #431–#435 and the desktop cards)
   8. [ ] Web: Membros, Papéis and Convites as tabs (`MEM-01..03`)
   9. [ ] Web: Minha conta (`ME-01`)
   10. [ ] Web: Histórico (`AUD-01`), with `WorkScreen` on the desktop

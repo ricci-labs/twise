@@ -4,7 +4,6 @@ import {
   type WorkspaceSettingsChange,
 } from '@financas/shared'
 import { useQuery } from '@tanstack/react-query'
-import { Link } from '@tanstack/react-router'
 import { CategoryArt } from '@web/components/display/category-art'
 import { RichText } from '@web/components/display/rich-text'
 import { Alert } from '@web/components/feedback/alert'
@@ -13,17 +12,16 @@ import { SectionSkeleton } from '@web/components/feedback/section-skeleton'
 import { showToast } from '@web/components/feedback/toast'
 import { FieldGroup } from '@web/components/forms/field-group'
 import { Form } from '@web/components/forms/form'
-import { SubmitButton } from '@web/components/forms/submit-button'
 import { DayField } from '@web/components/inputs/day-field'
 import { RadioSentenceList } from '@web/components/inputs/radio-sentence-list'
 import { Select } from '@web/components/inputs/select'
 import { PageFrame } from '@web/components/layout/page-frame'
-import { SettingsFormPage } from '@web/components/layout/settings-form-page'
 import {
   periodPreviewQueryOptions,
   workspaceSettingsQueryOptions,
 } from '@web/features/settings/api/settings.queries'
 import { useChangeSettings } from '@web/features/settings/api/use-change-settings'
+import { SettingsGroupFrame } from '@web/features/settings/components/settings-group-frame'
 import { settingsMessages } from '@web/features/settings/settings.messages'
 import { periodFormSchema } from '@web/features/settings/settings.schemas'
 import type {
@@ -62,6 +60,7 @@ export function PeriodPage({ workspaceId, permissions }: PeriodPageProps) {
     return (
       <PageFrame edge="bleed">
         <PeriodForm
+          layout="page"
           workspaceId={workspaceId}
           settings={settings.data}
           canUpdate={hasPermission(permissions, 'settings', 'update')}
@@ -95,7 +94,7 @@ export function periodChoiceOf(input: PeriodFormInput): PeriodAnchorChoice {
   return { anchor: CALENDAR_MONTH, value: null }
 }
 
-function PeriodForm({ workspaceId, settings, canUpdate }: PeriodFormProps) {
+export function PeriodForm({ workspaceId, settings, canUpdate, layout }: PeriodFormProps) {
   const change = useChangeSettings(workspaceId)
   const [problem, setProblem] = useState<string | null>(null)
   const form = useSchemaForm({
@@ -119,30 +118,27 @@ function PeriodForm({ workspaceId, settings, canUpdate }: PeriodFormProps) {
 
   return (
     <Form form={form} onSubmit={save}>
-      <SettingsFormPage
-        back={<Link to="/w/$workspaceId/settings" params={{ workspaceId }} />}
-        backLabel={messages.back}
+      <SettingsGroupFrame
+        layout={layout}
+        workspaceId={workspaceId}
         title={messages.title}
+        description={messages.cardDescription}
         readOnlyNote={canUpdate ? undefined : settingsMessages.readOnly}
-        footer={
-          <SubmitButton requiresChange loadingLabel={settingsMessages.saving} width="full">
-            {messages.save}
-          </SubmitButton>
-        }
+        saveLabel={messages.save}
       >
         {problem && (
           <Alert tone="danger" isUrgent>
             {problem}
           </Alert>
         )}
-        <PeriodChoiceField isDisabled={!canUpdate} />
+        <PeriodChoiceField isDisabled={!canUpdate} hasHelp={layout === 'page'} />
         <WatchedPeriodPreview workspaceId={workspaceId} />
-      </SettingsFormPage>
+      </SettingsGroupFrame>
     </Form>
   )
 }
 
-function PeriodChoiceField({ isDisabled }: PeriodChoiceFieldProps) {
+function PeriodChoiceField({ isDisabled, hasHelp }: PeriodChoiceFieldProps) {
   const { setValue } = useFormContext<PeriodFormInput>()
   const [anchor, dayOfMonth, businessDay] = useWatch<
     PeriodFormInput,
@@ -150,7 +146,7 @@ function PeriodChoiceField({ isDisabled }: PeriodChoiceFieldProps) {
   >({ name: ['periodAnchor', 'dayOfMonth', 'businessDay'] })
   const choose = (next: PeriodAnchor) => setValue('periodAnchor', next, { shouldDirty: true })
   return (
-    <FieldGroup label={messages.label} help={messages.help}>
+    <FieldGroup label={messages.label} help={hasHelp ? messages.help : undefined}>
       <RadioSentenceList
         label={messages.label}
         value={anchor}

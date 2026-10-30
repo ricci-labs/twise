@@ -166,4 +166,34 @@ describe('Configurações', () => {
       .element(menu.getByRole('link', { name: 'Configurações' }))
       .toHaveAttribute('aria-current', 'page')
   })
+
+  it('shows each group as a card on the desktop, in pairs of equal height, saving alone', async () => {
+    await page.viewport(1440, 1000)
+    await openSettings()
+    await expect
+      .element(
+        page.getByText('Do espaço Casa. Valem para todos os membros; cada grupo salva sozinho.'),
+      )
+      .toBeVisible()
+    const card = (name: string) => page.getByRole('region', { name, exact: true })
+    await expect.element(card('Nome e moeda').getByRole('textbox')).toHaveValue('Casa')
+    await expect.element(card('Mês financeiro').getByText(/^Período atual:/)).toBeVisible()
+    expect(page.getByText('Use o dia em que o salário costuma cair.').elements()).toHaveLength(1)
+    const [name, calendar, period, budget] = [
+      'Nome e moeda',
+      'Calendário e fuso',
+      'Mês financeiro',
+      'Orçamento',
+    ].map((title) => card(title).element().getBoundingClientRect())
+    expect(name?.top).toBe(calendar?.top)
+    expect(name?.height).toBe(calendar?.height)
+    expect(period?.height).toBe(budget?.height)
+    await expect
+      .element(card('Orçamento').getByRole('button', { name: 'Salvar orçamento' }))
+      .toBeDisabled()
+    const others = card('Cobranças e planejamento')
+    await expect.element(others.getByRole('link', { name: /Recebimento por Pix/ })).toBeVisible()
+    await expect.element(others.getByRole('link', { name: /Feriados/ })).toBeVisible()
+    await expectNoAccessibilityViolations(page.getByRole('main').element())
+  })
 })
