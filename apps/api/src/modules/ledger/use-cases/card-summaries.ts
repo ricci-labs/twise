@@ -52,6 +52,7 @@ export function listCardSummaries(
         ...card,
         openCents,
         limitUsedPercent: limitUsedPercentOf(openCents, card.limitCents),
+        freeLimitCents: card.limitCents === null ? null : card.limitCents - openCents,
         currentInvoice: snapshotOf(card, invoiceForPurchase(today, card), invoices, today),
       }
     })

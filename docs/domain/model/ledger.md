@@ -1,7 +1,7 @@
 ---
 summary: The double-entry ledger — account kinds, cards and invoices, journal entries and postings, sign convention, DB-enforced invariants, correction policy (soft delete / replace), and worked examples.
 read_when: Anything that records, edits, reverses or reports money movements, cards or invoices.
-updated: 2026-10-20
+updated: 2026-10-30
 ---
 
 # Ledger (double-entry)
@@ -218,7 +218,7 @@ A malformed or unknown id, or one from another workspace, is `404 ACCOUNT_NOT_FO
 | `POST /accounts/:accountId/restore` | `accounts:delete` | `restoreAccount` → `204` |
 | `GET /accounts/trash` | `accounts:delete` | `listTrashedAccounts`: deleted accounts (cards included) with `deletedAt`, `deletedByUserId` and `deleteReason`, latest deletion first |
 | `GET /accounts/summary` | `accounts:view` | `readAccountsSummary` (G40): `moneyTotalCents` and `moneyAccountCount` over the active money accounts (system, archived and `benefit` out), `benefitTotalCents` and `benefitAccountCount` over the active benefit accounts (G70), `cardsOpenCents` and `cardCount` over the active cards, and `nextInvoice`, the first upcoming invoice with something due (`null` when none) |
-| `GET /cards` | `cards:view` | `listCardSummaries` (G41): card accounts that aren't deleted (archived included) with their cycle, limit, holder, payment account and `createdAt` (the year sheet of `CARD-02` starts there), plus `openCents` (what the card owes, future installments included), `limitUsedPercent` (rounded, `null` without a limit) and `currentInvoice`: the invoice a purchase made today goes to (`invoiceId`, `null` while it has no line yet; `referenceMonth`, `closingOn`, `dueOn`, `status` computed for today, `totalCents`, `dueCents`) |
+| `GET /cards` | `cards:view` | `listCardSummaries` (G41): card accounts that aren't deleted (archived included) with their cycle, limit, holder, payment account and `createdAt` (the year sheet of `CARD-02` starts there), plus `openCents` (what the card owes, future installments included), `limitUsedPercent` (rounded, `null` without a limit), `freeLimitCents` (the limit minus `openCents`, negative past the limit, `null` without a limit; the card picker of "Posso comprar?", G77) and `currentInvoice`: the invoice a purchase made today goes to (`invoiceId`, `null` while it has no line yet; `referenceMonth`, `closingOn`, `dueOn`, `status` computed for today, `totalCents`, `dueCents`) |
 | `GET /cards/invoices/upcoming?limit` | `cards:view` | `listUpcomingInvoices` (G41): for every active card, closed invoices still owing, the current invoice and the next one (the next even before it has any line: `invoiceId` `null`, zeros), the soonest due first; `limit` 1–24, default 6 |
 | `POST /cards` | `cards:create` | `createCard` → `201 { accountId }` |
 | `PATCH /cards/:cardId` | `cards:update` | `changeCard` (cycle, limit, holder, payment account) → `204` |

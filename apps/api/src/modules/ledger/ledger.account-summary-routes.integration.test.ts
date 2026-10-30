@@ -166,6 +166,7 @@ describe('GET /cards', () => {
     expect(x).toMatchObject({
       openCents: 285_000,
       limitUsedPercent: Math.round((285_000 * 100) / LIMIT_X),
+      freeLimitCents: LIMIT_X - 285_000,
       currentInvoice: {
         referenceMonth: monthOf(CARD_X),
         closingOn: current.closingOn,
@@ -177,7 +178,7 @@ describe('GET /cards', () => {
     })
     expect(x?.currentInvoice.invoiceId).toEqual(expect.any(String))
     expect(Number.isNaN(Date.parse(String(x?.createdAt)))).toBe(false)
-    expect(y).toMatchObject({ openCents: 62_000, limitUsedPercent: null })
+    expect(y).toMatchObject({ openCents: 62_000, limitUsedPercent: null, freeLimitCents: null })
     expect(cards.find((card) => card.accountId === archivedCard)?.archivedAt).not.toBeNull()
   })
 })
