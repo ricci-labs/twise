@@ -308,4 +308,26 @@ describe('MEM-01 Membros', () => {
       .toBeVisible()
     await expectNoAccessibilityViolations(page.getByRole('main').element())
   })
+
+  it('lists the roles as a table and what each can do as a matrix on the desktop', async () => {
+    await page.viewport(1440, 1300)
+    await openMembers(
+      { ...membersAnswer(), ...rolesAnswer(), ...invitationsAnswer() },
+      workspaceAccess,
+      `/w/${WORKSPACE_ID}/members/roles`,
+    )
+    await expect.element(page.getByRole('link', { name: 'Novo papel' })).toBeVisible()
+    const table = page.getByRole('region', { name: 'Papéis · 4' })
+    await expect.element(table.getByRole('img', { name: 'Não pode ser alterado' })).toBeVisible()
+    await expect.element(table.getByRole('link', { name: 'Abrir Contador' })).toBeVisible()
+    await expect.element(table.getByText('Do espaço')).toBeVisible()
+    const matrix = page.getByRole('region', { name: 'O que cada papel pode' })
+    const members = matrix.getByRole('row', { name: /^Membros/ })
+    await expect.element(members.getByRole('cell').nth(0)).toHaveTextContent('Tudo')
+    await expect.element(members.getByRole('cell').nth(1)).toHaveTextContent('Ver, editar')
+    await expect.element(members.getByRole('cell').nth(3)).toHaveTextContent('Excluir')
+    const reports = matrix.getByRole('row', { name: /^Relatórios/ })
+    await expect.element(reports.getByRole('cell').nth(0)).toHaveTextContent('—')
+    await expectNoAccessibilityViolations(page.getByRole('main').element())
+  })
 })

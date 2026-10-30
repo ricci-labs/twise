@@ -207,3 +207,18 @@ export type PersonCellProps = {
 export type MembersTabBodyProps = MembersPageProps & {
   isDesktop: boolean
 }
+
+export type RolesDesktopProps = {
+  workspaceId: string
+  canEdit: boolean
+}
+
+export type RoleOpenProps = {
+  workspaceId: string
+  role: Role
+  canEdit: boolean
+}
+
+export type AbilityMatrixProps = {
+  roles: readonly Role[]
+}

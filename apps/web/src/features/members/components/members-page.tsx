@@ -20,6 +20,7 @@ import { InvitationsList } from '@web/features/members/components/invitations-li
 import { MemberActions } from '@web/features/members/components/member-actions'
 import { MembersDesktop } from '@web/features/members/components/members-desktop'
 import { roleSentence } from '@web/features/members/components/role-views'
+import { RolesDesktop } from '@web/features/members/components/roles-desktop'
 import { membersMessages as messages } from '@web/features/members/members.messages'
 import type {
   HeaderActionProps,
@@ -109,6 +110,14 @@ function MembersTabBody({
       <InvitationsList
         workspaceId={workspaceId}
         canRevoke={hasPermission(permissions, 'members', 'delete')}
+      />
+    )
+  }
+  if (tab === 'roles' && isDesktop) {
+    return (
+      <RolesDesktop
+        workspaceId={workspaceId}
+        canEdit={hasPermission(permissions, 'members', 'update')}
       />
     )
   }

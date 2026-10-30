@@ -12,6 +12,20 @@ export const membersMessages = {
     roles: 'Papéis',
     invitations: 'Convites',
   },
+  matrix: {
+    title: 'O que cada papel pode',
+    note: 'Uma coluna por papel. Com mais de 6 papéis, a tabela rola para o lado e a coluna "Área" fica parada.',
+    area: 'Área',
+    all: 'Tudo',
+    none: '—',
+    actions: { view: 'ver', create: 'criar', update: 'editar', delete: 'excluir' },
+  },
+  rolesDesktop: {
+    title: (count: number) => `Papéis · ${count}`,
+    note: 'Os do sistema não mudam; os do espaço você cria e edita.',
+    columns: { role: 'Papel', type: 'Tipo', usage: 'Quem usa', actions: 'Ações' },
+    locked: 'Não pode ser alterado',
+  },
   desktop: {
     lead: (workspace: string) =>
       `Quem participa do espaço ${workspace} e o que cada um pode fazer.`,
