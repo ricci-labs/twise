@@ -17,6 +17,17 @@ import { page, userEvent } from 'vitest/browser'
 import { render } from 'vitest-browser-react'
 
 const ACCOUNT_PATH = `/w/${WORKSPACE_ID}/account`
+
+function upcomingBill() {
+  const due = new Date(Date.now() + 40 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10)
+  return {
+    id: 'bill-1',
+    description: 'A Internet',
+    entryType: 'expense',
+    status: 'pending',
+    dueOn: due,
+  }
+}
 const NO_CONTENT = 204
 const UNAUTHORIZED = 401
 const BAD_REQUEST = 400
@@ -27,6 +38,18 @@ async function openAccount(path = ACCOUNT_PATH, answers: Record<string, FakeAnsw
     'GET /api/auth/me': account,
     'GET /api/workspaces': () => workspaceList(),
     [`GET /api/workspaces/${WORKSPACE_ID}`]: workspaceAccess,
+    'GET /api/auth/me/preferences': () =>
+      Response.json({ language: 'pt-BR', quietHoursStart: '22:00', quietHoursEnd: '07:00' }),
+    [`GET /api/workspaces/${WORKSPACE_ID}/members/me/preferences`]: () =>
+      Response.json({
+        notifyBillsDaysBefore: 3,
+        notifyChannel: 'email',
+        notifyDailyDigest: false,
+        notifyBudgetThresholdPct: 80,
+        notifyVariableIncome: true,
+      }),
+    [`GET /api/workspaces/${WORKSPACE_ID}/occurrences`]: () =>
+      Response.json({ items: [upcomingBill()], totals: {} }),
     ...answers,
   })
   const app = createApp(createMemoryHistory({ initialEntries: [path] }))
@@ -140,5 +163,56 @@ describe('ME-01 Minha conta', () => {
     await page.getByRole('button', { name: 'Trocar senha' }).click()
 
     await expect.element(page.getByRole('button', { name: /Tente de novo em/ })).toBeVisible()
+  })
+
+  it("sums up the quiet hours and this workspace's notices on the hub", async () => {
+    await openAccount()
+    const notices = page.getByRole('region', { name: 'Avisos' })
+    await expect.element(notices.getByText('Das 22:00 às 07:00, em todos os espaços')).toBeVisible()
+    await expect.element(notices.getByRole('link', { name: /Avisos do espaço Casa/ })).toBeVisible()
+    await expect
+      .element(notices.getByText('Contas e faturas 3 dias antes, por e-mail'))
+      .toBeVisible()
+    await expect
+      .element(page.getByText('Os avisos chegam por e-mail. WhatsApp vem depois.'))
+      .toBeVisible()
+  })
+
+  it('switches the quiet hours off, sending both times empty', async () => {
+    const sent: unknown[] = []
+    await openAccount(`${ACCOUNT_PATH}/quiet-hours`, {
+      'PATCH /api/auth/me/preferences': async (request) => {
+        sent.push(await request.json())
+        return Response.json({})
+      },
+    })
+    await expect.element(page.getByRole('button', { name: /^Das/ })).toBeVisible()
+    await page.getByRole('switch', { name: /Não enviar lembretes à noite/ }).click()
+    expect(page.getByRole('button', { name: /^Das/ }).query()).toBeNull()
+    await page.getByRole('button', { name: 'Salvar horário' }).click()
+
+    await expect.element(page.getByText('Preferências salvas.')).toBeVisible()
+    expect(sent).toEqual([{ quietHoursStart: null, quietHoursEnd: null }])
+  })
+
+  it('sets how many days before the notices come, with a real example', async () => {
+    const sent: unknown[] = []
+    await openAccount(`${ACCOUNT_PATH}/notices`, {
+      [`PATCH /api/workspaces/${WORKSPACE_ID}/members/me/preferences`]: async (request) => {
+        sent.push(await request.json())
+        return Response.json({})
+      },
+    })
+    await expect
+      .element(page.getByRole('heading', { name: 'Avisos do espaço Casa', level: 1 }))
+      .toBeVisible()
+    await expect.element(page.getByText(/A Internet vence em/)).toBeVisible()
+    await page.getByRole('button', { name: 'Um dia a menos' }).click()
+    await expect.element(page.getByText('2 dias')).toBeVisible()
+    await page.getByRole('button', { name: 'Salvar preferências' }).click()
+
+    await expect.element(page.getByText('Preferências salvas.')).toBeVisible()
+    expect(sent).toEqual([{ notifyBillsDaysBefore: 2 }])
+    await expectNoAccessibilityViolations(page.getByRole('main').element())
   })
 })

@@ -1,4 +1,4 @@
-import { PASSWORD_MAX_LENGTH, passwordSchema } from '@financas/shared'
+import { MAX_NOTIFY_DAYS_BEFORE, PASSWORD_MAX_LENGTH, passwordSchema } from '@financas/shared'
 import { authMessages } from '@web/features/auth/auth.messages'
 import { z } from 'zod'
 
@@ -31,3 +31,13 @@ export const passwordChangeFormSchema = z
     path: ['confirmation'],
     error: authMessages.resetPassword.mismatch,
   })
+
+export const quietHoursFormSchema = z.object({
+  isOn: z.boolean(),
+  start: z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/),
+  end: z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/),
+})
+
+export const noticesFormSchema = z.object({
+  daysBefore: z.number().int().min(0).max(MAX_NOTIFY_DAYS_BEFORE),
+})

@@ -234,6 +234,40 @@ export const authMessages = {
     emailLocked: 'Não muda por enquanto',
     logOut: 'Sair',
     readFailed: 'Não foi possível carregar sua conta.',
+    quietRow: 'Horário de silêncio',
+    quietRowOn: (start: string, end: string) => `Das ${start} às ${end}, em todos os espaços`,
+    quietRowOff: 'Desligado',
+    noticesRow: (workspace: string) => `Avisos do espaço ${workspace}`,
+    noticesRowDetail: (days: number) =>
+      days === 0
+        ? 'Contas e faturas no dia do vencimento, por e-mail'
+        : `Contas e faturas ${days} ${days === 1 ? 'dia' : 'dias'} antes, por e-mail`,
+    noticesNote: 'Os avisos chegam por e-mail. WhatsApp vem depois.',
+    preferencesSaved: 'Preferências salvas.',
+    quiet: {
+      pageTitle: 'Horário de silêncio',
+      title: 'Horário de silêncio',
+      switch: 'Não enviar lembretes à noite',
+      switchHelp: 'Lembretes que cairiam nesse horário chegam no fim dele.',
+      start: 'Das',
+      end: 'Até',
+      help: 'Pode passar da meia-noite. Vale para todos os seus espaços.',
+      save: 'Salvar horário',
+    },
+    notices: {
+      title: (workspace: string) => `Avisos do espaço ${workspace}`,
+      lead: (workspace: string) => `Valem só para o espaço ${workspace}. Cada espaço tem os seus.`,
+      days: 'Avisar contas e faturas com quantos dias de antecedência',
+      daysValue: (days: number) => (days === 1 ? '1 dia' : `${days} dias`),
+      decrease: 'Um dia a menos',
+      increase: 'Um dia a mais',
+      help: 'De 0 a 30. Com 0, o aviso chega só no dia do vencimento.',
+      exampleTitle: 'Por exemplo',
+      example: '{conta} vence em {vencimento}: o aviso chega em **{aviso}**, por e-mail, uma vez.',
+      exampleSameDay:
+        '{conta} vence em {vencimento}: o aviso chega **no dia**, por e-mail, uma vez.',
+      save: 'Salvar preferências',
+    },
     passwordRow: 'Senha',
     passwordRowDetail: 'Trocar a senha',
     password: {
