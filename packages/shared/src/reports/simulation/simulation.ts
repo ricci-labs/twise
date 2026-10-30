@@ -1,6 +1,7 @@
 import { invoicesForInstallments } from '@shared/ledger/cards/billing-cycle'
 import { splitInstallments } from '@shared/ledger/installments/installments'
 import { computeInsights } from '@shared/reports/insights/insights'
+import { HEAVILY_COMMITTED_PERCENT } from '@shared/reports/insights/insights.constants'
 import type { Insight } from '@shared/reports/insights/insights.types'
 import { sumCents } from '@shared/reports/metrics/facts'
 import { computeMetrics } from '@shared/reports/metrics/metrics'
@@ -10,6 +11,7 @@ import type {
   FactPosting,
   PeriodFacts,
 } from '@shared/reports/metrics/metrics.types'
+import { purchaseVerdictOf } from '@shared/reports/simulation/purchase-verdict'
 import type { PurchaseImpact, SimulatedPurchase } from '@shared/reports/simulation/simulation.types'
 
 export const SIMULATED_CATEGORY_ID = 'simulated-purchase'
@@ -18,21 +20,25 @@ export function simulatePurchase(facts: PeriodFacts, purchase: SimulatedPurchase
   const after = withPurchase(facts, purchase)
   const metricsBefore = computeMetrics(facts)
   const metricsAfter = computeMetrics(after)
+  const period = {
+    label: facts.period.label,
+    freeToSpendBefore: metricsBefore.freeToSpend,
+    freeToSpendAfter: metricsAfter.freeToSpend,
+    dailyAllowanceBefore: metricsBefore.dailyAllowance,
+    dailyAllowanceAfter: metricsAfter.dailyAllowance,
+  }
+  const coming = metricsAfter.committedAhead.map((month, index) => ({
+    label: month.label,
+    committedBefore: metricsBefore.committedAhead[index]?.committedCents ?? 0,
+    committedAfter: month.committedCents,
+    percentOfIncomeBefore: metricsBefore.committedAhead[index]?.percentOfIncome ?? null,
+    percentOfIncomeAfter: month.percentOfIncome,
+  }))
   return {
-    period: {
-      label: facts.period.label,
-      freeToSpendBefore: metricsBefore.freeToSpend,
-      freeToSpendAfter: metricsAfter.freeToSpend,
-      dailyAllowanceBefore: metricsBefore.dailyAllowance,
-      dailyAllowanceAfter: metricsAfter.dailyAllowance,
-    },
-    coming: metricsAfter.committedAhead.map((period, index) => ({
-      label: period.label,
-      committedBefore: metricsBefore.committedAhead[index]?.committedCents ?? 0,
-      committedAfter: period.committedCents,
-      percentOfIncomeBefore: metricsBefore.committedAhead[index]?.percentOfIncome ?? null,
-      percentOfIncomeAfter: period.percentOfIncome,
-    })),
+    ...purchaseVerdictOf(period, coming, facts.period.end),
+    committedReferencePercent: HEAVILY_COMMITTED_PERCENT,
+    period,
+    coming,
     newInsights: newOnly(
       computeInsights(facts, metricsBefore),
       computeInsights(after, metricsAfter),

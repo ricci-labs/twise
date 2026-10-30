@@ -425,6 +425,28 @@ describe('simulatePurchaseImpact', () => {
       MID_OCTOBER,
     )
     expect(debit.period.freeToSpendAfter).toBe(overview.metrics.freeToSpend - 50_000)
+    expect(debit.committedReferencePercent).toBe(70)
+    expect(debit.verdict).toBe('fits')
+    expect(debit.verdictReason).toEqual({
+      code: 'free_left',
+      leftCents: debit.period.freeToSpendAfter,
+      until: overview.period.end,
+    })
+
+    const tooMuch = await simulatePurchaseImpact(
+      databases.app,
+      workspaceId,
+      {
+        amountCents: overview.metrics.freeToSpend + 10_000,
+        installmentCount: 1,
+        paidFromAccountId: checking,
+      },
+      MID_OCTOBER,
+    )
+    expect(tooMuch).toMatchObject({
+      verdict: 'over',
+      verdictReason: { code: 'period_overspent', overspentCents: 10_000 },
+    })
   })
 
   it('refuses a card or an account that cannot pay', async () => {
