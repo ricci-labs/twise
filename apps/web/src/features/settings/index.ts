@@ -1,3 +1,4 @@
+export { BudgetPage } from '@web/features/settings/components/budget-page'
 export { ChargeTextPage } from '@web/features/settings/components/charge-text-page'
 export { HolidaysPage } from '@web/features/settings/components/holidays-page'
 export { PeriodPage } from '@web/features/settings/components/period-page'
