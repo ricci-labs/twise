@@ -68,6 +68,7 @@
   --z-overlay: 40;
   --z-modal: 50;
   --z-toast: 60;
+  --z-system-bar: 70;
 }
 
 .dark {

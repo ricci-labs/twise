@@ -41,7 +41,7 @@ export function OptOutPage() {
 
 function OptOutFrame({ title, children }: OptOutFrameProps) {
   return (
-    <main className="grid min-h-dvh place-items-center bg-page px-6 py-10 text-ink">
+    <main className="grid min-h-screen-safe place-items-center bg-page px-6 py-10 text-ink">
       <div className="flex max-w-110 flex-col items-center gap-3 text-center">
         <CategoryArt name={messages.art} icon={TOGETHER} size="2xl" />
         <h1 className="font-display text-title-lg">{title}</h1>

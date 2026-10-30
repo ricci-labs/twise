@@ -464,12 +464,28 @@
   z-index: var(--z-toast);
 }
 
+@utility z-system-bar {
+  z-index: var(--z-system-bar);
+}
+
 @utility bg-data-color {
   background-color: var(--data-color);
 
   &:where(.dark, .dark *) {
     background-color: var(--data-color-on-dark, var(--data-color));
   }
+}
+
+@utility top-safe {
+  top: env(safe-area-inset-top);
+}
+
+@utility min-h-screen-safe {
+  min-height: calc(100dvh - env(safe-area-inset-top));
+}
+
+@utility h-screen-safe {
+  height: calc(100dvh - env(safe-area-inset-top));
 }
 
 @utility pb-safe {

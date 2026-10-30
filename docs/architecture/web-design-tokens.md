@@ -1,7 +1,7 @@
 ---
 summary: The web's single source of visual values — token tiers and files, naming, colour roles, type, spacing, radius, elevation, motion, layers, breakpoints, dark mode, tokens in JS, and the checks that keep raw values out.
 read_when: Adding or changing a colour, font, size, shadow, animation or theme; styling anything in apps/web; reviewing a web PR.
-updated: 2026-10-16
+updated: 2026-10-30
 ---
 
 # Web design tokens
@@ -146,7 +146,9 @@ When to use each one: the design system guide → Colour, and each token's notes
 Tailwind has no duration or z-index namespace, so these are `:root` variables with one `@utility`
 each (`@utility duration-fast { transition-duration: var(--duration-fast) }`). `pb-safe` pads the
 bottom by the phone's safe area, at least `--spacing(3)` (the bottom tab bar), and `pb-safe-roomy`
-at least `--spacing(5)` (a form footer with one button, the bottom sheets); `max-h-sheet` caps a
+at least `--spacing(5)` (a form footer with one button, the bottom sheets); `top-safe`,
+`min-h-screen-safe` and `h-screen-safe` keep what is fixed to the top or as tall as the screen
+below the iPhone's status bar (`web-application.md` → PWA); `max-h-sheet` caps a
 bottom sheet at 85% of the screen; `text-cents` lifts the cents of a big amount; `scrollbar-none`
 hides the bar of a swipeable row (the KPI carousel).
 
@@ -157,7 +159,7 @@ hides the bar of a swipeable row (the KPI carousel).
 | `--duration-collapse` | 250 ms: the sidebar collapsing and opening |
 | `--duration-popover` / `--duration-raise` / `--duration-sheet` | 160 ms help popover (scale .96 → 1 and fade) / 300 ms the KPI carousel dot / 280 ms a bottom sheet opening (it closes in `--duration-normal`) |
 | `--ease-standard`, `--ease-emphasized`, `--ease-out` | In `@theme` (`--ease-*` is a Tailwind namespace); `ease-out` is the design's `cubic-bezier(.2,.8,.2,1)` |
-| `--z-sticky` < `--z-overlay` < `--z-modal` < `--z-toast` | The only layers; no numeric `z-10` in components |
+| `--z-sticky` < `--z-overlay` < `--z-modal` < `--z-toast` < `--z-system-bar` | The only layers; no numeric `z-10` in components. `--z-system-bar` is only the strip under the iPhone's status bar |
 
 `prefers-reduced-motion: reduce` sets every duration to `0ms` in `@layer base` (RNF-A11Y-6).
 

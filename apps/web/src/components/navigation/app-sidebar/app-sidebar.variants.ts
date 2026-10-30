@@ -1,7 +1,7 @@
 import { cva } from 'class-variance-authority'
 
 export const appSidebarVariants = cva(
-  'group/sidebar sticky top-0 flex h-dvh shrink-0 flex-col gap-0.5 overflow-y-auto border-r border-border bg-surface transition-all duration-collapse ease-out',
+  'group/sidebar sticky top-safe flex h-screen-safe shrink-0 flex-col gap-0.5 overflow-y-auto border-r border-border bg-surface transition-all duration-collapse ease-out',
   {
     variants: {
       isCollapsed: {

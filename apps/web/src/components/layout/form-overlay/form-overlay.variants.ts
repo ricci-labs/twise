@@ -6,7 +6,7 @@ export const formOverlayBackdropVariants = cva(
 
 export const formOverlayPopupVariants = cva(
   [
-    'fixed inset-0 z-modal flex flex-col bg-page text-ink outline-none',
+    'fixed inset-x-0 top-safe bottom-0 z-modal flex flex-col bg-page text-ink outline-none',
     'lg:inset-x-0 lg:mx-auto lg:max-h-205 lg:overflow-hidden lg:rounded-xl lg:shadow-dialog',
     'transition duration-popover ease-out data-ending-style:opacity-0 data-starting-style:opacity-0 lg:data-ending-style:scale-96 lg:data-starting-style:scale-96',
   ],

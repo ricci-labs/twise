@@ -1,7 +1,7 @@
 import { cva } from 'class-variance-authority'
 
 export const momentVariants = cva(
-  'flex min-h-dvh flex-col items-center px-4 pt-5 pb-8 text-center transition-colors duration-slow lg:justify-center',
+  'flex min-h-screen-safe flex-col items-center px-4 pt-5 pb-8 text-center transition-colors duration-slow lg:justify-center',
   {
     variants: {
       tone: {

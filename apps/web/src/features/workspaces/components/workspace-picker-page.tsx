@@ -12,7 +12,7 @@ export function WorkspacePickerPage({ isLost = false }: WorkspacePickerPageProps
   usePageTitle(messages.pageTitle)
   const { data: workspaces } = useSuspenseQuery(workspacesQueryOptions())
   return (
-    <main className="mx-auto flex min-h-dvh w-full max-w-100 flex-col gap-4 px-4 py-10">
+    <main className="mx-auto flex min-h-screen-safe w-full max-w-100 flex-col gap-4 px-4 py-10">
       <h1 className="text-title">{messages.title}</h1>
       {isLost && <Alert tone="warning">{messages.lost}</Alert>}
       <WorkspaceList workspaces={workspaces.filter((workspace) => !workspace.isArchived)} />

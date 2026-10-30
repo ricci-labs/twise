@@ -14,7 +14,7 @@ export function AppUpdatePrompt() {
     return null
   }
   return (
-    <div data-slot="app-update" className="fixed inset-x-0 top-0 z-toast">
+    <div data-slot="app-update" className="fixed inset-x-0 top-safe z-toast">
       <Banner
         icon={RefreshCw}
         action={

@@ -45,9 +45,12 @@ describe('useSystemBarColor', () => {
     document.documentElement.classList.remove(DARK_CLASS)
   })
 
-  it('paints the bar with the colour at the top of the screen and gives it back to the page', async () => {
+  it('paints the bar and the strip under it with the colour at the top of the screen, then the page', async () => {
     const screen = await render(<TopOfScreen color="mint" />)
     expect(meta.content).toBe(tokenIn('light', 'mint'))
+    expect(document.documentElement.style.getPropertyValue('--system-bar')).toBe(
+      tokenIn('light', 'mint'),
+    )
 
     await screen.unmount()
     expect(meta.content).toBe(tokenIn('light', 'bg-page'))

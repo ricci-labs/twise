@@ -20,6 +20,17 @@
     @apply bg-page font-sans text-body text-ink antialiased;
   }
 
+  body {
+    padding-top: env(safe-area-inset-top);
+  }
+
+  body::before {
+    @apply fixed inset-x-0 top-0 z-system-bar;
+    content: "";
+    height: env(safe-area-inset-top);
+    background-color: var(--system-bar, var(--bg-page));
+  }
+
   :focus-visible {
     @apply outline-2 outline-offset-2 outline-focus-ring;
   }
