@@ -84,4 +84,29 @@ describe('PermissionRows', () => {
       { module: 'entries', action: 'view' },
     ])
   })
+
+  it('draws a checkbox matrix on the desktop with the same rules', async () => {
+    const onChange = vi.fn()
+    const screen = await render(
+      <PermissionRows
+        label="Permissões"
+        areas={AREAS}
+        value={[]}
+        allowed={ALLOWED}
+        layout="matrix"
+        onChange={onChange}
+      />,
+    )
+    const table = screen.getByRole('table', { name: 'Permissões' })
+    await expect.element(table.getByRole('columnheader', { name: 'Excluir' })).toBeVisible()
+    expect(table.getByRole('checkbox', { name: 'Criar em Configurações' }).query()).toBeNull()
+    await expect.element(table.getByText('Não existe nesta área').first()).toBeInTheDocument()
+    await expect.element(table.getByRole('checkbox', { name: 'Excluir em Membros' })).toBeDisabled()
+    await table.getByRole('checkbox', { name: 'Editar em Lançamentos' }).click()
+    expect(onChange).toHaveBeenLastCalledWith([
+      { module: 'entries', action: 'view' },
+      { module: 'entries', action: 'update' },
+    ])
+    await expectNoAccessibilityViolations(screen.container)
+  })
 })

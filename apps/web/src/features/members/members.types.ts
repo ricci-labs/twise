@@ -7,6 +7,7 @@ import type {
 } from '@web/features/members/api/members.queries'
 import type { useInvite } from '@web/features/members/api/use-invite'
 import type { inviteFormSchema, roleFormSchema } from '@web/features/members/members.schemas'
+import type { ReactNode } from 'react'
 import type { z } from 'zod'
 
 export type Member = Awaited<ReturnType<typeof fetchMembers>>[number]
@@ -117,6 +118,28 @@ export type PresetButtonsProps = {
 export type PermissionsFieldProps = {
   actorPermissions: readonly Permission[]
   isLocked: boolean
+  layout: 'rows' | 'matrix'
+}
+
+export type RoleIdentityFieldsProps = {
+  roles: readonly Role[]
+  isLocked: boolean
+  onCopy: (preset: RolePreset) => void
+}
+
+export type RoleEditorDesktopProps = {
+  workspaceId: string
+  role: Role | null
+  problem: string | null
+  identity: ReactNode
+  permissions: ReactNode
+  remove: ReactNode
+  save: ReactNode
+}
+
+export type RoleUsageCardProps = {
+  workspaceId: string
+  role: Role
 }
 
 export type RoleEditorUnavailableProps = {

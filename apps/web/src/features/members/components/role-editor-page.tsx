@@ -24,6 +24,7 @@ import { SettingsFormPage } from '@web/components/layout/settings-form-page'
 import { rolesQueryOptions } from '@web/features/members/api/members.queries'
 import { useSaveRole } from '@web/features/members/api/use-save-role'
 import { RoleDelete } from '@web/features/members/components/role-delete'
+import { RoleEditorDesktop } from '@web/features/members/components/role-editor-desktop'
 import { membersMessages } from '@web/features/members/members.messages'
 import { roleFormSchema } from '@web/features/members/members.schemas'
 import type {
@@ -34,10 +35,13 @@ import type {
   RoleEditorPageProps,
   RoleEditorUnavailableProps,
   RoleFormInput,
+  RoleIdentityFieldsProps,
   RolePreset,
 } from '@web/features/members/members.types'
+import { useMediaQuery } from '@web/hooks/use-media-query'
 import { usePageTitle } from '@web/hooks/use-page-title'
 import { ApiError } from '@web/lib/api/api-error'
+import { DESKTOP_QUERY } from '@web/lib/breakpoints'
 import { errorMessageFor } from '@web/lib/errors/error-message'
 import { useSchemaForm } from '@web/lib/forms/use-schema-form'
 import { hasPermission } from '@web/lib/permissions'
@@ -77,6 +81,7 @@ function RoleEditorForm({ workspaceId, role, roles, actorPermissions }: RoleEdit
   const [problem, setProblem] = useState<string | null>(null)
   const isLocked = role?.systemKey === OWNER
   const canDelete = hasPermission(actorPermissions, 'members', 'delete')
+  const isDesktop = useMediaQuery(DESKTOP_QUERY)
   const form = useSchemaForm({
     schema: roleFormSchema,
     requiredMessages: messages.required,
@@ -111,6 +116,38 @@ function RoleEditorForm({ workspaceId, role, roles, actorPermissions }: RoleEdit
     form.setValue('permissions', copied, { shouldDirty: true, shouldValidate: true })
   }
 
+  const saveLabel = role ? messages.save : messages.create
+  const identity = <RoleIdentityFields roles={roles} isLocked={isLocked} onCopy={copyPreset} />
+  const remove = role?.systemKey === null && canDelete && (
+    <RoleDelete workspaceId={workspaceId} role={role} />
+  )
+  if (isDesktop) {
+    return (
+      <Form form={form} onSubmit={submit}>
+        <RoleEditorDesktop
+          workspaceId={workspaceId}
+          role={role}
+          problem={problem}
+          identity={identity}
+          permissions={
+            <PermissionsField
+              actorPermissions={actorPermissions}
+              isLocked={isLocked}
+              layout="matrix"
+            />
+          }
+          remove={remove}
+          save={
+            !isLocked && (
+              <SubmitButton requiresChange loadingLabel={messages.saving}>
+                {saveLabel}
+              </SubmitButton>
+            )
+          }
+        />
+      </Form>
+    )
+  }
   return (
     <Form form={form} onSubmit={submit}>
       <SettingsFormPage
@@ -120,7 +157,7 @@ function RoleEditorForm({ workspaceId, role, roles, actorPermissions }: RoleEdit
         readOnlyNote={isLocked ? messages.ownerLocked : undefined}
         footer={
           <SubmitButton requiresChange loadingLabel={messages.saving} width="full">
-            {role ? messages.save : messages.create}
+            {saveLabel}
           </SubmitButton>
         }
       >
@@ -129,32 +166,38 @@ function RoleEditorForm({ workspaceId, role, roles, actorPermissions }: RoleEdit
             {problem}
           </Alert>
         )}
-        <FormField<RoleFormInput>
-          name="name"
-          label={messages.name}
-          isRequired={!isLocked}
-          isReadOnly={isLocked}
-          maxLength={ROLE_NAME_MAX_LENGTH}
-        >
-          {(control) => (
-            <TextInput autoComplete="off" placeholder={messages.namePlaceholder} {...control} />
-          )}
-        </FormField>
-        <FormField<RoleFormInput>
-          name="description"
-          label={messages.description}
-          isReadOnly={isLocked}
-          maxLength={ROLE_DESCRIPTION_MAX_LENGTH}
-        >
-          {(control) => <TextArea {...control} />}
-        </FormField>
-        {!isLocked && <PresetButtons roles={roles} onCopy={copyPreset} />}
-        <PermissionsField actorPermissions={actorPermissions} isLocked={isLocked} />
-        {role && role.systemKey === null && canDelete && (
-          <RoleDelete workspaceId={workspaceId} role={role} />
-        )}
+        {identity}
+        <PermissionsField actorPermissions={actorPermissions} isLocked={isLocked} layout="rows" />
+        {remove}
       </SettingsFormPage>
     </Form>
+  )
+}
+
+function RoleIdentityFields({ roles, isLocked, onCopy }: RoleIdentityFieldsProps) {
+  return (
+    <>
+      <FormField<RoleFormInput>
+        name="name"
+        label={messages.name}
+        isRequired={!isLocked}
+        isReadOnly={isLocked}
+        maxLength={ROLE_NAME_MAX_LENGTH}
+      >
+        {(control) => (
+          <TextInput autoComplete="off" placeholder={messages.namePlaceholder} {...control} />
+        )}
+      </FormField>
+      <FormField<RoleFormInput>
+        name="description"
+        label={messages.description}
+        isReadOnly={isLocked}
+        maxLength={ROLE_DESCRIPTION_MAX_LENGTH}
+      >
+        {(control) => <TextArea {...control} />}
+      </FormField>
+      {!isLocked && <PresetButtons roles={roles} onCopy={onCopy} />}
+    </>
   )
 }
 
@@ -164,7 +207,8 @@ function PresetButtons({ roles, onCopy }: PresetButtonsProps) {
       <div className="grid grid-cols-3 gap-2">
         {PRESETS.map((preset) => (
           <Button key={preset} variant="secondary" onClick={() => onCopy(preset)}>
-            {roles.find((candidate) => candidate.systemKey === preset)?.name ?? preset}
+            {roles.find((candidate) => candidate.systemKey === preset)?.name ??
+              messages.presetNames[preset]}
           </Button>
         ))}
       </div>
@@ -172,30 +216,42 @@ function PresetButtons({ roles, onCopy }: PresetButtonsProps) {
   )
 }
 
-function PermissionsField({ actorPermissions, isLocked }: PermissionsFieldProps) {
+function PermissionsField({ actorPermissions, isLocked, layout }: PermissionsFieldProps) {
   const { control } = useFormContext<RoleFormInput>()
   const lacksSome = MODULE_ACTIONS.some(
     (permission) => !hasPermission(actorPermissions, permission.module, permission.action),
   )
+  const rows = (
+    <div className="flex flex-col gap-3">
+      {lacksSome && !isLocked && <Alert tone="info">{messages.lockedNote}</Alert>}
+      <Controller
+        control={control}
+        name="permissions"
+        render={({ field }) => (
+          <PermissionRows
+            label={messages.permissions}
+            areas={AREAS}
+            value={field.value}
+            allowed={actorPermissions}
+            isDisabled={isLocked}
+            layout={layout}
+            onChange={field.onChange}
+          />
+        )}
+      />
+    </div>
+  )
+  if (layout === 'matrix') {
+    return (
+      <div className="flex flex-col gap-3">
+        <p className="text-note text-ink-muted">{messages.permissionsHelp}</p>
+        {rows}
+      </div>
+    )
+  }
   return (
     <FieldGroup label={messages.permissions} isRequired={!isLocked} help={messages.permissionsHelp}>
-      <div className="flex flex-col gap-3">
-        {lacksSome && !isLocked && <Alert tone="info">{messages.lockedNote}</Alert>}
-        <Controller
-          control={control}
-          name="permissions"
-          render={({ field }) => (
-            <PermissionRows
-              label={messages.permissions}
-              areas={AREAS}
-              value={field.value}
-              allowed={actorPermissions}
-              isDisabled={isLocked}
-              onChange={field.onChange}
-            />
-          )}
-        />
-      </div>
+      {rows}
     </FieldGroup>
   )
 }

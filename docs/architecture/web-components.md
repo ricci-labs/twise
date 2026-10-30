@@ -685,6 +685,8 @@ component here, so the form, and later the account, card and planning forms, sha
   pressed with the ink outline and a ✓ (`aria-pressed`, a marking, not a single choice). Ticking any
   action ticks "Ver"; unticking "Ver" clears the area (`toggled`). Actions outside `allowed` (what
   the editor holds) show a lock, are disabled and say "Você não tem essa permissão para dar.".
+  `layout="matrix"` (desktop) draws the same rules as a table: Área | Ver | Criar | Editar |
+  Excluir with native checkboxes (named "{ação} em {área}") and "—" where the area lacks the action.
 - `PairedCardGrid` (`components/layout/paired-card-grid`, settings design rule 2): desktop cards
   in two equal columns that stretch, so the two cards of a row share their height and their
   footers line up; a card that has no pair takes `lg:col-span-2`. Stacked on the phone.

@@ -206,4 +206,39 @@ describe('MEM-02 role editor', () => {
     await expect.element(page.getByRole('heading', { name: 'Admin', level: 1 })).toBeVisible()
     expect(page.getByRole('button', { name: 'Excluir papel' }).query()).toBeNull()
   })
+
+  it('edits a role in two columns on the desktop, with who uses it', async () => {
+    await page.viewport(1440, 1000)
+    const sent: unknown[] = []
+    await openEditor(`${ROLES_PATH}/role-accountant`, {
+      ...invitationsAnswer(),
+      [`PATCH ${BASE}/roles/role-accountant`]: async (request) => {
+        sent.push(await request.json())
+        return new Response(null, { status: NO_CONTENT })
+      },
+    })
+    await expect.element(page.getByRole('link', { name: 'Papéis' })).toBeVisible()
+    await expect.element(page.getByText('Papel do espaço · ninguém usa ainda')).toBeVisible()
+    const usage = page.getByRole('region', { name: 'Quem usa' })
+    await expect.element(usage.getByText('member.c@exemplo.com')).toBeVisible()
+    const permissions = page.getByRole('table', { name: 'Permissões' })
+    await expect
+      .element(permissions.getByRole('checkbox', { name: 'Excluir em Membros' }))
+      .toBeChecked()
+    await permissions.getByRole('checkbox', { name: 'Ver em Lançamentos' }).click()
+    await page.getByRole('button', { name: 'Salvar papel' }).click()
+
+    await expect.element(page.getByText('Papel Contador salvo.')).toBeVisible()
+    expect(sent).toEqual([
+      {
+        name: 'Contador',
+        description: 'Vê tudo e anexa comprovantes. Não muda valores.',
+        permissions: [
+          { module: 'members', action: 'delete' },
+          { module: 'entries', action: 'view' },
+        ],
+      },
+    ])
+    await expectNoAccessibilityViolations(page.getByRole('main').element())
+  })
 })
