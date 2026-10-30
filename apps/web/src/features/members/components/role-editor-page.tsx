@@ -23,6 +23,7 @@ import { PageFrame } from '@web/components/layout/page-frame'
 import { SettingsFormPage } from '@web/components/layout/settings-form-page'
 import { rolesQueryOptions } from '@web/features/members/api/members.queries'
 import { useSaveRole } from '@web/features/members/api/use-save-role'
+import { RoleDelete } from '@web/features/members/components/role-delete'
 import { membersMessages } from '@web/features/members/members.messages'
 import { roleFormSchema } from '@web/features/members/members.schemas'
 import type {
@@ -75,6 +76,7 @@ function RoleEditorForm({ workspaceId, role, roles, actorPermissions }: RoleEdit
   const save = useSaveRole(workspaceId)
   const [problem, setProblem] = useState<string | null>(null)
   const isLocked = role?.systemKey === OWNER
+  const canDelete = hasPermission(actorPermissions, 'members', 'delete')
   const form = useSchemaForm({
     schema: roleFormSchema,
     requiredMessages: messages.required,
@@ -148,6 +150,9 @@ function RoleEditorForm({ workspaceId, role, roles, actorPermissions }: RoleEdit
         </FormField>
         {!isLocked && <PresetButtons roles={roles} onCopy={copyPreset} />}
         <PermissionsField actorPermissions={actorPermissions} isLocked={isLocked} />
+        {role && role.systemKey === null && canDelete && (
+          <RoleDelete workspaceId={workspaceId} role={role} />
+        )}
       </SettingsFormPage>
     </Form>
   )

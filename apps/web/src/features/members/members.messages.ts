@@ -100,6 +100,22 @@ export const membersMessages = {
     save: 'Salvar papel',
     saving: 'Salvando…',
     created: (name: string) => `Papel ${name} criado.`,
+    delete: 'Excluir papel',
+    deleteTitle: (name: string) => `Excluir ${name}?`,
+    deleteText: 'Não dá para desfazer.',
+    deleted: (name: string) => `Papel ${name} excluído.`,
+    cancel: 'Cancelar',
+    inUseTitle: (name: string) => `Não dá para excluir ${name}`,
+    inUseByInvitations: (count: number, contacts: string) =>
+      count === 1
+        ? `Um convite pendente usa este papel (${contacts}). Troque o papel ou revogue o convite antes.`
+        : `${count} convites pendentes usam este papel (${contacts}). Troque o papel ou revogue os convites antes.`,
+    inUseByMembers: (count: number, names: string) =>
+      count === 1
+        ? `${names} usa este papel. Mude o papel dessa pessoa antes.`
+        : `${count} pessoas usam este papel (${names}). Mude o papel delas antes.`,
+    seeInvitations: 'Ver convites',
+    seeMembers: 'Ver membros',
     saved: (name: string) => `Papel ${name} salvo.`,
   },
   systemRoles: {

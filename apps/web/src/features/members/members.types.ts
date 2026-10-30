@@ -163,3 +163,10 @@ export type InviteFieldsProps = {
 }
 
 export type CreatedInvite = Awaited<ReturnType<ReturnType<typeof useInvite>['mutateAsync']>>
+
+export type RoleDeleteProps = {
+  workspaceId: string
+  role: Role
+}
+
+export type RoleDeleteDialog = 'confirm' | 'inUse' | null
