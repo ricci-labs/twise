@@ -5,6 +5,13 @@ export const membersMessages = {
   ownersRule:
     'Só um dono dá o papel de dono ou muda outro dono. O espaço sempre precisa de pelo menos um dono.',
   failed: 'Não foi possível carregar os membros.',
+  tabs: {
+    label: 'Seções de Membros',
+    members: 'Membros',
+    roles: 'Papéis',
+  },
+  rolesLead: (workspace: string) => `O que cada papel pode ver e fazer no espaço ${workspace}.`,
+  rolesFailed: 'Não foi possível carregar os papéis.',
   systemRoles: {
     owner: 'Tudo, inclusive membros, papéis e configurações. Não pode ser alterado.',
     admin: 'Tudo, menos remover membros, excluir papéis e revogar convites.',

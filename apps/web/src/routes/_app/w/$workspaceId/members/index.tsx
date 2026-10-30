@@ -7,6 +7,7 @@ export const Route = createFileRoute('/_app/w/$workspaceId/members/')({
     const { access } = Route.useRouteContext()
     return (
       <MembersPage
+        tab="members"
         workspaceId={workspaceId}
         workspaceName={access.workspace.name}
         membershipId={access.membershipId}

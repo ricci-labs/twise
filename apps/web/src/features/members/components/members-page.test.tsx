@@ -191,4 +191,28 @@ describe('MEM-01 Membros', () => {
     await expect.element(sheet.getByRole('radio', { name: /Contador/ })).toBeDisabled()
     await expect.element(sheet.getByRole('radio', { name: /Admin/ })).toBeEnabled()
   })
+
+  it('opens Papéis from the tabs, with who uses each role and what it can do', async () => {
+    const app = await openMembers({ ...membersAnswer(), ...rolesAnswer() })
+    await page.getByRole('button', { name: 'Papéis' }).click()
+    await expect
+      .poll(() => app.router.state.location.pathname)
+      .toBe(`/w/${WORKSPACE_ID}/members/roles`)
+    await expect
+      .element(page.getByRole('button', { name: 'Papéis' }))
+      .toHaveAttribute('aria-pressed', 'true')
+    await expect
+      .element(page.getByText('O que cada papel pode ver e fazer no espaço Casa.'))
+      .toBeVisible()
+    const cards = page.getByRole('listitem')
+    await expect.element(cards.nth(0).getByText('Não pode ser alterado')).toBeVisible()
+    await expect.element(cards.nth(1).getByText('1 pessoa')).toBeVisible()
+    await expect.element(cards.nth(2).getByText('1 convite')).toBeVisible()
+    await expect.element(cards.nth(3).getByText('Do espaço')).toBeVisible()
+    await expect
+      .element(cards.nth(3).getByText('Vê tudo e anexa comprovantes. Não muda valores.'))
+      .toBeVisible()
+    await expect.element(cards.nth(3).getByText('Ninguém')).toBeVisible()
+    await expectNoAccessibilityViolations(page.getByRole('main').element())
+  })
 })

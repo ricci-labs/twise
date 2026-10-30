@@ -1,16 +1,25 @@
 import { todayIn } from '@financas/shared'
 import { useQuery } from '@tanstack/react-query'
+import { useNavigate } from '@tanstack/react-router'
+import { SegmentedControl } from '@web/components/actions/segmented-control'
 import { ShowMoreButton } from '@web/components/actions/show-more-button'
 import { MemberRow } from '@web/components/display/member-row'
+import { RoleCard } from '@web/components/display/role-card'
 import { SectionError } from '@web/components/feedback/section-error'
 import { SectionSkeleton } from '@web/components/feedback/section-skeleton'
 import { AccountGroup } from '@web/components/finance/account-group'
 import { PageFrame } from '@web/components/layout/page-frame'
 import { PageHeader } from '@web/components/layout/page-header'
-import { membersQueryOptions } from '@web/features/members/api/members.queries'
+import { membersQueryOptions, rolesQueryOptions } from '@web/features/members/api/members.queries'
 import { MemberActions } from '@web/features/members/components/member-actions'
+import { roleSentence } from '@web/features/members/components/role-views'
 import { membersMessages as messages } from '@web/features/members/members.messages'
-import type { MembersListProps, MembersPageProps } from '@web/features/members/members.types'
+import type {
+  MembersListProps,
+  MembersPageProps,
+  MembersTabsProps,
+  RolesListProps,
+} from '@web/features/members/members.types'
 import { usePageTitle } from '@web/hooks/use-page-title'
 import { ApiError } from '@web/lib/api/api-error'
 import { hasPermission } from '@web/lib/permissions'
@@ -22,6 +31,7 @@ const SKELETON_LINES = 6
 const TIME_ZONE = 'America/Sao_Paulo'
 
 export function MembersPage({
+  tab,
   workspaceId,
   workspaceName,
   membershipId,
@@ -31,13 +41,76 @@ export function MembersPage({
   return (
     <PageFrame className="gap-4 lg:gap-6">
       <PageHeader title={messages.title} />
-      <MembersList
-        workspaceId={workspaceId}
-        workspaceName={workspaceName}
-        membershipId={membershipId}
-        permissions={permissions}
-      />
+      <MembersTabs workspaceId={workspaceId} value={tab} />
+      {tab === 'roles' ? (
+        <RolesList workspaceId={workspaceId} workspaceName={workspaceName} />
+      ) : (
+        <MembersList
+          workspaceId={workspaceId}
+          workspaceName={workspaceName}
+          membershipId={membershipId}
+          permissions={permissions}
+        />
+      )}
     </PageFrame>
+  )
+}
+
+function MembersTabs({ workspaceId, value }: MembersTabsProps) {
+  const navigate = useNavigate()
+  return (
+    <SegmentedControl
+      label={messages.tabs.label}
+      width="full"
+      className="lg:max-w-160"
+      value={value}
+      options={[
+        { value: 'members', label: messages.tabs.members },
+        { value: 'roles', label: messages.tabs.roles },
+      ]}
+      onValueChange={(next) =>
+        void navigate(
+          next === 'roles'
+            ? { to: '/w/$workspaceId/members/roles', params: { workspaceId } }
+            : { to: '/w/$workspaceId/members', params: { workspaceId } },
+        )
+      }
+    />
+  )
+}
+
+function RolesList({ workspaceId, workspaceName }: RolesListProps) {
+  const roles = useQuery(rolesQueryOptions(workspaceId))
+  if (roles.isError) {
+    return (
+      <SectionError
+        message={messages.rolesFailed}
+        errorRef={roles.error instanceof ApiError ? roles.error.ref : null}
+        isRetrying={roles.isFetching}
+        onRetry={() => void roles.refetch()}
+      />
+    )
+  }
+  if (!roles.data) {
+    return <SectionSkeleton lines={SKELETON_LINES} />
+  }
+  return (
+    <div className="flex flex-col gap-3 lg:max-w-160">
+      <p className="text-body-sm text-ink-muted">{messages.rolesLead(workspaceName)}</p>
+      <AccountGroup>
+        {roles.data.map((role) => (
+          <RoleCard
+            key={role.roleId}
+            name={role.name}
+            description={roleSentence(role)}
+            isSystem={role.systemKey !== null}
+            isLocked={role.systemKey === OWNER}
+            memberCount={role.memberCount}
+            invitationCount={role.invitationCount}
+          />
+        ))}
+      </AccountGroup>
+    </div>
   )
 }
 
