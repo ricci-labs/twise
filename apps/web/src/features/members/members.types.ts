@@ -18,6 +18,13 @@ export type MembersTab = 'members' | 'roles' | 'invitations'
 export type MembersTabsProps = {
   workspaceId: string
   value: MembersTab
+  isDesktop: boolean
+}
+
+export type HeaderActionProps = {
+  tab: MembersTab
+  workspaceId: string
+  isDesktop: boolean
 }
 
 export type RolesListProps = {
@@ -170,3 +177,33 @@ export type RoleDeleteProps = {
 }
 
 export type RoleDeleteDialog = 'confirm' | 'inUse' | null
+
+export type MembersDesktopProps = {
+  workspaceId: string
+  workspaceName: string
+  membershipId: string
+  permissions: readonly Permission[]
+}
+
+export type MembersCardProps = MembersDesktopProps & {
+  members: readonly Member[]
+}
+
+export type InvitationsCardProps = {
+  workspaceId: string
+  members: readonly Member[]
+  canRevoke: boolean
+}
+
+export type RolesCardProps = {
+  workspaceId: string
+}
+
+export type PersonCellProps = {
+  member: Member
+  isYou: boolean
+}
+
+export type MembersTabBodyProps = MembersPageProps & {
+  isDesktop: boolean
+}

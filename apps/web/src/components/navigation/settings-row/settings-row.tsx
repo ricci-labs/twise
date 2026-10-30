@@ -19,13 +19,15 @@ export function SettingsRow({ title, detail, icon, link, variant }: SettingsRowP
         link,
         { className: settingsRowLinkVariants() },
         <>
-          <span
-            aria-hidden="true"
-            data-slot="settings-row-icon"
-            className={settingsRowIconVariants()}
-          >
-            {icon}
-          </span>
+          {icon && (
+            <span
+              aria-hidden="true"
+              data-slot="settings-row-icon"
+              className={settingsRowIconVariants()}
+            >
+              {icon}
+            </span>
+          )}
           <span className={settingsRowTextVariants()}>
             <span className={settingsRowTitleVariants()}>{title}</span>
             {detail && (
