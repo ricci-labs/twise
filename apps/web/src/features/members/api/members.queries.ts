@@ -26,3 +26,14 @@ export function rolesQueryOptions(workspaceId: string) {
 export function fetchRoles(workspaceId: string) {
   return unwrap(workspaceApi.roles.$get({ param: { workspaceId } }))
 }
+
+export function invitationsQueryOptions(workspaceId: string) {
+  return queryOptions({
+    queryKey: [...queryKeys.workspace(workspaceId), 'invitations'] as const,
+    queryFn: () => fetchInvitations(workspaceId),
+  })
+}
+
+export function fetchInvitations(workspaceId: string) {
+  return unwrap(workspaceApi.invitations.$get({ param: { workspaceId } }))
+}

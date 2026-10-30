@@ -392,7 +392,8 @@ passes the overview's numbers.
 - `SegmentedControl` (`components/actions/segmented-control`, Base UI `ToggleGroup`): one option
   pressed at a time (`aria-pressed`), e.g. the forecast's account tabs. `width="full"` splits the
   whole width in equal options with the raised white selection (the "Contas | Categorias" tabs).
-  `isDisabled` (a read-only settings screen) dims it and refuses presses.
+  `isDisabled` (a read-only settings screen) dims it and refuses presses. An option's `badge` shows a
+  count in a small ink circle (Membros › "Convites 2").
 - `Badge` (`components/display/badge`): a short status pill (`neutral`, `info`, `success`,
   `warning`, `danger`), e.g. "Período encerrado"; `neutral` is the design's `fn-badge--neutral`
   (`status-neutral-soft` with the muted `status-neutral` text, "Futura"); `partial` is
@@ -666,6 +667,10 @@ component here, so the form, and later the account, card and planning forms, sha
   40 px "‹" back link (named "Voltar para {page}"), the title in `form-title-lg`, a grey
   `sub-page` description under it, and an optional `actions` slot on the right (a card's "⋯";
   several actions sit side by side, as the entry detail's pencil and "⋯").
+- `InvitationRow` (`components/display/invitation-row`, settings design `MEM-03`): one pending
+  invitation (`li`): an e-mail or phone tile (named for screen readers), the contact (2 lines,
+  breaks anywhere), the role badge (partial for custom roles) with "Vale até dd/mm", "Convidado por
+  {nome} em dd/mm", and "Link mostrado uma vez" for phone invitations; an `actions` slot.
 - `MemberRow` (`components/display/member-row`, settings design `MEM-01`): one person of the
   workspace (`li`): the 42 px initial, the name (2 lines) with a "você" pill, the e-mail alone on
   line 2 (2 lines, breaks anywhere, `wrap-anywhere`), then the role as a green badge with "Desde

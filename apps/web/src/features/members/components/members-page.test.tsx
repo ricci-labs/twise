@@ -12,7 +12,14 @@ import {
   workspaceAccess,
   workspaceList,
 } from '@web/testing/fake-api'
-import { ADMIN_HOUSEHOLD, manyMembers, membersAnswer, rolesAnswer } from '@web/testing/members-api'
+import {
+  ADMIN_HOUSEHOLD,
+  invitationsAnswer,
+  manyMembers,
+  membersAnswer,
+  PENDING_INVITATIONS,
+  rolesAnswer,
+} from '@web/testing/members-api'
 import type { FakeAnswer } from '@web/testing/testing.types'
 import { beforeEach, describe, expect, it } from 'vitest'
 import { page, userEvent } from 'vitest/browser'
@@ -26,6 +33,7 @@ const MEMBER_PERMISSIONS = [...VIEWER_PERMISSIONS, { module: 'members', action: 
 async function openMembers(
   answers: Record<string, FakeAnswer> = membersAnswer(),
   access: FakeAnswer = workspaceAccess,
+  path = `/w/${WORKSPACE_ID}/members`,
 ) {
   fakeApi({
     'GET /api/auth/me': account,
@@ -33,7 +41,7 @@ async function openMembers(
     [`GET /api/workspaces/${WORKSPACE_ID}`]: access,
     ...answers,
   })
-  const app = createApp(createMemoryHistory({ initialEntries: [`/w/${WORKSPACE_ID}/members`] }))
+  const app = createApp(createMemoryHistory({ initialEntries: [path] }))
   await render(<AppProviders app={app} />)
   return app
 }
@@ -214,5 +222,62 @@ describe('MEM-01 Membros', () => {
       .toBeVisible()
     await expect.element(cards.nth(3).getByText('Ninguém')).toBeVisible()
     await expectNoAccessibilityViolations(page.getByRole('main').element())
+  })
+
+  it('counts the pending invitations on their tab and lists them', async () => {
+    const app = await openMembers({ ...membersAnswer(), ...rolesAnswer(), ...invitationsAnswer() })
+    await page.getByRole('button', { name: 'Convites 2' }).click()
+    await expect
+      .poll(() => app.router.state.location.pathname)
+      .toBe(`/w/${WORKSPACE_ID}/members/invitations`)
+    const pending = page.getByRole('region', { name: 'Pendentes' })
+    const rows = pending.getByRole('listitem')
+    await expect.element(rows.nth(0).getByText('member.c@exemplo.com')).toBeVisible()
+    await expect.element(rows.nth(0).getByText('Contador')).toBeVisible()
+    await expect.element(rows.nth(0).getByText('Convidado por Member A em 17/10')).toBeVisible()
+    await expect.element(rows.nth(1).getByText('+55 (11) 99999-0005')).toBeVisible()
+    await expect.element(rows.nth(1).getByText('Link mostrado uma vez')).toBeVisible()
+    await expect
+      .element(page.getByText('Convites aceitos viram membros; vencidos somem da lista.'))
+      .toBeVisible()
+    await expectNoAccessibilityViolations(page.getByRole('main').element())
+  })
+
+  it('revokes an invitation after confirming', async () => {
+    let revoked = false
+    await openMembers(
+      {
+        ...membersAnswer(),
+        ...rolesAnswer(),
+        [`GET /api/workspaces/${WORKSPACE_ID}/invitations`]: () =>
+          Response.json(revoked ? PENDING_INVITATIONS.slice(1) : PENDING_INVITATIONS),
+        [`DELETE /api/workspaces/${WORKSPACE_ID}/invitations/invitation-c`]: () => {
+          revoked = true
+          return new Response(null, { status: NO_CONTENT })
+        },
+      },
+      workspaceAccess,
+      `/w/${WORKSPACE_ID}/members/invitations`,
+    )
+    await page.getByRole('button', { name: 'Ações do convite para member.c@exemplo.com' }).click()
+    await page.getByRole('dialog').getByRole('button', { name: 'Revogar' }).click()
+    await page
+      .getByRole('alertdialog', { name: 'Revogar o convite para member.c@exemplo.com?' })
+      .getByRole('button', { name: 'Revogar' })
+      .click()
+
+    await expect.element(page.getByText('Convite revogado.')).toBeVisible()
+    await expect.element(page.getByRole('button', { name: 'Convites 1' })).toBeVisible()
+    expect(page.getByText('member.c@exemplo.com').query()).toBeNull()
+  })
+
+  it('explains what an invitation is when there is none', async () => {
+    await openMembers(
+      { ...membersAnswer(), ...rolesAnswer(), ...invitationsAnswer([]) },
+      workspaceAccess,
+      `/w/${WORKSPACE_ID}/members/invitations`,
+    )
+    await expect.element(page.getByText('Nenhum convite pendente.')).toBeVisible()
+    await expect.element(page.getByRole('button', { name: 'Convites', exact: true })).toBeVisible()
   })
 })

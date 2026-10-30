@@ -1,6 +1,10 @@
 import type { NewRole, Permission, SystemRoleKey } from '@financas/shared'
 import type { UseQueryResult } from '@tanstack/react-query'
-import type { fetchMembers, fetchRoles } from '@web/features/members/api/members.queries'
+import type {
+  fetchInvitations,
+  fetchMembers,
+  fetchRoles,
+} from '@web/features/members/api/members.queries'
 import type { roleFormSchema } from '@web/features/members/members.schemas'
 import type { z } from 'zod'
 
@@ -8,7 +12,7 @@ export type Member = Awaited<ReturnType<typeof fetchMembers>>[number]
 
 export type Role = Awaited<ReturnType<typeof fetchRoles>>[number]
 
-export type MembersTab = 'members' | 'roles'
+export type MembersTab = 'members' | 'roles' | 'invitations'
 
 export type MembersTabsProps = {
   workspaceId: string
@@ -109,4 +113,17 @@ export type PermissionsFieldProps = {
 
 export type RoleEditorUnavailableProps = {
   roles: UseQueryResult<Role[]>
+}
+
+export type Invitation = Awaited<ReturnType<typeof fetchInvitations>>[number]
+
+export type InvitationsListProps = {
+  workspaceId: string
+  canRevoke: boolean
+}
+
+export type InvitationActionsProps = {
+  workspaceId: string
+  contact: string
+  invitationId: string
 }

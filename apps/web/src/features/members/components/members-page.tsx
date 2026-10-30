@@ -11,13 +11,19 @@ import { SectionSkeleton } from '@web/components/feedback/section-skeleton'
 import { AccountGroup } from '@web/components/finance/account-group'
 import { PageFrame } from '@web/components/layout/page-frame'
 import { PageHeader } from '@web/components/layout/page-header'
-import { membersQueryOptions, rolesQueryOptions } from '@web/features/members/api/members.queries'
+import {
+  invitationsQueryOptions,
+  membersQueryOptions,
+  rolesQueryOptions,
+} from '@web/features/members/api/members.queries'
+import { InvitationsList } from '@web/features/members/components/invitations-list'
 import { MemberActions } from '@web/features/members/components/member-actions'
 import { roleSentence } from '@web/features/members/components/role-views'
 import { membersMessages as messages } from '@web/features/members/members.messages'
 import type {
   MembersListProps,
   MembersPageProps,
+  MembersTab,
   MembersTabsProps,
   RolesListProps,
 } from '@web/features/members/members.types'
@@ -28,6 +34,11 @@ import { ChevronRight, Plus } from 'lucide-react'
 import { useState } from 'react'
 
 const PAGE_SIZE = 50
+const TAB_PATHS = {
+  members: '/w/$workspaceId/members',
+  roles: '/w/$workspaceId/members/roles',
+  invitations: '/w/$workspaceId/members/invitations',
+} as const
 const OWNER = 'owner'
 const SKELETON_LINES = 6
 const TIME_ZONE = 'America/Sao_Paulo'
@@ -59,13 +70,20 @@ export function MembersPage({
         }
       />
       <MembersTabs workspaceId={workspaceId} value={tab} />
-      {tab === 'roles' ? (
+      {tab === 'invitations' && (
+        <InvitationsList
+          workspaceId={workspaceId}
+          canRevoke={hasPermission(permissions, 'members', 'delete')}
+        />
+      )}
+      {tab === 'roles' && (
         <RolesList
           workspaceId={workspaceId}
           workspaceName={workspaceName}
           canEdit={hasPermission(permissions, 'members', 'update')}
         />
-      ) : (
+      )}
+      {tab === 'members' && (
         <MembersList
           workspaceId={workspaceId}
           workspaceName={workspaceName}
@@ -79,6 +97,7 @@ export function MembersPage({
 
 function MembersTabs({ workspaceId, value }: MembersTabsProps) {
   const navigate = useNavigate()
+  const pending = useQuery(invitationsQueryOptions(workspaceId)).data?.length ?? 0
   return (
     <SegmentedControl
       label={messages.tabs.label}
@@ -88,13 +107,14 @@ function MembersTabs({ workspaceId, value }: MembersTabsProps) {
       options={[
         { value: 'members', label: messages.tabs.members },
         { value: 'roles', label: messages.tabs.roles },
+        {
+          value: 'invitations',
+          label: messages.tabs.invitations,
+          badge: pending > 0 ? String(pending) : undefined,
+        },
       ]}
       onValueChange={(next) =>
-        void navigate(
-          next === 'roles'
-            ? { to: '/w/$workspaceId/members/roles', params: { workspaceId } }
-            : { to: '/w/$workspaceId/members', params: { workspaceId } },
-        )
+        void navigate({ to: TAB_PATHS[tabOf(next)], params: { workspaceId } })
       }
     />
   )
@@ -209,4 +229,8 @@ function MembersList({ workspaceId, workspaceName, membershipId, permissions }: 
       )}
     </div>
   )
+}
+
+function tabOf(value: string): MembersTab {
+  return value === 'roles' || value === 'invitations' ? value : 'members'
 }

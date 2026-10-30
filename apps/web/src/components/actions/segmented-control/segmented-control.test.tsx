@@ -68,4 +68,21 @@ describe('SegmentedControl', () => {
     const group = screen.container.querySelector('[data-slot=segmented-control]') as HTMLElement
     expect(getComputedStyle(group).opacity).toBe('0.6')
   })
+
+  it('shows a count beside an option', async () => {
+    const screen = await render(
+      <SegmentedControl
+        label="Seções"
+        options={[
+          { value: 'members', label: 'Membros' },
+          { value: 'invitations', label: 'Convites', badge: '2' },
+        ]}
+        value="members"
+        onValueChange={vi.fn()}
+      />,
+    )
+
+    await expect.element(screen.getByRole('button', { name: 'Convites 2' })).toBeVisible()
+    await expectNoAccessibilityViolations(screen.container)
+  })
 })

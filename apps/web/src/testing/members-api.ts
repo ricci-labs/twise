@@ -101,3 +101,30 @@ export const ADMIN_HOUSEHOLD = HOUSEHOLD_MEMBERS.map((member, index) => ({
   ...member,
   role: index === 0 ? ADMIN_ROLE : MEMBER_ROLE,
 }))
+
+export const PENDING_INVITATIONS = [
+  {
+    invitationId: 'invitation-c',
+    email: 'member.c@exemplo.com',
+    phoneE164: null,
+    roleId: 'role-accountant',
+    invitedByUserId: MEMBER_A_ID,
+    expiresAt: '2026-10-24T12:00:00.000Z',
+    createdAt: '2026-10-17T12:00:00.000Z',
+  },
+  {
+    invitationId: 'invitation-d',
+    email: null,
+    phoneE164: '+5511999990005',
+    roleId: 'role-member',
+    invitedByUserId: MEMBER_B_ID,
+    expiresAt: '2026-10-26T12:00:00.000Z',
+    createdAt: '2026-10-19T12:00:00.000Z',
+  },
+]
+
+export function invitationsAnswer(
+  invitations: readonly unknown[] = PENDING_INVITATIONS,
+): Record<string, FakeAnswer> {
+  return { [`GET ${BASE}/invitations`]: () => Response.json(invitations) }
+}
