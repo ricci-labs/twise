@@ -1,4 +1,5 @@
 import { TextLink } from '@web/components/actions/text-link'
+import { MetaLine } from '@web/components/display/meta-line'
 import { sendOptionsMessages as messages } from '@web/components/finance/send-options/send-options.messages'
 import type {
   SendOptionProps,
@@ -109,7 +110,9 @@ function SendOption({
       <Icon aria-hidden="true" className={sendOptionIconVariants()} />
       <span className={sendOptionTextVariants()}>
         <span className={sendOptionTitleVariants()}>{title}</span>
-        <span className={sendOptionDetailVariants()}>{detail}</span>
+        <span className={sendOptionDetailVariants()}>
+          <MetaLine text={detail} />
+        </span>
       </span>
       {hasChevron && <ChevronRight aria-hidden="true" className={sendOptionChevronVariants()} />}
     </button>

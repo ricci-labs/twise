@@ -1,6 +1,7 @@
 import { dayOfWeek } from '@financas/shared'
 import { Badge } from '@web/components/display/badge'
 import { DateBlock } from '@web/components/display/date-block'
+import { MetaLine } from '@web/components/display/meta-line'
 import { holidayRowMessages as messages } from '@web/components/finance/holiday-row/holiday-row.messages'
 import type {
   HolidayRowProps,
@@ -38,7 +39,7 @@ export function HolidayRow({ onDate, name, status, actions }: HolidayRowProps) {
               {messages.next}
             </Badge>
           )}
-          {messages.detail(formatShortWeekday(onDate), isWeekend)}
+          <MetaLine text={messages.detail(formatShortWeekday(onDate), isWeekend)} />
         </span>
       </span>
       {actions && <div className={holidayRowActionsVariants()}>{actions}</div>}

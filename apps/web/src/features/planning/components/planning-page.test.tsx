@@ -72,7 +72,7 @@ describe('PLAN-03 planned occurrences', () => {
     await expect.element(page.getByRole('region', { name: /Atrasados/ })).toBeVisible()
     await expect.element(page.getByRole('region', { name: /A vencer/ })).toBeVisible()
     await expect.element(page.getByText(/Conta X · pago em 16\/10/)).toBeVisible()
-    await expect.element(page.getByText(/Conta X → Poupança · pulado$/)).toBeVisible()
+    await expect.element(page.getByText(/Conta X → Poupança · Pulado$/)).toBeVisible()
     await expectNoAccessibilityViolations(page.getByRole('main').element())
   })
 

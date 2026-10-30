@@ -1,5 +1,6 @@
 import { Amount } from '@web/components/display/amount'
 import { CategoryArt } from '@web/components/display/category-art'
+import { MetaLine } from '@web/components/display/meta-line'
 import { entryRowMessages as messages } from '@web/components/finance/entry-row/entry-row.messages'
 import type {
   EntryAmountProps,
@@ -52,7 +53,9 @@ export function EntryRow({
           hasReceipt={hasReceipt}
           search={search}
         />
-        <span className={entryRowDetailVariants()}>{detail}</span>
+        <span className={entryRowDetailVariants()}>
+          <MetaLine text={detail} />
+        </span>
       </span>
       <EntryAmount amountCents={amountCents} direction={direction} />
     </>

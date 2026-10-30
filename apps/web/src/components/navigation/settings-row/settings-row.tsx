@@ -1,4 +1,5 @@
 import { CategoryArt } from '@web/components/display/category-art'
+import { MetaLine } from '@web/components/display/meta-line'
 import type { SettingsRowProps } from '@web/components/navigation/settings-row/settings-row.types'
 import {
   settingsRowChevronVariants,
@@ -21,7 +22,11 @@ export function SettingsRow({ title, detail, icon, link }: SettingsRowProps) {
           <CategoryArt name={title} icon={icon} size="list" />
           <span className={settingsRowTextVariants()}>
             <span className={settingsRowTitleVariants()}>{title}</span>
-            {detail && <span className={settingsRowDetailVariants()}>{detail}</span>}
+            {detail && (
+              <span className={settingsRowDetailVariants()}>
+                <MetaLine text={detail} />
+              </span>
+            )}
           </span>
           <ChevronRight aria-hidden="true" className={settingsRowChevronVariants()} />
         </>,

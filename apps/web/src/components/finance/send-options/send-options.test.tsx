@@ -25,8 +25,8 @@ describe('SendOptions', () => {
     const group = screen.getByRole('group', { name: 'Como enviar' })
     const buttons = group.getByRole('button').elements()
     expect(buttons.map((button) => button.textContent)).toEqual([
-      'Enviar pelo WhatsApp+55 (11) 99999-0004 · abre o WhatsApp com a mensagem',
-      'Enviar por e-mailmember.d@exemplo.com · o app envia e já marca como enviada',
+      'Enviar pelo WhatsApp+55 (11) 99999-0004 · Abre o WhatsApp com a mensagem',
+      'Enviar por e-mailmember.d@exemplo.com · O app envia e já marca como enviada',
       'Copiar mensagemPara mandar por onde preferir',
     ])
     await screen.getByRole('button', { name: /^Enviar pelo WhatsApp/ }).click()

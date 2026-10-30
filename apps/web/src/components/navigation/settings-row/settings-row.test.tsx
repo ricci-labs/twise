@@ -1,6 +1,6 @@
 import { SettingsRow } from '@web/components/navigation/settings-row/settings-row'
 import { expectNoAccessibilityViolations } from '@web/testing/accessibility'
-import { expectClampedToTwoLines } from '@web/testing/long-text'
+import { expectClampedToTwoLines, supportLineOf } from '@web/testing/long-text'
 import { describe, expect, it } from 'vitest'
 import { page } from 'vitest/browser'
 import { render } from 'vitest-browser-react'
@@ -38,6 +38,6 @@ describe('SettingsRow', () => {
         />
       </ul>,
     )
-    expectClampedToTwoLines(screen.getByText(LONG_DETAIL).element())
+    expectClampedToTwoLines(supportLineOf(screen.container))
   })
 })

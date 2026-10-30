@@ -4,7 +4,12 @@ import type {
   EntryRowProps,
 } from '@web/components/finance/entry-row/entry-row.types'
 import { expectNoAccessibilityViolations } from '@web/testing/accessibility'
-import { expectClampedToTwoLines, expectWholeAmount, LONG_TEXT } from '@web/testing/long-text'
+import {
+  expectClampedToTwoLines,
+  expectWholeAmount,
+  LONG_TEXT,
+  supportLineOf,
+} from '@web/testing/long-text'
 import { describe, expect, it } from 'vitest'
 import { render } from 'vitest-browser-react'
 
@@ -91,7 +96,7 @@ describe('EntryRow', () => {
     const row = screen.container.querySelector('[data-slot=entry-row]') as HTMLElement
 
     expectClampedToTwoLines(screen.getByText(LONG_TEXT.description).element())
-    expectClampedToTwoLines(screen.getByText(LONG_TEXT.account, { exact: false }).element())
+    expectClampedToTwoLines(supportLineOf(row))
     expectWholeAmount(row.querySelector('[data-slot=amount]') as HTMLElement, row)
   })
 })

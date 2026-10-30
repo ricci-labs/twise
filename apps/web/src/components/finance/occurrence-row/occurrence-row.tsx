@@ -2,6 +2,7 @@ import { Button } from '@web/components/actions/button'
 import { Amount } from '@web/components/display/amount'
 import { Badge } from '@web/components/display/badge'
 import { DateBlock } from '@web/components/display/date-block'
+import { MetaLine } from '@web/components/display/meta-line'
 import { occurrenceRowMessages as messages } from '@web/components/finance/occurrence-row/occurrence-row.messages'
 import type {
   OccurrenceBadge,
@@ -62,7 +63,7 @@ export function OccurrenceRow({
               {messages.badges[badge]}
             </Badge>
           )}
-          {detail}
+          <MetaLine text={detail} />
         </span>
       </span>
       {!register && amount}

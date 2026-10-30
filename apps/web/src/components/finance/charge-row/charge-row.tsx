@@ -3,6 +3,7 @@ import type { ChargeStatus } from '@financas/shared'
 import { ItemActions } from '@web/components/actions/item-actions'
 import { Amount } from '@web/components/display/amount'
 import { Badge, type BadgeProps } from '@web/components/display/badge'
+import { MetaLine } from '@web/components/display/meta-line'
 import { chargeRowMessages as messages } from '@web/components/finance/charge-row/charge-row.messages'
 import type { ChargeRowProps } from '@web/components/finance/charge-row/charge-row.types'
 import {
@@ -63,7 +64,7 @@ export function ChargeRow({
             <Badge tone={STATUS_TONES[status]} size="xs" hasDot>
               {messages.statuses[status]}
             </Badge>
-            {detail}
+            <MetaLine text={detail} />
           </span>
         </Collapsible.Trigger>
         {isOpen && actions.length > 0 && (

@@ -22,6 +22,12 @@ export function expectClampedToTwoLines(text: Element) {
   expect(text.scrollHeight).toBeGreaterThan(text.clientHeight)
 }
 
+export function supportLineOf(container: Element): HTMLElement {
+  const line = container.querySelector('[data-slot=meta-line]')
+  expect(line?.parentElement).toBeInstanceOf(HTMLElement)
+  return line?.parentElement as HTMLElement
+}
+
 export function expectWholeAmount(amount: Element, row: Element) {
   const box = amount.getBoundingClientRect()
   const fontSize = Number.parseFloat(getComputedStyle(amount).fontSize)

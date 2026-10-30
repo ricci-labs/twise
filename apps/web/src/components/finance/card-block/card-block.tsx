@@ -1,6 +1,7 @@
 import { ProgressBar } from '@web/components/charts/progress-bar'
 import { Amount } from '@web/components/display/amount'
 import { CategoryArt } from '@web/components/display/category-art'
+import { MetaLine } from '@web/components/display/meta-line'
 import type { CardBlockProps } from '@web/components/finance/card-block/card-block.types'
 import {
   cardBlockAmountVariants,
@@ -48,7 +49,9 @@ export function CardBlock({
                 <span>{name}</span>
                 <ColorSwatch color={color} />
               </span>
-              <span className={cardBlockCycleVariants()}>{cycle}</span>
+              <span className={cardBlockCycleVariants()}>
+                <MetaLine text={cycle} />
+              </span>
             </span>
           </>,
         )}

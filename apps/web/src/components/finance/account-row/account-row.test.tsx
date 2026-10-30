@@ -1,6 +1,11 @@
 import { AccountRow } from '@web/components/finance/account-row/account-row'
 import { expectNoAccessibilityViolations } from '@web/testing/accessibility'
-import { expectClampedToTwoLines, expectWholeAmount, LONG_TEXT } from '@web/testing/long-text'
+import {
+  expectClampedToTwoLines,
+  expectWholeAmount,
+  LONG_TEXT,
+  supportLineOf,
+} from '@web/testing/long-text'
 import { describe, expect, it } from 'vitest'
 import { render } from 'vitest-browser-react'
 
@@ -64,7 +69,7 @@ describe('AccountRow', () => {
     const row = screen.container.querySelector('[data-slot=account-row]') as HTMLElement
 
     expectClampedToTwoLines(screen.getByText(LONG_TEXT.description, { exact: false }).element())
-    expectClampedToTwoLines(screen.getByText(LONG_TEXT.person, { exact: false }).element())
+    expectClampedToTwoLines(supportLineOf(row))
     expectWholeAmount(row.querySelector('[data-slot=amount]') as HTMLElement, row)
   })
 })
