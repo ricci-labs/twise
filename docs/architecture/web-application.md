@@ -1,7 +1,7 @@
 ---
 summary: The web's application layer — routes and guards (TanStack Router), server data (TanStack Query over the hc client), errors, permissions, dates and money, PWA, how the API serves the SPA, and the bundle budget.
 read_when: Adding a route or page, fetching or changing server data, handling an API error, touching the PWA, the SPA serving or the build.
-updated: 2026-10-17
+updated: 2026-10-30
 ---
 
 # Web application layer
@@ -205,9 +205,19 @@ hidden, not disabled (`../product/requirements/ui-standards.md` → Permissions)
   `localStorage` (`installOfferSnoozedAt`); the shell adds "Instalar o app" to the "Mais" items.
   Rules in `../product/requirements/non-functional.md` → RNF-RESP-2.
 - **Manifest:** name "Twise", description "Leve, claro, a dois.", `lang: 'pt-BR'`, `display:
-  'standalone'`, `start_url: '/'`. `background_color` and `theme_color` are the `mint` token, read
-  from `semantic.css` at build time: the design hands off from the icon to the mint app opening
-  with no seam (`docs/design/account/screens.md` → App opening).
+  'standalone'`, `start_url: '/'`. `background_color` and `theme_color` are the light `bg-page`
+  token, read from `semantic.css` at build time, so the installed app's bars and splash are cream,
+  never the mint (`docs/design/system-bars/README.md`, decided on 2026-10-29).
+- **System bars:** the phone's status bar (and an installed desktop app's title bar) takes the
+  colour of what sits right under it. The build adds `<meta name="theme-color">` after the charset
+  (`vite.config.ts`), with the light page colour and the dark one in `data-dark`; `theme-init.js`
+  picks the dark one when the stored theme is dark. In the app, `useSystemBarColor(color)`
+  (`hooks/use-system-bar-color.ts`, over `lib/system-bar.ts`) asks for a screen's top colour while
+  it is mounted: `ink` for a `Banner` (the offline and update strips), `mint` for the app opening,
+  the account art on the phone and the celebrating moments, `sketch-paper` for the calm moments.
+  The topmost wins in that order; with none, the page colour. The value is the token read from the
+  current theme, and `useLightTheme()` repaints when it forces or gives back the theme (a future
+  theme picker calls `paintSystemBar()` too).
 - **Icons:** `public/icons/` (192, 512, maskable 512 with the owl in the safe zone, the 180 px
   Apple icon and the SVG favicon), generated from the design's `twise-icone.svg` by `pnpm
   gen:app-icons` (`scripts/generate-app-icons.mjs`, Chromium through Playwright; run it again

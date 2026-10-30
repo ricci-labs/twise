@@ -9,12 +9,14 @@ import {
 import { drawingOf } from '@web/components/brand/owl-kit'
 import { Spinner } from '@web/components/feedback/spinner'
 import { useLightTheme } from '@web/hooks/use-light-theme'
+import { useSystemBarColor } from '@web/hooks/use-system-bar-color'
 import { cn } from '@web/lib/cn'
 import { useLayoutEffect, useRef } from 'react'
 
 export function AppSplash({ isSlow, className }: AppSplashProps) {
   const owl = useRef<HTMLDivElement>(null)
   useLightTheme()
+  useSystemBarColor('mint')
 
   useLayoutEffect(() => {
     owl.current?.replaceChildren(drawingOf(owlSource))

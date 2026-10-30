@@ -1,3 +1,4 @@
+import { paintSystemBar } from '@web/lib/system-bar'
 import { useLayoutEffect } from 'react'
 
 const DARK_CLASS = 'dark'
@@ -10,9 +11,11 @@ export function useLightTheme() {
     const previousScheme = root.style.colorScheme
     root.classList.remove(DARK_CLASS)
     root.style.colorScheme = LIGHT_SCHEME
+    paintSystemBar()
     return () => {
       root.classList.toggle(DARK_CLASS, wasDark)
       root.style.colorScheme = previousScheme
+      paintSystemBar()
     }
   }, [])
 }

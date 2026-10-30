@@ -1,7 +1,7 @@
 ---
 summary: Phases, MVP scope, current focus and the list of open questions.
 read_when: Deciding what to build next, checking whether something is in scope, or resuming work in a new session.
-updated: 2026-10-29
+updated: 2026-10-30
 ---
 
 # Roadmap
@@ -434,7 +434,7 @@ updated: 2026-10-29
   HOME-02** (designs `../design/settings/`, `../design/purchase/`, `../design/system-bars/`,
   exported and approved 2026-10-29; one PR per step, every screen checked side by side with its PNG
   and run through the long-text test):
-  1. [ ] Design package; requirements (`requirements/modules/workspace-and-members.md`,
+  1. [x] Design package; requirements (`requirements/modules/workspace-and-members.md`,
      `requirements/modules/auth-and-account.md`, `requirements/modules/attachments-and-audit.md`,
      `requirements/modules/dashboard.md`), the seven app-wide rules and the system bars in
      `requirements/ui-standards.md`, API gaps G73–G78

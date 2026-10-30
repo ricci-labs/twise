@@ -23,6 +23,9 @@ import {
   authTitleVariants,
 } from '@web/components/layout/auth-layout/auth-layout.variants'
 import { useLightTheme } from '@web/hooks/use-light-theme'
+import { useMediaQuery } from '@web/hooks/use-media-query'
+import { useSystemBarColor } from '@web/hooks/use-system-bar-color'
+import { DESKTOP_QUERY } from '@web/lib/breakpoints'
 import { cn } from '@web/lib/cn'
 import { createContext, use, useEffect, useLayoutEffect, useState } from 'react'
 
@@ -97,6 +100,8 @@ export function AuthLayout({ scene, banner, className, ...main }: AuthLayoutProp
 }
 
 function AuthArt({ scene }: AuthArtProps) {
+  const isDesktop = useMediaQuery(DESKTOP_QUERY)
+  useSystemBarColor('mint', !isDesktop)
   return (
     <div className={authArtVariants()}>
       <Logo className="hidden lg:block lg:self-start" />

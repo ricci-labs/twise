@@ -1,7 +1,10 @@
 import { OwlEntrance } from '@web/components/brand/owl-entrance'
 import { OwlKit } from '@web/components/brand/owl-kit'
 import { useWithoutAuthArt } from '@web/components/layout/auth-layout'
-import type { MomentScreenProps } from '@web/components/layout/moment-screen/moment-screen.types'
+import type {
+  MomentScreenProps,
+  MomentTone,
+} from '@web/components/layout/moment-screen/moment-screen.types'
 import {
   momentActionsVariants,
   momentArtVariants,
@@ -13,7 +16,14 @@ import {
   momentVariants,
 } from '@web/components/layout/moment-screen/moment-screen.variants'
 import { useLightTheme } from '@web/hooks/use-light-theme'
+import { useSystemBarColor } from '@web/hooks/use-system-bar-color'
 import { cn } from '@web/lib/cn'
+import type { SystemBarColor } from '@web/lib/system-bar.types'
+
+const SYSTEM_BAR_BY_TONE: Record<MomentTone, SystemBarColor> = {
+  celebrate: 'mint',
+  calm: 'sketch-paper',
+}
 
 export function MomentScreen({
   tone,
@@ -28,6 +38,7 @@ export function MomentScreen({
 }: MomentScreenProps) {
   useWithoutAuthArt()
   useLightTheme()
+  useSystemBarColor(SYSTEM_BAR_BY_TONE[tone])
   return (
     <main
       data-slot="moment-screen"
