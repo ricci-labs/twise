@@ -674,6 +674,12 @@ component here, so the form, and later the account, card and planning forms, sha
   a "Sistema" (neutral) or "Do espaço" (partial, with dot) badge with who uses it ("1 pessoa · 2
   convites", "Ninguém"), what it can do, a lock line "Não pode ser alterado" when `isLocked`, and an
   `actions` slot.
+- `PermissionRows` (`components/inputs/permission-rows`, settings design `MEM-02` editor): one
+  `fieldset` per area (legend = the area's pt-BR name, given by the screen) with "Ver", "Criar",
+  "Editar", "Excluir" in four fixed columns, only the actions the area has (`isValidPermission`),
+  pressed with the ink outline and a ✓ (`aria-pressed`, a marking, not a single choice). Ticking any
+  action ticks "Ver"; unticking "Ver" clears the area (`toggled`). Actions outside `allowed` (what
+  the editor holds) show a lock, are disabled and say "Você não tem essa permissão para dar.".
 - `PairedCardGrid` (`components/layout/paired-card-grid`, settings design rule 2): desktop cards
   in two equal columns that stretch, so the two cards of a row share their height and their
   footers line up; a card that has no pair takes `lg:col-span-2`. Stacked on the phone.

@@ -125,6 +125,7 @@ import { filterButtonExamples } from '@web/components/inputs/filter-button'
 import { illustrationPickerExamples } from '@web/components/inputs/illustration-picker'
 import { moneyInputExamples } from '@web/components/inputs/money-input'
 import { passwordInputExamples } from '@web/components/inputs/password-input'
+import { permissionRowsExamples } from '@web/components/inputs/permission-rows'
 import { phoneInputExamples } from '@web/components/inputs/phone-input'
 import { pickerFieldExamples } from '@web/components/inputs/picker-field'
 import { pickerSheetExamples } from '@web/components/inputs/picker-sheet'
@@ -220,6 +221,7 @@ export const workbenchSections: readonly ComponentExamples[] = [
   tileGridExamples,
   settingsFormPageExamples,
   pairedCardGridExamples,
+  permissionRowsExamples,
   memberRowExamples,
   roleCardExamples,
   pageHeaderExamples,
