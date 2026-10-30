@@ -391,6 +391,7 @@ passes the overview's numbers.
 - `SegmentedControl` (`components/actions/segmented-control`, Base UI `ToggleGroup`): one option
   pressed at a time (`aria-pressed`), e.g. the forecast's account tabs. `width="full"` splits the
   whole width in equal options with the raised white selection (the "Contas | Categorias" tabs).
+  `isDisabled` (a read-only settings screen) dims it and refuses presses.
 - `Badge` (`components/display/badge`): a short status pill (`neutral`, `info`, `success`,
   `warning`, `danger`), e.g. "Período encerrado"; `neutral` is the design's `fn-badge--neutral`
   (`status-neutral-soft` with the muted `status-neutral` text, "Futura"); `partial` is

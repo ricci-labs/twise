@@ -13,9 +13,11 @@ import {
   workspaceSettingsQueryOptions,
 } from '@web/features/settings/api/settings.queries'
 import { holidaySummaryText } from '@web/features/settings/components/holiday-views'
+import { timezoneText } from '@web/features/settings/components/timezone-views'
 import { settingsMessages as messages } from '@web/features/settings/settings.messages'
 import type {
   BudgetRowProps,
+  CalendarRowProps,
   ChargeTextRowProps,
   HolidaysRowProps,
   NameRowProps,
@@ -31,6 +33,7 @@ import { hasPermission } from '@web/lib/permissions'
 const NAME_ART = 'house'
 const PERIOD_ART = 'calendar'
 const BUDGET_ART = 'wallet'
+const CALENDAR_ART = 'travel'
 const HOLIDAYS_ART = 'calendar'
 const PIX_ART = 'coin'
 const CHARGE_TEXT_ART = 'list'
@@ -51,6 +54,7 @@ export function SettingsPage({ workspaceId, workspaceName, permissions }: Settin
             <NameRow workspaceId={workspaceId} workspaceName={workspaceName} />
             <PeriodRow workspaceId={workspaceId} />
             <BudgetRow workspaceId={workspaceId} />
+            <CalendarRow workspaceId={workspaceId} />
           </AccountGroup>
         )}
         {hasPermission(permissions, 'planning', 'view') && (
@@ -122,6 +126,24 @@ function BudgetRow({ workspaceId }: BudgetRowProps) {
       }
       icon={BUDGET_ART}
       link={<Link to="/w/$workspaceId/settings/budget" params={{ workspaceId }} />}
+    />
+  )
+}
+
+function CalendarRow({ workspaceId }: CalendarRowProps) {
+  const settings = useQuery(workspaceSettingsQueryOptions(workspaceId)).data
+  const row = messages.calendarRow
+  const week = settings && row.weekStarts[settings.weekStartsOn]
+  return (
+    <SettingsRow
+      title={row.title}
+      detail={
+        settings && week
+          ? row.detail(week, timezoneText(settings.timezone, new Date()).label)
+          : undefined
+      }
+      icon={CALENDAR_ART}
+      link={<Link to="/w/$workspaceId/settings/calendar" params={{ workspaceId }} />}
     />
   )
 }

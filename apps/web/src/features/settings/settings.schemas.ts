@@ -78,3 +78,8 @@ export const budgetFormSchema = z.object({
   budgetBase: z.enum(BUDGET_BASES),
   installmentBudgetView: z.enum(INSTALLMENT_BUDGET_VIEWS),
 })
+
+export const calendarFormSchema = z.object({
+  weekStartsOn: z.number().int().min(0).max(6),
+  timezone: z.string().min(1),
+})

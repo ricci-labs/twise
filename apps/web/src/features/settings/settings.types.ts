@@ -10,6 +10,7 @@ import type {
 } from '@web/features/settings/api/settings.queries'
 import type {
   budgetFormSchema,
+  calendarFormSchema,
   chargeTextFormSchema,
   holidayFormSchemaFor,
   holidaysSearchSchema,
@@ -304,3 +305,31 @@ export type BudgetFormProps = {
 export type BudgetRowProps = {
   workspaceId: string
 }
+
+export type TimezoneText = {
+  label: string
+  detail: string
+}
+
+export type CalendarFormInput = z.input<typeof calendarFormSchema>
+
+export type CalendarPageProps = {
+  workspaceId: string
+  permissions: readonly Permission[]
+}
+
+export type CalendarFormProps = {
+  workspaceId: string
+  settings: WorkspaceSettings
+  canUpdate: boolean
+}
+
+export type TimezoneFieldProps = {
+  isDisabled: boolean
+}
+
+export type CalendarRowProps = {
+  workspaceId: string
+}
+
+export type ZoneSheet = 'brazil' | 'others'

@@ -14,6 +14,7 @@ export function SegmentedControl({
   onValueChange,
   width,
   selection,
+  isDisabled = false,
   className,
 }: SegmentedControlProps) {
   return (
@@ -21,6 +22,7 @@ export function SegmentedControl({
       data-slot="segmented-control"
       aria-label={label}
       value={[value]}
+      disabled={isDisabled}
       onValueChange={(next) => {
         const [picked] = next
         if (picked) {
