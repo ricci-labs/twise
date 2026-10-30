@@ -1,4 +1,5 @@
 import type { Database } from '@api/core/db/db.types'
+import type { RoleUsage } from '@api/modules/members'
 import type { NewRole, Permission, RoleChange, SystemRoleKey } from '@financas/shared'
 
 export type SystemRoleIds = Record<SystemRoleKey, string>
@@ -81,10 +82,11 @@ export type RemoveMemberInput = {
   reason?: string
 }
 
-export type RoleItem = WorkspaceRole & {
-  description: string | null
-  permissions: Permission[]
-}
+export type RoleItem = WorkspaceRole &
+  RoleUsage & {
+    description: string | null
+    permissions: Permission[]
+  }
 
 export type RoleDetails = {
   name?: string

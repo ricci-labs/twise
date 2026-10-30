@@ -274,3 +274,19 @@ export function invitationAuditTarget(workspaceId: string, invitationId: string)
     hidden: ['tokenHash'],
   }
 }
+
+export function countActiveMembersByRole(tx: WorkspaceTransaction) {
+  return tx
+    .select({ roleId: memberships.roleId, count: sql<number>`count(*)::int` })
+    .from(memberships)
+    .where(isNull(memberships.deletedAt))
+    .groupBy(memberships.roleId)
+}
+
+export function countOpenInvitationsByRole(tx: WorkspaceTransaction) {
+  return tx
+    .select({ roleId: invitations.roleId, count: sql<number>`count(*)::int` })
+    .from(invitations)
+    .where(and(isNull(invitations.acceptedAt), isNull(invitations.deletedAt)))
+    .groupBy(invitations.roleId)
+}

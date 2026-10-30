@@ -114,3 +114,8 @@ export type MembershipRef = {
   workspaceId: string
   membershipId: string
 }
+
+export type RoleUsage = {
+  memberCount: number
+  invitationCount: number
+}

@@ -1,7 +1,7 @@
 ---
 summary: Allowed and forbidden import directions across packages, layers and modules; enforced by dependency-cruiser.
 read_when: Adding an import that crosses a module, layer or package boundary.
-updated: 2026-10-09
+updated: 2026-10-30
 ---
 
 # Dependency rules
@@ -78,7 +78,7 @@ in the last column).
 | every module that writes tenant data | `audit` | `recordAudit` in the same transaction (ADR 0026) |
 | `onboarding` | `workspaces`, `ledger`, `access`, `members` | Creating a workspace: the workspace and its settings, the system accounts, the system roles, the creator as owner |
 | `onboarding` | `identity` | Registering an owner: the user, then their first workspace |
-| `access` | `members` | Loading the caller's active membership to authorize a request; managing members (role changes, removals) with the owner rules |
+| `access` | `members` | Loading the caller's active membership to authorize a request; managing members (role changes, removals) with the owner rules; how many members and invitations use each role |
 | `access` | `identity` | Member names and emails in the member list |
 | every module's routes | `access` | `authorize()`, `currentWorkspace()` on workspace routes |
 | `workspaces` routes | `onboarding` | `POST /api/workspaces` creates a workspace through `createWorkspace` |

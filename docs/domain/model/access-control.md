@@ -1,7 +1,7 @@
 ---
 summary: Access control inside a workspace — roles (system templates + custom), a module × action permission matrix (view/create/update/delete), owner rules, and where permissions are enforced (routes, agent tools, UI).
 read_when: Adding a route, agent tool or screen; working on roles, members or invitations; any "who can do what" question.
-updated: 2026-10-15
+updated: 2026-10-30
 ---
 
 # Access control
@@ -135,7 +135,7 @@ same people with their `userId` (G50), so a list can say who spent ("por Member 
 ### Roles (`access.routes.ts`, use cases in `access/use-cases/roles.ts`)
 | Route | Permission | Behavior |
 |---|---|---|
-| `GET /roles` | `members:view` | active roles (system ones first by creation) with their permissions |
+| `GET /roles` | `members:view` | active roles (system ones first by creation) with their permissions, `memberCount` (active members) and `invitationCount` (invitations not accepted nor revoked, expired included: the same rule that refuses deleting a role in use) |
 | `POST /roles` `{ name, description?, permissions }` | `members:create` | custom role → `201 { roleId }` |
 | `PATCH /roles/:roleId` `{ name?, description?, permissions? }` | `members:update` | the permission list replaces the old one. The **owner role can't be changed** (`403 OWNER_ROLE_LOCKED`); the other system roles can |
 | `DELETE /roles/:roleId` (optional `{ reason }`) | `members:delete` | soft delete of a custom role. System roles → `409 SYSTEM_ROLE`; a role used by a member or a pending invitation → `409 ROLE_IN_USE` (DB trigger) |
