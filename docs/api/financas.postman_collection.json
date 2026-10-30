@@ -3391,6 +3391,37 @@
           ]
         },
         {
+          "name": "Preview the periods of a start day",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/workspaces/{{workspaceId}}/settings/period-preview?anchor=day_of_month&value=5",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "workspaces", "{{workspaceId}}", "settings", "period-preview"],
+              "query": [
+                {
+                  "key": "anchor",
+                  "value": "day_of_month"
+                },
+                {
+                  "key": "value",
+                  "value": "5"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": ["pm.test('answers 200', () => pm.response.to.have.status(200))"]
+              }
+            }
+          ]
+        },
+        {
           "name": "Split a commission",
           "request": {
             "method": "GET",

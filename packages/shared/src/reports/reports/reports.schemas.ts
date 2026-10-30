@@ -1,3 +1,5 @@
+import { PERIOD_ANCHORS } from '@shared/identity/workspaces/workspaces.constants'
+import { isAnchorValueValid } from '@shared/identity/workspaces/workspaces.schemas'
 import { yearMonthSchema } from '@shared/planning/budgets/budgets.schemas'
 import { z } from 'zod'
 
@@ -14,3 +16,15 @@ export const periodsQuerySchema = z.object({
 })
 
 export type PeriodsQuery = z.infer<typeof periodsQuerySchema>
+
+export const periodPreviewQuerySchema = z
+  .object({
+    anchor: z.enum(PERIOD_ANCHORS),
+    value: z.coerce.number().int().min(1).optional(),
+  })
+  .refine(({ anchor, value }) => isAnchorValueValid(anchor, value), {
+    message: 'Send a value that fits the anchor',
+    path: ['value'],
+  })
+
+export type PeriodPreviewQuery = z.infer<typeof periodPreviewQuerySchema>

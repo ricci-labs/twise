@@ -9,7 +9,12 @@ import {
   replaceAllocationSteps,
   setBudget,
 } from '@api/modules/planning'
-import { getPeriodOverview, listPeriodsOfYear, simulatePurchaseImpact } from '@api/modules/reports'
+import {
+  getPeriodOverview,
+  listPeriodsOfYear,
+  previewPeriods,
+  simulatePurchaseImpact,
+} from '@api/modules/reports'
 import { changeWorkspaceSettings } from '@api/modules/workspaces'
 import { testAppDeps } from '@api/testing/app'
 import { connectTestDatabases } from '@api/testing/database'
@@ -681,5 +686,79 @@ describe('GET /periods', () => {
     const invalid = await viewer.get(`/api/workspaces/${workspaceId}/periods?year=26`)
     expect(invalid.status).toBe(400)
     expect(await invalid.json()).toMatchObject({ error: { code: 'PERIODS_QUERY_INVALID' } })
+  })
+})
+
+describe('previewPeriods', () => {
+  it('previews the current and the next period of a start day, without saving it', async () => {
+    const ownerId = await fixtures.createUser('preview-owner')
+    const { workspaceId } = await fixtures.createWorkspaceOwnedBy(ownerId, 'Preview')
+
+    const preview = await previewPeriods(
+      databases.app,
+      workspaceId,
+      { anchor: 'day_of_month', value: 5 },
+      MID_OCTOBER,
+    )
+    expect(preview).toEqual({
+      current: { label: '2026-10', start: '2026-10-05', end: '2026-11-04' },
+      next: { label: '2026-11', start: '2026-11-05', end: '2026-12-04' },
+    })
+    const saved = await listPeriodsOfYear(databases.app, workspaceId, {}, MID_OCTOBER)
+    expect(saved.periods[9]).toEqual({ label: '2026-10', start: '2026-10-01', end: '2026-10-31' })
+  })
+
+  it('moves a business-day start past a national holiday', async () => {
+    const ownerId = await fixtures.createUser('preview-business')
+    const { workspaceId } = await fixtures.createWorkspaceOwnedBy(ownerId, 'Preview business')
+
+    const preview = await previewPeriods(
+      databases.app,
+      workspaceId,
+      { anchor: 'nth_business_day', value: 1 },
+      MID_OCTOBER,
+    )
+    expect(preview.current).toEqual({ label: '2026-10', start: '2026-10-01', end: '2026-11-02' })
+    expect(preview.next).toEqual({ label: '2026-11', start: '2026-11-03', end: '2026-11-30' })
+  })
+})
+
+describe('GET /settings/period-preview', () => {
+  it('answers who sees the settings, refuses a viewer and a value that does not fit', async () => {
+    const app = createApp(testAppDeps({ db: databases.app }))
+    const ownerSession = await loggedInUser(app, databases.app, fixtures.runId, 'preview-http')
+    const viewerSession = await loggedInUser(app, databases.app, fixtures.runId, 'preview-viewer')
+    const { workspaceId } = await fixtures.createWorkspaceOwnedBy(
+      ownerSession.userId,
+      'Preview HTTP',
+    )
+    await addMemberWithSystemRole(
+      databases.app,
+      databases.owner,
+      workspaceId,
+      viewerSession.userId,
+      'viewer',
+    )
+    const owner = requestsAs(app, ownerSession)
+    const preview = `/api/workspaces/${workspaceId}/settings/period-preview`
+
+    const calendar = await owner.get(`${preview}?anchor=calendar_month`)
+    expect(calendar.status).toBe(200)
+    expect(await calendar.json()).toMatchObject({
+      current: { start: expect.stringMatching(/-01$/) },
+      next: { start: expect.stringMatching(/-01$/) },
+    })
+    for (const query of [
+      'anchor=day_of_month',
+      'anchor=day_of_month&value=32',
+      'anchor=calendar_month&value=5',
+      'anchor=weekly',
+    ]) {
+      const invalid = await owner.get(`${preview}?${query}`)
+      expect(invalid.status).toBe(400)
+      expect(await invalid.json()).toMatchObject({ error: { code: 'PERIOD_PREVIEW_INVALID' } })
+    }
+    const refused = await requestsAs(app, viewerSession).get(`${preview}?anchor=calendar_month`)
+    expect(refused.status).toBe(403)
   })
 })

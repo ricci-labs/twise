@@ -5,6 +5,7 @@ import {
   MAX_ANCHOR_BUSINESS_DAY,
   MAX_ANCHOR_DAY_OF_MONTH,
   PERIOD_ANCHORS,
+  type PeriodAnchor,
 } from '@shared/identity/workspaces/workspaces.constants'
 import { z } from 'zod'
 
@@ -29,22 +30,28 @@ function hasAnyField(change: object): boolean {
   return Object.values(change).some((value) => value !== undefined)
 }
 
+export function isAnchorValueValid(
+  anchor: PeriodAnchor,
+  value: number | null | undefined,
+): boolean {
+  if (anchor === 'calendar_month') {
+    return value === undefined || value === null
+  }
+  const maxValue = anchor === 'day_of_month' ? MAX_ANCHOR_DAY_OF_MONTH : MAX_ANCHOR_BUSINESS_DAY
+  return typeof value === 'number' && value <= maxValue
+}
+
 function anchorValueFits({
   periodAnchor,
   periodAnchorValue,
 }: {
-  periodAnchor?: string
+  periodAnchor?: PeriodAnchor
   periodAnchorValue?: number | null
 }): boolean {
   if (periodAnchor === undefined) {
     return periodAnchorValue === undefined
   }
-  if (periodAnchor === 'calendar_month') {
-    return periodAnchorValue === undefined || periodAnchorValue === null
-  }
-  const maxValue =
-    periodAnchor === 'day_of_month' ? MAX_ANCHOR_DAY_OF_MONTH : MAX_ANCHOR_BUSINESS_DAY
-  return typeof periodAnchorValue === 'number' && periodAnchorValue <= maxValue
+  return isAnchorValueValid(periodAnchor, periodAnchorValue)
 }
 
 export const workspaceSettingsChangeSchema = z

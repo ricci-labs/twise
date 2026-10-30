@@ -8,6 +8,11 @@ export type PeriodsOfYear = {
   periods: Period[]
 }
 
+export type PeriodPreview = {
+  current: Period
+  next: Period
+}
+
 export type PeriodOverview = {
   today: IsoDate
   period: Period

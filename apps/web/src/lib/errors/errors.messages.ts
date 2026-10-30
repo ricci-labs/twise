@@ -172,6 +172,7 @@ export const errorMessages: Readonly<Record<string, string>> = {
   HOLIDAY_NOT_FOUND: 'Este feriado não existe mais.',
   OVERVIEW_QUERY_INVALID: 'Mostrando o período atual.',
   PERIODS_QUERY_INVALID: 'Não foi possível carregar os períodos.',
+  PERIOD_PREVIEW_INVALID: 'Escolha um dia que exista no mês.',
   ALLOCATION_QUERY_INVALID: 'Informe um valor maior que zero.',
   SIMULATION_QUERY_INVALID: 'Escolha um cartão ou uma conta.',
   SIMULATION_CARD_INVALID: 'Escolha um cartão ativo.',
