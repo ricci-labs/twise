@@ -1,7 +1,7 @@
 import { cva } from 'class-variance-authority'
 
 export const segmentedControlVariants = cva(
-  'max-w-full overflow-x-auto rounded-full bg-sunken scrollbar-none',
+  'max-w-full overflow-x-auto rounded-full bg-sunken scrollbar-none data-disabled:opacity-60',
   {
     variants: {
       width: {

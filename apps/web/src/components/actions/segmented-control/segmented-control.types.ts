@@ -15,5 +15,6 @@ export type SegmentedControlProps = VariantProps<typeof segmentedControlVariants
     options: readonly SegmentedOption[]
     value: string
     onValueChange: (value: string) => void
+    isDisabled?: boolean
     className?: string
   }

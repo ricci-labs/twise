@@ -45,4 +45,27 @@ describe('SegmentedControl', () => {
     expect(chosen.boxShadow).toContain('inset')
     await expectNoAccessibilityViolations(screen.container)
   })
+
+  it('keeps the choice and dims the control when disabled', async () => {
+    const onValueChange = vi.fn()
+    const screen = await render(
+      <SegmentedControl
+        label="A semana começa no"
+        options={[
+          { value: '0', label: 'Domingo' },
+          { value: '1', label: 'Segunda-feira' },
+        ]}
+        value="0"
+        onValueChange={onValueChange}
+        isDisabled
+      />,
+    )
+
+    const monday = screen.getByRole('button', { name: 'Segunda-feira' })
+    await expect.element(monday).toBeDisabled()
+    await monday.click({ force: true })
+    expect(onValueChange).not.toHaveBeenCalled()
+    const group = screen.container.querySelector('[data-slot=segmented-control]') as HTMLElement
+    expect(getComputedStyle(group).opacity).toBe('0.6')
+  })
 })

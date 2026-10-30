@@ -78,6 +78,37 @@ export const settingsMessages = {
     recommended: 'recomendado',
     save: 'Salvar orçamento',
   },
+  calendarRow: {
+    title: 'Calendário e fuso',
+    weekStarts: { 0: 'Semana começa no domingo', 1: 'Semana começa na segunda' } as Readonly<
+      Record<number, string>
+    >,
+    detail: (week: string, zone: string) => `${week} · ${zone}`,
+  },
+  calendar: {
+    pageTitle: 'Calendário e fuso',
+    title: 'Calendário e fuso',
+    back: 'Voltar para Configurações',
+    weekLabel: 'A semana começa no',
+    weekdays: { 0: 'Domingo', 1: 'Segunda-feira' } as Readonly<Record<number, string>>,
+    zoneLabel: 'Fuso horário',
+    zoneHelp: 'Vale para lembretes, vencimentos e o "hoje" do app.',
+    zoneSubtitle: 'Do Brasil primeiro.',
+    others: 'Outros países',
+    othersDetail: 'Todos os fusos, por nome da cidade',
+    search: 'Buscar cidade ou fuso',
+    otherZone: (city: string, offset: string) => `${city} (${offset})`,
+    brazil: {
+      'America/Sao_Paulo': {
+        label: 'Brasília (GMT-3)',
+        detail: 'São Paulo, Rio, Minas, Sul e boa parte do país',
+      },
+      'America/Manaus': { label: 'Amazonas (GMT-4)', detail: 'Manaus, Cuiabá, Porto Velho' },
+      'America/Rio_Branco': { label: 'Acre (GMT-5)', detail: 'Rio Branco' },
+      'America/Noronha': { label: 'Fernando de Noronha (GMT-2)', detail: 'Noronha' },
+    } as Readonly<Record<string, { label: string; detail: string }>>,
+    save: 'Salvar calendário',
+  },
   workspaceName: {
     pageTitle: 'Nome e moeda',
     title: 'Nome e moeda',

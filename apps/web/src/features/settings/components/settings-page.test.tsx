@@ -81,6 +81,10 @@ describe('Configurações', () => {
     await expect
       .element(budget.getByText('Só a renda fixa · Parcelas na fatura em que caem'))
       .toBeVisible()
+    const calendar = workspace.getByRole('link', { name: /Calendário e fuso/ })
+    await expect
+      .element(calendar.getByText('Semana começa no domingo · Brasília (GMT-3)'))
+      .toBeVisible()
     await name.click()
     await expect
       .poll(() => app.router.state.location.pathname)
