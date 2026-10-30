@@ -65,6 +65,8 @@ export const membersMessages = {
     open: 'Convidar',
     pageTitle: 'Convidar',
     title: 'Convidar',
+    dialogTitle: (workspace: string) => `Convidar para o espaço ${workspace}`,
+    cancel: 'Cancelar',
     back: 'Voltar para Convites',
     channel: 'Convidar por',
     channels: { email: 'E-mail', phone: 'Telefone' },

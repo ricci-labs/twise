@@ -16,11 +16,13 @@ import { PhoneInput } from '@web/components/inputs/phone-input'
 import { PickerField } from '@web/components/inputs/picker-field'
 import { PickerSheet } from '@web/components/inputs/picker-sheet'
 import { TextInput } from '@web/components/inputs/text-input'
+import { FormOverlay } from '@web/components/layout/form-overlay'
 import { PageFrame } from '@web/components/layout/page-frame'
 import { SettingsFormPage } from '@web/components/layout/settings-form-page'
 import { Sheet } from '@web/components/layout/sheet'
 import { membersQueryOptions, rolesQueryOptions } from '@web/features/members/api/members.queries'
 import { useInvite } from '@web/features/members/api/use-invite'
+import { MembersPage } from '@web/features/members/components/members-page'
 import { canGive, roleSentence } from '@web/features/members/components/role-views'
 import { membersMessages } from '@web/features/members/members.messages'
 import { inviteFormSchema } from '@web/features/members/members.schemas'
@@ -34,8 +36,10 @@ import type {
   InvitePageProps,
   Role,
 } from '@web/features/members/members.types'
+import { useMediaQuery } from '@web/hooks/use-media-query'
 import { usePageTitle } from '@web/hooks/use-page-title'
 import { ApiError } from '@web/lib/api/api-error'
+import { DESKTOP_QUERY } from '@web/lib/breakpoints'
 import { copyText } from '@web/lib/clipboard'
 import { errorMessageFor } from '@web/lib/errors/error-message'
 import { formatShortDate } from '@web/lib/format/calendar'
@@ -43,7 +47,7 @@ import { BRAZIL_CALLING_CODE, formatPhone, phoneE164Of, whatsappLink } from '@we
 import { useSchemaForm } from '@web/lib/forms/use-schema-form'
 import { Copy, Link2, MessageCircle } from 'lucide-react'
 import { useRef, useState } from 'react'
-import { useController, useWatch } from 'react-hook-form'
+import { FormProvider, useController, useWatch } from 'react-hook-form'
 
 const messages = membersMessages.invite
 const SKELETON_LINES = 6
@@ -54,6 +58,7 @@ const TIME_ZONE = 'America/Sao_Paulo'
 
 export function InvitePage(props: InvitePageProps) {
   usePageTitle(messages.pageTitle)
+  const isDesktop = useMediaQuery(DESKTOP_QUERY)
   const roles = useQuery(rolesQueryOptions(props.workspaceId))
   const members = useQuery(membersQueryOptions(props.workspaceId))
   if (!roles.data || !members.data) {
@@ -76,9 +81,17 @@ export function InvitePage(props: InvitePageProps) {
   const isActorOwner = members.data.some(
     (member) => member.membershipId === props.membershipId && member.role.systemKey === OWNER,
   )
+  if (isDesktop) {
+    return (
+      <>
+        <MembersPage {...props} tab="members" />
+        <InviteForm {...props} roles={roles.data} isActorOwner={isActorOwner} isDialog />
+      </>
+    )
+  }
   return (
     <PageFrame edge="bleed">
-      <InviteForm {...props} roles={roles.data} isActorOwner={isActorOwner} />
+      <InviteForm {...props} roles={roles.data} isActorOwner={isActorOwner} isDialog={false} />
     </PageFrame>
   )
 }
@@ -87,6 +100,7 @@ function InviteForm({
   workspaceId,
   workspaceName,
   permissions,
+  isDialog,
   roles,
   isActorOwner,
 }: InviteFormProps) {
@@ -133,6 +147,60 @@ function InviteForm({
     }
   }
 
+  const body = (
+    <>
+      {problem && (
+        <Alert tone="danger" isUrgent>
+          {problem}
+        </Alert>
+      )}
+      <InviteFields roles={roles} givable={givable.map((role) => role.roleId)} />
+      <p className="text-body-sm text-ink-muted">{messages.validity}</p>
+    </>
+  )
+  const invitedSheet = (
+    <InvitedSheet
+      workspaceName={workspaceName}
+      invited={invited}
+      onClose={() => {
+        setInvited(null)
+        void toInvitations()
+      }}
+    />
+  )
+  if (isDialog) {
+    return (
+      <FormProvider {...form}>
+        <FormOverlay
+          title={messages.dialogTitle(workspaceName)}
+          closeLabel={messages.close}
+          size="md"
+          actions="single"
+          isOpen
+          onRequestClose={() =>
+            void navigate({ to: '/w/$workspaceId/members', params: { workspaceId } })
+          }
+          onSubmit={form.handleSubmit(submit)}
+          footer={
+            <div className="flex flex-row-reverse items-center justify-between">
+              <SubmitButton loadingLabel={messages.sending}>{messages.send}</SubmitButton>
+              <Button
+                variant="quiet"
+                onClick={() =>
+                  void navigate({ to: '/w/$workspaceId/members', params: { workspaceId } })
+                }
+              >
+                {messages.cancel}
+              </Button>
+            </div>
+          }
+        >
+          <div className="flex flex-col gap-5 px-8 pt-2.5">{body}</div>
+        </FormOverlay>
+        {invitedSheet}
+      </FormProvider>
+    )
+  }
   return (
     <Form form={form} onSubmit={submit}>
       <SettingsFormPage
@@ -145,22 +213,9 @@ function InviteForm({
           </SubmitButton>
         }
       >
-        {problem && (
-          <Alert tone="danger" isUrgent>
-            {problem}
-          </Alert>
-        )}
-        <InviteFields roles={roles} givable={givable.map((role) => role.roleId)} />
-        <p className="text-body-sm text-ink-muted">{messages.validity}</p>
+        {body}
       </SettingsFormPage>
-      <InvitedSheet
-        workspaceName={workspaceName}
-        invited={invited}
-        onClose={() => {
-          setInvited(null)
-          void toInvitations()
-        }}
-      />
+      {invitedSheet}
     </Form>
   )
 }
