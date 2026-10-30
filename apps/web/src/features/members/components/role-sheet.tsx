@@ -1,4 +1,3 @@
-import type { Permission } from '@financas/shared'
 import { useQuery } from '@tanstack/react-query'
 import { Button } from '@web/components/actions/button'
 import { SectionError } from '@web/components/feedback/section-error'
@@ -8,16 +7,14 @@ import { RadioCardList } from '@web/components/inputs/radio-card-list'
 import { Sheet } from '@web/components/layout/sheet'
 import { rolesQueryOptions } from '@web/features/members/api/members.queries'
 import { useChangeMemberRole } from '@web/features/members/api/use-change-member-role'
-import { roleSentence } from '@web/features/members/components/role-views'
+import { canGive, roleSentence } from '@web/features/members/components/role-views'
 import { membersMessages } from '@web/features/members/members.messages'
-import type { Role, RoleSheetProps } from '@web/features/members/members.types'
+import type { RoleSheetProps } from '@web/features/members/members.types'
 import { ApiError } from '@web/lib/api/api-error'
 import { errorMessageFor } from '@web/lib/errors/error-message'
-import { hasPermission } from '@web/lib/permissions'
 import { useState } from 'react'
 
 const messages = membersMessages
-const OWNER = 'owner'
 const SKELETON_LINES = 5
 
 export function RoleSheet({
@@ -94,14 +91,5 @@ export function RoleSheet({
         </div>
       </div>
     </Sheet>
-  )
-}
-
-function canGive(role: Role, actorPermissions: readonly Permission[], isActorOwner: boolean) {
-  if (role.systemKey === OWNER) {
-    return isActorOwner
-  }
-  return role.permissions.every((permission) =>
-    hasPermission(actorPermissions, permission.module, permission.action),
   )
 }

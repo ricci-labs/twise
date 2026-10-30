@@ -5,7 +5,8 @@ import type {
   fetchMembers,
   fetchRoles,
 } from '@web/features/members/api/members.queries'
-import type { roleFormSchema } from '@web/features/members/members.schemas'
+import type { useInvite } from '@web/features/members/api/use-invite'
+import type { inviteFormSchema, roleFormSchema } from '@web/features/members/members.schemas'
 import type { z } from 'zod'
 
 export type Member = Awaited<ReturnType<typeof fetchMembers>>[number]
@@ -127,3 +128,38 @@ export type InvitationActionsProps = {
   contact: string
   invitationId: string
 }
+
+export type InviteFormInput = z.input<typeof inviteFormSchema>
+
+export type InvitePageProps = {
+  workspaceId: string
+  workspaceName: string
+  membershipId: string
+  permissions: readonly Permission[]
+}
+
+export type InviteFormProps = InvitePageProps & {
+  roles: readonly Role[]
+  isActorOwner: boolean
+}
+
+export type InvitedLink = {
+  contact: string
+  roleName: string
+  expiresAt: string
+  link: string
+  phoneE164: string
+}
+
+export type InvitedSheetProps = {
+  workspaceName: string
+  invited: InvitedLink | null
+  onClose: () => void
+}
+
+export type InviteFieldsProps = {
+  roles: readonly Role[]
+  givable: readonly string[]
+}
+
+export type CreatedInvite = Awaited<ReturnType<ReturnType<typeof useInvite>['mutateAsync']>>

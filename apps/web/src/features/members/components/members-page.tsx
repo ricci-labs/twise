@@ -30,7 +30,7 @@ import type {
 import { usePageTitle } from '@web/hooks/use-page-title'
 import { ApiError } from '@web/lib/api/api-error'
 import { hasPermission } from '@web/lib/permissions'
-import { ChevronRight, Plus } from 'lucide-react'
+import { ChevronRight, Plus, UserPlus } from 'lucide-react'
 import { useState } from 'react'
 
 const PAGE_SIZE = 50
@@ -56,8 +56,8 @@ export function MembersPage({
       <PageHeader
         title={messages.title}
         actions={
-          tab === 'roles' &&
-          hasPermission(permissions, 'members', 'create') && (
+          hasPermission(permissions, 'members', 'create') &&
+          (tab === 'roles' ? (
             <Button
               variant="secondary"
               size="sm"
@@ -66,7 +66,18 @@ export function MembersPage({
               <Plus aria-hidden="true" />
               {messages.newRole}
             </Button>
-          )
+          ) : (
+            <Button
+              variant="secondary"
+              size="sm"
+              render={
+                <Link to="/w/$workspaceId/members/invitations/new" params={{ workspaceId }} />
+              }
+            >
+              <UserPlus aria-hidden="true" />
+              {messages.invite.open}
+            </Button>
+          ))
         }
       />
       <MembersTabs workspaceId={workspaceId} value={tab} />

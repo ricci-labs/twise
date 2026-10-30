@@ -20,6 +20,7 @@ const COMMISSION_SPLIT_PAGE = 'commission-split'
 const SETTINGS_AREA = 'settings'
 const MEMBERS_AREA = 'members'
 const ROLES_PAGE = 'roles'
+const INVITATIONS_PAGE = 'invitations'
 
 const SETTINGS_FORM_PAGES: ReadonlySet<string> = new Set(['name', 'period', 'budget', 'calendar'])
 
@@ -86,7 +87,7 @@ export function hasNewEntryButton(pathname: string): boolean {
 
 export function hasTabBar(pathname: string): boolean {
   const [, , , area, item, detail] = pathname.split('/')
-  if (area === MEMBERS_AREA && item === ROLES_PAGE && detail) {
+  if (area === MEMBERS_AREA && (item === ROLES_PAGE || item === INVITATIONS_PAGE) && detail) {
     return false
   }
   return !(area === SETTINGS_AREA && item !== undefined && SETTINGS_FORM_PAGES.has(item))
