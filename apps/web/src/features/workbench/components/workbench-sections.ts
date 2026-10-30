@@ -36,6 +36,7 @@ import { miniMonthCalendarExamples } from '@web/components/display/mini-month-ca
 import { nextStepCardExamples } from '@web/components/display/next-step-card'
 import { responsiveTextExamples } from '@web/components/display/responsive-text'
 import { richTextExamples } from '@web/components/display/rich-text'
+import { roleCardExamples } from '@web/components/display/role-card'
 import { stepTrackExamples } from '@web/components/display/step-track'
 import { alertExamples } from '@web/components/feedback/alert'
 import { autoFillTipExamples } from '@web/components/feedback/auto-fill-tip'
@@ -220,6 +221,7 @@ export const workbenchSections: readonly ComponentExamples[] = [
   settingsFormPageExamples,
   pairedCardGridExamples,
   memberRowExamples,
+  roleCardExamples,
   pageHeaderExamples,
   cyclePreviewExamples,
   entryDayGroupExamples,

@@ -38,6 +38,7 @@ import { Route as AppWWorkspaceIdCardsCardRouteImport } from './routes/_app/w/$w
 import { Route as AppWWorkspaceIdContactsContactRouteImport } from './routes/_app/w/$workspaceId/contacts_/$contact'
 import { Route as AppWWorkspaceIdEntriesEntryRouteImport } from './routes/_app/w/$workspaceId/entries_/$entry'
 import { Route as AppWWorkspaceIdMembersIndexRouteImport } from './routes/_app/w/$workspaceId/members/index'
+import { Route as AppWWorkspaceIdMembersRolesRouteImport } from './routes/_app/w/$workspaceId/members/roles'
 import { Route as AppWWorkspaceIdPlanningIndexRouteImport } from './routes/_app/w/$workspaceId/planning/index'
 import { Route as AppWWorkspaceIdPlanningTabRouteImport } from './routes/_app/w/$workspaceId/planning/$tab'
 import { Route as AppWWorkspaceIdPlanningHolidaysRouteImport } from './routes/_app/w/$workspaceId/planning/holidays'
@@ -202,6 +203,12 @@ const AppWWorkspaceIdMembersIndexRoute =
     path: '/members/',
     getParentRoute: () => AppWWorkspaceIdRouteRoute,
   } as any)
+const AppWWorkspaceIdMembersRolesRoute =
+  AppWWorkspaceIdMembersRolesRouteImport.update({
+    id: '/members/roles',
+    path: '/members/roles',
+    getParentRoute: () => AppWWorkspaceIdRouteRoute,
+  } as any)
 const AppWWorkspaceIdPlanningIndexRoute =
   AppWWorkspaceIdPlanningIndexRouteImport.update({
     id: '/planning/',
@@ -308,6 +315,7 @@ export interface FileRoutesByFullPath {
   '/w/$workspaceId/cards/$card': typeof AppWWorkspaceIdCardsCardRoute
   '/w/$workspaceId/contacts/$contact': typeof AppWWorkspaceIdContactsContactRoute
   '/w/$workspaceId/entries/$entry': typeof AppWWorkspaceIdEntriesEntryRoute
+  '/w/$workspaceId/members/roles': typeof AppWWorkspaceIdMembersRolesRoute
   '/w/$workspaceId/planning/$tab': typeof AppWWorkspaceIdPlanningTabRoute
   '/w/$workspaceId/planning/holidays': typeof AppWWorkspaceIdPlanningHolidaysRoute
   '/w/$workspaceId/planning/split': typeof AppWWorkspaceIdPlanningSplitRoute
@@ -349,6 +357,7 @@ export interface FileRoutesByTo {
   '/w/$workspaceId/cards/$card': typeof AppWWorkspaceIdCardsCardRoute
   '/w/$workspaceId/contacts/$contact': typeof AppWWorkspaceIdContactsContactRoute
   '/w/$workspaceId/entries/$entry': typeof AppWWorkspaceIdEntriesEntryRoute
+  '/w/$workspaceId/members/roles': typeof AppWWorkspaceIdMembersRolesRoute
   '/w/$workspaceId/planning/$tab': typeof AppWWorkspaceIdPlanningTabRoute
   '/w/$workspaceId/planning/holidays': typeof AppWWorkspaceIdPlanningHolidaysRoute
   '/w/$workspaceId/planning/split': typeof AppWWorkspaceIdPlanningSplitRoute
@@ -394,6 +403,7 @@ export interface FileRoutesById {
   '/_app/w/$workspaceId/cards_/$card': typeof AppWWorkspaceIdCardsCardRoute
   '/_app/w/$workspaceId/contacts_/$contact': typeof AppWWorkspaceIdContactsContactRoute
   '/_app/w/$workspaceId/entries_/$entry': typeof AppWWorkspaceIdEntriesEntryRoute
+  '/_app/w/$workspaceId/members/roles': typeof AppWWorkspaceIdMembersRolesRoute
   '/_app/w/$workspaceId/planning/$tab': typeof AppWWorkspaceIdPlanningTabRoute
   '/_app/w/$workspaceId/planning/holidays': typeof AppWWorkspaceIdPlanningHolidaysRoute
   '/_app/w/$workspaceId/planning/split': typeof AppWWorkspaceIdPlanningSplitRoute
@@ -438,6 +448,7 @@ export interface FileRouteTypes {
     | '/w/$workspaceId/cards/$card'
     | '/w/$workspaceId/contacts/$contact'
     | '/w/$workspaceId/entries/$entry'
+    | '/w/$workspaceId/members/roles'
     | '/w/$workspaceId/planning/$tab'
     | '/w/$workspaceId/planning/holidays'
     | '/w/$workspaceId/planning/split'
@@ -479,6 +490,7 @@ export interface FileRouteTypes {
     | '/w/$workspaceId/cards/$card'
     | '/w/$workspaceId/contacts/$contact'
     | '/w/$workspaceId/entries/$entry'
+    | '/w/$workspaceId/members/roles'
     | '/w/$workspaceId/planning/$tab'
     | '/w/$workspaceId/planning/holidays'
     | '/w/$workspaceId/planning/split'
@@ -523,6 +535,7 @@ export interface FileRouteTypes {
     | '/_app/w/$workspaceId/cards_/$card'
     | '/_app/w/$workspaceId/contacts_/$contact'
     | '/_app/w/$workspaceId/entries_/$entry'
+    | '/_app/w/$workspaceId/members/roles'
     | '/_app/w/$workspaceId/planning/$tab'
     | '/_app/w/$workspaceId/planning/holidays'
     | '/_app/w/$workspaceId/planning/split'
@@ -754,6 +767,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppWWorkspaceIdMembersIndexRouteImport
       parentRoute: typeof AppWWorkspaceIdRouteRoute
     }
+    '/_app/w/$workspaceId/members/roles': {
+      id: '/_app/w/$workspaceId/members/roles'
+      path: '/members/roles'
+      fullPath: '/w/$workspaceId/members/roles'
+      preLoaderRoute: typeof AppWWorkspaceIdMembersRolesRouteImport
+      parentRoute: typeof AppWWorkspaceIdRouteRoute
+    }
     '/_app/w/$workspaceId/planning/': {
       id: '/_app/w/$workspaceId/planning/'
       path: '/planning'
@@ -862,6 +882,7 @@ interface AppWWorkspaceIdRouteRouteChildren {
   AppWWorkspaceIdCardsCardRoute: typeof AppWWorkspaceIdCardsCardRoute
   AppWWorkspaceIdContactsContactRoute: typeof AppWWorkspaceIdContactsContactRoute
   AppWWorkspaceIdEntriesEntryRoute: typeof AppWWorkspaceIdEntriesEntryRoute
+  AppWWorkspaceIdMembersRolesRoute: typeof AppWWorkspaceIdMembersRolesRoute
   AppWWorkspaceIdPlanningTabRoute: typeof AppWWorkspaceIdPlanningTabRoute
   AppWWorkspaceIdPlanningHolidaysRoute: typeof AppWWorkspaceIdPlanningHolidaysRoute
   AppWWorkspaceIdPlanningSplitRoute: typeof AppWWorkspaceIdPlanningSplitRoute
@@ -892,6 +913,7 @@ const AppWWorkspaceIdRouteRouteChildren: AppWWorkspaceIdRouteRouteChildren = {
   AppWWorkspaceIdCardsCardRoute: AppWWorkspaceIdCardsCardRoute,
   AppWWorkspaceIdContactsContactRoute: AppWWorkspaceIdContactsContactRoute,
   AppWWorkspaceIdEntriesEntryRoute: AppWWorkspaceIdEntriesEntryRoute,
+  AppWWorkspaceIdMembersRolesRoute: AppWWorkspaceIdMembersRolesRoute,
   AppWWorkspaceIdPlanningTabRoute: AppWWorkspaceIdPlanningTabRoute,
   AppWWorkspaceIdPlanningHolidaysRoute: AppWWorkspaceIdPlanningHolidaysRoute,
   AppWWorkspaceIdPlanningSplitRoute: AppWWorkspaceIdPlanningSplitRoute,

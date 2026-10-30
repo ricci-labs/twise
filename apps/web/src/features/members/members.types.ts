@@ -5,7 +5,20 @@ export type Member = Awaited<ReturnType<typeof fetchMembers>>[number]
 
 export type Role = Awaited<ReturnType<typeof fetchRoles>>[number]
 
+export type MembersTab = 'members' | 'roles'
+
+export type MembersTabsProps = {
+  workspaceId: string
+  value: MembersTab
+}
+
+export type RolesListProps = {
+  workspaceId: string
+  workspaceName: string
+}
+
 export type MembersPageProps = {
+  tab: MembersTab
   workspaceId: string
   workspaceName: string
   membershipId: string

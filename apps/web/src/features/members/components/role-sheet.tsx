@@ -8,6 +8,7 @@ import { RadioCardList } from '@web/components/inputs/radio-card-list'
 import { Sheet } from '@web/components/layout/sheet'
 import { rolesQueryOptions } from '@web/features/members/api/members.queries'
 import { useChangeMemberRole } from '@web/features/members/api/use-change-member-role'
+import { roleSentence } from '@web/features/members/components/role-views'
 import { membersMessages } from '@web/features/members/members.messages'
 import type { Role, RoleSheetProps } from '@web/features/members/members.types'
 import { ApiError } from '@web/lib/api/api-error'
@@ -94,10 +95,6 @@ export function RoleSheet({
       </div>
     </Sheet>
   )
-}
-
-export function roleSentence(role: Role): string {
-  return role.systemKey ? messages.systemRoles[role.systemKey] : (role.description ?? '')
 }
 
 function canGive(role: Role, actorPermissions: readonly Permission[], isActorOwner: boolean) {
