@@ -1,5 +1,4 @@
 import { useQuery } from '@tanstack/react-query'
-import { Link } from '@tanstack/react-router'
 import { SegmentedControl } from '@web/components/actions/segmented-control'
 import { Alert } from '@web/components/feedback/alert'
 import { SectionError } from '@web/components/feedback/section-error'
@@ -8,13 +7,12 @@ import { showToast } from '@web/components/feedback/toast'
 import { FieldGroup } from '@web/components/forms/field-group'
 import { Form } from '@web/components/forms/form'
 import { FormField } from '@web/components/forms/form-field'
-import { SubmitButton } from '@web/components/forms/submit-button'
 import { PickerField } from '@web/components/inputs/picker-field'
 import { PickerSheet } from '@web/components/inputs/picker-sheet'
 import { PageFrame } from '@web/components/layout/page-frame'
-import { SettingsFormPage } from '@web/components/layout/settings-form-page'
 import { workspaceSettingsQueryOptions } from '@web/features/settings/api/settings.queries'
 import { useChangeSettings } from '@web/features/settings/api/use-change-settings'
+import { SettingsGroupFrame } from '@web/features/settings/components/settings-group-frame'
 import {
   brazilZoneItems,
   OTHER_ZONES,
@@ -53,6 +51,7 @@ export function CalendarPage({ workspaceId, permissions }: CalendarPageProps) {
     return (
       <PageFrame edge="bleed">
         <CalendarForm
+          layout="page"
           workspaceId={workspaceId}
           settings={settings.data}
           canUpdate={hasPermission(permissions, 'settings', 'update')}
@@ -76,7 +75,7 @@ export function CalendarPage({ workspaceId, permissions }: CalendarPageProps) {
   )
 }
 
-function CalendarForm({ workspaceId, settings, canUpdate }: CalendarFormProps) {
+export function CalendarForm({ workspaceId, settings, canUpdate, layout }: CalendarFormProps) {
   const change = useChangeSettings(workspaceId)
   const [problem, setProblem] = useState<string | null>(null)
   const form = useSchemaForm({
@@ -98,16 +97,13 @@ function CalendarForm({ workspaceId, settings, canUpdate }: CalendarFormProps) {
 
   return (
     <Form form={form} onSubmit={save}>
-      <SettingsFormPage
-        back={<Link to="/w/$workspaceId/settings" params={{ workspaceId }} />}
-        backLabel={messages.back}
+      <SettingsGroupFrame
+        layout={layout}
+        workspaceId={workspaceId}
         title={messages.title}
+        description={messages.cardDescription}
         readOnlyNote={canUpdate ? undefined : settingsMessages.readOnly}
-        footer={
-          <SubmitButton requiresChange loadingLabel={settingsMessages.saving} width="full">
-            {messages.save}
-          </SubmitButton>
-        }
+        saveLabel={messages.save}
       >
         {problem && (
           <Alert tone="danger" isUrgent>
@@ -131,13 +127,13 @@ function CalendarForm({ workspaceId, settings, canUpdate }: CalendarFormProps) {
             )}
           />
         </FieldGroup>
-        <TimezoneField isDisabled={!canUpdate} />
-      </SettingsFormPage>
+        <TimezoneField isDisabled={!canUpdate} hasHelp={layout === 'page'} />
+      </SettingsGroupFrame>
     </Form>
   )
 }
 
-function TimezoneField({ isDisabled }: TimezoneFieldProps) {
+function TimezoneField({ isDisabled, hasHelp }: TimezoneFieldProps) {
   const { setValue } = useFormContext<CalendarFormInput>()
   const timezone = useWatch<CalendarFormInput, 'timezone'>({ name: 'timezone' })
   const [openSheet, setOpenSheet] = useState<ZoneSheet | null>(null)
@@ -155,7 +151,7 @@ function TimezoneField({ isDisabled }: TimezoneFieldProps) {
       <FormField<CalendarFormInput>
         name="timezone"
         label={messages.zoneLabel}
-        help={messages.zoneHelp}
+        help={hasHelp ? messages.zoneHelp : undefined}
       >
         {(control) => (
           <PickerField

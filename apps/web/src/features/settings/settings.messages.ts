@@ -8,6 +8,13 @@ export const settingsMessages = {
     planning: 'Planejamento',
     receiving: 'Cobranças',
   },
+  back: 'Voltar para Configurações',
+  desktopLead: (workspaceName: string) =>
+    `Do espaço ${workspaceName}. Valem para todos os membros; cada grupo salva sozinho.`,
+  otherScreens: {
+    title: 'Cobranças e planejamento',
+    description: 'Cada um tem a sua tela.',
+  },
   readOnly: 'Só donos e admins mudam as configurações. Peça a um deles.',
   lead: (workspaceName: string) => `Do espaço ${workspaceName}. Valem para todos os membros.`,
   hubReadOnly: 'Só donos e admins mudam as configurações. Você pode ver.',
@@ -27,6 +34,7 @@ export const settingsMessages = {
   },
   period: {
     pageTitle: 'Mês financeiro',
+    cardDescription: 'Use o dia em que o salário costuma cair.',
     title: 'Mês financeiro',
     back: 'Voltar para Configurações',
     label: 'Seu mês financeiro começa',
@@ -63,6 +71,7 @@ export const settingsMessages = {
   },
   budget: {
     pageTitle: 'Orçamento',
+    cardDescription: 'O que entra na conta do orçamento do mês.',
     title: 'Orçamento',
     back: 'Voltar para Configurações',
     baseLabel: 'O orçamento considera',
@@ -88,6 +97,7 @@ export const settingsMessages = {
   },
   calendar: {
     pageTitle: 'Calendário e fuso',
+    cardDescription: 'Para lembretes, vencimentos e o "hoje" do app.',
     title: 'Calendário e fuso',
     back: 'Voltar para Configurações',
     weekLabel: 'A semana começa no',
@@ -112,6 +122,7 @@ export const settingsMessages = {
   },
   workspaceName: {
     pageTitle: 'Nome e moeda',
+    cardDescription: 'Como o espaço aparece para todos os membros.',
     title: 'Nome e moeda',
     back: 'Voltar para Configurações',
     name: 'Nome do espaço',

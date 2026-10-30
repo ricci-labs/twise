@@ -1,9 +1,13 @@
 import { parseIsoDate } from '@financas/shared'
 import { useQuery } from '@tanstack/react-query'
 import { Link } from '@tanstack/react-router'
+import { Card } from '@web/components/display/card'
+import { SectionError } from '@web/components/feedback/section-error'
+import { SectionSkeleton } from '@web/components/feedback/section-skeleton'
 import { AccountGroup } from '@web/components/finance/account-group'
 import { PageFrame } from '@web/components/layout/page-frame'
 import { PageHeader } from '@web/components/layout/page-header'
+import { PairedCardGrid } from '@web/components/layout/paired-card-grid'
 import { SettingsRow } from '@web/components/navigation/settings-row'
 import {
   chargeTextQueryOptions,
@@ -12,8 +16,12 @@ import {
   todayQueryOptions,
   workspaceSettingsQueryOptions,
 } from '@web/features/settings/api/settings.queries'
+import { BudgetForm } from '@web/features/settings/components/budget-page'
+import { CalendarForm } from '@web/features/settings/components/calendar-page'
 import { holidaySummaryText } from '@web/features/settings/components/holiday-views'
+import { PeriodForm } from '@web/features/settings/components/period-page'
 import { timezoneText } from '@web/features/settings/components/timezone-views'
+import { WorkspaceNameForm } from '@web/features/settings/components/workspace-name-page'
 import { settingsMessages as messages } from '@web/features/settings/settings.messages'
 import type {
   BudgetRowProps,
@@ -25,14 +33,94 @@ import type {
   PeriodRowProps,
   PixRowProps,
   SettingsPageProps,
+  WorkspaceCardsProps,
 } from '@web/features/settings/settings.types'
+import { useMediaQuery } from '@web/hooks/use-media-query'
 import { usePageTitle } from '@web/hooks/use-page-title'
+import { ApiError } from '@web/lib/api/api-error'
+import { DESKTOP_QUERY } from '@web/lib/breakpoints'
+import { errorMessageFor } from '@web/lib/errors/error-message'
 import { formatRange } from '@web/lib/format/calendar'
 import { hasPermission } from '@web/lib/permissions'
 import { CalendarDays, Flag, Globe, House, MessageCircle, QrCode, Target } from 'lucide-react'
 
-export function SettingsPage({ workspaceId, workspaceName, permissions }: SettingsPageProps) {
+const SKELETON_LINES = 8
+
+export function SettingsPage(props: SettingsPageProps) {
   usePageTitle(messages.pageTitle)
+  const isDesktop = useMediaQuery(DESKTOP_QUERY)
+  return isDesktop ? <DesktopSettings {...props} /> : <PhoneSettings {...props} />
+}
+
+function DesktopSettings({ workspaceId, workspaceName, permissions }: SettingsPageProps) {
+  const canView = hasPermission(permissions, 'settings', 'view')
+  const canSeePlanning = hasPermission(permissions, 'planning', 'view')
+  return (
+    <PageFrame className="gap-6">
+      <PageHeader title={messages.title} description={messages.desktopLead(workspaceName)} />
+      <PairedCardGrid>
+        {canView && (
+          <WorkspaceCards
+            workspaceId={workspaceId}
+            workspaceName={workspaceName}
+            canUpdate={hasPermission(permissions, 'settings', 'update')}
+          />
+        )}
+        <Card
+          title={messages.otherScreens.title}
+          description={messages.otherScreens.description}
+          className="lg:col-span-2"
+        >
+          <ul className="grid gap-3 lg:grid-cols-3">
+            {canView && <PixRow workspaceId={workspaceId} variant="tile" />}
+            {canView && <ChargeTextRow workspaceId={workspaceId} variant="tile" />}
+            {canSeePlanning && <HolidaysRow workspaceId={workspaceId} variant="tile" />}
+          </ul>
+        </Card>
+      </PairedCardGrid>
+    </PageFrame>
+  )
+}
+
+function WorkspaceCards({ workspaceId, workspaceName, canUpdate }: WorkspaceCardsProps) {
+  const settings = useQuery(workspaceSettingsQueryOptions(workspaceId))
+  if (settings.isError) {
+    return (
+      <div className="lg:col-span-2">
+        <SectionError
+          message={errorMessageFor(settings.error)}
+          errorRef={settings.error instanceof ApiError ? settings.error.ref : null}
+          isRetrying={settings.isFetching}
+          onRetry={() => void settings.refetch()}
+        />
+      </div>
+    )
+  }
+  if (!settings.data) {
+    return (
+      <div className="lg:col-span-2">
+        <SectionSkeleton lines={SKELETON_LINES} />
+      </div>
+    )
+  }
+  const shared = { layout: 'card' as const, workspaceId, settings: settings.data, canUpdate }
+  return (
+    <>
+      <WorkspaceNameForm
+        layout="card"
+        workspaceId={workspaceId}
+        workspaceName={workspaceName}
+        currency={settings.data.currency}
+        canUpdate={canUpdate}
+      />
+      <CalendarForm {...shared} />
+      <PeriodForm {...shared} />
+      <BudgetForm {...shared} />
+    </>
+  )
+}
+
+function PhoneSettings({ workspaceId, workspaceName, permissions }: SettingsPageProps) {
   const canView = hasPermission(permissions, 'settings', 'view')
   const canUpdate = hasPermission(permissions, 'settings', 'update')
   return (
@@ -155,7 +243,7 @@ function periodAnchorText({ anchor, value }: PeriodAnchorChoice): string {
   return messages.periodRow.calendarMonth
 }
 
-function HolidaysRow({ workspaceId }: HolidaysRowProps) {
+function HolidaysRow({ workspaceId, variant }: HolidaysRowProps) {
   const today = useQuery(todayQueryOptions(workspaceId)).data
   const year = today ? parseIsoDate(today).year : null
   const holidays = useQuery({
@@ -164,6 +252,7 @@ function HolidaysRow({ workspaceId }: HolidaysRowProps) {
   })
   return (
     <SettingsRow
+      variant={variant}
       title={messages.holidaysRow.title}
       detail={
         holidays.data && year !== null ? holidaySummaryText(holidays.data.summary, year) : undefined
@@ -174,10 +263,11 @@ function HolidaysRow({ workspaceId }: HolidaysRowProps) {
   )
 }
 
-function PixRow({ workspaceId }: PixRowProps) {
+function PixRow({ workspaceId, variant }: PixRowProps) {
   const settings = useQuery(workspaceSettingsQueryOptions(workspaceId)).data
   return (
     <SettingsRow
+      variant={variant}
       title={messages.pixRow.title}
       detail={
         settings ? pixRowDetail(settings.pixReceiverName, settings.pixReceiverCity) : undefined
@@ -188,11 +278,12 @@ function PixRow({ workspaceId }: PixRowProps) {
   )
 }
 
-function ChargeTextRow({ workspaceId }: ChargeTextRowProps) {
+function ChargeTextRow({ workspaceId, variant }: ChargeTextRowProps) {
   const text = useQuery(chargeTextQueryOptions(workspaceId)).data
   const row = messages.chargeTextRow
   return (
     <SettingsRow
+      variant={variant}
       title={row.title}
       detail={text && chargeTextRowDetail(text.isDefault)}
       icon={<MessageCircle />}

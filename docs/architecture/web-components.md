@@ -665,6 +665,9 @@ component here, so the form, and later the account, card and planning forms, sha
   40 px "‹" back link (named "Voltar para {page}"), the title in `form-title-lg`, a grey
   `sub-page` description under it, and an optional `actions` slot on the right (a card's "⋯";
   several actions sit side by side, as the entry detail's pencil and "⋯").
+- `PairedCardGrid` (`components/layout/paired-card-grid`, settings design rule 2): desktop cards
+  in two equal columns that stretch, so the two cards of a row share their height and their
+  footers line up; a card that has no pair takes `lg:col-span-2`. Stacked on the phone.
 - `SettingsFormPage` (`components/layout/settings-form-page`): one settings group on its own screen
   (settings design, `SET-01`): the `SubPageHeader`, the fields, and a `footer` with the one "Salvar
   …" fixed to the bottom of the phone (white, top border, as a form over a screen; the shell hides
@@ -1036,6 +1039,7 @@ online with `asChild` are translated to `render`.
   the line icon in a 36 px sunken tile (`icon`, a lucide element; settings design), the title, the
   current value ("15 em 2026 · próximo: Finados, 02/11", through `MetaLine`, 2 lines at most) and a
   chevron, inside an `AccountGroup` titled by the group ("Espaço", "Cobranças", "Planejamento").
+  `variant="tile"` draws it as a bordered tile, side by side on the desktop hub.
 - `NextHolidayCard` (`components/finance/next-holiday-card`, PLAN-07 desktop): "Próximo feriado",
   the large ink `DateBlock`, the name in the display face (2 lines), "Segunda-feira · daqui a 18
   dias" ("amanhã", "hoje"), and at the bottom the amber box with what it moves in the fixed bills

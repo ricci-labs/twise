@@ -1,6 +1,14 @@
 import { cva } from 'class-variance-authority'
 
-export const settingsRowVariants = cva('flex border-border not-first:border-t')
+export const settingsRowVariants = cva('flex border-border', {
+  variants: {
+    variant: {
+      list: 'not-first:border-t',
+      tile: 'rounded-lg border px-3.5',
+    },
+  },
+  defaultVariants: { variant: 'list' },
+})
 
 export const settingsRowLinkVariants = cva(
   'flex min-h-16 min-w-0 flex-1 items-center gap-3 py-2.5 text-ink outline-none focus-visible:ring-2 focus-visible:ring-focus-ring',

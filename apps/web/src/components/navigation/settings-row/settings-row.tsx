@@ -12,9 +12,9 @@ import {
 import { ChevronRight } from 'lucide-react'
 import { cloneElement } from 'react'
 
-export function SettingsRow({ title, detail, icon, link }: SettingsRowProps) {
+export function SettingsRow({ title, detail, icon, link, variant }: SettingsRowProps) {
   return (
-    <li data-slot="settings-row" className={settingsRowVariants()}>
+    <li data-slot="settings-row" className={settingsRowVariants({ variant })}>
       {cloneElement(
         link,
         { className: settingsRowLinkVariants() },
