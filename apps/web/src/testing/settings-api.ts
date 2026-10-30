@@ -109,3 +109,37 @@ export function chargeTextAnswer(
     [`GET ${BASE}/periods`]: () => Response.json(demoPeriodsOf(2026)),
   }
 }
+
+const CALENDAR_PREVIEW = {
+  current: { label: '2026-10', start: '2026-10-01', end: '2026-10-31' },
+  next: { label: '2026-11', start: '2026-11-01', end: '2026-11-30' },
+}
+
+const BUSINESS_DAY_PREVIEW = {
+  current: { label: '2026-10', start: '2026-10-07', end: '2026-11-06' },
+  next: { label: '2026-11', start: '2026-11-09', end: '2026-12-04' },
+}
+
+export function periodPreviewAnswer(): Record<string, FakeAnswer> {
+  return {
+    [`GET ${BASE}/settings/period-preview`]: (request) => {
+      const query = new URL(request.url).searchParams
+      const day = Number(query.get('value'))
+      if (query.get('anchor') === 'day_of_month') {
+        return Response.json(dayOfMonthPreview(day))
+      }
+      return Response.json(
+        query.get('anchor') === 'nth_business_day' ? BUSINESS_DAY_PREVIEW : CALENDAR_PREVIEW,
+      )
+    },
+  }
+}
+
+function dayOfMonthPreview(day: number) {
+  const on = (month: number, dayOfMonth: number) =>
+    `2026-${String(month).padStart(2, '0')}-${String(dayOfMonth).padStart(2, '0')}`
+  return {
+    current: { label: '2026-10', start: on(10, day), end: on(11, day - 1) },
+    next: { label: '2026-11', start: on(11, day), end: on(12, day - 1) },
+  }
+}

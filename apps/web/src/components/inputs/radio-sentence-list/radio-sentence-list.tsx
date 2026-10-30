@@ -17,6 +17,7 @@ export function RadioSentenceList({
   value,
   onSelect,
   onBlur,
+  disabled = false,
   className,
 }: RadioSentenceListProps) {
   return (
@@ -24,6 +25,7 @@ export function RadioSentenceList({
       data-slot="radio-sentence-list"
       aria-label={label}
       value={value}
+      disabled={disabled}
       onValueChange={(next) => onSelect(String(next))}
       className={cn(radioSentenceListVariants(), className)}
     >

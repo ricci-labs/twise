@@ -58,4 +58,24 @@ describe('RadioSentenceList', () => {
     expect(onPicker).toHaveBeenCalledTimes(1)
     expect(onSelect).toHaveBeenCalledTimes(1)
   })
+
+  it('shows the choice dimmed and keeps it when disabled', async () => {
+    const onSelect = vi.fn()
+    const screen = await render(
+      <RadioSentenceList
+        label="Quando"
+        options={rules(vi.fn())}
+        value="day"
+        onSelect={onSelect}
+        disabled
+      />,
+    )
+    const sameDay = screen.getByRole('radio', { name: 'No mesmo dia da primeira data' })
+    await expect.element(sameDay).toBeDisabled()
+    const [, sameDayCard] = screen.container.querySelectorAll('[data-slot=radio-sentence]')
+    await userEvent.click(sameDayCard as HTMLElement, { force: true })
+    expect(onSelect).not.toHaveBeenCalled()
+    const group = screen.getByRole('radiogroup', { name: 'Quando' }).element()
+    expect(getComputedStyle(group).opacity).toBe('0.6')
+  })
 })

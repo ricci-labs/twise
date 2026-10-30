@@ -6,6 +6,7 @@ import {
   type IsoDate,
   nationalHolidays,
   newHolidaySchema,
+  PERIOD_ANCHORS,
   parseIsoDate,
   pixReceivingSchema,
   unknownChargeTags,
@@ -64,3 +65,9 @@ function chargeTextFieldSchema(field: ChargeTextField) {
       }
     })
 }
+
+export const periodFormSchema = z.object({
+  periodAnchor: z.enum(PERIOD_ANCHORS),
+  dayOfMonth: z.string(),
+  businessDay: z.string(),
+})

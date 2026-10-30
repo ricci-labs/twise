@@ -8,6 +8,7 @@ import { SettingsRow } from '@web/components/navigation/settings-row'
 import {
   chargeTextQueryOptions,
   holidaysQueryOptions,
+  periodPreviewQueryOptions,
   todayQueryOptions,
   workspaceSettingsQueryOptions,
 } from '@web/features/settings/api/settings.queries'
@@ -17,13 +18,17 @@ import type {
   ChargeTextRowProps,
   HolidaysRowProps,
   NameRowProps,
+  PeriodAnchorChoice,
+  PeriodRowProps,
   PixRowProps,
   SettingsPageProps,
 } from '@web/features/settings/settings.types'
 import { usePageTitle } from '@web/hooks/use-page-title'
+import { formatRange } from '@web/lib/format/calendar'
 import { hasPermission } from '@web/lib/permissions'
 
 const NAME_ART = 'home'
+const PERIOD_ART = 'calendar'
 const HOLIDAYS_ART = 'calendar'
 const PIX_ART = 'coin'
 const CHARGE_TEXT_ART = 'list'
@@ -42,6 +47,7 @@ export function SettingsPage({ workspaceId, workspaceName, permissions }: Settin
             note={canUpdate ? undefined : messages.hubReadOnly}
           >
             <NameRow workspaceId={workspaceId} workspaceName={workspaceName} />
+            <PeriodRow workspaceId={workspaceId} />
           </AccountGroup>
         )}
         {hasPermission(permissions, 'planning', 'view') && (
@@ -71,6 +77,44 @@ function NameRow({ workspaceId, workspaceName }: NameRowProps) {
       link={<Link to="/w/$workspaceId/settings/name" params={{ workspaceId }} />}
     />
   )
+}
+
+function PeriodRow({ workspaceId }: PeriodRowProps) {
+  const settings = useQuery(workspaceSettingsQueryOptions(workspaceId)).data
+  const choice = settings && { anchor: settings.periodAnchor, value: settings.periodAnchorValue }
+  const preview = useQuery({
+    ...periodPreviewQueryOptions(
+      workspaceId,
+      choice?.anchor ?? 'calendar_month',
+      choice?.value ?? null,
+    ),
+    enabled: choice !== undefined,
+  }).data
+  return (
+    <SettingsRow
+      title={messages.periodRow.title}
+      detail={
+        choice && preview
+          ? messages.periodRow.detail(
+              periodAnchorText(choice),
+              formatRange(preview.current.start, preview.current.end),
+            )
+          : undefined
+      }
+      icon={PERIOD_ART}
+      link={<Link to="/w/$workspaceId/settings/period" params={{ workspaceId }} />}
+    />
+  )
+}
+
+function periodAnchorText({ anchor, value }: PeriodAnchorChoice): string {
+  if (anchor === 'day_of_month' && value !== null) {
+    return messages.periodRow.dayOfMonth(value)
+  }
+  if (anchor === 'nth_business_day' && value !== null) {
+    return messages.periodRow.businessDay(value)
+  }
+  return messages.periodRow.calendarMonth
 }
 
 function HolidaysRow({ workspaceId }: HolidaysRowProps) {

@@ -1,4 +1,5 @@
-import { queryOptions } from '@tanstack/react-query'
+import type { PeriodAnchor } from '@financas/shared'
+import { keepPreviousData, queryOptions } from '@tanstack/react-query'
 import { unwrap } from '@web/lib/api/unwrap'
 import { apiClient } from '@web/lib/api-client'
 import { queryKeys } from '@web/lib/query-keys'
@@ -25,6 +26,31 @@ export function workspaceSettingsQueryOptions(workspaceId: string) {
 
 export function fetchWorkspaceSettings(workspaceId: string) {
   return unwrap(workspaceApi.settings.$get({ param: { workspaceId } }))
+}
+
+export function periodPreviewQueryOptions(
+  workspaceId: string,
+  anchor: PeriodAnchor,
+  value: number | null,
+) {
+  return queryOptions({
+    queryKey: [...queryKeys.workspace(workspaceId), 'period-preview', anchor, value] as const,
+    queryFn: () => fetchPeriodPreview(workspaceId, anchor, value),
+    placeholderData: keepPreviousData,
+  })
+}
+
+export function fetchPeriodPreview(
+  workspaceId: string,
+  anchor: PeriodAnchor,
+  value: number | null,
+) {
+  return unwrap(
+    workspaceApi.settings['period-preview'].$get({
+      param: { workspaceId },
+      query: value === null ? { anchor } : { anchor, value },
+    }),
+  )
 }
 
 export function holidaysQueryOptions(workspaceId: string, year: number) {

@@ -15,6 +15,7 @@ import {
   chargeTextAnswer,
   holidaysAnswer,
   NO_PIX,
+  periodPreviewAnswer,
   WORKSPACE_TEXT,
   workspaceSettingsAnswer,
 } from '@web/testing/settings-api'
@@ -35,6 +36,7 @@ async function openSettings(
     [`GET /api/workspaces/${WORKSPACE_ID}`]: access,
     ...holidaysAnswer(),
     ...workspaceSettingsAnswer(),
+    ...periodPreviewAnswer(),
     ...chargeTextAnswer(),
     ...answers,
   })
@@ -71,6 +73,10 @@ describe('Configurações', () => {
     const name = workspace.getByRole('link', { name: /Nome e moeda/ })
     await expect.element(name.getByText('Casa · Real (R$)')).toBeVisible()
     expect(workspace.getByText(/Você pode ver/).query()).toBeNull()
+    const period = workspace.getByRole('link', { name: /Mês financeiro/ })
+    await expect
+      .element(period.getByText('Dia 1 (mês do calendário) · Período atual: 1 out – 31 out'))
+      .toBeVisible()
     await name.click()
     await expect
       .poll(() => app.router.state.location.pathname)
