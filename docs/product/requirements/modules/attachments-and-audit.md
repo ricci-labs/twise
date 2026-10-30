@@ -59,8 +59,8 @@ deleted items, G75). E.g.:
 - "Member A excluiu a conta Carteira";
 - "Member A mudou o papel de Member B para Membro".
 Tapping an event opens the change in a sheet (phone) or the right pane (desktop): who, when and how,
-before and after field by field with the changed fields highlighted, labels and formatted money and
-dates from the API (G75), the reference sentence, "Ver lançamento", and "Neste lançamento" (the
+before and after field by field with the changed fields highlighted (the API's `changes`: field
+keys, kinds and names for ids, G75; the web holds the labels and formats money and dates), the reference sentence, "Ver lançamento", and "Neste lançamento" (the
 item's other changes).
 **RF-AUD-2** Filters: area (the API's `area`, also on each event: "Lançamentos" = `journal_entries`, "Contas" =
 `ledger_accounts`, "Cartões" = `card_details`, "Contatos" = `contacts`, "Cobranças" = `charges`,

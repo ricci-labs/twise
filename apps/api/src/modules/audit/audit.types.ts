@@ -1,6 +1,12 @@
 import type { Database, WorkspaceTransaction } from '@api/core/db/db.types'
 import type { auditLog } from '@api/modules/audit/audit.table'
-import type { AuditAction, AuditArea } from '@financas/shared'
+import type {
+  AuditAction,
+  AuditArea,
+  AuditRawChange,
+  AuditRawValue,
+  AuditReferenceKind,
+} from '@financas/shared'
 import type { PgColumn, PgTable } from 'drizzle-orm/pg-core'
 
 export type AuditRow = typeof auditLog.$inferSelect
@@ -29,10 +35,23 @@ export type ActorActivity = {
   at: Date
 }
 
+export type AuditValue = AuditRawValue | AuditName
+
+export type AuditFieldChange = Omit<AuditRawChange, 'before' | 'after'> & {
+  before: AuditValue
+  after: AuditValue
+}
+
+export type DescribedEvent = {
+  event: AuditEvent
+  changes: AuditRawChange[]
+}
+
 export type AuditItem = AuditEvent & {
   actor: AuditActor | null
   area: AuditArea | null
   entityLabel: string | null
+  changes: AuditFieldChange[]
 }
 
 export type AuditName = {
@@ -51,7 +70,7 @@ export type AuditNameLookup = (
   ids: string[],
 ) => Promise<ReadonlyMap<string, AuditName>>
 
-export type AuditNameKind = 'account' | 'contact' | 'charge' | 'rule' | 'role' | 'user'
+export type AuditNameKind = AuditReferenceKind | 'charge'
 
 export type AuditNames = Record<Exclude<AuditNameKind, 'user'>, AuditNameLookup>
 

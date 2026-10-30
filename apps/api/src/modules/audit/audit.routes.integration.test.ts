@@ -513,7 +513,15 @@ describe('workspace, roles, invitations and members', () => {
     })
 
     await ok(owner.patch(`${home}/members/${membershipId}`, { roleId: await viewerRoleOf(home) }))
-    expect((await auditOf('memberships', membershipId))[0]).toMatchObject({ action: 'update' })
+    const [roleChange] = await auditOf('memberships', membershipId)
+    expect(roleChange).toMatchObject({ action: 'update' })
+    expect(roleChange?.changes.find((change) => change.field === 'roleId')).toMatchObject({
+      kind: 'reference',
+      reference: 'role',
+      before: { name: 'Lançador' },
+      after: { name: expect.any(String) },
+      changed: true,
+    })
     await ok(owner.del(`${home}/members/${membershipId}`, { reason: 'Saiu' }))
     expect((await auditOf('memberships', membershipId))[0]).toMatchObject({
       action: 'delete',
@@ -549,6 +557,48 @@ describe('workspace, roles, invitations and members', () => {
     expect((await auditOf('workspace_settings', homeId))[0]).toMatchObject({
       area: 'settings',
       entityLabel: null,
+    })
+  })
+})
+
+describe('changes in GET /audit', () => {
+  it('list the fields before and after, with names for the ids and the changed ones marked', async () => {
+    const bakeryId = await idOf(
+      owner.post(`${workspacePath}/accounts`, {
+        kind: 'expense_category',
+        name: 'Padaria',
+        parentId: groceriesId,
+      }),
+    )
+    const entryId = await idOf(member.post(`${workspacePath}/entries`, expense('Pão', 1850)))
+    const replacementId = await idOf(
+      member.put(`${workspacePath}/entries/${entryId}`, {
+        ...expense('Pão', 2100),
+        categoryId: bakeryId,
+      }),
+    )
+
+    const [creation] = (await auditAt(`?rowId=${entryId}`)).items
+    expect(creation?.changes.find((change) => change.field === 'accountId')).toMatchObject({
+      before: null,
+      after: { name: 'Conta X', parentName: null },
+    })
+    const [replacement] = (await auditAt(`?rowId=${replacementId}`)).items
+    const byField = Object.fromEntries(
+      (replacement?.changes ?? []).map((change) => [change.field, change]),
+    )
+    expect(byField.amountCents).toMatchObject({
+      kind: 'money',
+      before: 1850,
+      after: 2100,
+      changed: true,
+    })
+    expect(byField.description).toMatchObject({ before: 'Pão', after: 'Pão', changed: false })
+    expect(byField.occurredOn).toMatchObject({ kind: 'date', changed: false })
+    expect(byField.categoryId).toMatchObject({
+      before: { name: 'Mercado', parentName: null },
+      after: { name: 'Padaria', parentName: 'Mercado' },
+      changed: true,
     })
   })
 })
@@ -620,6 +670,18 @@ describe('labels in GET /audit', () => {
     )
     const [budget] = (await auditAt('?tableName=budget_lines&limit=1')).items
     expect(budget?.entityLabel).toBe('Mercado')
+
+    const paid = await idOf(
+      owner.post(`${base}/entries`, { ...expense('Faxina', 9000), occurredOn: today }),
+    )
+    await ok(owner.post(`${base}/occurrences/${occurrenceId}/unskip`))
+    await ok(owner.post(`${base}/occurrences/${occurrenceId}/match`, { entryId: paid }))
+    const matched = await latestOf('planned_occurrences', occurrenceId)
+    expect(matched?.changes.find((change) => change.field === 'matchedEntryId')).toMatchObject({
+      before: null,
+      after: { name: 'Faxina', parentName: null },
+      changed: true,
+    })
 
     const planning = (await auditAt('?area=planning&limit=50')).items
     expect(planning.length).toBeGreaterThan(0)

@@ -1,11 +1,15 @@
 import type { WorkspaceTransaction } from '@api/core/db/db.types'
 import type {
   AuditEvent,
+  AuditFieldChange,
   AuditName,
   AuditNameKind,
   AuditNames,
+  AuditValue,
+  DescribedEvent,
   LabelReference,
 } from '@api/modules/audit/audit.types'
+import type { AuditRawChange, AuditRawValue } from '@financas/shared'
 
 const SNAPSHOT_LABELS: Readonly<Record<string, readonly string[]>> = {
   journal_entries: ['description'],
@@ -32,10 +36,14 @@ const REFERENCE_LABELS: Readonly<Record<string, LabelReference>> = {
   membership_preferences: { kind: 'user', field: null },
 }
 
-export function referencedIds(events: AuditEvent[], kind: AuditNameKind): string[] {
-  const ids = events.flatMap((event) => {
+export function referencedIds(described: DescribedEvent[], kind: AuditNameKind): string[] {
+  const ids = described.flatMap(({ event, changes }) => {
     const reference = REFERENCE_LABELS[event.tableName]
-    return reference?.kind === kind ? (referencedIdOf(event, reference) ?? []) : []
+    const labelId = reference?.kind === kind ? referencedIdOf(event, reference) : null
+    const changeIds = changes
+      .filter((change) => change.reference === kind)
+      .flatMap((change) => [change.before, change.after].filter(isId))
+    return [...(labelId ? [labelId] : []), ...changeIds]
   })
   return [...new Set(ids)]
 }
@@ -43,7 +51,7 @@ export function referencedIds(events: AuditEvent[], kind: AuditNameKind): string
 export async function readReferencedNames(
   tx: WorkspaceTransaction,
   names: AuditNames,
-  events: AuditEvent[],
+  events: DescribedEvent[],
 ): Promise<Map<AuditNameKind, ReadonlyMap<string, AuditName>>> {
   const kinds = Object.keys(names) as (keyof AuditNames)[]
   const found = await Promise.all(
@@ -65,6 +73,23 @@ export function entityLabelOf(
   const fields = SNAPSHOT_LABELS[event.tableName] ?? []
   const label = fields.map((field) => snapshot[field]).find((value) => typeof value === 'string')
   return typeof label === 'string' && label !== '' ? label : null
+}
+
+export function resolvedChange(
+  change: AuditRawChange,
+  names: ReadonlyMap<AuditNameKind, ReadonlyMap<string, AuditName>>,
+): AuditFieldChange {
+  const { reference } = change
+  if (!reference) {
+    return change
+  }
+  const resolve = (value: AuditRawValue): AuditValue =>
+    isId(value) ? (names.get(reference)?.get(value) ?? null) : null
+  return { ...change, before: resolve(change.before), after: resolve(change.after) }
+}
+
+function isId(value: AuditRawValue): value is string {
+  return typeof value === 'string' && value !== ''
 }
 
 function referencedIdOf(event: AuditEvent, reference: LabelReference): string | null {

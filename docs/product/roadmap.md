@@ -445,7 +445,8 @@ updated: 2026-10-30
      blocks), each desktop screen checked at 1440 and 1920 px (#418–#422; Configurações and Pix
      wait for step 7, the contact page for `WorkScreen`)
   4. [x] API: the period preview (G73, #423) and role usage (G74)
-  5. [ ] API: the readable history, the `actorId` filter and the members' last activity (G75)
+  5. [x] API: the readable history (actor, area, item names and the field diff), the `actorId` and
+     `area` filters and the members' last activity (G75, #425–#427)
   6. [ ] API: the purchase simulation's verdict, payment method effect and period (G76–G78)
   7. [ ] Web: the Configurações hub and its screens (`SET-01`)
   8. [ ] Web: Membros, Papéis and Convites as tabs (`MEM-01..03`)

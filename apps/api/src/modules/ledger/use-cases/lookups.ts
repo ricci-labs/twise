@@ -1,7 +1,11 @@
 import type { WorkspaceTransaction } from '@api/core/db/db.types'
 import { ValidationError } from '@api/core/http/errors'
 import { type AuditName, namesById } from '@api/modules/audit'
-import { findUsableAccounts, selectAccountNames } from '@api/modules/ledger/ledger.repository'
+import {
+  findUsableAccounts,
+  selectAccountNames,
+  selectEntryNames,
+} from '@api/modules/ledger/ledger.repository'
 import type { AccountsById } from '@api/modules/ledger/ledger.types'
 import type { AccountRef } from '@financas/shared'
 
@@ -26,4 +30,11 @@ export async function readAccountNames(
   accountIds: string[],
 ): Promise<ReadonlyMap<string, AuditName>> {
   return namesById(accountIds.length === 0 ? [] : await selectAccountNames(tx, accountIds))
+}
+
+export async function readEntryNames(
+  tx: WorkspaceTransaction,
+  entryIds: string[],
+): Promise<ReadonlyMap<string, AuditName>> {
+  return namesById(entryIds.length === 0 ? [] : await selectEntryNames(tx, entryIds))
 }
