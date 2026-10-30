@@ -30,3 +30,34 @@ export const permissionToggleVariants = cva(
     },
   },
 )
+
+export const permissionMatrixVariants = cva(
+  'w-full border-collapse text-left text-body-sm data-disabled:opacity-60',
+)
+
+export const permissionMatrixHeadVariants = cva('pb-2 font-normal text-ink-muted', {
+  variants: { align: { start: 'text-left', center: 'w-24 text-center' } },
+  defaultVariants: { align: 'start' },
+})
+
+export const permissionMatrixRowVariants = cva('border-t border-border')
+
+export const permissionMatrixAreaVariants = cva('py-3 pr-4 font-semibold text-ink')
+
+export const permissionMatrixCellVariants = cva('py-2 text-center text-ink-muted')
+
+export const permissionCheckboxBoxVariants = cva('relative inline-grid size-6 place-items-center')
+
+export const permissionCheckboxVariants = cva([
+  'size-6 cursor-pointer appearance-none rounded-sm border border-border-control bg-surface outline-none',
+  'focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-offset-2',
+  'checked:border-ink checked:bg-ink',
+  'disabled:cursor-not-allowed disabled:bg-sunken',
+])
+
+export const permissionCheckboxMarkVariants = cva(
+  'pointer-events-none absolute size-4 text-ink-muted',
+  {
+    variants: { isChecked: { true: 'text-on-action-primary', false: 'hidden' } },
+  },
+)

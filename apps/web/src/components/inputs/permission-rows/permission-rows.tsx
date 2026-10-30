@@ -9,13 +9,22 @@ import { TwiseIcon } from '@web/components/icons/twise-icon'
 import { permissionRowsMessages as messages } from '@web/components/inputs/permission-rows/permission-rows.messages'
 import type {
   PermissionAreaProps,
+  PermissionCheckboxProps,
   PermissionRowsProps,
   PermissionToggleProps,
 } from '@web/components/inputs/permission-rows/permission-rows.types'
 import {
   permissionAreaTitleVariants,
   permissionAreaVariants,
+  permissionCheckboxBoxVariants,
+  permissionCheckboxMarkVariants,
+  permissionCheckboxVariants,
   permissionGridVariants,
+  permissionMatrixAreaVariants,
+  permissionMatrixCellVariants,
+  permissionMatrixHeadVariants,
+  permissionMatrixRowVariants,
+  permissionMatrixVariants,
   permissionRowsVariants,
   permissionToggleVariants,
 } from '@web/components/inputs/permission-rows/permission-rows.variants'
@@ -29,8 +38,21 @@ export function PermissionRows({
   value,
   allowed,
   isDisabled = false,
+  layout = 'rows',
   onChange,
 }: PermissionRowsProps) {
+  if (layout === 'matrix') {
+    return (
+      <PermissionMatrix
+        label={label}
+        areas={areas}
+        value={value}
+        allowed={allowed}
+        isDisabled={isDisabled}
+        onChange={onChange}
+      />
+    )
+  }
   return (
     <fieldset
       aria-label={label}
@@ -56,6 +78,97 @@ export function PermissionRows({
         </PermissionArea>
       ))}
     </fieldset>
+  )
+}
+
+function PermissionMatrix({
+  label,
+  areas,
+  value,
+  allowed,
+  isDisabled = false,
+  onChange,
+}: PermissionRowsProps) {
+  return (
+    <table
+      aria-label={label}
+      data-slot="permission-matrix"
+      data-disabled={isDisabled || undefined}
+      className={permissionMatrixVariants()}
+    >
+      <thead>
+        <tr>
+          <th scope="col" className={permissionMatrixHeadVariants({ align: 'start' })}>
+            {messages.area}
+          </th>
+          {PERMISSION_ACTIONS.map((action) => (
+            <th
+              key={action}
+              scope="col"
+              className={permissionMatrixHeadVariants({ align: 'center' })}
+            >
+              {messages.actions[action]}
+            </th>
+          ))}
+        </tr>
+      </thead>
+      <tbody>
+        {areas.map((area) => (
+          <tr key={area.module} className={permissionMatrixRowVariants()}>
+            <th scope="row" className={permissionMatrixAreaVariants()}>
+              {area.label}
+            </th>
+            {PERMISSION_ACTIONS.map((action) => (
+              <td key={action} className={permissionMatrixCellVariants()}>
+                {isValidPermission({ module: area.module, action }) ? (
+                  <PermissionCheckbox
+                    area={area.label}
+                    action={action}
+                    isOn={holds(value, area.module, action)}
+                    isLocked={!holds(allowed, area.module, action)}
+                    isDisabled={isDisabled}
+                    onToggle={(isOn) => onChange(toggled(value, area.module, action, isOn))}
+                  />
+                ) : (
+                  <>
+                    <span aria-hidden="true">{messages.none}</span>
+                    <span className="sr-only">{messages.notInArea}</span>
+                  </>
+                )}
+              </td>
+            ))}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  )
+}
+
+function PermissionCheckbox({
+  area,
+  action,
+  isOn,
+  isLocked,
+  isDisabled,
+  onToggle,
+}: PermissionCheckboxProps) {
+  return (
+    <span className={permissionCheckboxBoxVariants()}>
+      <input
+        type="checkbox"
+        checked={isOn}
+        aria-label={messages.checkbox(messages.actions[action], area)}
+        disabled={isDisabled || isLocked}
+        title={isLocked ? messages.locked : undefined}
+        onChange={(event) => onToggle(event.target.checked)}
+        className={permissionCheckboxVariants()}
+      />
+      {isLocked ? (
+        <TwiseIcon name="lock" size="sm" className={permissionCheckboxMarkVariants()} />
+      ) : (
+        <Check aria-hidden="true" className={permissionCheckboxMarkVariants({ isChecked: isOn })} />
+      )}
+    </span>
   )
 }
 

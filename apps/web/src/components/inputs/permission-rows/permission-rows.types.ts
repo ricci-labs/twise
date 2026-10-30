@@ -12,6 +12,7 @@ export type PermissionRowsProps = {
   value: readonly Permission[]
   allowed: readonly Permission[]
   isDisabled?: boolean
+  layout?: 'rows' | 'matrix'
   onChange: (next: Permission[]) => void
 }
 
@@ -27,4 +28,13 @@ export type PermissionToggleProps = {
 export type PermissionAreaProps = {
   title: string
   children: ReactNode
+}
+
+export type PermissionCheckboxProps = {
+  area: string
+  action: PermissionAction
+  isOn: boolean
+  isLocked: boolean
+  isDisabled: boolean
+  onToggle: (isOn: boolean) => void
 }
