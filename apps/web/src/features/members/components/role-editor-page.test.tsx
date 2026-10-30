@@ -12,7 +12,7 @@ import {
   workspaceAccess,
   workspaceList,
 } from '@web/testing/fake-api'
-import { membersAnswer, rolesAnswer } from '@web/testing/members-api'
+import { invitationsAnswer, membersAnswer, rolesAnswer } from '@web/testing/members-api'
 import type { FakeAnswer } from '@web/testing/testing.types'
 import { beforeEach, describe, expect, it } from 'vitest'
 import { page, userEvent } from 'vitest/browser'
@@ -166,5 +166,44 @@ describe('MEM-02 role editor', () => {
     await expect
       .poll(() => app.router.state.location.pathname)
       .toBe(`${ROLES_PATH}/role-accountant`)
+  })
+
+  it('says who still uses a role instead of deleting it, and leads there', async () => {
+    const app = await openEditor(`${ROLES_PATH}/role-accountant`, invitationsAnswer())
+    await page.getByRole('button', { name: 'Excluir papel' }).click()
+    const dialog = page.getByRole('alertdialog', { name: 'Não dá para excluir Contador' })
+    await expect
+      .element(dialog.getByText(/Um convite pendente usa este papel \(member\.c@exemplo\.com\)/))
+      .toBeVisible()
+    await dialog.getByRole('button', { name: 'Ver convites' }).click()
+    await expect
+      .poll(() => app.router.state.location.pathname)
+      .toBe(`/w/${WORKSPACE_ID}/members/invitations`)
+  })
+
+  it('deletes a role nobody uses after confirming', async () => {
+    let deleted = false
+    const app = await openEditor(`${ROLES_PATH}/role-accountant`, {
+      ...invitationsAnswer([]),
+      [`DELETE ${BASE}/roles/role-accountant`]: () => {
+        deleted = true
+        return new Response(null, { status: NO_CONTENT })
+      },
+    })
+    await page.getByRole('button', { name: 'Excluir papel' }).click()
+    await page
+      .getByRole('alertdialog', { name: 'Excluir Contador?' })
+      .getByRole('button', { name: 'Excluir papel' })
+      .click()
+
+    await expect.element(page.getByText('Papel Contador excluído.')).toBeVisible()
+    await expect.poll(() => app.router.state.location.pathname).toBe(ROLES_PATH)
+    expect(deleted).toBe(true)
+  })
+
+  it('never offers to delete a system role', async () => {
+    await openEditor(`${ROLES_PATH}/role-admin`)
+    await expect.element(page.getByRole('heading', { name: 'Admin', level: 1 })).toBeVisible()
+    expect(page.getByRole('button', { name: 'Excluir papel' }).query()).toBeNull()
   })
 })
