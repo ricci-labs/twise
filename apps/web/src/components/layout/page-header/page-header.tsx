@@ -6,12 +6,14 @@ import {
   pageHeaderVariants,
 } from '@web/components/layout/page-header/page-header.variants'
 
-export function PageHeader({ title, description, actions }: PageHeaderProps) {
+export function PageHeader({ title, description, descriptionOn, actions }: PageHeaderProps) {
   return (
     <header data-slot="page-header" className={pageHeaderVariants()}>
       <div className="min-w-0">
         <h1 className={pageHeaderTitleVariants()}>{title}</h1>
-        {description && <p className={pageHeaderDescriptionVariants()}>{description}</p>}
+        {description && (
+          <p className={pageHeaderDescriptionVariants({ descriptionOn })}>{description}</p>
+        )}
       </div>
       {actions && <div className={pageHeaderActionsVariants()}>{actions}</div>}
     </header>

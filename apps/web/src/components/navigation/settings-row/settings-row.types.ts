@@ -8,6 +8,6 @@ export type SettingsRowLinkProps = {
 export type SettingsRowProps = {
   title: string
   detail?: string
-  icon: string
+  icon: ReactNode
   link: ReactElement<SettingsRowLinkProps>
 }

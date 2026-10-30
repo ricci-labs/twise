@@ -6,9 +6,10 @@ export const settingsMessages = {
   groups: {
     workspace: 'Espaço',
     planning: 'Planejamento',
-    receiving: 'Recebimentos',
+    receiving: 'Cobranças',
   },
   readOnly: 'Só donos e admins mudam as configurações. Peça a um deles.',
+  lead: (workspaceName: string) => `Do espaço ${workspaceName}. Valem para todos os membros.`,
   hubReadOnly: 'Só donos e admins mudam as configurações. Você pode ver.',
   saved: 'Configurações salvas.',
   saving: 'Salvando…',
@@ -121,7 +122,7 @@ export const settingsMessages = {
   },
   pixRow: {
     title: 'Recebimento por Pix',
-    configured: (receiverName: string) => `Chave cadastrada · ${receiverName}`,
+    configured: (receiverName: string, receiverCity: string) => `${receiverName} · ${receiverCity}`,
     missing: 'Não configurado',
   },
   chargeTextRow: {

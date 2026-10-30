@@ -1,9 +1,9 @@
-import { CategoryArt } from '@web/components/display/category-art'
 import { MetaLine } from '@web/components/display/meta-line'
 import type { SettingsRowProps } from '@web/components/navigation/settings-row/settings-row.types'
 import {
   settingsRowChevronVariants,
   settingsRowDetailVariants,
+  settingsRowIconVariants,
   settingsRowLinkVariants,
   settingsRowTextVariants,
   settingsRowTitleVariants,
@@ -19,7 +19,13 @@ export function SettingsRow({ title, detail, icon, link }: SettingsRowProps) {
         link,
         { className: settingsRowLinkVariants() },
         <>
-          <CategoryArt name={title} icon={icon} size="list" />
+          <span
+            aria-hidden="true"
+            data-slot="settings-row-icon"
+            className={settingsRowIconVariants()}
+          >
+            {icon}
+          </span>
           <span className={settingsRowTextVariants()}>
             <span className={settingsRowTitleVariants()}>{title}</span>
             {detail && (
