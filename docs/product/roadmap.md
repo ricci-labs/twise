@@ -447,7 +447,8 @@ updated: 2026-10-30
   4. [x] API: the period preview (G73, #423) and role usage (G74)
   5. [x] API: the readable history (actor, area, item names and the field diff), the `actorId` and
      `area` filters and the members' last activity (G75, #425–#427)
-  6. [ ] API: the purchase simulation's verdict, payment method effect and period (G76–G78)
+  6. [x] API: the purchase simulation's verdict, payment method effect and period (G76–G78,
+     #428, #429, #430)
   7. [ ] Web: the Configurações hub and its screens (`SET-01`)
   8. [ ] Web: Membros, Papéis and Convites as tabs (`MEM-01..03`)
   9. [ ] Web: Minha conta (`ME-01`)

@@ -7,6 +7,8 @@ const PERIOD_END = '2026-11-04'
 function period(freeToSpendBefore: number, freeToSpendAfter: number) {
   return {
     label: '2026-10',
+    start: '2026-10-05',
+    end: PERIOD_END,
     freeToSpendBefore,
     freeToSpendAfter,
     dailyAllowanceBefore: null,
