@@ -1,6 +1,9 @@
 import { TextLink } from '@web/components/actions/text-link'
 import { occurrenceGroupMessages as messages } from '@web/components/finance/occurrence-group/occurrence-group.messages'
-import type { OccurrenceGroupProps } from '@web/components/finance/occurrence-group/occurrence-group.types'
+import type {
+  OccurrenceGroupItemsProps,
+  OccurrenceGroupProps,
+} from '@web/components/finance/occurrence-group/occurrence-group.types'
 import {
   occurrenceGroupAddVariants,
   occurrenceGroupCountVariants,
@@ -11,6 +14,7 @@ import {
   occurrenceGroupTitleVariants,
   occurrenceGroupVariants,
 } from '@web/components/finance/occurrence-group/occurrence-group.variants'
+import { TileGrid } from '@web/components/layout/tile-grid'
 import { Plus } from 'lucide-react'
 import { useId } from 'react'
 
@@ -61,9 +65,22 @@ export function OccurrenceGroup({
       {empty && count === 0 ? (
         <p className={occurrenceGroupEmptyVariants()}>{empty}</p>
       ) : (
-        <ul className={occurrenceGroupListVariants({ tone, layout })}>{children}</ul>
+        <GroupItems tone={tone} layout={layout}>
+          {children}
+        </GroupItems>
       )}
       {footer}
     </section>
   )
+}
+
+function GroupItems({ tone, layout, children }: OccurrenceGroupItemsProps) {
+  if (layout === 'cards') {
+    return (
+      <TileGrid density="compact" render={<ul />}>
+        {children}
+      </TileGrid>
+    )
+  }
+  return <ul className={occurrenceGroupListVariants({ tone, layout })}>{children}</ul>
 }

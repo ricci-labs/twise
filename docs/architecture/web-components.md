@@ -113,6 +113,12 @@ from outside.
   canvas in the line's font and breaks before a piece that doesn't fit, which then starts its line
   without the dot and with a capital letter; the dot stays for screen readers (`sr-only`). Tests
   measure the line's box with `supportLineOf(container)` from `testing/long-text.ts`, not a piece.
+- **Tile grids** (same section → Quantities): tiles that wrap (cards, goals) sit in `TileGrid`
+  (`components/layout/tile-grid`), a wrapping flex row from `lg`: each tile at least 320 px, up to
+  four per row, and the tiles grow to fill their row, so the last row never leaves a hole (five
+  become 3 + 2 wider ones). When four per row would leave one tile alone (5, 9…), the row stops at
+  three. Tiles in a row share its height by stretching; a tile never sets `h-full` on itself (inside
+  a page column that height resolves against the whole grid). Stacked on the phone.
 
 ## Forms
 React Hook Form v7 + `zodResolver` with the **schemas from `@financas/shared`** (ADR 0005,

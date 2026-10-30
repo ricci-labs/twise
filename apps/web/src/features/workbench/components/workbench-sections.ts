@@ -145,6 +145,7 @@ import { pageHeaderExamples } from '@web/components/layout/page-header'
 import { sheetExamples } from '@web/components/layout/sheet'
 import { sidePanelExamples } from '@web/components/layout/side-panel'
 import { subPageHeaderExamples } from '@web/components/layout/sub-page-header'
+import { tileGridExamples } from '@web/components/layout/tile-grid'
 import { appSidebarExamples } from '@web/components/navigation/app-sidebar'
 import { bottomTabBarExamples } from '@web/components/navigation/bottom-tab-bar'
 import { breadcrumbExamples } from '@web/components/navigation/breadcrumb'
@@ -212,6 +213,7 @@ export const workbenchSections: readonly ComponentExamples[] = [
   cardBlockExamples,
   dataTableExamples,
   pageFrameExamples,
+  tileGridExamples,
   pageHeaderExamples,
   cyclePreviewExamples,
   entryDayGroupExamples,
