@@ -1,7 +1,7 @@
 ---
 summary: Functional requirements for the home screens — the period overview (four indicators, insights, bills due, balance forecast, pace, budgets, coming months, where income goes, invoices, reserve and goals, commissions, receivables, achievements of a closed period, first run), "posso comprar?" and the commission split suggestion (HOME-01..03).
 read_when: Designing or building HOME-01, HOME-02 or HOME-03, or writing the pt-BR text of an insight.
-updated: 2026-10-21
+updated: 2026-10-29
 ---
 
 # Dashboard
@@ -180,27 +180,41 @@ picker until there are numbers. Right after `WS-01` the band plays its entrance 
 (`../../../design/home/motion.md`).
 
 ## HOME-02 "Posso comprar?" (MVP)
-Route `/posso-comprar`. `GET /simulations/purchase` (read-only, nothing is recorded).
+Route `/posso-comprar`. `GET /simulations/purchase` (read-only, nothing is recorded). Design:
+`../../../design/purchase/` (approved on 2026-10-29; replaces the 09/10 draft in the Home design).
 
 | Field | Label | Input | Required | Rules |
 |---|---|---|---|---|
 | amountCents | "Valor da compra" | money | yes | > 0 |
 | payment | "Como vai pagar" | radio "No cartão" / "Na conta" | yes | |
 | cardAccountId | "Cartão" | card picker (archived allowed but hidden by default) | when "No cartão" | a card |
-| installmentCount | "Parcelas" | stepper, default 1 | when "No cartão" | 1–48 and ≤ the amount in cents (prevents a known API error, `../api-gaps.md`) |
+| installmentCount | "Parcelas" | stepper, default 1, with "6× de R$ 540,00" beside it and the preview of the invoices each installment falls on, as in the new entry (RF-ENT-6, computed on the device) | when "No cartão" | 1–48 and ≤ the amount in cents (prevents a known API error, `../api-gaps.md`): a field error, and "+" stops at the max |
 | paidFromAccountId | "Conta" | money-account picker | when "Na conta" | a money account; installments hidden |
 | occurredOn | "Quando" | date, default "Hoje" | no | valid date |
 
-**RF-HOME-11** "Simular" (or live, debounced 500 ms after a valid change) shows:
-- this period: "Livre para gastar: R$ A → R$ B" and "Por dia: R$ C → R$ D";
-- the next 6 months: a list or bars with "Comprometido: R$ X → R$ Y ({p}% → {q}% da renda fixa)",
-  only months that change highlighted;
-- new alerts (`newInsights`) with the insight sentences, e.g. "Março ficaria com 82% da renda fixa
-  comprometida.";
-- a verdict line: no new alert → "Cabe no orçamento."; only warnings → "Cabe, mas aperta."; any
-  alert → "Não cabe sem estourar." (wording to validate in design).
+**RF-HOME-11** The result runs **live only**, 500 ms after each valid change (no "Simular" button;
+only the last request counts). Before the first valid change the result area explains what will
+appear; while loading, a skeleton in the result's shape. The result, in order:
+- the verdict from the API (G76): "Cabe no orçamento." / "Cabe, mas aperta." / "Não cabe sem
+  estourar.", with one sentence below built from `verdictReason`;
+- "Neste período" as before-and-after blocks (`../ui-standards.md` → Before and after values):
+  "Livre para gastar", "Por dia" and the payment method's line (the card's free limit or the
+  account's balance today, G77). A purchase that falls in another period shows "sem mudança" here
+  and a note saying where the effect shows (G78);
+- "Próximos meses": bars for the next 6 months (already committed + this purchase, the 70% line
+  from `committedReferencePercent`), only the months that change in strong colour; above 100% the bar
+  stops at the end with an overflow mark;
+- "O que passaria a aparecer nos avisos": the new alerts (`newInsights`) with the insight sentences,
+  e.g. "Março ficaria com 82% da renda fixa comprometida.", or "Nenhum aviso novo apareceria.";
+- "É só uma simulação: nada foi registrado." and "Registrar esta compra", which opens `ENT-02`
+  filled in (amount, card or account, installments, date); hidden without `entries:create`.
+The card picker shows the due day and the free limit of each card (G77), archived cards behind
+"Mostrar arquivados" (they can be simulated). Desktop is a work screen (`../ui-standards.md` → Work
+screens): "A compra" on the left, "O que muda" on the right with "Atualiza enquanto você digita",
+"Neste período" as three blocks side by side.
 Errors: `SIMULATION_QUERY_INVALID` (fields), `SIMULATION_CARD_INVALID` / `SIMULATION_ACCOUNT_INVALID`
-(field: "Escolha um cartão/conta ativo."). The same simulation becomes an agent tool on WhatsApp
+(field: "Escolha um cartão/conta ativo."). Offline and server errors replace the result
+(`../ui-standards.md` → Offline or error where a result appears); an old result is never kept. The same simulation becomes an agent tool on WhatsApp
 later (`../../../integrations/ai-agent.md`).
 
 ## HOME-03 Commission split suggestion (MVP)

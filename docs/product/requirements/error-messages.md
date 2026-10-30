@@ -1,7 +1,7 @@
 ---
 summary: Catalog of every API error code — HTTP status, when it happens, the pt-BR message the user sees, and where it shows (field, form, page, toast).
 read_when: Showing any API error in the web, writing a screen spec, or adding an error code to the API (add it here in the same PR).
-updated: 2026-10-20
+updated: 2026-10-29
 ---
 
 # Error messages
@@ -71,13 +71,13 @@ message.
 | `ROLE_NOT_AVAILABLE` | 400 | The role was deleted meanwhile | "Esse papel não existe mais. Escolha outro." | field role |
 | `OWNER_ONLY` | 403 | Touching an owner without being one | "Só um dono pode mudar outro dono ou dar o papel de dono." | form |
 | `PERMISSION_ESCALATION` | 403 | Granting permissions one doesn't hold | "Você não pode dar permissões que não tem." | form |
-| `LAST_OWNER` | 409 | The change would leave no owner | "O espaço precisa de pelo menos um dono. Promova outra pessoa antes." | form |
+| `LAST_OWNER` | 409 | The change would leave no owner | "O espaço precisa de pelo menos um dono. Dê o papel de dono a {nome} antes de sair.", in a dialog titled "Você é o único dono do {espaço}" with "Tornar {nome} dono" (without another member: "Promova outra pessoa antes.") | dialog |
 | `ROLE_INVALID` | 400 | Role form invalid | per field; "Toda área com alguma ação precisa de 'Ver'." | fields |
 | `ROLE_NAME_TAKEN` | 409 | Name used by another role | "Já existe um papel com esse nome." | field name |
 | `ROLE_NOT_FOUND` | 404 | Role deleted | "Este papel não existe mais." | toast |
 | `OWNER_ROLE_LOCKED` | 403 | Editing the owner role | "O papel de dono não pode ser alterado." | form |
 | `SYSTEM_ROLE` | 409 | Deleting a system role | "Papéis do sistema não podem ser excluídos." | toast |
-| `ROLE_IN_USE` | 409 | Deleting a role used by members or invitations | "Este papel está em uso. Troque o papel dessas pessoas ou revogue os convites antes." | dialog |
+| `ROLE_IN_USE` | 409 | Deleting a role used by members or invitations | "Este papel está em uso. Troque o papel dessas pessoas ou revogue os convites antes.", in a dialog titled "Não dá para excluir {papel}" that names who uses it ("Um convite pendente usa este papel ({contato})."), with "Ver convites" or the members | dialog |
 | `DELETION_INVALID` | 400 | Reason longer than 200 (or blank sent) | "Use no máximo 200 caracteres no motivo." | field reason |
 
 ## Accounts, categories and cards
