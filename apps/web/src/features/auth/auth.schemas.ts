@@ -1,4 +1,4 @@
-import { passwordSchema } from '@financas/shared'
+import { PASSWORD_MAX_LENGTH, passwordSchema } from '@financas/shared'
 import { authMessages } from '@web/features/auth/auth.messages'
 import { z } from 'zod'
 
@@ -17,6 +17,17 @@ export const loginSearchSchema = z.object({
 export const newPasswordSchema = z
   .object({ password: passwordSchema, confirmation: z.string().min(1) })
   .refine((fields) => fields.password === fields.confirmation, {
+    path: ['confirmation'],
+    error: authMessages.resetPassword.mismatch,
+  })
+
+export const passwordChangeFormSchema = z
+  .object({
+    currentPassword: z.string().min(1).max(PASSWORD_MAX_LENGTH),
+    newPassword: passwordSchema,
+    confirmation: z.string().min(1),
+  })
+  .refine((fields) => fields.newPassword === fields.confirmation, {
     path: ['confirmation'],
     error: authMessages.resetPassword.mismatch,
   })

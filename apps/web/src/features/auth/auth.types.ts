@@ -7,6 +7,7 @@ import type {
   LOGIN_NOTICES,
   loginSearchSchema,
   newPasswordSchema,
+  passwordChangeFormSchema,
 } from '@web/features/auth/auth.schemas'
 import type { ReactElement, ReactNode } from 'react'
 import type { z } from 'zod'
@@ -196,3 +197,10 @@ export type AccountNameFormProps = {
 }
 
 export type DisplayNameInput = { displayName: string }
+
+export type PasswordChangeInput = z.input<typeof passwordChangeFormSchema>
+
+export type PasswordProblem = {
+  message: string
+  retryAt: number | null
+}

@@ -14,7 +14,7 @@ import { authMessages } from '@web/features/auth/auth.messages'
 import type { AccountHeaderProps, AccountPageProps } from '@web/features/auth/auth.types'
 import { usePageTitle } from '@web/hooks/use-page-title'
 import { ApiError } from '@web/lib/api/api-error'
-import { LogOut, Mail, User } from 'lucide-react'
+import { KeyRound, LogOut, Mail, User } from 'lucide-react'
 
 const messages = authMessages.myAccount
 const SKELETON_LINES = 8
@@ -51,6 +51,12 @@ export function AccountPage({ workspaceId }: AccountPageProps) {
               icon={<Mail />}
               isLocked
               link={<div />}
+            />
+            <SettingsRow
+              title={messages.passwordRow}
+              detail={messages.passwordRowDetail}
+              icon={<KeyRound />}
+              link={<Link to="/w/$workspaceId/account/password" params={{ workspaceId }} />}
             />
           </AccountGroup>
           <Button variant="secondary" width="full" onClick={() => logOut.mutate()}>
