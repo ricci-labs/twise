@@ -17,7 +17,21 @@ export type AuditChange = {
   after?: unknown
 }
 
-export type AuditItem = Omit<AuditRow, 'workspaceId'>
+export type AuditEvent = Omit<AuditRow, 'workspaceId'>
+
+export type AuditActor = {
+  id: string
+  name: string
+}
+
+export type ActorActivity = {
+  actorUserId: string
+  at: Date
+}
+
+export type AuditItem = AuditEvent & {
+  actor: AuditActor | null
+}
 
 export type AuditRouteDeps = {
   db: Database

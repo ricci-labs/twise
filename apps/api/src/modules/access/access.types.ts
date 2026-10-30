@@ -61,6 +61,7 @@ export type MemberItem = {
   email: string
   role: WorkspaceRole
   joinedAt: Date
+  lastActivityAt: Date | null
 }
 
 export type MemberActor = {

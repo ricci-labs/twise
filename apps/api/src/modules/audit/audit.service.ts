@@ -5,9 +5,17 @@ import {
   insertAuditRow,
   selectAuditedRow,
   selectAuditRows,
+  selectLatestActivity,
   tableNameOf,
 } from '@api/modules/audit/audit.repository'
-import type { AuditChange, AuditItem, AuditTarget } from '@api/modules/audit/audit.types'
+import type {
+  AuditActor,
+  AuditChange,
+  AuditEvent,
+  AuditItem,
+  AuditTarget,
+} from '@api/modules/audit/audit.types'
+import { listAccounts } from '@api/modules/identity'
 import { type AuditAction, type AuditQuery, type Page, pageOf } from '@financas/shared'
 
 export async function recordAudit(tx: WorkspaceTransaction, change: AuditChange): Promise<void> {
@@ -51,15 +59,36 @@ export async function audited<T>(
   return result
 }
 
-export function listAuditEvents(
+export async function listAuditEvents(
   db: Database,
   workspaceId: string,
   query: AuditQuery,
 ): Promise<Page<AuditItem>> {
-  return withWorkspace(db, workspaceId, async (tx) =>
+  const page = await withWorkspace(db, workspaceId, async (tx) =>
     pageOf(await selectAuditRows(tx, query), query.limit, (event) => ({
       key: event.at.toISOString(),
       id: event.id,
     })),
+  )
+  const actors = await actorsOf(db, page.items)
+  return {
+    ...page,
+    items: page.items.map((event) => ({
+      ...event,
+      actor: event.actorUserId ? (actors.get(event.actorUserId) ?? null) : null,
+    })),
+  }
+}
+
+export async function readLatestActivity(tx: WorkspaceTransaction): Promise<Map<string, Date>> {
+  const activity = await selectLatestActivity(tx)
+  return new Map(activity.map(({ actorUserId, at }) => [actorUserId, at]))
+}
+
+async function actorsOf(db: Database, events: AuditEvent[]): Promise<Map<string, AuditActor>> {
+  const actorIds = [...new Set(events.flatMap((event) => event.actorUserId ?? []))]
+  const accounts = await listAccounts(db, actorIds)
+  return new Map(
+    accounts.map((account) => [account.userId, { id: account.userId, name: account.displayName }]),
   )
 }

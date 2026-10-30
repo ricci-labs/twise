@@ -79,6 +79,22 @@ describe('GET /members', () => {
     expect(listed[0]?.email).toBe(sessions.owner.email)
     expect((await as('viewer').get(membersPath)).status).toBe(403)
   })
+
+  it('says when each member last did something in the workspace, from the history', async () => {
+    const { workspaceId, as, members } = await team()
+    const before = Date.now()
+    const created = await as('admin').post(`/api/workspaces/${workspaceId}/accounts`, {
+      kind: 'checking',
+      name: 'Conta X',
+    })
+    expect(created.status).toBe(201)
+
+    const activity = Object.fromEntries(
+      (await members()).map((item) => [item.role.systemKey, item.lastActivityAt]),
+    )
+    expect(new Date(activity.admin ?? 0).getTime()).toBeGreaterThanOrEqual(before - 1000)
+    expect(activity.viewer).toBeNull()
+  })
 })
 
 describe('PATCH /members/:membershipId', () => {

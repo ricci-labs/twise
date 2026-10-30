@@ -1,0 +1,1 @@
+CREATE INDEX "audit_log_actor_idx" ON "audit_log" USING btree ("workspace_id","actor_user_id","at");

@@ -1,7 +1,7 @@
 ---
 summary: Supporting tables — tags, attachments (receipts/notas), notification outbox (reminders, charges), audit log, agent runs/messages/pending actions.
 read_when: Working on tags, file uploads/receipts, reminders and message sending, audit, or agent persistence.
-updated: 2026-10-17
+updated: 2026-10-30
 ---
 
 # Supporting tables
@@ -149,7 +149,11 @@ Implemented (`modules/audit`, ADR 0026):
   its owner, and joining by invitation sign-up as the new user.
 - Not audited: system bookkeeping nobody did by hand (occurrences the nightly job plans, the system
   accounts and roles of a new workspace).
-- `GET /audit?tableName=&rowId=&cursor=&limit=` (`audit:view`: owner and admin) pages newest first.
+- `GET /audit?tableName=&rowId=&actorId=&cursor=&limit=` (`audit:view`: owner and admin) pages
+  newest first. Each event carries `actor { id, name }`, or `null` for automatic changes (jobs,
+  system); `actorId` filters by a member's user id, or `automatic` for those (G75).
+- `readLatestActivity(tx)` gives each user's latest event; `GET /members` shows it as
+  `lastActivityAt` (null if they never changed anything).
 
 ## Agent
 - `agent_runs`: one row per agent turn (fields in `../../operations/observability.md` → Agent run records) + `workspace_id`, `user_id`.

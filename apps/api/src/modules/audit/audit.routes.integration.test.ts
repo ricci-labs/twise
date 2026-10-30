@@ -171,6 +171,33 @@ describe('GET /audit', () => {
     const invalid = await owner.get(`${workspacePath}/audit?rowId=not-a-uuid`)
     expect(invalid.status).toBe(400)
   })
+
+  it('names who did it, or nobody for automatic changes, and filters by them', async () => {
+    const entryId = await idOf(member.post(`${workspacePath}/entries`, expense('Quitanda')))
+    await runInOperation({ traceId: 'actor-job', source: 'job', actorUserId: null }, () =>
+      withWorkspace(databases.app, workspaceId, (tx) =>
+        recordAudit(tx, {
+          workspaceId,
+          action: 'update',
+          tableName: 'journal_entries',
+          rowId: entryId,
+        }),
+      ),
+    )
+
+    const [automatic, creation] = (await auditAt(`?rowId=${entryId}`)).items
+    expect([automatic?.actor, creation?.actor]).toEqual([
+      null,
+      { id: memberId, name: 'Member audit-member' },
+    ])
+
+    const byMember = await auditAt(`?rowId=${entryId}&actorId=${memberId}`)
+    expect(byMember.items.map((event) => event.action)).toEqual(['create'])
+    const byNobody = await auditAt(`?rowId=${entryId}&actorId=automatic`)
+    expect(byNobody.items.map((event) => event.traceId)).toEqual(['actor-job'])
+    expect((await auditAt(`?rowId=${entryId}&actorId=${ownerId}`)).items).toEqual([])
+    expect((await owner.get(`${workspacePath}/audit?actorId=someone`)).status).toBe(400)
+  })
 })
 
 describe('audit_log', () => {

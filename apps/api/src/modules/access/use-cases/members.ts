@@ -18,6 +18,7 @@ import type {
   WorkspaceRole,
 } from '@api/modules/access/access.types'
 import { assertMayGrant } from '@api/modules/access/use-cases/roles'
+import { readLatestActivity } from '@api/modules/audit'
 import { listAccounts } from '@api/modules/identity'
 import {
   listActiveMemberships,
@@ -29,10 +30,15 @@ import {
 const OWNER_ROLE = 'owner'
 
 export async function listMembers(db: Database, workspaceId: string): Promise<MemberItem[]> {
-  const { memberships, rolesById } = await withWorkspace(db, workspaceId, async (tx) => ({
-    memberships: await listActiveMemberships(tx),
-    rolesById: new Map((await selectActiveRoles(tx)).map((role) => [role.roleId, role])),
-  }))
+  const { memberships, rolesById, latestActivity } = await withWorkspace(
+    db,
+    workspaceId,
+    async (tx) => ({
+      memberships: await listActiveMemberships(tx),
+      rolesById: new Map((await selectActiveRoles(tx)).map((role) => [role.roleId, role])),
+      latestActivity: await readLatestActivity(tx),
+    }),
+  )
   const accounts = await listAccounts(
     db,
     memberships.map((membership) => membership.userId),
@@ -53,6 +59,7 @@ export async function listMembers(db: Database, workspaceId: string): Promise<Me
         email: account.email,
         role,
         joinedAt: membership.joinedAt,
+        lastActivityAt: latestActivity.get(membership.userId) ?? null,
       },
     ]
   })
