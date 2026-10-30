@@ -11,6 +11,10 @@ export type OccurrenceGroupAdd = {
   onPress?: () => void
 }
 
+export type OccurrenceGroupItemsProps = VariantProps<typeof occurrenceGroupListVariants> & {
+  children?: ReactNode
+}
+
 export type OccurrenceGroupProps = VariantProps<typeof occurrenceGroupListVariants> &
   Pick<VariantProps<typeof occurrenceGroupTitleVariants>, 'heading'> & {
     title: string

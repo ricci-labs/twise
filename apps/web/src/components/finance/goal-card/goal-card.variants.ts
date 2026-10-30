@@ -1,7 +1,7 @@
 import { cva } from 'class-variance-authority'
 
 export const goalCardVariants = cva(
-  'flex h-full flex-col gap-2 rounded-xl border border-border bg-surface px-4 py-3.5',
+  'flex flex-col gap-2 rounded-xl border border-border bg-surface px-4 py-3.5',
 )
 
 export const goalCardTopVariants = cva('flex items-start gap-3')

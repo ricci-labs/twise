@@ -52,7 +52,7 @@ export const occurrenceGroupListVariants = cva('flex flex-col', {
     },
     layout: {
       list: 'rounded-xl border bg-surface',
-      cards: 'gap-2.5 lg:grid lg:grid-cols-3 lg:gap-4',
+      cards: '',
     },
   },
   compoundVariants: [

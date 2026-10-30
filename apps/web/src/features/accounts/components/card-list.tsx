@@ -6,6 +6,7 @@ import { ArchivedToggle } from '@web/components/display/archived-toggle'
 import { AccountGroup } from '@web/components/finance/account-group'
 import { AccountRow } from '@web/components/finance/account-row'
 import { CardBlock } from '@web/components/finance/card-block'
+import { TileGrid } from '@web/components/layout/tile-grid'
 import { accountsMessages } from '@web/features/accounts/accounts.messages'
 import type {
   CardItemProps,
@@ -34,13 +35,7 @@ export function CardList({ workspaceId, permissions, cards, members, afterCards 
   const hasGap = active.length % perRow !== 0
   return (
     <>
-      <div
-        className={
-          perRow === THREE_PER_ROW
-            ? 'grid gap-4 lg:grid-cols-3 lg:gap-5'
-            : 'grid gap-4 lg:grid-cols-2 lg:gap-5'
-        }
-      >
+      <TileGrid>
         {active.map((card) => (
           <CardItem
             key={card.accountId}
@@ -59,7 +54,7 @@ export function CardList({ workspaceId, permissions, cards, members, afterCards 
             />
           </div>
         )}
-      </div>
+      </TileGrid>
       {afterCards}
       <ArchivedToggle count={archived.length}>
         <AccountGroup>
