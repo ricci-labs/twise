@@ -20,6 +20,7 @@ export {
   listContacts,
   readContactBalanceFacts,
 } from '@api/modules/contacts/use-cases/contacts'
+export { readChargeNames, readContactNames } from '@api/modules/contacts/use-cases/names'
 export {
   listOpenItems,
   listUpcomingContactItems,

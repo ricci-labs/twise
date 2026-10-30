@@ -262,3 +262,18 @@ export function chargeAuditTarget(workspaceId: string, chargeId: string): AuditT
 export function chargePaymentAuditTarget(workspaceId: string, paymentId: string): AuditTarget {
   return { workspaceId, table: chargePayments, key: chargePayments.id, rowId: paymentId }
 }
+
+export function selectContactNames(tx: WorkspaceTransaction, contactIds: string[]) {
+  return tx
+    .select({ id: contacts.id, name: contacts.name })
+    .from(contacts)
+    .where(inArray(contacts.id, contactIds))
+}
+
+export function selectChargeContactNames(tx: WorkspaceTransaction, chargeIds: string[]) {
+  return tx
+    .select({ id: charges.id, name: contacts.name })
+    .from(charges)
+    .innerJoin(contacts, eq(contacts.id, charges.contactId))
+    .where(inArray(charges.id, chargeIds))
+}

@@ -6,8 +6,19 @@ import type {
   AuditTarget,
   NewAuditRow,
 } from '@api/modules/audit/audit.types'
-import { AUTOMATIC_ACTOR, type AuditQuery } from '@financas/shared'
-import { and, desc, eq, getTableName, isNotNull, isNull, max, type SQL, sql } from 'drizzle-orm'
+import { AUDIT_AREAS, AUTOMATIC_ACTOR, type AuditQuery } from '@financas/shared'
+import {
+  and,
+  desc,
+  eq,
+  getTableName,
+  inArray,
+  isNotNull,
+  isNull,
+  max,
+  type SQL,
+  sql,
+} from 'drizzle-orm'
 
 const AT_TO_THE_MILLISECOND = sql`date_trunc('milliseconds', ${auditLog.at})`
 
@@ -22,6 +33,9 @@ export function selectAuditRows(
   const conditions: SQL[] = []
   if (query.tableName) {
     conditions.push(eq(auditLog.tableName, query.tableName))
+  }
+  if (query.area) {
+    conditions.push(inArray(auditLog.tableName, [...AUDIT_AREAS[query.area]]))
   }
   if (query.rowId) {
     conditions.push(eq(auditLog.rowId, query.rowId))

@@ -17,6 +17,7 @@ import {
   markRoleDeleted,
   roleAuditTarget,
   selectActiveRolesWithDescriptions,
+  selectRoleNames,
   selectRolePermissions,
   selectWorkspacePermissions,
   updateRoleDetails,
@@ -28,7 +29,7 @@ import type {
   MemberActor,
   RoleItem,
 } from '@api/modules/access/access.types'
-import { auditCreation, audited, recordAudit } from '@api/modules/audit'
+import { type AuditName, auditCreation, audited, namesById, recordAudit } from '@api/modules/audit'
 import { type RoleUsage, readRoleUsage } from '@api/modules/members'
 import { type Permission, permissionsBeyond } from '@financas/shared'
 
@@ -181,4 +182,11 @@ async function refusingTakenRoleNames<T>(work: () => Promise<T>): Promise<T> {
     }
     throw error
   }
+}
+
+export async function readRoleNames(
+  tx: WorkspaceTransaction,
+  roleIds: string[],
+): Promise<ReadonlyMap<string, AuditName>> {
+  return namesById(roleIds.length === 0 ? [] : await selectRoleNames(tx, roleIds))
 }

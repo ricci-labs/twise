@@ -90,6 +90,15 @@ export async function insertAccounts(tx: WorkspaceTransaction, accounts: NewLedg
   await tx.insert(ledgerAccounts).values(accounts)
 }
 
+export function selectAccountNames(tx: WorkspaceTransaction, accountIds: string[]) {
+  const parents = alias(ledgerAccounts, 'parents')
+  return tx
+    .select({ id: ledgerAccounts.id, name: ledgerAccounts.name, parentName: parents.name })
+    .from(ledgerAccounts)
+    .leftJoin(parents, eq(parents.id, ledgerAccounts.parentId))
+    .where(inArray(ledgerAccounts.id, accountIds))
+}
+
 export function findUsableAccounts(tx: WorkspaceTransaction, accountIds: string[]) {
   return tx
     .select({ id: ledgerAccounts.id, kind: ledgerAccounts.kind })
