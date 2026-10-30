@@ -6,11 +6,13 @@ import type { Insight } from '@shared/reports/insights/insights.types'
 import { sumCents } from '@shared/reports/metrics/facts'
 import { computeMetrics } from '@shared/reports/metrics/metrics'
 import type {
+  FactBalance,
   FactCard,
   FactInvoice,
   FactPosting,
   PeriodFacts,
 } from '@shared/reports/metrics/metrics.types'
+import { accountImpactOf, cardImpactOf } from '@shared/reports/simulation/payment-effect'
 import { purchaseVerdictOf } from '@shared/reports/simulation/purchase-verdict'
 import type { PurchaseImpact, SimulatedPurchase } from '@shared/reports/simulation/simulation.types'
 
@@ -34,10 +36,13 @@ export function simulatePurchase(facts: PeriodFacts, purchase: SimulatedPurchase
     percentOfIncomeBefore: metricsBefore.committedAhead[index]?.percentOfIncome ?? null,
     percentOfIncomeAfter: month.percentOfIncome,
   }))
+  const card = cardImpactOf(facts, after, purchase)
   return {
-    ...purchaseVerdictOf(period, coming, facts.period.end),
+    ...purchaseVerdictOf(period, coming, facts.period.end, card),
     committedReferencePercent: HEAVILY_COMMITTED_PERCENT,
     period,
+    card,
+    account: accountImpactOf(facts, after, purchase),
     coming,
     newInsights: newOnly(
       computeInsights(facts, metricsBefore),
@@ -102,7 +107,12 @@ function onCard(facts: PeriodFacts, purchase: SimulatedPurchase, card: FactCard)
       frontedCents: 0,
     }))
   const updatedInvoices = [...updated, ...created]
-  return { ...facts, postings: [...facts.postings, ...postings], invoices: updatedInvoices }
+  return {
+    ...facts,
+    postings: [...facts.postings, ...postings],
+    invoices: updatedInvoices,
+    balances: withMoreOwed(facts.balances, card.accountId, purchase.amountCents),
+  }
 }
 
 function fromAccount(
@@ -124,6 +134,20 @@ function fromAccount(
   )
   const later = purchase.occurredOn > facts.today ? [payment] : []
   return { ...facts, postings: [...facts.postings, expense, ...later], balances }
+}
+
+function withMoreOwed(
+  balances: readonly FactBalance[],
+  cardAccountId: string,
+  amountCents: number,
+): FactBalance[] {
+  const known = balances.some((balance) => balance.accountId === cardAccountId)
+  const listed = known ? balances : [...balances, { accountId: cardAccountId, balanceCents: 0 }]
+  return listed.map((balance) =>
+    balance.accountId === cardAccountId
+      ? { ...balance, balanceCents: balance.balanceCents - amountCents }
+      : balance,
+  )
 }
 
 function newOnly(before: readonly Insight[], after: readonly Insight[]): Insight[] {

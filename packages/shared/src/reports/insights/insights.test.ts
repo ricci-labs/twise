@@ -302,3 +302,35 @@ describe('contact_overdue', () => {
     ])
   })
 })
+
+describe('card_limit_exceeded', () => {
+  const card = (accountId: string, limitCents: number | null) => ({
+    accountId,
+    paymentAccountId: 'checking',
+    limitCents,
+    closingDay: 3,
+    dueDay: 10,
+    purchaseOnClosingDayGoesNext: true,
+  })
+
+  it('alerts for each card that owes more than its limit, never for one without a limit', () => {
+    const facts: PeriodFacts = {
+      ...FACTS,
+      occurrences: [],
+      cards: [card('over', 100_000), card('at-limit', 50_000), card('no-limit', null)],
+      balances: [
+        { accountId: 'over', balanceCents: -130_000 },
+        { accountId: 'at-limit', balanceCents: -50_000 },
+        { accountId: 'no-limit', balanceCents: -900_000 },
+      ],
+    }
+    expect(computeInsights(facts, computeMetrics(facts))).toEqual([
+      {
+        code: 'card_limit_exceeded',
+        severity: 'alert',
+        subject: 'over',
+        values: { limitCents: 100_000, exceededCents: 30_000 },
+      },
+    ])
+  })
+})

@@ -192,6 +192,7 @@ export type InvoiceSnapshot = {
 export type CardSummary = CardItem & {
   openCents: number
   limitUsedPercent: number | null
+  freeLimitCents: number | null
   currentInvoice: InvoiceSnapshot
 }
 

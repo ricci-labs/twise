@@ -53,6 +53,7 @@ async function household() {
       closingDay: 3,
       dueDay: 10,
       paymentAccountId: checking,
+      limitCents: 1_000_000,
     })
   ).accountId
   const entry = (input: Record<string, unknown>) =>
@@ -417,6 +418,10 @@ describe('simulatePurchaseImpact', () => {
     expect(
       impact.coming.slice(0, 4).map((period) => period.committedAfter - period.committedBefore),
     ).toEqual([60_000, 60_000, 60_000, 60_000])
+    expect(impact.account).toBeNull()
+    expect(impact.card).toMatchObject({ accountId: card, limitCents: 1_000_000 })
+    expect(impact.card?.freeBeforeCents).toBeLessThan(1_000_000)
+    expect(impact.card?.freeAfterCents).toBe((impact.card?.freeBeforeCents ?? 0) - 240_000)
 
     const debit = await simulatePurchaseImpact(
       databases.app,
@@ -426,6 +431,11 @@ describe('simulatePurchaseImpact', () => {
     )
     expect(debit.period.freeToSpendAfter).toBe(overview.metrics.freeToSpend - 50_000)
     expect(debit.committedReferencePercent).toBe(70)
+    expect(debit.card).toBeNull()
+    expect(debit.account).toMatchObject({ accountId: checking })
+    expect(debit.account?.balanceTodayAfterCents).toBe(
+      (debit.account?.balanceTodayBeforeCents ?? 0) - 50_000,
+    )
     expect(debit.verdict).toBe('fits')
     expect(debit.verdictReason).toEqual({
       code: 'free_left',
@@ -447,6 +457,18 @@ describe('simulatePurchaseImpact', () => {
       verdict: 'over',
       verdictReason: { code: 'period_overspent', overspentCents: 10_000 },
     })
+
+    const pastLimit = await simulatePurchaseImpact(
+      databases.app,
+      workspaceId,
+      { amountCents: 1_000_000, installmentCount: 10, cardAccountId: card },
+      MID_OCTOBER,
+    )
+    expect(pastLimit.verdictReason).toEqual({
+      code: 'card_limit_exceeded',
+      exceededCents: 1_000_000 - (impact.card?.freeBeforeCents ?? 0),
+    })
+    expect(pastLimit.newInsights.map((insight) => insight.code)).toContain('card_limit_exceeded')
   })
 
   it('refuses a card or an account that cannot pay', async () => {

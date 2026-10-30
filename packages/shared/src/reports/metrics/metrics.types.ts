@@ -50,6 +50,7 @@ export type FactBudget = {
 export type FactCard = CardCycle & {
   accountId: string
   paymentAccountId: string | null
+  limitCents: number | null
 }
 
 export type FactInvoice = {

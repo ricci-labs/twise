@@ -6,6 +6,7 @@ import type { AccountClass, IncomeNature } from '@shared/ledger/ledger/ledger.co
 import type { RecurringEntryType } from '@shared/planning/recurrence/recurrence.constants'
 import type {
   FactAccount,
+  FactCard,
   FactOccurrence,
   FactPosting,
   PeriodDays,
@@ -102,6 +103,15 @@ export function recentActivePeriods(
   return facts.recentPeriods
     .slice(-lastCount)
     .filter((period) => facts.postings.some((posting) => isInPeriod(posting.effectiveOn, period)))
+}
+
+export function cardOwedCents(facts: PeriodFacts, cardAccountId: string): number {
+  const balance = facts.balances.find((candidate) => candidate.accountId === cardAccountId)
+  return -(balance?.balanceCents ?? 0)
+}
+
+export function cardFreeLimitCents(facts: PeriodFacts, card: FactCard): number | null {
+  return card.limitCents === null ? null : card.limitCents - cardOwedCents(facts, card.accountId)
 }
 
 export function sumCents(values: readonly number[]): number {

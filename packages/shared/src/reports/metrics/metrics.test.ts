@@ -204,6 +204,7 @@ function household(overrides: Partial<PeriodFacts> = {}): PeriodFacts {
       {
         accountId: 'card',
         paymentAccountId: 'checking',
+        limitCents: null,
         closingDay: 3,
         dueDay: 10,
         purchaseOnClosingDayGoesNext: true,

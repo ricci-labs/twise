@@ -109,8 +109,8 @@ function demoFactsFor(periodLabel: string, variant: DemoVariant): PeriodFacts {
       goal(ids.laptopGoal, ids.laptopSavings, 400_000, 120_000, '2026-12-31'),
     ],
     cards: [
-      { accountId: ids.cardX, paymentAccountId: ids.checkingA, ...CARD_X_CYCLE },
-      { accountId: ids.cardY, paymentAccountId: ids.checkingB, ...CARD_Y_CYCLE },
+      { accountId: ids.cardX, paymentAccountId: ids.checkingA, limitCents: null, ...CARD_X_CYCLE },
+      { accountId: ids.cardY, paymentAccountId: ids.checkingB, limitCents: null, ...CARD_Y_CYCLE },
     ],
     invoices: [
       {
