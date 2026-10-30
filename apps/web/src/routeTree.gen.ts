@@ -38,6 +38,7 @@ import { Route as AppWWorkspaceIdAccountNameRouteImport } from './routes/_app/w/
 import { Route as AppWWorkspaceIdAccountNoticesRouteImport } from './routes/_app/w/$workspaceId/account/notices'
 import { Route as AppWWorkspaceIdAccountPasswordRouteImport } from './routes/_app/w/$workspaceId/account/password'
 import { Route as AppWWorkspaceIdAccountQuietHoursRouteImport } from './routes/_app/w/$workspaceId/account/quiet-hours'
+import { Route as AppWWorkspaceIdAccountThemeRouteImport } from './routes/_app/w/$workspaceId/account/theme'
 import { Route as AppWWorkspaceIdAccountsTrashRouteImport } from './routes/_app/w/$workspaceId/accounts_.trash'
 import { Route as AppWWorkspaceIdCardsCardRouteImport } from './routes/_app/w/$workspaceId/cards_/$card'
 import { Route as AppWWorkspaceIdContactsContactRouteImport } from './routes/_app/w/$workspaceId/contacts_/$contact'
@@ -212,6 +213,12 @@ const AppWWorkspaceIdAccountQuietHoursRoute =
     path: '/account/quiet-hours',
     getParentRoute: () => AppWWorkspaceIdRouteRoute,
   } as any)
+const AppWWorkspaceIdAccountThemeRoute =
+  AppWWorkspaceIdAccountThemeRouteImport.update({
+    id: '/account/theme',
+    path: '/account/theme',
+    getParentRoute: () => AppWWorkspaceIdRouteRoute,
+  } as any)
 const AppWWorkspaceIdAccountsTrashRoute =
   AppWWorkspaceIdAccountsTrashRouteImport.update({
     id: '/accounts_/trash',
@@ -378,6 +385,7 @@ export interface FileRoutesByFullPath {
   '/w/$workspaceId/account/notices': typeof AppWWorkspaceIdAccountNoticesRoute
   '/w/$workspaceId/account/password': typeof AppWWorkspaceIdAccountPasswordRoute
   '/w/$workspaceId/account/quiet-hours': typeof AppWWorkspaceIdAccountQuietHoursRoute
+  '/w/$workspaceId/account/theme': typeof AppWWorkspaceIdAccountThemeRoute
   '/w/$workspaceId/accounts/trash': typeof AppWWorkspaceIdAccountsTrashRoute
   '/w/$workspaceId/cards/$card': typeof AppWWorkspaceIdCardsCardRoute
   '/w/$workspaceId/contacts/$contact': typeof AppWWorkspaceIdContactsContactRoute
@@ -429,6 +437,7 @@ export interface FileRoutesByTo {
   '/w/$workspaceId/account/notices': typeof AppWWorkspaceIdAccountNoticesRoute
   '/w/$workspaceId/account/password': typeof AppWWorkspaceIdAccountPasswordRoute
   '/w/$workspaceId/account/quiet-hours': typeof AppWWorkspaceIdAccountQuietHoursRoute
+  '/w/$workspaceId/account/theme': typeof AppWWorkspaceIdAccountThemeRoute
   '/w/$workspaceId/accounts/trash': typeof AppWWorkspaceIdAccountsTrashRoute
   '/w/$workspaceId/cards/$card': typeof AppWWorkspaceIdCardsCardRoute
   '/w/$workspaceId/contacts/$contact': typeof AppWWorkspaceIdContactsContactRoute
@@ -484,6 +493,7 @@ export interface FileRoutesById {
   '/_app/w/$workspaceId/account/notices': typeof AppWWorkspaceIdAccountNoticesRoute
   '/_app/w/$workspaceId/account/password': typeof AppWWorkspaceIdAccountPasswordRoute
   '/_app/w/$workspaceId/account/quiet-hours': typeof AppWWorkspaceIdAccountQuietHoursRoute
+  '/_app/w/$workspaceId/account/theme': typeof AppWWorkspaceIdAccountThemeRoute
   '/_app/w/$workspaceId/accounts_/trash': typeof AppWWorkspaceIdAccountsTrashRoute
   '/_app/w/$workspaceId/cards_/$card': typeof AppWWorkspaceIdCardsCardRoute
   '/_app/w/$workspaceId/contacts_/$contact': typeof AppWWorkspaceIdContactsContactRoute
@@ -538,6 +548,7 @@ export interface FileRouteTypes {
     | '/w/$workspaceId/account/notices'
     | '/w/$workspaceId/account/password'
     | '/w/$workspaceId/account/quiet-hours'
+    | '/w/$workspaceId/account/theme'
     | '/w/$workspaceId/accounts/trash'
     | '/w/$workspaceId/cards/$card'
     | '/w/$workspaceId/contacts/$contact'
@@ -589,6 +600,7 @@ export interface FileRouteTypes {
     | '/w/$workspaceId/account/notices'
     | '/w/$workspaceId/account/password'
     | '/w/$workspaceId/account/quiet-hours'
+    | '/w/$workspaceId/account/theme'
     | '/w/$workspaceId/accounts/trash'
     | '/w/$workspaceId/cards/$card'
     | '/w/$workspaceId/contacts/$contact'
@@ -643,6 +655,7 @@ export interface FileRouteTypes {
     | '/_app/w/$workspaceId/account/notices'
     | '/_app/w/$workspaceId/account/password'
     | '/_app/w/$workspaceId/account/quiet-hours'
+    | '/_app/w/$workspaceId/account/theme'
     | '/_app/w/$workspaceId/accounts_/trash'
     | '/_app/w/$workspaceId/cards_/$card'
     | '/_app/w/$workspaceId/contacts_/$contact'
@@ -884,6 +897,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppWWorkspaceIdAccountQuietHoursRouteImport
       parentRoute: typeof AppWWorkspaceIdRouteRoute
     }
+    '/_app/w/$workspaceId/account/theme': {
+      id: '/_app/w/$workspaceId/account/theme'
+      path: '/account/theme'
+      fullPath: '/w/$workspaceId/account/theme'
+      preLoaderRoute: typeof AppWWorkspaceIdAccountThemeRouteImport
+      parentRoute: typeof AppWWorkspaceIdRouteRoute
+    }
     '/_app/w/$workspaceId/accounts_/trash': {
       id: '/_app/w/$workspaceId/accounts_/trash'
       path: '/accounts/trash'
@@ -1062,6 +1082,7 @@ interface AppWWorkspaceIdRouteRouteChildren {
   AppWWorkspaceIdAccountNoticesRoute: typeof AppWWorkspaceIdAccountNoticesRoute
   AppWWorkspaceIdAccountPasswordRoute: typeof AppWWorkspaceIdAccountPasswordRoute
   AppWWorkspaceIdAccountQuietHoursRoute: typeof AppWWorkspaceIdAccountQuietHoursRoute
+  AppWWorkspaceIdAccountThemeRoute: typeof AppWWorkspaceIdAccountThemeRoute
   AppWWorkspaceIdAccountsTrashRoute: typeof AppWWorkspaceIdAccountsTrashRoute
   AppWWorkspaceIdCardsCardRoute: typeof AppWWorkspaceIdCardsCardRoute
   AppWWorkspaceIdContactsContactRoute: typeof AppWWorkspaceIdContactsContactRoute
@@ -1102,6 +1123,7 @@ const AppWWorkspaceIdRouteRouteChildren: AppWWorkspaceIdRouteRouteChildren = {
   AppWWorkspaceIdAccountNoticesRoute: AppWWorkspaceIdAccountNoticesRoute,
   AppWWorkspaceIdAccountPasswordRoute: AppWWorkspaceIdAccountPasswordRoute,
   AppWWorkspaceIdAccountQuietHoursRoute: AppWWorkspaceIdAccountQuietHoursRoute,
+  AppWWorkspaceIdAccountThemeRoute: AppWWorkspaceIdAccountThemeRoute,
   AppWWorkspaceIdAccountsTrashRoute: AppWWorkspaceIdAccountsTrashRoute,
   AppWWorkspaceIdCardsCardRoute: AppWWorkspaceIdCardsCardRoute,
   AppWWorkspaceIdContactsContactRoute: AppWWorkspaceIdContactsContactRoute,

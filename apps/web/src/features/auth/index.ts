@@ -13,6 +13,7 @@ export { AccountNoticesPage } from '@web/features/auth/components/account-notice
 export { AccountPage } from '@web/features/auth/components/account-page'
 export { AccountPasswordPage } from '@web/features/auth/components/account-password-page'
 export { AccountQuietPage } from '@web/features/auth/components/account-quiet-page'
+export { AccountThemePage } from '@web/features/auth/components/account-theme-page'
 export { AppOpening } from '@web/features/auth/components/app-opening'
 export { ForgotPasswordPage } from '@web/features/auth/components/forgot-password-page'
 export { InvitationPage } from '@web/features/auth/components/invitation-page'

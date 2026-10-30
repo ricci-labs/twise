@@ -268,6 +268,15 @@ export const authMessages = {
         '{conta} vence em {vencimento}: o aviso chega **no dia**, por e-mail, uma vez.',
       save: 'Salvar preferências',
     },
+    themeRow: 'Tema',
+    themeRowDetail: (theme: string) => `${theme} · Só neste aparelho`,
+    themeNames: { light: 'Claro', dark: 'Escuro', system: 'Automático' },
+    theme: {
+      pageTitle: 'Tema',
+      title: 'Tema',
+      label: 'Tema',
+      help: 'Fica guardado só neste aparelho.',
+    },
     passwordRow: 'Senha',
     passwordRowDetail: 'Trocar a senha',
     password: {

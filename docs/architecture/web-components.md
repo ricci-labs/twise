@@ -679,6 +679,9 @@ component here, so the form, and later the account, card and planning forms, sha
   a "Sistema" (neutral) or "Do espaço" (partial, with dot) badge with who uses it ("1 pessoa · 2
   convites", "Ninguém"), what it can do, a lock line "Não pode ser alterado" when `isLocked`, and an
   `actions` slot.
+- `ThemeCards` (`components/inputs/theme-cards`, settings design `Conta-tema`): a radio group of
+  three cards, each with a miniature of the app in that theme (light, dark, half and half) and the
+  title ("Claro" / "Padrão", "Escuro", "Automático" / "Segue o aparelho"), the chosen one outlined.
 - `PermissionRows` (`components/inputs/permission-rows`, settings design `MEM-02` editor): one
   `fieldset` per area (legend = the area's pt-BR name, given by the screen) with "Ver", "Criar",
   "Editar", "Excluir" in four fixed columns, only the actions the area has (`isValidPermission`),
