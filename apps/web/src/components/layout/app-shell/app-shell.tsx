@@ -1,5 +1,6 @@
 import type { AppShellProps } from '@web/components/layout/app-shell/app-shell.types'
 import {
+  appShellContentVariants,
   appShellFloatingVariants,
   appShellMainVariants,
   appShellVariants,
@@ -11,7 +12,7 @@ export function AppShell({ sidebar, bottomBar, banner, floatingAction, children 
       <div className="hidden lg:flex">{sidebar}</div>
       <div className={appShellMainVariants()}>
         {banner}
-        <main className="flex flex-1 flex-col">{children}</main>
+        <main className={appShellContentVariants()}>{children}</main>
       </div>
       {floatingAction && (
         <div data-slot="floating-action" className={appShellFloatingVariants()}>
