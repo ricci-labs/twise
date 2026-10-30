@@ -665,6 +665,10 @@ component here, so the form, and later the account, card and planning forms, sha
   40 px "‹" back link (named "Voltar para {page}"), the title in `form-title-lg`, a grey
   `sub-page` description under it, and an optional `actions` slot on the right (a card's "⋯";
   several actions sit side by side, as the entry detail's pencil and "⋯").
+- `MemberRow` (`components/display/member-row`, settings design `MEM-01`): one person of the
+  workspace (`li`): the 42 px initial, the name (2 lines) with a "você" pill, the e-mail alone on
+  line 2 (2 lines, breaks anywhere, `wrap-anywhere`), then the role as a green badge with "Desde
+  dd/mm/aaaa"; an `actions` slot on the right for the "⋯".
 - `PairedCardGrid` (`components/layout/paired-card-grid`, settings design rule 2): desktop cards
   in two equal columns that stretch, so the two cards of a row share their height and their
   footers line up; a card that has no pair takes `lg:col-span-2`. Stacked on the phone.

@@ -30,6 +30,7 @@ import { kpiCardExamples } from '@web/components/display/kpi-card'
 import { kpiCarouselExamples } from '@web/components/display/kpi-carousel'
 import { listSectionExamples } from '@web/components/display/list-section'
 import { listSummaryExamples } from '@web/components/display/list-summary'
+import { memberRowExamples } from '@web/components/display/member-row'
 import { metaLineExamples } from '@web/components/display/meta-line'
 import { miniMonthCalendarExamples } from '@web/components/display/mini-month-calendar'
 import { nextStepCardExamples } from '@web/components/display/next-step-card'
@@ -218,6 +219,7 @@ export const workbenchSections: readonly ComponentExamples[] = [
   tileGridExamples,
   settingsFormPageExamples,
   pairedCardGridExamples,
+  memberRowExamples,
   pageHeaderExamples,
   cyclePreviewExamples,
   entryDayGroupExamples,

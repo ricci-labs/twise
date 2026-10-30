@@ -4,6 +4,7 @@ export const LONG_TEXT = {
   description: 'Internet fibra 1 giga com TV e telefone',
   account: 'Conta Conjunta do Banco Exemplo',
   person: 'Fulana de Tal dos Santos Silva',
+  email: 'fulana.de.tal.dos.santos.silva.financeiro@exemplo-de-dominio-longo.com.br',
   amountCents: 123456789,
   amount: 'R$ 1.234.567,89',
 } as const
