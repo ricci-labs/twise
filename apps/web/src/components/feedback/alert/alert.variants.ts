@@ -9,6 +9,7 @@ export const alertVariants = cva(
         success: 'bg-success-soft [&>svg]:text-success',
         warning: 'bg-warning-soft [&>svg]:text-warning',
         danger: 'bg-danger-soft [&>svg]:text-danger',
+        neutral: 'bg-sunken [&>svg]:text-ink-muted',
       },
     },
     defaultVariants: { tone: 'info' },

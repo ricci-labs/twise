@@ -4,8 +4,28 @@ export const settingsMessages = {
   pageTitle: 'Configurações',
   title: 'Configurações',
   groups: {
+    workspace: 'Espaço',
     planning: 'Planejamento',
     receiving: 'Recebimentos',
+  },
+  readOnly: 'Só donos e admins mudam as configurações. Peça a um deles.',
+  hubReadOnly: 'Só donos e admins mudam as configurações. Você pode ver.',
+  saved: 'Configurações salvas.',
+  saving: 'Salvando…',
+  currencyNames: { BRL: 'Real (R$)' } as Readonly<Record<string, string>>,
+  nameRow: {
+    title: 'Nome e moeda',
+    detail: (name: string, currency: string) => `${name} · ${currency}`,
+  },
+  workspaceName: {
+    pageTitle: 'Nome e moeda',
+    title: 'Nome e moeda',
+    back: 'Voltar para Configurações',
+    name: 'Nome do espaço',
+    required: { name: 'Informe o nome do espaço (até 80 caracteres).' },
+    currency: 'Moeda',
+    currencyLocked: 'Não muda por enquanto.',
+    save: 'Salvar nome',
   },
   pixRow: {
     title: 'Recebimento por Pix',

@@ -9,6 +9,7 @@ const TONE_ICONS: Record<AlertTone, LucideIcon> = {
   success: CircleCheck,
   warning: TriangleAlert,
   danger: CircleAlert,
+  neutral: Info,
 }
 
 export function Alert({ tone, isUrgent = false, icon, action, children, className }: AlertProps) {

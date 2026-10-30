@@ -57,7 +57,13 @@ export type HolidayLists = {
 
 export type SettingsPageProps = {
   workspaceId: string
+  workspaceName: string
   permissions: readonly Permission[]
+}
+
+export type NameRowProps = {
+  workspaceId: string
+  workspaceName: string
 }
 
 export type HolidaysRowProps = {
@@ -229,3 +235,18 @@ export type ChargeTextPreviewProps = {
 }
 
 export type ChargeTextPreviewTab = 'email' | 'whatsapp'
+
+export type WorkspaceNamePageProps = {
+  workspaceId: string
+  workspaceName: string
+  permissions: readonly Permission[]
+}
+
+export type WorkspaceNameFormProps = {
+  workspaceId: string
+  workspaceName: string
+  currency: string
+  canUpdate: boolean
+}
+
+export type WorkspaceNameInput = { name: string }
