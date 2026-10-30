@@ -11,5 +11,6 @@ export type SettingsRowProps = VariantProps<typeof settingsRowVariants> & {
   title: string
   detail?: string
   icon?: ReactNode
+  isLocked?: boolean
   link: ReactElement<SettingsRowLinkProps>
 }

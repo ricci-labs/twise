@@ -19,6 +19,7 @@ const COMMISSION_SPLIT_PAGE = 'commission-split'
 
 const SETTINGS_AREA = 'settings'
 const MEMBERS_AREA = 'members'
+const ACCOUNT_AREA = 'account'
 const ROLES_PAGE = 'roles'
 const INVITATIONS_PAGE = 'invitations'
 
@@ -88,6 +89,9 @@ export function hasNewEntryButton(pathname: string): boolean {
 export function hasTabBar(pathname: string): boolean {
   const [, , , area, item, detail] = pathname.split('/')
   if (area === MEMBERS_AREA && (item === ROLES_PAGE || item === INVITATIONS_PAGE) && detail) {
+    return false
+  }
+  if (area === ACCOUNT_AREA && item) {
     return false
   }
   return !(area === SETTINGS_AREA && item !== undefined && SETTINGS_FORM_PAGES.has(item))

@@ -180,3 +180,19 @@ export type InvalidInvitationProps = {
 export type PasswordLinkInvalidProps = {
   wasTried: boolean
 }
+
+export type AccountPageProps = {
+  workspaceId: string
+}
+
+export type AccountHeaderProps = {
+  name: string
+  email: string
+}
+
+export type AccountNameFormProps = {
+  workspaceId: string
+  displayName: string
+}
+
+export type DisplayNameInput = { displayName: string }

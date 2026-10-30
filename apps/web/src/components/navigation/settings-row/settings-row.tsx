@@ -1,4 +1,5 @@
 import { MetaLine } from '@web/components/display/meta-line'
+import { TwiseIcon } from '@web/components/icons/twise-icon'
 import type { SettingsRowProps } from '@web/components/navigation/settings-row/settings-row.types'
 import {
   settingsRowChevronVariants,
@@ -12,7 +13,14 @@ import {
 import { ChevronRight } from 'lucide-react'
 import { cloneElement } from 'react'
 
-export function SettingsRow({ title, detail, icon, link, variant }: SettingsRowProps) {
+export function SettingsRow({
+  title,
+  detail,
+  icon,
+  link,
+  variant,
+  isLocked = false,
+}: SettingsRowProps) {
   return (
     <li data-slot="settings-row" className={settingsRowVariants({ variant })}>
       {cloneElement(
@@ -36,7 +44,11 @@ export function SettingsRow({ title, detail, icon, link, variant }: SettingsRowP
               </span>
             )}
           </span>
-          <ChevronRight aria-hidden="true" className={settingsRowChevronVariants()} />
+          {isLocked ? (
+            <TwiseIcon name="lock" size="sm" className={settingsRowChevronVariants()} />
+          ) : (
+            <ChevronRight aria-hidden="true" className={settingsRowChevronVariants()} />
+          )}
         </>,
       )}
     </li>
