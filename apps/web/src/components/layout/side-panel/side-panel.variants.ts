@@ -5,7 +5,7 @@ export const sidePanelBackdropVariants = cva(
 )
 
 export const sidePanelPopupVariants = cva(
-  'fixed inset-y-0 right-0 z-modal flex w-120 max-w-full flex-col bg-page text-ink shadow-dialog outline-none transition duration-popover ease-out data-ending-style:translate-x-8 data-ending-style:opacity-0 data-starting-style:translate-x-8 data-starting-style:opacity-0',
+  'fixed top-safe right-0 bottom-0 z-modal flex w-120 max-w-full flex-col bg-page text-ink shadow-dialog outline-none transition duration-popover ease-out data-ending-style:translate-x-8 data-ending-style:opacity-0 data-starting-style:translate-x-8 data-starting-style:opacity-0',
 )
 
 export const sidePanelHeadVariants = cva(

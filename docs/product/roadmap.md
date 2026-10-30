@@ -438,7 +438,7 @@ updated: 2026-10-30
      `requirements/modules/auth-and-account.md`, `requirements/modules/attachments-and-audit.md`,
      `requirements/modules/dashboard.md`), the seven app-wide rules and the system bars in
      `requirements/ui-standards.md`, API gaps G73–G78
-  2. [ ] Web: the phone system bars (manifest colours, `theme-color` for light and dark, the iPhone
+  2. [x] Web: the phone system bars (manifest colours, `theme-color` for light and dark, the iPhone
      status bar and safe areas), checked on an installed Android and on an iPhone
   3. [ ] Web: the app-wide rules on the screens already built (`MetaLine` support lines, paired
      desktop cards, lists on the full row, the desktop offline bar edge to edge, before and after

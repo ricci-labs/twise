@@ -218,6 +218,13 @@ hidden, not disabled (`../product/requirements/ui-standards.md` → Permissions)
   The topmost wins in that order; with none, the page colour. The value is the token read from the
   current theme, and `useLightTheme()` repaints when it forces or gives back the theme (a future
   theme picker calls `paintSystemBar()` too).
+- **iPhone:** `apple-mobile-web-app-status-bar-style` is `black-translucent`, so the app draws
+  under the status bar. `body` pads its top with `env(safe-area-inset-top)` and a fixed strip
+  (`body::before`, `z-system-bar`) fills that space with `--system-bar`, the same colour as the
+  `theme-color` (set by `paintSystemBar()`, the page colour before it runs). Full-height screens use
+  `min-h-screen-safe` / `h-screen-safe` instead of `dvh`, and what is fixed to the top (the form
+  overlay on the phone, the side panel, the update banner) starts at `top-safe`. Everywhere else
+  the inset is 0 and nothing moves. iOS draws the status bar text white in this mode.
 - **Icons:** `public/icons/` (192, 512, maskable 512 with the owl in the safe zone, the 180 px
   Apple icon and the SVG favicon), generated from the design's `twise-icone.svg` by `pnpm
   gen:app-icons` (`scripts/generate-app-icons.mjs`, Chromium through Playwright; run it again
