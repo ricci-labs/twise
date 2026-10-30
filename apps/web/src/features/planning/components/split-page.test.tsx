@@ -263,6 +263,17 @@ describe('PLAN-06 on the desktop', () => {
     )
     await expectNoAccessibilityViolations(page.getByRole('main').element())
   })
+
+  it('ends the example together with the steps card', async () => {
+    await openSplit()
+    const card = page.getByRole('region', { name: 'Passos, nesta ordem' })
+    await expect.element(card).toBeVisible()
+
+    expect(example().element().getBoundingClientRect().bottom).toBeCloseTo(
+      card.element().getBoundingClientRect().bottom,
+      0,
+    )
+  })
 })
 
 describe('PLAN-05 split shortcut', () => {

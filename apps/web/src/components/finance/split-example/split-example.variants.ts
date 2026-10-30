@@ -65,4 +65,4 @@ export const splitLeaderVariants = cva('mt-1 min-w-4 flex-1 self-center dotted-l
 
 export const splitAmountVariants = cva('shrink-0 font-emphasis whitespace-nowrap tabular-nums')
 
-export const splitFootnoteVariants = cva('mt-3 text-note text-ink-muted lg:mt-3.5')
+export const splitFootnoteVariants = cva('mt-3 text-note text-ink-muted lg:mt-auto lg:pt-3.5')

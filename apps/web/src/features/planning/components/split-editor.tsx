@@ -103,7 +103,7 @@ export function SplitEditor({
   return (
     <>
       <SplitHeader workspaceId={workspaceId} actions={isDesktop ? saveButton : undefined} />
-      <div className="grid gap-4 lg:grid-cols-5 lg:items-start lg:gap-5">
+      <div className="grid gap-4 lg:grid-cols-5 lg:gap-5">
         <StepsCard isDesktop={isDesktop}>
           {shown.length === 0 ? (
             <EmptySplit
