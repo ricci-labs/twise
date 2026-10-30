@@ -440,10 +440,11 @@ updated: 2026-10-30
      `requirements/ui-standards.md`, API gaps G73–G78
   2. [x] Web: the phone system bars (manifest colours, `theme-color` for light and dark, the iPhone
      status bar and safe areas), checked on an installed Android and on an iPhone
-  3. [ ] Web: the app-wide rules on the screens already built (`MetaLine` support lines, paired
+  3. [x] Web: the app-wide rules on the screens already built (`MetaLine` support lines, paired
      desktop cards, lists on the full row, the desktop offline bar edge to edge, before and after
-     blocks), each desktop screen checked at 1440 and 1920 px
-  4. [ ] API: the period preview (G73) and role usage (G74)
+     blocks), each desktop screen checked at 1440 and 1920 px (#418–#422; Configurações and Pix
+     wait for step 7, the contact page for `WorkScreen`)
+  4. [x] API: the period preview (G73, #423) and role usage (G74)
   5. [ ] API: the readable history, the `actorId` filter and the members' last activity (G75)
   6. [ ] API: the purchase simulation's verdict, payment method effect and period (G76–G78)
   7. [ ] Web: the Configurações hub and its screens (`SET-01`)

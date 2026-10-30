@@ -82,6 +82,36 @@ describe('GET /roles', () => {
     expect(listed[3]?.permissions).toContainEqual({ module: 'entries', action: 'view' })
     expect((await as('viewer').get(`${base}/roles`)).status).toBe(403)
   })
+
+  it('says how many active members and open invitations use each role', async () => {
+    const { base, as, roles, roleId, createRole } = await team()
+    const unused = await idOf(await createRole('owner', 'Ninguém usa', RECORDER))
+    const invited = await as('owner').post(`${base}/invitations`, {
+      email: `usage-${crypto.randomUUID()}@example.test`,
+      roleId: await roleId('member'),
+    })
+    expect(invited.status).toBe(201)
+    const revoked = await as('owner').post(`${base}/invitations`, {
+      email: `usage-${crypto.randomUUID()}@example.test`,
+      roleId: await roleId('viewer'),
+    })
+    const { invitationId } = (await revoked.json()) as { invitationId: string }
+    expect((await as('owner').del(`${base}/invitations/${invitationId}`)).status).toBe(204)
+
+    const usage = Object.fromEntries(
+      (await roles()).map((role) => [
+        role.systemKey ?? role.roleId,
+        [role.memberCount, role.invitationCount],
+      ]),
+    )
+    expect(usage).toEqual({
+      owner: [1, 0],
+      admin: [1, 0],
+      member: [1, 1],
+      viewer: [1, 0],
+      [unused]: [0, 0],
+    })
+  })
 })
 
 describe('custom roles', () => {

@@ -29,6 +29,7 @@ import type {
   RoleItem,
 } from '@api/modules/access/access.types'
 import { auditCreation, audited, recordAudit } from '@api/modules/audit'
+import { type RoleUsage, readRoleUsage } from '@api/modules/members'
 import { type Permission, permissionsBeyond } from '@financas/shared'
 
 const OWNER_ROLE = 'owner'
@@ -36,12 +37,16 @@ const ROLE_NAME_CONSTRAINT = 'roles_name_unique'
 
 const ROLE_PERMISSIONS_TABLE = 'role_permissions'
 
+const UNUSED: RoleUsage = { memberCount: 0, invitationCount: 0 }
+
 export async function listRoles(db: Database, workspaceId: string): Promise<RoleItem[]> {
   return withWorkspace(db, workspaceId, async (tx) => {
     const roles = await selectActiveRolesWithDescriptions(tx)
     const permissions = await selectWorkspacePermissions(tx)
+    const usage = await readRoleUsage(tx)
     return roles.map((role) => ({
       ...role,
+      ...(usage.get(role.roleId) ?? UNUSED),
       permissions: permissions
         .filter((permission) => permission.roleId === role.roleId)
         .map(({ module, action }) => ({ module, action })),

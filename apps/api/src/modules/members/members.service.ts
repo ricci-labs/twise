@@ -11,6 +11,8 @@ import { ConflictError, ForbiddenError, NotFoundError, parseOrThrow } from '@api
 import { generateToken, hashToken } from '@api/core/security/tokens'
 import { auditCreation, audited } from '@api/modules/audit'
 import {
+  countActiveMembersByRole,
+  countOpenInvitationsByRole,
   findInvitationWorkspaceId,
   hasActiveMembership,
   insertDefaultPreferencesIfMissing,
@@ -55,6 +57,7 @@ import type {
   PendingInvitation,
   RevocableInvitation,
   RevokeInvitationInput,
+  RoleUsage,
 } from '@api/modules/members/members.types'
 import { membershipPreferencesChangeSchema } from '@financas/shared'
 
@@ -153,6 +156,19 @@ export function findActiveMembership(
   userId: string,
 ): Promise<ActiveMembership | undefined> {
   return selectActiveMembershipOfUser(tx, userId)
+}
+
+export async function readRoleUsage(tx: WorkspaceTransaction): Promise<Map<string, RoleUsage>> {
+  const members = await countActiveMembersByRole(tx)
+  const invitationsByRole = await countOpenInvitationsByRole(tx)
+  const usage = new Map<string, RoleUsage>()
+  for (const { roleId, count } of members) {
+    usage.set(roleId, { memberCount: count, invitationCount: 0 })
+  }
+  for (const { roleId, count } of invitationsByRole) {
+    usage.set(roleId, { memberCount: usage.get(roleId)?.memberCount ?? 0, invitationCount: count })
+  }
+  return usage
 }
 
 export function listWorkspaceIdsOfUser(db: Database, userId: string): Promise<string[]> {
