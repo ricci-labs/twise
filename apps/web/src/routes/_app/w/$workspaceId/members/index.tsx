@@ -8,6 +8,7 @@ export const Route = createFileRoute('/_app/w/$workspaceId/members/')({
     return (
       <MembersPage
         workspaceId={workspaceId}
+        workspaceName={access.workspace.name}
         membershipId={access.membershipId}
         permissions={access.permissions}
       />

@@ -8,27 +8,40 @@ import { AccountGroup } from '@web/components/finance/account-group'
 import { PageFrame } from '@web/components/layout/page-frame'
 import { PageHeader } from '@web/components/layout/page-header'
 import { membersQueryOptions } from '@web/features/members/api/members.queries'
+import { MemberActions } from '@web/features/members/components/member-actions'
 import { membersMessages as messages } from '@web/features/members/members.messages'
 import type { MembersListProps, MembersPageProps } from '@web/features/members/members.types'
 import { usePageTitle } from '@web/hooks/use-page-title'
 import { ApiError } from '@web/lib/api/api-error'
+import { hasPermission } from '@web/lib/permissions'
 import { useState } from 'react'
 
 const PAGE_SIZE = 50
 const SKELETON_LINES = 6
 const TIME_ZONE = 'America/Sao_Paulo'
 
-export function MembersPage({ workspaceId, membershipId }: MembersPageProps) {
+export function MembersPage({
+  workspaceId,
+  workspaceName,
+  membershipId,
+  permissions,
+}: MembersPageProps) {
   usePageTitle(messages.pageTitle)
   return (
     <PageFrame className="gap-4 lg:gap-6">
       <PageHeader title={messages.title} />
-      <MembersList workspaceId={workspaceId} membershipId={membershipId} />
+      <MembersList
+        workspaceId={workspaceId}
+        workspaceName={workspaceName}
+        membershipId={membershipId}
+        permissions={permissions}
+      />
     </PageFrame>
   )
 }
 
-function MembersList({ workspaceId, membershipId }: MembersListProps) {
+function MembersList({ workspaceId, workspaceName, membershipId, permissions }: MembersListProps) {
+  const canRemove = hasPermission(permissions, 'members', 'delete')
   const members = useQuery(membersQueryOptions(workspaceId))
   const [shownCount, setShownCount] = useState(PAGE_SIZE)
   if (members.isError) {
@@ -56,6 +69,16 @@ function MembersList({ workspaceId, membershipId }: MembersListProps) {
             roleName={member.role.name}
             joinedOn={todayIn(TIME_ZONE, new Date(member.joinedAt))}
             isYou={member.membershipId === membershipId}
+            actions={
+              <MemberActions
+                workspaceId={workspaceId}
+                workspaceName={workspaceName}
+                member={member}
+                members={members.data}
+                isYou={member.membershipId === membershipId}
+                canRemove={canRemove}
+              />
+            }
           />
         ))}
       </AccountGroup>
