@@ -1,8 +1,13 @@
 import type { WorkspaceTransaction } from '@api/core/db/db.types'
 import { auditLog } from '@api/modules/audit/audit.table'
-import type { AuditItem, AuditTarget, NewAuditRow } from '@api/modules/audit/audit.types'
-import type { AuditQuery } from '@financas/shared'
-import { and, desc, eq, getTableName, type SQL, sql } from 'drizzle-orm'
+import type {
+  ActorActivity,
+  AuditEvent,
+  AuditTarget,
+  NewAuditRow,
+} from '@api/modules/audit/audit.types'
+import { AUTOMATIC_ACTOR, type AuditQuery } from '@financas/shared'
+import { and, desc, eq, getTableName, isNotNull, isNull, max, type SQL, sql } from 'drizzle-orm'
 
 const AT_TO_THE_MILLISECOND = sql`date_trunc('milliseconds', ${auditLog.at})`
 
@@ -10,13 +15,23 @@ export async function insertAuditRow(tx: WorkspaceTransaction, row: NewAuditRow)
   await tx.insert(auditLog).values(row)
 }
 
-export function selectAuditRows(tx: WorkspaceTransaction, query: AuditQuery): Promise<AuditItem[]> {
+export function selectAuditRows(
+  tx: WorkspaceTransaction,
+  query: AuditQuery,
+): Promise<AuditEvent[]> {
   const conditions: SQL[] = []
   if (query.tableName) {
     conditions.push(eq(auditLog.tableName, query.tableName))
   }
   if (query.rowId) {
     conditions.push(eq(auditLog.rowId, query.rowId))
+  }
+  if (query.actorId) {
+    conditions.push(
+      query.actorId === AUTOMATIC_ACTOR
+        ? isNull(auditLog.actorUserId)
+        : eq(auditLog.actorUserId, query.actorId),
+    )
   }
   if (query.cursor) {
     conditions.push(
@@ -40,6 +55,15 @@ export function selectAuditRows(tx: WorkspaceTransaction, query: AuditQuery): Pr
     .where(and(...conditions))
     .orderBy(desc(AT_TO_THE_MILLISECOND), desc(auditLog.id))
     .limit(query.limit + 1)
+}
+
+export async function selectLatestActivity(tx: WorkspaceTransaction): Promise<ActorActivity[]> {
+  const rows = await tx
+    .select({ actorUserId: auditLog.actorUserId, at: max(auditLog.at) })
+    .from(auditLog)
+    .where(isNotNull(auditLog.actorUserId))
+    .groupBy(auditLog.actorUserId)
+  return rows.flatMap(({ actorUserId, at }) => (actorUserId && at ? [{ actorUserId, at }] : []))
 }
 
 export async function selectAuditedRow(

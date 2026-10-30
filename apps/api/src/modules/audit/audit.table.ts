@@ -30,6 +30,7 @@ export const auditLog = pgTable(
   (table) => [
     index('audit_log_timeline_idx').on(table.workspaceId, table.at, table.id),
     index('audit_log_row_idx').on(table.workspaceId, table.tableName, table.rowId),
+    index('audit_log_actor_idx').on(table.workspaceId, table.actorUserId, table.at),
     pgPolicy('audit_log_read', {
       as: 'permissive',
       for: 'select',

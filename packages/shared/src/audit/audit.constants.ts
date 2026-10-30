@@ -12,3 +12,5 @@ export type AuditAction = (typeof AUDIT_ACTIONS)[number]
 export const AUDIT_SOURCES = ['web', 'whatsapp', 'job', 'ops', 'system'] as const
 
 export type AuditSource = (typeof AUDIT_SOURCES)[number]
+
+export const AUTOMATIC_ACTOR = 'automatic'
