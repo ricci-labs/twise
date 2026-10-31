@@ -12,6 +12,7 @@ import {
   comingBarsOf,
   elsewhereNoteOf,
   insightSentenceOf,
+  isFieldError,
   periodItemsOf,
   periodRangeOf,
   verdictOf,
@@ -22,14 +23,17 @@ import type {
   PurchaseResultProps,
   PurchaseShownProps,
 } from '@web/features/purchase/purchase.types'
+import { useIsOnline } from '@web/hooks/use-is-online'
 import { ApiError } from '@web/lib/api/api-error'
 import { Info } from 'lucide-react'
 
 const SKELETON_LINES = 4
 
-export function PurchaseResult({ live, names }: PurchaseResultProps) {
+export function PurchaseResult({ live, names, record }: PurchaseResultProps) {
   const { query, isWaiting, result } = live
-  if (query === null && !isWaiting) {
+  const isOnline = useIsOnline()
+  const hasNoQuery = query === null || isFieldError(result.error)
+  if (hasNoQuery && !isWaiting) {
     return (
       <ResultState
         frame="dashed"
@@ -38,6 +42,9 @@ export function PurchaseResult({ live, names }: PurchaseResultProps) {
         text={messages.start.text}
       />
     )
+  }
+  if (!isOnline) {
+    return <PurchaseOffline result={result} />
   }
   if (result.isError && !isWaiting) {
     return <PurchaseFailed result={result} />
@@ -56,7 +63,29 @@ export function PurchaseResult({ live, names }: PurchaseResultProps) {
       </div>
     )
   }
-  return <PurchaseShown impact={result.data} names={names} />
+  return <PurchaseShown impact={result.data} names={names} record={record} />
+}
+
+function PurchaseOffline({ result }: PurchaseFailedProps) {
+  return (
+    <ResultState
+      isAlert
+      tone="neutral"
+      art={<TwiseIcon name="refresh" />}
+      title={messages.offline.title}
+      text={messages.offline.text}
+      action={
+        <Button
+          variant="secondary"
+          isLoading={result.isFetching}
+          onClick={() => void result.refetch()}
+        >
+          <TwiseIcon name="refresh" size="md" />
+          {messages.failed.retry}
+        </Button>
+      }
+    />
+  )
 }
 
 function PurchaseFailed({ result }: PurchaseFailedProps) {
@@ -83,7 +112,7 @@ function PurchaseFailed({ result }: PurchaseFailedProps) {
   )
 }
 
-function PurchaseShown({ impact, names }: PurchaseShownProps) {
+function PurchaseShown({ impact, names, record }: PurchaseShownProps) {
   const verdict = verdictOf(impact)
   const note = elsewhereNoteOf(impact)
   const bars = comingBarsOf(impact)
@@ -111,6 +140,7 @@ function PurchaseShown({ impact, names }: PurchaseShownProps) {
         <Info aria-hidden="true" className="size-4 shrink-0" />
         {messages.simulationOnly}
       </p>
+      {record}
     </div>
   )
 }

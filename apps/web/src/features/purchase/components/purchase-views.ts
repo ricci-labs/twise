@@ -7,12 +7,16 @@ import type {
   PurchaseAccount,
   PurchaseCard,
   PurchaseDraft,
+  PurchaseField,
+  PurchaseFieldErrors,
   PurchaseImpact,
   PurchaseInsight,
   PurchaseNames,
+  RecordSearch,
   RichSentence,
   SimulationQuery,
 } from '@web/features/purchase/purchase.types'
+import { ApiError } from '@web/lib/api/api-error'
 import {
   formatDayMonth,
   formatFullDate,
@@ -23,6 +27,15 @@ import {
 import { centsOfTypedAmount } from '@web/lib/format/money'
 
 const SINGLE = 1
+const NEW_ENTRY = 'new'
+const CARD_PURCHASE = 'card_purchase'
+const EXPENSE = 'expense'
+const FIELD_OF_CODE: Readonly<Record<string, PurchaseField>> = {
+  SIMULATION_CARD_INVALID: 'card',
+  SIMULATION_ACCOUNT_INVALID: 'account',
+  SIMULATION_QUERY_INVALID: 'installments',
+}
+const ERROR_OF_FIELD = { card: 'card', account: 'account', installments: 'query' } as const
 const TONES = { fits: 'ok', tight: 'warn', over: 'alert' } as const
 
 export function firstDraftOf(cards: readonly PurchaseCard[], today: IsoDate): PurchaseDraft {
@@ -78,6 +91,38 @@ export function simulationQueryOf(draft: PurchaseDraft): SimulationQuery | null 
 
 export function maxInstallmentsOf(amountCents: number | null): number {
   return amountCents ? Math.min(MAX_INSTALLMENTS, amountCents) : MAX_INSTALLMENTS
+}
+
+export function fieldErrorsOf(draft: PurchaseDraft, error: unknown): PurchaseFieldErrors {
+  const amountCents = centsOfTypedAmount(draft.amount)
+  const hasTooMany =
+    draft.payment === 'card' &&
+    amountCents !== null &&
+    amountCents > 0 &&
+    draft.installmentCount > amountCents
+  if (hasTooMany) {
+    return { installments: messages.errors.tooManyInstallments }
+  }
+  const code = error instanceof ApiError ? error.code : null
+  const field = code ? FIELD_OF_CODE[code] : undefined
+  return field ? { [field]: messages.errors[ERROR_OF_FIELD[field]] } : {}
+}
+
+export function isFieldError(error: unknown): boolean {
+  return error instanceof ApiError && error.code in FIELD_OF_CODE
+}
+
+export function recordSearchOf(draft: PurchaseDraft, query: SimulationQuery): RecordSearch {
+  const isCard = draft.payment === 'card'
+  return {
+    entry: NEW_ENTRY,
+    entryType: isCard ? CARD_PURCHASE : EXPENSE,
+    entryAmount: Number(query.amountCents),
+    entryCard: isCard ? draft.cardAccountId : undefined,
+    entryInstallments: isCard ? draft.installmentCount : undefined,
+    entryAccount: isCard ? undefined : draft.paidFromAccountId,
+    entryDate: draft.occurredOn,
+  }
 }
 
 export function simulationKeyOf(query: SimulationQuery | null): string {

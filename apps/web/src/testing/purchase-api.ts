@@ -1,4 +1,4 @@
-import { CARD, CHECKING } from '@web/testing/accounts-api'
+import { accountsAnswers, CARD, CHECKING } from '@web/testing/accounts-api'
 import { WORKSPACE_ID } from '@web/testing/fake-api'
 import type { FakeAnswer } from '@web/testing/testing.types'
 
@@ -63,6 +63,27 @@ export function simulationAnswer(
     [`GET ${BASE}/simulations/purchase`]: (request) => {
       queries.push(new URL(request.url).searchParams)
       return Response.json(impact)
+    },
+  }
+}
+
+const OLD_CARD = '00000000-0000-4000-8000-0000000000c8'
+
+export function archivedCardAnswer(): Record<string, FakeAnswer> {
+  const cards: FakeAnswer | undefined = accountsAnswers()[`GET ${BASE}/cards`]
+  return {
+    [`GET ${BASE}/cards`]: async (request) => {
+      const current = (await (await cards?.(request))?.json()) as Record<string, unknown>[]
+      const [first] = current
+      return Response.json([
+        ...current,
+        {
+          ...first,
+          accountId: OLD_CARD,
+          name: 'Cartão antigo',
+          archivedAt: '2026-09-01T12:00:00.000Z',
+        },
+      ])
     },
   }
 }
