@@ -38,9 +38,26 @@ export type HistoryPageProps = {
 
 export type HistoryListProps = HistoryPageProps & {
   today: IsoDate
+  isDesktop: boolean
 }
 
-export type HistoryDaysProps = Pick<HistoryPageProps, 'workspaceId'> & {
+export type HistoryShownProps = HistoryListProps & {
+  list: HistoryMoreProps['list']
+  events: readonly AuditEvent[]
+}
+
+export type HistoryDetailProps = HistoryShownProps & {
+  event: AuditEvent
+}
+
+export type HistoryTrailProps = {
+  workspaceId: string
+  event: AuditEvent
+  today: IsoDate
+  hasAllLink: boolean
+}
+
+export type HistoryDaysProps = {
   days: readonly AuditDay[]
   selectedId?: string
 }
@@ -60,6 +77,7 @@ export type HistoryFilterMenuProps = {
 export type HistoryItemProps = {
   event: AuditEvent
   onClear: () => void
+  isFramed?: boolean
 }
 
 export type HistoryEmptyProps = Pick<HistoryPageProps, 'search' | 'onSearchChange'>
