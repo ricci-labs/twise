@@ -8,8 +8,8 @@ import { ChevronRight } from 'lucide-react'
 export function CanIBuyCard({ workspaceId, className }: CanIBuyCardProps) {
   return (
     <Link
-      to="/w/$workspaceId/$area"
-      params={{ workspaceId, area: 'can-i-buy' }}
+      to="/w/$workspaceId/can-i-buy"
+      params={{ workspaceId }}
       className={cn(
         'flex min-h-16 items-center gap-3 rounded-lg border border-border bg-surface py-2.5 pr-3 pl-2.5 hover:bg-sunken',
         className,
