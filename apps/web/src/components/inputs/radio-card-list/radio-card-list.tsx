@@ -67,14 +67,21 @@ export function RadioCardList({
           >
             <span data-slot="radio-dot" aria-hidden="true" className={radioDotVariants()} />
             <span className={radioCardTextVariants()}>
-              {option.label}
+              <span>
+                {option.label}
+                {option.badge?.isInline && (
+                  <Badge tone={option.badge.tone} size="xs" className="ml-2 align-middle">
+                    {option.badge.label}
+                  </Badge>
+                )}
+              </span>
               {option.detail && (
                 <span className={radioCardDetailVariants()}>
                   <RichText text={option.detail} />
                 </span>
               )}
             </span>
-            {option.badge && (
+            {option.badge && !option.badge.isInline && (
               <Badge tone={option.badge.tone} hasDot>
                 {option.badge.label}
               </Badge>

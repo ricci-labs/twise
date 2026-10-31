@@ -8,7 +8,15 @@ export const lockedFieldBoxVariants = cva(
   'flex min-h-control items-center gap-2 rounded-md bg-sunken px-3.5 py-2.5 text-ink-muted',
 )
 
-export const lockedFieldTextVariants = cva('flex min-w-0 flex-col')
+export const lockedFieldTextVariants = cva('flex min-w-0 flex-1', {
+  variants: {
+    detailPlacement: {
+      below: 'flex-col',
+      end: 'flex-wrap items-baseline justify-between gap-x-3',
+    },
+  },
+  defaultVariants: { detailPlacement: 'below' },
+})
 
 export const lockedFieldDetailVariants = cva('text-note text-ink-muted')
 

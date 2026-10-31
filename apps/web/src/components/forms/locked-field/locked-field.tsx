@@ -11,7 +11,7 @@ import {
 import { TwiseIcon } from '@web/components/icons/twise-icon'
 import { useId } from 'react'
 
-export function LockedField({ label, value, detail, help }: LockedFieldProps) {
+export function LockedField({ label, value, detail, help, detailPlacement }: LockedFieldProps) {
   const labelId = useId()
   const helpId = useId()
   return (
@@ -26,7 +26,7 @@ export function LockedField({ label, value, detail, help }: LockedFieldProps) {
       </span>
       <div className={lockedFieldBoxVariants()}>
         <TwiseIcon name="lock" size="sm" />
-        <span className={lockedFieldTextVariants()}>
+        <span className={lockedFieldTextVariants({ detailPlacement })}>
           <span className={lockedFieldValueVariants()}>{value}</span>
           {detail && <span className={lockedFieldDetailVariants()}>{detail}</span>}
         </span>

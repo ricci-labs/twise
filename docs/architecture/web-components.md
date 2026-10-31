@@ -165,7 +165,8 @@ React Hook Form v7 + `zodResolver` with the **schemas from `@financas/shared`** 
   group too; it may hold a link ("Ver feriados" after the business-day help).
 - `LockedField` (`components/forms/locked-field`): a value that can't change on this form (an
   account's kind on edit): the label, a grey box with the lock and the value in bold, and the reason
-  under it.
+  under it; `detailPlacement="end"` puts the box's detail on the same line, on the right ("Real
+  (R$) · Não muda por enquanto." in Configurações, design `Config-nome`).
 - `FormField`'s help sits 4 px under the label by default; `helpGap="roomy"` gives the 8 px of the
   account, category and card forms.
 - Text inputs keep the design's 2 px inner padding on the `input` (18 px from the border to the
@@ -504,7 +505,9 @@ component here, so the form, and later the account, card and planning forms, sha
 - `RadioCardList` (`components/inputs/radio-card-list`, Base UI `RadioGroup`, the design's
   `InvoiceRadioList`): one choice among rows with a radio dot, a title, a detail with `**bold**`
   ("Falta pagar **R$ 1.950,00**", 13 px) and an optional status badge with its dot; the title is
-  15 px semibold; the chosen row gets the ink outline.
+  15 px semibold; the chosen row gets the ink outline. A badge with `isInline` sits right after the
+  title, small and without the dot, and drops under it when the title is long (the "recomendado"
+  of Orçamento, design `Config-orcamento`).
   `layout="pair"` puts two cards side by side, the dot at the top and a grey example under the title
   (the income nature: "Renda fixa" / "ex.: salário").
   A `stack` of more than 5 shows the first 5 and "Mostrar mais (n)" (the chosen one past them shows
