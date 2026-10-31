@@ -27,6 +27,7 @@ import { Route as AppWorkspacesNewRouteImport } from './routes/_app/workspaces/n
 import { Route as AppWWorkspaceIdIndexRouteImport } from './routes/_app/w/$workspaceId/index'
 import { Route as AppWWorkspaceIdAreaRouteImport } from './routes/_app/w/$workspaceId/$area'
 import { Route as AppWWorkspaceIdAccountsRouteImport } from './routes/_app/w/$workspaceId/accounts'
+import { Route as AppWWorkspaceIdCanIBuyRouteImport } from './routes/_app/w/$workspaceId/can-i-buy'
 import { Route as AppWWorkspaceIdCardsRouteImport } from './routes/_app/w/$workspaceId/cards'
 import { Route as AppWWorkspaceIdCategoriesRouteImport } from './routes/_app/w/$workspaceId/categories'
 import { Route as AppWWorkspaceIdCommissionSplitRouteImport } from './routes/_app/w/$workspaceId/commission-split'
@@ -150,6 +151,11 @@ const AppWWorkspaceIdAreaRoute = AppWWorkspaceIdAreaRouteImport.update({
 const AppWWorkspaceIdAccountsRoute = AppWWorkspaceIdAccountsRouteImport.update({
   id: '/accounts',
   path: '/accounts',
+  getParentRoute: () => AppWWorkspaceIdRouteRoute,
+} as any)
+const AppWWorkspaceIdCanIBuyRoute = AppWWorkspaceIdCanIBuyRouteImport.update({
+  id: '/can-i-buy',
+  path: '/can-i-buy',
   getParentRoute: () => AppWWorkspaceIdRouteRoute,
 } as any)
 const AppWWorkspaceIdCardsRoute = AppWWorkspaceIdCardsRouteImport.update({
@@ -380,6 +386,7 @@ export interface FileRoutesByFullPath {
   '/workspaces/': typeof AppWorkspacesIndexRoute
   '/w/$workspaceId/$area': typeof AppWWorkspaceIdAreaRoute
   '/w/$workspaceId/accounts': typeof AppWWorkspaceIdAccountsRoute
+  '/w/$workspaceId/can-i-buy': typeof AppWWorkspaceIdCanIBuyRoute
   '/w/$workspaceId/cards': typeof AppWWorkspaceIdCardsRoute
   '/w/$workspaceId/categories': typeof AppWWorkspaceIdCategoriesRoute
   '/w/$workspaceId/commission-split': typeof AppWWorkspaceIdCommissionSplitRoute
@@ -433,6 +440,7 @@ export interface FileRoutesByTo {
   '/workspaces': typeof AppWorkspacesIndexRoute
   '/w/$workspaceId/$area': typeof AppWWorkspaceIdAreaRoute
   '/w/$workspaceId/accounts': typeof AppWWorkspaceIdAccountsRoute
+  '/w/$workspaceId/can-i-buy': typeof AppWWorkspaceIdCanIBuyRoute
   '/w/$workspaceId/cards': typeof AppWWorkspaceIdCardsRoute
   '/w/$workspaceId/categories': typeof AppWWorkspaceIdCategoriesRoute
   '/w/$workspaceId/commission-split': typeof AppWWorkspaceIdCommissionSplitRoute
@@ -490,6 +498,7 @@ export interface FileRoutesById {
   '/_app/workspaces/': typeof AppWorkspacesIndexRoute
   '/_app/w/$workspaceId/$area': typeof AppWWorkspaceIdAreaRoute
   '/_app/w/$workspaceId/accounts': typeof AppWWorkspaceIdAccountsRoute
+  '/_app/w/$workspaceId/can-i-buy': typeof AppWWorkspaceIdCanIBuyRoute
   '/_app/w/$workspaceId/cards': typeof AppWWorkspaceIdCardsRoute
   '/_app/w/$workspaceId/categories': typeof AppWWorkspaceIdCategoriesRoute
   '/_app/w/$workspaceId/commission-split': typeof AppWWorkspaceIdCommissionSplitRoute
@@ -546,6 +555,7 @@ export interface FileRouteTypes {
     | '/workspaces/'
     | '/w/$workspaceId/$area'
     | '/w/$workspaceId/accounts'
+    | '/w/$workspaceId/can-i-buy'
     | '/w/$workspaceId/cards'
     | '/w/$workspaceId/categories'
     | '/w/$workspaceId/commission-split'
@@ -599,6 +609,7 @@ export interface FileRouteTypes {
     | '/workspaces'
     | '/w/$workspaceId/$area'
     | '/w/$workspaceId/accounts'
+    | '/w/$workspaceId/can-i-buy'
     | '/w/$workspaceId/cards'
     | '/w/$workspaceId/categories'
     | '/w/$workspaceId/commission-split'
@@ -655,6 +666,7 @@ export interface FileRouteTypes {
     | '/_app/workspaces/'
     | '/_app/w/$workspaceId/$area'
     | '/_app/w/$workspaceId/accounts'
+    | '/_app/w/$workspaceId/can-i-buy'
     | '/_app/w/$workspaceId/cards'
     | '/_app/w/$workspaceId/categories'
     | '/_app/w/$workspaceId/commission-split'
@@ -830,6 +842,13 @@ declare module '@tanstack/react-router' {
       path: '/accounts'
       fullPath: '/w/$workspaceId/accounts'
       preLoaderRoute: typeof AppWWorkspaceIdAccountsRouteImport
+      parentRoute: typeof AppWWorkspaceIdRouteRoute
+    }
+    '/_app/w/$workspaceId/can-i-buy': {
+      id: '/_app/w/$workspaceId/can-i-buy'
+      path: '/can-i-buy'
+      fullPath: '/w/$workspaceId/can-i-buy'
+      preLoaderRoute: typeof AppWWorkspaceIdCanIBuyRouteImport
       parentRoute: typeof AppWWorkspaceIdRouteRoute
     }
     '/_app/w/$workspaceId/cards': {
@@ -1090,6 +1109,7 @@ declare module '@tanstack/react-router' {
 interface AppWWorkspaceIdRouteRouteChildren {
   AppWWorkspaceIdAreaRoute: typeof AppWWorkspaceIdAreaRoute
   AppWWorkspaceIdAccountsRoute: typeof AppWWorkspaceIdAccountsRoute
+  AppWWorkspaceIdCanIBuyRoute: typeof AppWWorkspaceIdCanIBuyRoute
   AppWWorkspaceIdCardsRoute: typeof AppWWorkspaceIdCardsRoute
   AppWWorkspaceIdCategoriesRoute: typeof AppWWorkspaceIdCategoriesRoute
   AppWWorkspaceIdCommissionSplitRoute: typeof AppWWorkspaceIdCommissionSplitRoute
@@ -1132,6 +1152,7 @@ interface AppWWorkspaceIdRouteRouteChildren {
 const AppWWorkspaceIdRouteRouteChildren: AppWWorkspaceIdRouteRouteChildren = {
   AppWWorkspaceIdAreaRoute: AppWWorkspaceIdAreaRoute,
   AppWWorkspaceIdAccountsRoute: AppWWorkspaceIdAccountsRoute,
+  AppWWorkspaceIdCanIBuyRoute: AppWWorkspaceIdCanIBuyRoute,
   AppWWorkspaceIdCardsRoute: AppWWorkspaceIdCardsRoute,
   AppWWorkspaceIdCategoriesRoute: AppWWorkspaceIdCategoriesRoute,
   AppWWorkspaceIdCommissionSplitRoute: AppWWorkspaceIdCommissionSplitRoute,

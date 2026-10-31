@@ -202,6 +202,7 @@ export function accountsAnswers(overrides: Record<string, FakeAnswer> = {}) {
           paymentAccountId: CHECKING,
           openCents: 289000,
           limitUsedPercent: 48,
+          freeLimitCents: 311000,
           currentInvoice: INVOICE,
         },
       ]),

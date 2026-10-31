@@ -19,6 +19,7 @@ const COMMISSION_SPLIT_PAGE = 'commission-split'
 
 const SETTINGS_AREA = 'settings'
 const HISTORY_AREA = 'history'
+const PURCHASE_PAGE = 'can-i-buy'
 const MEMBERS_AREA = 'members'
 const ACCOUNT_AREA = 'account'
 const ROLES_PAGE = 'roles'
@@ -82,7 +83,8 @@ export function hasNewEntryButton(pathname: string): boolean {
     area === TRASH_PAGE ||
     item === TRASH_PAGE ||
     area === SETTINGS_AREA ||
-    area === HISTORY_AREA
+    area === HISTORY_AREA ||
+    area === PURCHASE_PAGE
   ) {
     return false
   }

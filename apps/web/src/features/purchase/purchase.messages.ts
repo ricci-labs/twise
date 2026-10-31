@@ -1,0 +1,92 @@
+export const purchaseMessages = {
+  pageTitle: 'Posso comprar?',
+  title: 'Posso comprar?',
+  lead: 'Simule uma compra antes de gastar. Nada é registrado.',
+  back: 'Início',
+  form: 'A compra',
+  result: 'O que muda',
+  fields: {
+    amount: 'Valor da compra',
+    payment: 'Como vai pagar',
+    card: 'Cartão',
+    installments: 'Parcelas',
+    account: 'Conta',
+    date: 'Quando',
+  },
+  payments: { card: 'No cartão', account: 'Na conta' },
+  cards: {
+    placeholder: 'Escolha o cartão',
+    due: (day: string) => `Vence ${day}`,
+    free: (amount: string) => `Limite livre ${amount}`,
+    noLimit: 'Sem limite cadastrado',
+    empty: { title: 'Nenhum cartão', text: 'Cadastre um cartão para simular uma compra nele.' },
+  },
+  accounts: {
+    placeholder: 'Escolha a conta',
+    balance: (amount: string) => `Saldo hoje ${amount}`,
+    empty: { title: 'Nenhuma conta', text: 'Cadastre uma conta para simular uma compra nela.' },
+  },
+  installments: {
+    cash: 'À vista',
+    times: (count: number) => `${count}×`,
+    each: (count: number, amount: string) => `${count}× de ${amount}`,
+    fewer: 'Menos parcelas',
+    more: 'Mais parcelas',
+    single: (due: string) => `Entra na fatura que vence em ${due}.`,
+    first: (due: string) => `A 1ª parcela entra na fatura que vence em ${due}.`,
+    number: (installment: number, count: number) => `${installment}/${count}`,
+    due: (date: string) => `vence ${date}`,
+    rest: (count: number, last: string) =>
+      `+ ${count} ${count === 1 ? 'parcela' : 'parcelas'}, até a fatura que vence em ${last}`,
+  },
+  start: {
+    title: 'Quanto custa o que vocês querem comprar?',
+    text: 'Digite o valor e como vai pagar. O resultado aparece sozinho, sem botão. Nada é registrado.',
+  },
+  loading: 'Calculando o efeito da compra',
+  verdicts: {
+    fits: 'Cabe no orçamento.',
+    tight: 'Cabe, mas aperta.',
+    over: 'Não cabe sem estourar.',
+  },
+  reasons: {
+    free_left: 'Ainda sobram **{left}** até {until}.',
+    card_limit_exceeded: 'Passaria do limite do cartão em **{exceeded}**.',
+    period_overspent: 'Os gastos deste período passariam da renda em **{overspent}**.',
+    month_overcommitted: '{month} passaria de {percent}% da renda fixa comprometida.',
+    month_heavily_committed: '{month} chegaria a {percent}% da renda fixa comprometida.',
+  },
+  period: {
+    title: 'Neste período',
+    description: (range: string) => `${range} · com a compra`,
+    free: 'Livre para gastar',
+    daily: (end: string) => `Por dia, até ${end}`,
+    cardFree: (card: string) => `Limite livre do ${card}`,
+    accountBalance: (account: string) => `Saldo de hoje da ${account}`,
+    elsewhere: (range: string) =>
+      `A compra cai no período de ${range}: este período não muda e o efeito aparece lá.`,
+  },
+  coming: {
+    title: 'Próximos meses',
+    description: 'Quanto da renda fixa fica comprometido. Só os meses que mudam ficam fortes.',
+  },
+  insights: {
+    title: 'O que passaria a aparecer nos avisos',
+    none: 'Nenhum aviso novo apareceria.',
+    period_heavily_committed:
+      '**{month}** ficaria com **{percent}%** da renda fixa comprometida (**{committed}**).',
+    card_limit_exceeded: 'A compra passaria do limite do **{card}** em **{exceeded}**.',
+    period_overspent: 'Os gastos e as contas deste período passariam da renda em **{overspent}**.',
+    balance_going_negative:
+      'O saldo de **{account}** ficaria negativo: **{lowest}** em {lowestOn}.',
+    budget_over: '**{category}** estouraria o orçamento: **{spent}** de **{limit}**.',
+  },
+  simulationOnly: 'É só uma simulação: nada foi registrado.',
+  failed: {
+    title: 'Não deu para simular agora',
+    text: 'Foi um erro do nosso lado. Tente de novo em instantes; se continuar, informe o código.',
+    code: (code: string) => `Código ${code}`,
+    reference: (reference: string) => `Ref. ${reference}`,
+    retry: 'Tentar de novo',
+  },
+} as const
