@@ -128,6 +128,7 @@ export function WorkspaceNameForm({
           label={messages.currency}
           value={settingsMessages.currencyNames[currency] ?? currency}
           detail={messages.currencyLocked}
+          detailPlacement="end"
         />
       </SettingsGroupFrame>
     </Form>

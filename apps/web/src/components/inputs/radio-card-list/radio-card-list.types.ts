@@ -7,7 +7,7 @@ export type RadioCard = {
   label: string
   detail?: string
   isDisabled?: boolean
-  badge?: { label: string; tone: BadgeProps['tone'] }
+  badge?: { label: string; tone: BadgeProps['tone']; isInline?: boolean }
 }
 
 export type RadioCardListProps = VariantProps<typeof radioCardListVariants> & {

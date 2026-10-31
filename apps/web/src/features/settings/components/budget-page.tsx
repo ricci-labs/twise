@@ -87,7 +87,7 @@ export function BudgetForm({ workspaceId, settings, canUpdate, layout }: BudgetF
     }
   }
 
-  const recommended = { label: messages.recommended, tone: 'neutral' as const }
+  const recommended = { label: messages.recommended, tone: 'neutral' as const, isInline: true }
   return (
     <Form form={form} onSubmit={save}>
       <SettingsGroupFrame
