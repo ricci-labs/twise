@@ -30,6 +30,8 @@ export const Route = createFileRoute('/_app/w/$workspaceId')({
       entrySplitPart,
       entrySplitLabel,
       entryCard,
+      entryInstallments,
+      entryDate,
       entryInvoice,
       entryContact,
       entryRepeat,
@@ -88,6 +90,8 @@ export const Route = createFileRoute('/_app/w/$workspaceId')({
                 ? { position: entrySplitPart, label: entrySplitLabel }
                 : undefined,
             cardAccountId: entryCard,
+            installmentCount: entryInstallments,
+            occurredOn: entryDate,
             invoiceId: entryInvoice,
             contactId: entryContact,
           }}
@@ -110,6 +114,8 @@ export const Route = createFileRoute('/_app/w/$workspaceId')({
                 entrySplitPart: undefined,
                 entrySplitLabel: undefined,
                 entryCard: undefined,
+                entryInstallments: undefined,
+                entryDate: undefined,
                 entryInvoice: undefined,
                 entryContact: undefined,
                 entryRepeat: undefined,

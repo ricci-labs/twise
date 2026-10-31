@@ -4,27 +4,38 @@ import { createApp } from '@web/app/router'
 import { expectNoAccessibilityViolations } from '@web/testing/accessibility'
 import { accountsAnswers, CARD, CHECKING } from '@web/testing/accounts-api'
 import {
+  accessAs,
   account,
   apiError,
   fakeApi,
+  VIEWER_PERMISSIONS,
   WORKSPACE_ID,
   workspaceAccess,
   workspaceList,
 } from '@web/testing/fake-api'
-import { OVER_ON_ACCOUNT, simulationAnswer, TIGHT_ON_CARD } from '@web/testing/purchase-api'
+import {
+  archivedCardAnswer,
+  OVER_ON_ACCOUNT,
+  simulationAnswer,
+  TIGHT_ON_CARD,
+} from '@web/testing/purchase-api'
 import type { FakeAnswer } from '@web/testing/testing.types'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { page, userEvent } from 'vitest/browser'
 import { render } from 'vitest-browser-react'
 
 const SERVER_ERROR = 500
+const BAD_REQUEST = 400
 const SIMULATION = `GET /api/workspaces/${WORKSPACE_ID}/simulations/purchase`
 
-async function openPurchase(answers: Record<string, FakeAnswer> = simulationAnswer()) {
+async function openPurchase(
+  answers: Record<string, FakeAnswer> = simulationAnswer(),
+  access: FakeAnswer = workspaceAccess,
+) {
   fakeApi({
     'GET /api/auth/me': account,
     'GET /api/workspaces': () => workspaceList(),
-    [`GET /api/workspaces/${WORKSPACE_ID}`]: workspaceAccess,
+    [`GET /api/workspaces/${WORKSPACE_ID}`]: access,
     ...accountsAnswers(),
     ...answers,
   })
@@ -46,6 +57,7 @@ describe('HOME-02 Posso comprar?', () => {
 
   afterEach(() => {
     vi.useRealTimers()
+    vi.restoreAllMocks()
   })
 
   it('starts on the card with one installment today and explains what will appear', async () => {
@@ -137,5 +149,91 @@ describe('HOME-02 Posso comprar?', () => {
     await expect.element(alert.getByText('Não deu para simular agora')).toBeVisible()
     await expect.element(alert.getByText('Código INTERNAL')).toBeVisible()
     await expect.element(alert.getByRole('button', { name: 'Tentar de novo' })).toBeVisible()
+  })
+
+  it('opens the new entry filled in with the purchase', async () => {
+    await openPurchase()
+
+    await typeAmount('3240')
+    for (const _ of [1, 2, 3, 4, 5]) {
+      await page.getByRole('button', { name: 'Mais parcelas' }).click()
+    }
+    await page.getByRole('link', { name: 'Registrar esta compra' }).click()
+
+    const dialog = page.getByRole('dialog', { name: 'Novo lançamento' })
+    await expect.element(dialog.getByRole('textbox', { name: /Valor/ })).toHaveValue('3.240,00')
+    await expect.element(dialog.getByText('6×', { exact: true }).first()).toBeVisible()
+    await expect.element(dialog.getByText('Cartão X').first()).toBeVisible()
+  })
+
+  it('lets a viewer simulate without "Registrar esta compra"', async () => {
+    await openPurchase(simulationAnswer(), () =>
+      accessAs('Leitor', [...VIEWER_PERMISSIONS, { module: 'reports', action: 'view' }]),
+    )
+
+    await typeAmount('3240')
+
+    await expect.element(page.getByText('Cabe, mas aperta.')).toBeVisible()
+    expect(page.getByRole('link', { name: 'Registrar esta compra' }).query()).toBeNull()
+  })
+
+  it('stops before asking when the amount cannot be split that many times', async () => {
+    const queries: URLSearchParams[] = []
+    await openPurchase(simulationAnswer(TIGHT_ON_CARD, queries))
+
+    await typeAmount('3240')
+    for (const _ of [1, 2, 3, 4, 5]) {
+      await page.getByRole('button', { name: 'Mais parcelas' }).click()
+    }
+    await expect.element(page.getByText('Cabe, mas aperta.')).toBeVisible()
+    const asked = queries.length
+    await typeAmount('0,05')
+
+    await expect
+      .element(page.getByText('Cada parcela precisa de pelo menos R$ 0,01: use menos parcelas.'))
+      .toBeVisible()
+    await expect
+      .element(page.getByRole('region', { name: 'Quanto custa o que vocês querem comprar?' }))
+      .toBeVisible()
+    expect(queries).toHaveLength(asked)
+  })
+
+  it('puts a card that is no longer valid on the card field', async () => {
+    await openPurchase({ [SIMULATION]: () => apiError('SIMULATION_CARD_INVALID', BAD_REQUEST) })
+
+    await typeAmount('100')
+
+    await expect.element(page.getByText('Escolha um cartão ativo.')).toBeVisible()
+    expect(page.getByRole('alert').query()).toBeNull()
+  })
+
+  it('says it is offline instead of keeping an old result', async () => {
+    vi.spyOn(navigator, 'onLine', 'get').mockReturnValue(false)
+    await openPurchase()
+
+    await typeAmount('100')
+
+    const alert = page.getByRole('alert').filter({ hasText: 'Sem conexão' }).last()
+    await expect
+      .element(
+        alert.getByText('O resultado aparece sozinho quando a internet voltar.', { exact: false }),
+      )
+      .toBeVisible()
+    expect(page.getByText('Cabe, mas aperta.').query()).toBeNull()
+  })
+
+  it('shows archived cards only on request, and they can be simulated', async () => {
+    await openPurchase({
+      ...simulationAnswer(),
+      ...archivedCardAnswer(),
+    })
+
+    await page.getByRole('button', { name: /Cartão X/ }).click()
+    const sheet = page.getByRole('dialog', { name: 'Cartão' })
+    expect(sheet.getByRole('button', { name: /Cartão antigo/ }).query()).toBeNull()
+    await sheet.getByRole('button', { name: /Mostrar arquivados \(1\)/ }).click()
+    await sheet.getByRole('button', { name: /Cartão antigo/ }).click()
+
+    await expect.element(page.getByRole('button', { name: /Cartão antigo/ })).toBeVisible()
   })
 })

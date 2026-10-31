@@ -70,16 +70,19 @@ export function PurchaseForm(props: PurchaseFormProps) {
   )
 }
 
-function CardFields({ draft, cards, today, onChange }: PurchaseFormProps) {
+function CardFields({ draft, cards, today, errors, onChange }: PurchaseFormProps) {
+  const [showsArchived, setShowsArchived] = useState(false)
   const amountCents = centsOfTypedAmount(draft.amount)
   const card = cards.find((candidate) => candidate.accountId === draft.cardAccountId)
+  const archivedCount = cards.filter((candidate) => candidate.archivedAt !== null).length
   const items = cards
-    .filter((candidate) => candidate.archivedAt === null)
+    .filter((candidate) => showsArchived || candidate.archivedAt === null || candidate === card)
     .map((candidate) => ({
       value: candidate.accountId,
       label: candidate.name,
       icon: candidate.icon ?? CARD_ICON,
       detail: cardDetailOf(candidate),
+      badge: candidate.archivedAt === null ? undefined : messages.cards.archived,
     }))
   const eachCents = amountCents ? Math.floor(amountCents / draft.installmentCount) : null
   return (
@@ -89,10 +92,21 @@ function CardFields({ draft, cards, today, onChange }: PurchaseFormProps) {
         placeholder={messages.cards.placeholder}
         items={items}
         value={draft.cardAccountId}
+        error={errors.card}
+        subtitle={messages.cards.subtitle}
+        action={
+          archivedCount > 0 && !showsArchived
+            ? {
+                label: messages.cards.showArchived(archivedCount),
+                detail: messages.cards.archivedHelp,
+                onPress: () => setShowsArchived(true),
+              }
+            : undefined
+        }
         empty={{ icon: CARD_ICON, ...messages.cards.empty }}
         onSelect={(cardAccountId) => onChange({ cardAccountId })}
       />
-      <FieldGroup label={fields.installments} isRequired>
+      <FieldGroup label={fields.installments} isRequired error={errors.installments}>
         <Stepper
           value={draft.installmentCount}
           min={1}
@@ -125,7 +139,7 @@ function CardFields({ draft, cards, today, onChange }: PurchaseFormProps) {
   )
 }
 
-function AccountFields({ draft, accounts, balances, onChange }: PurchaseFormProps) {
+function AccountFields({ draft, accounts, balances, errors, onChange }: PurchaseFormProps) {
   const items = accounts
     .filter(
       (account) =>
@@ -148,6 +162,7 @@ function AccountFields({ draft, accounts, balances, onChange }: PurchaseFormProp
       placeholder={messages.accounts.placeholder}
       items={items}
       value={draft.paidFromAccountId}
+      error={errors.account}
       empty={{ icon: 'wallet', ...messages.accounts.empty }}
       onSelect={(paidFromAccountId) => onChange({ paidFromAccountId })}
     />
@@ -160,23 +175,38 @@ function PurchasePicker({
   items,
   value,
   empty,
+  error,
+  subtitle,
+  action,
   onSelect,
 }: PurchasePickerProps) {
   const [isOpen, setIsOpen] = useState(false)
   const anchor = useRef<HTMLButtonElement>(null)
   const chosen = items.find((item) => item.value === value)
   return (
-    <FieldGroup label={label} isRequired>
+    <FieldGroup label={label} isRequired error={error}>
       <PickerField
         ref={anchor}
         value={chosen?.label ?? null}
         detail={chosen?.detail}
+        badge={chosen?.badge}
+        aria-invalid={error ? true : undefined}
         art={chosen && <CategoryArt name={chosen.label} icon={chosen.icon} size="lg" />}
         placeholder={placeholder}
         onClick={() => setIsOpen(true)}
       />
       <PickerSheet
         title={label}
+        subtitle={subtitle}
+        action={
+          action && {
+            ...action,
+            onPress: () => {
+              action.onPress()
+              setIsOpen(true)
+            },
+          }
+        }
         items={items as PickerItem[]}
         value={value || null}
         anchor={anchor}

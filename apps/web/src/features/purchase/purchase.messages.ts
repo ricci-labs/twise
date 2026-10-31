@@ -20,6 +20,10 @@ export const purchaseMessages = {
     free: (amount: string) => `Limite livre ${amount}`,
     noLimit: 'Sem limite cadastrado',
     empty: { title: 'Nenhum cartão', text: 'Cadastre um cartão para simular uma compra nele.' },
+    subtitle: 'Os mais usados primeiro.',
+    showArchived: (count: number) => `Mostrar arquivados (${count})`,
+    archivedHelp: 'Arquivados também podem ser simulados',
+    archived: 'Arquivado',
   },
   accounts: {
     placeholder: 'Escolha a conta',
@@ -82,6 +86,17 @@ export const purchaseMessages = {
     budget_over: '**{category}** estouraria o orçamento: **{spent}** de **{limit}**.',
   },
   simulationOnly: 'É só uma simulação: nada foi registrado.',
+  record: 'Registrar esta compra',
+  errors: {
+    tooManyInstallments: 'Cada parcela precisa de pelo menos R$ 0,01: use menos parcelas.',
+    card: 'Escolha um cartão ativo.',
+    account: 'Escolha uma conta ativa de dinheiro.',
+    query: 'Confira o valor, a forma de pagamento e as parcelas.',
+  },
+  offline: {
+    title: 'Sem conexão',
+    text: 'Os campos continuam como você deixou. O resultado aparece sozinho quando a internet voltar.',
+  },
   failed: {
     title: 'Não deu para simular agora',
     text: 'Foi um erro do nosso lado. Tente de novo em instantes; se continuar, informe o código.',

@@ -301,6 +301,8 @@ function prefilled(blank: EntryFormInput, prefill: EntryPrefill): EntryFormInput
     toAccountId: prefill.toAccountId ?? blank.toAccountId,
     amount: prefill.amountCents ? formatTypedAmount(prefill.amountCents) : blank.amount,
     cardAccountId: prefill.cardAccountId ?? blank.cardAccountId,
+    installmentCount: prefill.installmentCount ?? blank.installmentCount,
+    occurredOn: prefill.occurredOn ?? blank.occurredOn,
     invoiceId: prefill.invoiceId ?? blank.invoiceId,
     contactId: prefill.contactId ?? blank.contactId,
     ...prefill.planned,

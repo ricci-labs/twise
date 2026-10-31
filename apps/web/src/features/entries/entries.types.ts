@@ -191,6 +191,8 @@ export type EntryPrefill = {
   amountCents?: number
   splitPart?: SplitPartPrefill
   cardAccountId?: string
+  installmentCount?: number
+  occurredOn?: string
   invoiceId?: string
   contactId?: string
   planned?: Partial<Pick<EntryFormInput, 'amount' | 'description' | 'categoryId' | 'toAccountId'>>

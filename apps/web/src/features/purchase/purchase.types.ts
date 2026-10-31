@@ -1,12 +1,13 @@
-import type { IsoDate } from '@financas/shared'
+import type { IsoDate, Permission } from '@financas/shared'
 import type { UseQueryResult } from '@tanstack/react-query'
-import type { PickerItem } from '@web/components/inputs/picker-sheet'
+import type { PickerAction, PickerItem } from '@web/components/inputs/picker-sheet'
 import type {
   fetchAccounts,
   fetchBalances,
   fetchCards,
   fetchSimulation,
 } from '@web/features/purchase/api/purchase.queries'
+import type { ReactElement } from 'react'
 
 export type PurchaseCard = Awaited<ReturnType<typeof fetchCards>>[number]
 
@@ -50,11 +51,17 @@ export type LiveSimulation = {
 
 export type PurchasePageProps = {
   workspaceId: string
+  permissions: readonly Permission[]
 }
+
+export type PurchaseField = 'card' | 'account' | 'installments'
+
+export type PurchaseFieldErrors = Partial<Record<PurchaseField, string>>
 
 export type PurchaseFormProps = {
   workspaceId: string
   draft: PurchaseDraft
+  errors: PurchaseFieldErrors
   today: IsoDate
   cards: readonly PurchaseCard[]
   accounts: readonly PurchaseAccount[]
@@ -65,11 +72,13 @@ export type PurchaseFormProps = {
 export type PurchaseResultProps = {
   live: LiveSimulation
   names: PurchaseNames
+  record: ReactElement | null
 }
 
 export type PurchaseShownProps = {
   impact: PurchaseImpact
   names: PurchaseNames
+  record?: ReactElement | null
 }
 
 export type PurchasePickerProps = {
@@ -78,6 +87,9 @@ export type PurchasePickerProps = {
   items: readonly PickerItem[]
   value: string
   empty: { title: string; text: string; icon: string }
+  error?: string
+  subtitle?: string
+  action?: PickerAction
   onSelect: (value: string) => void
 }
 
@@ -97,4 +109,14 @@ export type PurchaseScreenProps = PurchasePageProps & {
 
 export type PurchaseFailedProps = {
   result: LiveSimulation['result']
+}
+
+export type RecordSearch = {
+  entry: 'new'
+  entryType: 'card_purchase' | 'expense'
+  entryAmount: number
+  entryCard: string | undefined
+  entryInstallments: number | undefined
+  entryAccount: string | undefined
+  entryDate: IsoDate
 }
