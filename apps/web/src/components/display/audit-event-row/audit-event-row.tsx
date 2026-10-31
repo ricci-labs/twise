@@ -57,7 +57,7 @@ export function AuditEventRow({
   )
 }
 
-function AuditActorMark({ actorName }: AuditActorMarkProps) {
+export function AuditActorMark({ actorName }: AuditActorMarkProps) {
   if (actorName === null) {
     return (
       <span aria-hidden="true" className={auditEventRowSystemVariants()}>
