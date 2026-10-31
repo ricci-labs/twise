@@ -454,8 +454,8 @@ updated: 2026-10-30
      editor)
   9. [x] Web: Minha conta (`ME-01`, #451–#454 and the desktop cards; "Trocada em …" waits for G79)
   10. [x] Web: Histórico (`AUD-01`, #456–#461), with `WorkScreen` on the desktop
-  11. [ ] Web: "Posso comprar?" (`HOME-02`): the form, the live result, the states and the desktop
-      work screen
+  11. [x] Web: "Posso comprar?" (`HOME-02`, #462–#466): the form, the live result, the states and
+      the desktop work screen
   12. [ ] Review of the round against every PNG
 - [ ] Remaining project skills (`new-module`, `db-migration`, `domain-rule`, `pr`) and Claude Code hooks
 

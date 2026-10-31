@@ -5,6 +5,8 @@ export const purchaseMessages = {
   back: 'Início',
   form: 'A compra',
   result: 'O que muda',
+  live: 'Atualiza enquanto você digita',
+  crumb: 'Você está em',
   fields: {
     amount: 'Valor da compra',
     payment: 'Como vai pagar',

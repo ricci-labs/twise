@@ -28,15 +28,16 @@ import { ApiError } from '@web/lib/api/api-error'
 import { Info } from 'lucide-react'
 
 const SKELETON_LINES = 4
+const FRAMES = { phone: 'card', desktop: 'bare' } as const
 
-export function PurchaseResult({ live, names, record }: PurchaseResultProps) {
+export function PurchaseResult({ live, names, record, layout }: PurchaseResultProps) {
   const { query, isWaiting, result } = live
   const isOnline = useIsOnline()
   const hasNoQuery = query === null || isFieldError(result.error)
   if (hasNoQuery && !isWaiting) {
     return (
       <ResultState
-        frame="dashed"
+        frame={layout === 'desktop' ? 'bare' : 'dashed'}
         art={<CategoryArt name={messages.start.title} icon="wallet" size="hero" />}
         title={messages.start.title}
         text={messages.start.text}
@@ -44,10 +45,10 @@ export function PurchaseResult({ live, names, record }: PurchaseResultProps) {
     )
   }
   if (!isOnline) {
-    return <PurchaseOffline result={result} />
+    return <PurchaseOffline result={result} layout={layout} />
   }
   if (result.isError && !isWaiting) {
-    return <PurchaseFailed result={result} />
+    return <PurchaseFailed result={result} layout={layout} />
   }
   if (isWaiting || !result.data) {
     return (
@@ -63,13 +64,14 @@ export function PurchaseResult({ live, names, record }: PurchaseResultProps) {
       </div>
     )
   }
-  return <PurchaseShown impact={result.data} names={names} record={record} />
+  return <PurchaseShown impact={result.data} names={names} record={record} layout={layout} />
 }
 
-function PurchaseOffline({ result }: PurchaseFailedProps) {
+function PurchaseOffline({ result, layout }: PurchaseFailedProps) {
   return (
     <ResultState
       isAlert
+      frame={FRAMES[layout]}
       tone="neutral"
       art={<TwiseIcon name="refresh" />}
       title={messages.offline.title}
@@ -88,11 +90,12 @@ function PurchaseOffline({ result }: PurchaseFailedProps) {
   )
 }
 
-function PurchaseFailed({ result }: PurchaseFailedProps) {
+function PurchaseFailed({ result, layout }: PurchaseFailedProps) {
   const error = result.error instanceof ApiError ? result.error : null
   return (
     <ResultState
       isAlert
+      frame={FRAMES[layout]}
       tone="danger"
       art={<TwiseIcon name="alert" />}
       title={messages.failed.title}
@@ -112,7 +115,7 @@ function PurchaseFailed({ result }: PurchaseFailedProps) {
   )
 }
 
-function PurchaseShown({ impact, names, record }: PurchaseShownProps) {
+function PurchaseShown({ impact, names, record, layout }: PurchaseShownProps) {
   const verdict = verdictOf(impact)
   const note = elsewhereNoteOf(impact)
   const bars = comingBarsOf(impact)
@@ -127,7 +130,10 @@ function PurchaseShown({ impact, names, record }: PurchaseShownProps) {
         title={messages.period.title}
         description={messages.period.description(periodRangeOf(impact))}
       >
-        <BeforeAfterTiles items={periodItemsOf(impact, names)} layout="rows" />
+        <BeforeAfterTiles
+          items={periodItemsOf(impact, names)}
+          layout={layout === 'desktop' ? 'tiles' : 'rows'}
+        />
         {note && <p className="mt-2 text-note text-ink-muted">{note}</p>}
       </Card>
       {bars.length > 0 && (
@@ -135,7 +141,7 @@ function PurchaseShown({ impact, names, record }: PurchaseShownProps) {
           <ComingMonthsBars months={bars} referencePercent={impact.committedReferencePercent} />
         </Card>
       )}
-      <PurchaseInsights impact={impact} names={names} />
+      <PurchaseInsights impact={impact} names={names} layout={layout} />
       <p className="flex items-center gap-2 text-note text-ink-muted">
         <Info aria-hidden="true" className="size-4 shrink-0" />
         {messages.simulationOnly}
