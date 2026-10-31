@@ -49,7 +49,7 @@ describe('HOME-01 motion', () => {
     expect(animationOf('[data-slot=kpi-card][data-tone=mint] [data-slot=kpi-art]')).toBe('home-pop')
 
     await screen.getByRole('link', { name: 'Histórico' }).first().click()
-    await expect.element(screen.getByRole('heading', { name: 'Em breve' })).toBeVisible()
+    await expect.element(screen.getByRole('heading', { name: 'Histórico', level: 1 })).toBeVisible()
     await screen.getByRole('link', { name: 'Início' }).first().click()
 
     await expect.element(screen.getByRole('heading', { name: 'Livre para gastar' })).toBeVisible()
