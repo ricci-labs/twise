@@ -239,6 +239,7 @@
     minmax(0, 1fr) 9.375rem 3rem;
   --grid-template-columns-next-dates: auto minmax(0, 1fr) auto;
   --grid-template-columns-work-screen: minmax(0, 1.45fr) minmax(0, 1fr);
+  --grid-template-columns-work-screen-wide-detail: minmax(0, 1fr) minmax(0, 1.4fr);
   --grid-template-columns-table-occurrences: 4.625rem minmax(0, 2fr) minmax(0, 1.1fr) minmax(0, 1fr)
     8.75rem 12.5rem 3rem;
   --grid-template-columns-table-recurrences: minmax(0, 1.8fr) minmax(0, 1.3fr) minmax(0, 1.2fr)

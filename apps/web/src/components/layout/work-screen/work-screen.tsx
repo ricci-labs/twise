@@ -19,6 +19,7 @@ export function WorkScreen({
   detailHeader,
   detail,
   onNearEnd,
+  columns,
 }: WorkScreenProps) {
   const isTall = useMediaQuery(TALL_QUERY)
   const listPane = useRef<HTMLElement>(null)
@@ -46,7 +47,7 @@ export function WorkScreen({
     <div
       data-slot="work-screen"
       data-tall={isTall ? '' : undefined}
-      className={workScreenVariants()}
+      className={workScreenVariants({ columns })}
     >
       <section
         ref={listPane}

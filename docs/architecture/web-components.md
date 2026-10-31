@@ -731,7 +731,8 @@ component here, so the form, and later the account, card and planning forms, sha
   height (the `tall` variant, `TALL_QUERY`) the two panes (`grid-cols-work-screen`) end together,
   the page does not scroll and each pane scrolls on its own, with its header (`listHeader`,
   `detailHeader`) pinned on top; each pane is a named, focusable `section` so the keyboard can
-  scroll it. `onNearEnd` fires when the list comes within 300 px of its end (the screen loads the
+  scroll it. `columns="detail"` makes the detail the wider pane ("Posso comprar?": the form
+  left, the result right). `onNearEnd` fires when the list comes within 300 px of its end (the screen loads the
   next page and draws its own loading, error and end rows). Below 700 px it falls back to a page
   that scrolls, the detail pinned at the top and no automatic loading.
 - `SettingsFormPage` (`components/layout/settings-form-page`): one settings group on its own screen

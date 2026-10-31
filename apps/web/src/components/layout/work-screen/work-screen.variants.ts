@@ -1,7 +1,16 @@
 import { cva } from 'class-variance-authority'
 
 export const workScreenVariants = cva(
-  'grid flex-1 grid-cols-work-screen items-start gap-5 tall:min-h-0 tall:items-stretch',
+  'grid flex-1 items-start gap-5 tall:min-h-0 tall:items-stretch',
+  {
+    variants: {
+      columns: {
+        list: 'grid-cols-work-screen',
+        detail: 'grid-cols-work-screen-wide-detail',
+      },
+    },
+    defaultVariants: { columns: 'list' },
+  },
 )
 
 export const workScreenPaneVariants = cva(

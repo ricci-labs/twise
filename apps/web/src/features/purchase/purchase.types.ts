@@ -69,16 +69,20 @@ export type PurchaseFormProps = {
   onChange: (change: Partial<PurchaseDraft>) => void
 }
 
+export type PurchaseLayout = 'phone' | 'desktop'
+
 export type PurchaseResultProps = {
   live: LiveSimulation
   names: PurchaseNames
   record: ReactElement | null
+  layout: PurchaseLayout
 }
 
 export type PurchaseShownProps = {
   impact: PurchaseImpact
   names: PurchaseNames
   record?: ReactElement | null
+  layout: PurchaseLayout
 }
 
 export type PurchasePickerProps = {
@@ -102,6 +106,7 @@ export type PurchasePlanProps = {
 }
 
 export type PurchaseScreenProps = PurchasePageProps & {
+  isDesktop: boolean
   cards: readonly PurchaseCard[]
   accounts: readonly PurchaseAccount[]
   balances: readonly PurchaseBalance[]
@@ -109,6 +114,7 @@ export type PurchaseScreenProps = PurchasePageProps & {
 
 export type PurchaseFailedProps = {
   result: LiveSimulation['result']
+  layout: PurchaseLayout
 }
 
 export type RecordSearch = {

@@ -236,4 +236,31 @@ describe('HOME-02 Posso comprar?', () => {
 
     await expect.element(page.getByRole('button', { name: /Cartão antigo/ })).toBeVisible()
   })
+
+  it('is a work screen on the desktop: the purchase left, what changes right', async () => {
+    await page.viewport(1440, 900)
+    await openPurchase()
+
+    await expect
+      .element(
+        page
+          .getByRole('navigation', { name: 'Você está em' })
+          .getByRole('link', { name: 'Início' }),
+      )
+      .toBeVisible()
+    const purchase = page.getByRole('region', { name: 'A compra' })
+    const changes = page.getByRole('region', { name: 'O que muda' })
+    await expect.element(changes.getByText('Atualiza enquanto você digita')).toBeVisible()
+    await expect
+      .element(changes.getByRole('region', { name: 'Quanto custa o que vocês querem comprar?' }))
+      .toBeVisible()
+
+    await userEvent.fill(purchase.getByRole('textbox', { name: 'Valor da compra' }), '3240')
+
+    await expect.element(changes.getByText('Cabe, mas aperta.')).toBeVisible()
+    const tiles = changes.element().querySelector('[data-slot=before-after-tiles]') as HTMLElement
+    expect(getComputedStyle(tiles).display).toBe('grid')
+    expect(document.documentElement.scrollHeight).toBeLessThanOrEqual(window.innerHeight)
+    await expectNoAccessibilityViolations(page.getByRole('main').element())
+  })
 })

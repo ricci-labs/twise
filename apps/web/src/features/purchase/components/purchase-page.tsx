@@ -3,8 +3,12 @@ import { useQuery } from '@tanstack/react-query'
 import { Link } from '@tanstack/react-router'
 import { Button } from '@web/components/actions/button'
 import { SectionSkeleton } from '@web/components/feedback/section-skeleton'
+import { TwiseIcon } from '@web/components/icons/twise-icon'
 import { PageFrame } from '@web/components/layout/page-frame'
+import { PageHeader } from '@web/components/layout/page-header'
 import { SubPageHeader } from '@web/components/layout/sub-page-header'
+import { WorkScreen } from '@web/components/layout/work-screen'
+import { Breadcrumb } from '@web/components/navigation/breadcrumb'
 import {
   accountsQueryOptions,
   balancesQueryOptions,
@@ -26,7 +30,9 @@ import type {
   PurchasePageProps,
   PurchaseScreenProps,
 } from '@web/features/purchase/purchase.types'
+import { useMediaQuery } from '@web/hooks/use-media-query'
 import { usePageTitle } from '@web/hooks/use-page-title'
+import { DESKTOP_QUERY } from '@web/lib/breakpoints'
 import { hasPermission } from '@web/lib/permissions'
 import { Plus } from 'lucide-react'
 import { useMemo, useState } from 'react'
@@ -40,14 +46,31 @@ export function PurchasePage({ workspaceId, permissions }: PurchasePageProps) {
   const cards = useQuery(cardsQueryOptions(workspaceId))
   const accounts = useQuery(accountsQueryOptions(workspaceId))
   const balances = useQuery(balancesQueryOptions(workspaceId))
+  const isDesktop = useMediaQuery(DESKTOP_QUERY)
   return (
-    <PageFrame className="gap-4">
-      <SubPageHeader
-        back={<Link to="/w/$workspaceId" params={{ workspaceId }} />}
-        backLabel={messages.back}
-        title={messages.title}
-        description={messages.lead}
-      />
+    <PageFrame className="gap-4 lg:gap-6 lg:tall:h-screen-safe">
+      {isDesktop ? (
+        <div className="flex flex-col gap-3">
+          <Breadcrumb
+            label={messages.crumb}
+            items={[
+              {
+                label: messages.back,
+                link: <Link to="/w/$workspaceId" params={{ workspaceId }} />,
+              },
+              { label: messages.title },
+            ]}
+          />
+          <PageHeader title={messages.title} description={messages.lead} />
+        </div>
+      ) : (
+        <SubPageHeader
+          back={<Link to="/w/$workspaceId" params={{ workspaceId }} />}
+          backLabel={messages.back}
+          title={messages.title}
+          description={messages.lead}
+        />
+      )}
       {cards.data && accounts.data ? (
         <PurchaseScreen
           workspaceId={workspaceId}
@@ -55,6 +78,7 @@ export function PurchasePage({ workspaceId, permissions }: PurchasePageProps) {
           cards={cards.data}
           accounts={accounts.data}
           balances={balances.data ?? []}
+          isDesktop={isDesktop}
         />
       ) : (
         <SectionSkeleton lines={SKELETON_LINES} />
@@ -69,6 +93,7 @@ function PurchaseScreen({
   cards,
   accounts,
   balances,
+  isDesktop,
 }: PurchaseScreenProps) {
   const today = todayIn(TIME_ZONE, new Date())
   const [draft, setDraft] = useState<PurchaseDraft>(() => firstDraftOf(cards, today))
@@ -94,25 +119,57 @@ function PurchaseScreen({
         {messages.record}
       </Button>
     ) : null
+  const form = (
+    <PurchaseForm
+      workspaceId={workspaceId}
+      draft={draft}
+      errors={errors}
+      today={today}
+      cards={cards}
+      accounts={accounts}
+      balances={balances}
+      onChange={(change) => setDraft((current) => ({ ...current, ...change }))}
+    />
+  )
+  const result = (
+    <PurchaseResult
+      live={live}
+      names={names}
+      record={record}
+      layout={isDesktop ? 'desktop' : 'phone'}
+    />
+  )
+  if (isDesktop) {
+    return (
+      <WorkScreen
+        columns="detail"
+        listLabel={messages.form}
+        listHeader={<h2 className="text-card-title">{messages.form}</h2>}
+        list={form}
+        detailLabel={messages.result}
+        detailHeader={
+          <>
+            <h2 className="flex-1 text-card-title">{messages.result}</h2>
+            <span className="flex items-center gap-1.5 text-note text-ink-muted">
+              <TwiseIcon name="refresh" size="sm" />
+              {messages.live}
+            </span>
+          </>
+        }
+        detail={<div aria-live="polite">{result}</div>}
+      />
+    )
+  }
   return (
     <>
       <section
         aria-label={messages.form}
         className="rounded-lg border border-border bg-surface p-4"
       >
-        <PurchaseForm
-          workspaceId={workspaceId}
-          draft={draft}
-          errors={errors}
-          today={today}
-          cards={cards}
-          accounts={accounts}
-          balances={balances}
-          onChange={(change) => setDraft((current) => ({ ...current, ...change }))}
-        />
+        {form}
       </section>
       <section aria-label={messages.result} aria-live="polite">
-        <PurchaseResult live={live} names={names} record={record} />
+        {result}
       </section>
     </>
   )
