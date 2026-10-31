@@ -21,6 +21,7 @@ import { archivedToggleExamples } from '@web/components/display/archived-toggle'
 import { auditChangeExamples } from '@web/components/display/audit-change'
 import { auditEventRowExamples } from '@web/components/display/audit-event-row'
 import { avatarExamples } from '@web/components/display/avatar'
+import { beforeAfterTilesExamples } from '@web/components/display/before-after-tiles'
 import { cardExamples } from '@web/components/display/card'
 import { categoryArtExamples } from '@web/components/display/category-art'
 import { dataTableExamples } from '@web/components/display/data-table'
@@ -41,6 +42,7 @@ import { responsiveTextExamples } from '@web/components/display/responsive-text'
 import { richTextExamples } from '@web/components/display/rich-text'
 import { roleCardExamples } from '@web/components/display/role-card'
 import { stepTrackExamples } from '@web/components/display/step-track'
+import { verdictExamples } from '@web/components/display/verdict'
 import { alertExamples } from '@web/components/feedback/alert'
 import { autoFillTipExamples } from '@web/components/feedback/auto-fill-tip'
 import { bannerExamples } from '@web/components/feedback/banner'
@@ -234,6 +236,8 @@ export const workbenchSections: readonly ComponentExamples[] = [
   invitationRowExamples,
   auditEventRowExamples,
   auditChangeExamples,
+  verdictExamples,
+  beforeAfterTilesExamples,
   pageHeaderExamples,
   cyclePreviewExamples,
   entryDayGroupExamples,
