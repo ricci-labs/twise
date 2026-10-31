@@ -156,6 +156,8 @@ export const membersMessages = {
     presetsHelp: 'Copia as permissões. Depois é só ajustar.',
     permissions: 'Permissões',
     permissionsHelp: 'Marcar qualquer ação marca "Ver". Desmarcar "Ver" desmarca o resto.',
+    matrixHelp:
+      'Marcar qualquer ação marca "Ver". Desmarcar "Ver" desmarca o resto. "—" quando a ação não existe na área.',
     lockedNote: 'As permissões com cadeado você não tem, então não pode dar. Peça a um dono.',
     ownerLocked: 'O papel Dono não pode ser alterado.',
     notFound: 'Este papel não existe mais.',
@@ -164,6 +166,7 @@ export const membersMessages = {
     saving: 'Salvando…',
     created: (name: string) => `Papel ${name} criado.`,
     delete: 'Excluir papel',
+    roleActions: (name: string) => `Ações do papel ${name}`,
     deleteTitle: (name: string) => `Excluir ${name}?`,
     deleteText: 'Não dá para desfazer.',
     deleted: (name: string) => `Papel ${name} excluído.`,

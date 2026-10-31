@@ -712,7 +712,7 @@ component here, so the form, and later the account, card and planning forms, sha
   line 2 (2 lines, breaks anywhere, `wrap-anywhere`), then the role as a green badge with "Desde
   dd/mm/aaaa"; an `actions` slot on the right for the "⋯".
 - `RoleCard` (`components/display/role-card`, settings design `MEM-02`): one role (`li`): the name,
-  a "Sistema" (neutral) or "Do espaço" (partial, with dot) badge with who uses it ("1 pessoa · 2
+  a "Sistema" (neutral) or "Do espaço" (partial) badge, both with the dot with who uses it ("1 pessoa · 2
   convites", "Ninguém"), what it can do, a lock line "Não pode ser alterado" when `isLocked`, and an
   `actions` slot.
 - `ThemeCards` (`components/inputs/theme-cards`, settings design `Conta-tema`): a radio group of
@@ -721,7 +721,8 @@ component here, so the form, and later the account, card and planning forms, sha
 - `PermissionRows` (`components/inputs/permission-rows`, settings design `MEM-02` editor): one
   `fieldset` per area (legend = the area's pt-BR name, given by the screen) with "Ver", "Criar",
   "Editar", "Excluir" in four fixed columns, only the actions the area has (`isValidPermission`),
-  pressed with the ink outline and a ✓ (`aria-pressed`, a marking, not a single choice). Ticking any
+  pressed with the ink outline and a ✓ (`aria-pressed`, a marking, not a single choice); the areas
+  are separated by a line, each title in bold above its chips. Ticking any
   action ticks "Ver"; unticking "Ver" clears the area (`toggled`). Actions outside `allowed` (what
   the editor holds) show a lock, are disabled and say "Você não tem essa permissão para dar.".
   `layout="matrix"` (desktop) draws the same rules as a table: Área | Ver | Criar | Editar |

@@ -206,6 +206,7 @@ export type CreatedInvite = Awaited<ReturnType<ReturnType<typeof useInvite>['mut
 export type RoleDeleteProps = {
   workspaceId: string
   role: Role
+  isMenu?: boolean
 }
 
 export type RoleDeleteDialog = 'confirm' | 'inUse' | null

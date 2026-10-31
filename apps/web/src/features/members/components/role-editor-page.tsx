@@ -119,7 +119,7 @@ function RoleEditorForm({ workspaceId, role, roles, actorPermissions }: RoleEdit
   const saveLabel = role ? messages.save : messages.create
   const identity = <RoleIdentityFields roles={roles} isLocked={isLocked} onCopy={copyPreset} />
   const remove = role?.systemKey === null && canDelete && (
-    <RoleDelete workspaceId={workspaceId} role={role} />
+    <RoleDelete workspaceId={workspaceId} role={role} isMenu={isDesktop} />
   )
   if (isDesktop) {
     return (
@@ -203,10 +203,10 @@ function RoleIdentityFields({ roles, isLocked, onCopy }: RoleIdentityFieldsProps
 
 function PresetButtons({ roles, onCopy }: PresetButtonsProps) {
   return (
-    <FieldGroup label={messages.presets} help={messages.presetsHelp}>
+    <FieldGroup label={messages.presets} note={messages.presetsHelp}>
       <div className="grid grid-cols-3 gap-2">
         {PRESETS.map((preset) => (
-          <Button key={preset} variant="secondary" onClick={() => onCopy(preset)}>
+          <Button key={preset} variant="subtle" size="sm" onClick={() => onCopy(preset)}>
             {roles.find((candidate) => candidate.systemKey === preset)?.name ??
               messages.presetNames[preset]}
           </Button>
@@ -244,7 +244,7 @@ function PermissionsField({ actorPermissions, isLocked, layout }: PermissionsFie
   if (layout === 'matrix') {
     return (
       <div className="flex flex-col gap-3">
-        <p className="text-note text-ink-muted">{messages.permissionsHelp}</p>
+        <p className="text-note text-ink-muted">{messages.matrixHelp}</p>
         {rows}
       </div>
     )

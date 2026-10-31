@@ -84,6 +84,7 @@ export function hasNewEntryButton(pathname: string): boolean {
     item === TRASH_PAGE ||
     area === SETTINGS_AREA ||
     area === HISTORY_AREA ||
+    area === MEMBERS_AREA ||
     area === PURCHASE_PAGE
   ) {
     return false
