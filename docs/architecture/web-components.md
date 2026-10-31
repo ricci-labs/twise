@@ -717,7 +717,9 @@ component here, so the form, and later the account, card and planning forms, sha
   `actions` slot.
 - `ThemeCards` (`components/inputs/theme-cards`, settings design `Conta-tema`): a radio group of
   three cards, each with a miniature of the app in that theme (light, dark, half and half) and the
-  title ("Claro" / "Padrão", "Escuro", "Automático" / "Segue o aparelho"), the chosen one outlined.
+  title ("Claro" / "Padrão", "Escuro", "Automático" / "Segue o aparelho"), the chosen one outlined;
+  `size="fill"` (the desktop Minha conta card) lets the miniatures grow to fill the card, the titles
+  aligned.
 - `PermissionRows` (`components/inputs/permission-rows`, settings design `MEM-02` editor): one
   `fieldset` per area (legend = the area's pt-BR name, given by the screen) with "Ver", "Criar",
   "Editar", "Excluir" in four fixed columns, only the actions the area has (`isValidPermission`),

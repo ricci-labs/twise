@@ -33,9 +33,14 @@ export function ThemeChooser({ workspaceId, layout }: AccountFormProps) {
       description={copy.cardDescription}
       title={copy.title}
     >
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-1 flex-col gap-2">
         {layout === 'page' && <span className="text-label font-medium text-ink">{copy.label}</span>}
-        <ThemeCards label={copy.label} value={theme} onChange={choose} />
+        <ThemeCards
+          label={copy.label}
+          value={theme}
+          onChange={choose}
+          size={layout === 'card' ? 'fill' : 'compact'}
+        />
         {layout === 'page' && <p className="text-body-sm text-ink-muted">{copy.help}</p>}
       </div>
     </AccountGroupFrame>

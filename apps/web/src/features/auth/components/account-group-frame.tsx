@@ -21,7 +21,7 @@ export function AccountGroupFrame({
         className={className}
         footerAction={footer && <span className="ml-auto">{footer}</span>}
       >
-        <div className="flex flex-col gap-5">{children}</div>
+        <div className="flex flex-1 flex-col gap-5">{children}</div>
       </Card>
     )
   }
