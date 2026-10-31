@@ -85,6 +85,7 @@ export function hasNewEntryButton(pathname: string): boolean {
     area === SETTINGS_AREA ||
     area === HISTORY_AREA ||
     area === MEMBERS_AREA ||
+    area === ACCOUNT_AREA ||
     area === PURCHASE_PAGE
   ) {
     return false
@@ -108,7 +109,14 @@ export function hasTabBar(pathname: string): boolean {
 
 export function currentAreaOf(pathname: string): string | null {
   const [, , , area] = pathname.split('/')
-  return area ? (AREA_OF_PAGE[area] ?? area) : null
+  if (!area || area === PURCHASE_PAGE) {
+    return null
+  }
+  return AREA_OF_PAGE[area] ?? area
+}
+
+export function isUnderMore(area: string | null): boolean {
+  return area === ACCOUNT_AREA
 }
 
 export function tabAreaOf(area: string | null): string | null {

@@ -18,14 +18,14 @@ import type { ThemeChoice } from '@web/lib/theme.types'
 
 const CHOICES: readonly ThemeChoice[] = ['light', 'dark', 'system']
 
-export function ThemeCards({ label, value, onChange, className }: ThemeCardsProps) {
+export function ThemeCards({ label, value, onChange, size, className }: ThemeCardsProps) {
   return (
     <RadioGroup
       data-slot="theme-cards"
       aria-label={label}
       value={value}
       onValueChange={(next) => onChange(CHOICES.find((choice) => choice === next) ?? 'light')}
-      className={cn(themeCardsVariants(), className)}
+      className={cn(themeCardsVariants({ size }), className)}
     >
       {CHOICES.map((choice) => (
         <Radio.Root
@@ -36,20 +36,18 @@ export function ThemeCards({ label, value, onChange, className }: ThemeCardsProp
           aria-label={messages[choice].title}
           className={themeCardVariants()}
         >
-          <ThemeMiniature choice={choice} />
+          <ThemeMiniature choice={choice} size={size} />
           <span className={themeCardTitleVariants()}>{messages[choice].title}</span>
-          {messages[choice].detail && (
-            <span className={themeCardDetailVariants()}>{messages[choice].detail}</span>
-          )}
+          <span className={themeCardDetailVariants()}>{messages[choice].detail}</span>
         </Radio.Root>
       ))}
     </RadioGroup>
   )
 }
 
-function ThemeMiniature({ choice }: ThemeMiniatureProps) {
+function ThemeMiniature({ choice, size }: ThemeMiniatureProps) {
   return (
-    <span aria-hidden="true" className={themeMiniatureVariants({ choice })}>
+    <span aria-hidden="true" className={themeMiniatureVariants({ choice, size })}>
       <span className={themeMiniatureBarVariants({ tone: 'mint' })} />
       <span className={themeMiniatureBarVariants({ tone: 'line' })} />
       <span className={themeMiniatureBarVariants({ tone: 'short' })} />

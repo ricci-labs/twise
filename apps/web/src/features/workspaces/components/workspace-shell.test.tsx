@@ -122,6 +122,28 @@ describe('SHELL-01 workspace shell', () => {
     await expect.element(sheet.getByRole('button', { name: 'Sair' })).toBeVisible()
   })
 
+  it('marks Início on "Posso comprar?" and Mais on Minha conta, without the floating "+"', async () => {
+    await page.viewport(390, 844)
+    const purchase = await openWorkspace({}, `${HOME}/can-i-buy`)
+    const tabs = purchase.screen.getByRole('navigation', { name: 'Navegação' })
+
+    await expect
+      .element(tabs.getByRole('link', { name: 'Início' }))
+      .toHaveAttribute('aria-current', 'page')
+    expect(document.querySelector('[data-slot=floating-action]')).toBeNull()
+    await purchase.screen.unmount()
+
+    const account = await openWorkspace({}, `${HOME}/account`)
+    await expect
+      .element(
+        account.screen
+          .getByRole('navigation', { name: 'Navegação' })
+          .getByRole('button', { name: 'Mais' }),
+      )
+      .toHaveAttribute('aria-current', 'page')
+    expect(document.querySelector('[data-slot=floating-action]')).toBeNull()
+  })
+
   it('offers "Instalar o app" under "Mais" only when the browser can install it', async () => {
     await page.viewport(390, 844)
     listenForInstallOffer()

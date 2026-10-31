@@ -106,7 +106,7 @@ export function NoticesForm({ workspaceId, workspaceName, daysBefore, layout }: 
             {problem}
           </Alert>
         )}
-        <FieldGroup label={copy.days} isRequired help={copy.help}>
+        <FieldGroup label={copy.days} isRequired note={copy.help}>
           <Controller
             control={form.control}
             name="daysBefore"

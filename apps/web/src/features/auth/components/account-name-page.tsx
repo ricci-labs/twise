@@ -100,7 +100,12 @@ export function AccountNameForm({ workspaceId, displayName, email, layout }: Acc
           {(control) => <TextInput autoComplete="name" {...control} />}
         </FormField>
         {layout === 'card' && (
-          <LockedField label={messages.emailRow} value={email} detail={messages.emailLocked} />
+          <LockedField
+            label={messages.emailRow}
+            value={email}
+            detail={messages.emailLocked}
+            detailPlacement="end"
+          />
         )}
       </AccountGroupFrame>
     </Form>
