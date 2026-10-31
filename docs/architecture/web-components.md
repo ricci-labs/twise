@@ -671,6 +671,16 @@ component here, so the form, and later the account, card and planning forms, sha
   invitation (`li`): an e-mail or phone tile (named for screen readers), the contact (2 lines,
   breaks anywhere), the role badge (partial for custom roles) with "Vale até dd/mm", "Convidado por
   {nome} em dd/mm", and "Link mostrado uma vez" for phone invitations; an `actions` slot.
+- `Verdict` (`components/display/verdict`, purchase design `HOME-02`): the answer of a simulation
+  in one box: an icon in a white circle, the title in the display font and one sentence; `tone`
+  `ok` (mint, "Cabe no orçamento."), `warn` (warning-soft, "Cabe, mas aperta.") or `alert`
+  (danger-soft with a red title, "Não cabe sem estourar.").
+- `BeforeAfterTiles` (`components/display/before-after-tiles`, purchase design rule 6): values
+  before and after a change, never "old › new" on one line. `layout="rows"` (phone): the label (2
+  lines) with "antes R$ X" under it on the left and the new value large on the right, never
+  wrapping; `layout="tiles"` (desktop): three tiles side by side, the value large (it shrinks with
+  the tile, `text-tile-amount`, so 9 digits never break out) and "antes" below. A value that did
+  not change says "sem mudança"; a negative one is red.
 - `AuditChange` (`components/display/audit-change`, settings design `Historico-evento`): one
   history change: the actor's mark (`AuditActorMark`, shared with `AuditEventRow`) with the
   sentence and "Hoje, 11:05 · Pela web", a Campo / Antes / Depois table (`table-fixed`, values

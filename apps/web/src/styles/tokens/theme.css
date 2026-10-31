@@ -408,6 +408,12 @@
   flex-basis: calc(50% - --spacing(1.25));
 }
 
+@utility text-tile-amount {
+  font-size: clamp(1rem, 12cqi, 1.5rem);
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+
 @utility w-anchor {
   width: var(--anchor-width);
 }
