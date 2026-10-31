@@ -704,6 +704,14 @@ component here, so the form, and later the account, card and planning forms, sha
 - `PairedCardGrid` (`components/layout/paired-card-grid`, settings design rule 2): desktop cards
   in two equal columns that stretch, so the two cards of a row share their height and their
   footers line up; a card that has no pair takes `lg:col-span-2`. Stacked on the phone.
+- `WorkScreen` (`components/layout/work-screen`, settings design rule 4, `Historico-desktop`): a
+  list with a detail beside it that uses the whole window on the desktop. From 700 px of window
+  height (the `tall` variant, `TALL_QUERY`) the two panes (`grid-cols-work-screen`) end together,
+  the page does not scroll and each pane scrolls on its own, with its header (`listHeader`,
+  `detailHeader`) pinned on top; each pane is a named, focusable `section` so the keyboard can
+  scroll it. `onNearEnd` fires when the list comes within 300 px of its end (the screen loads the
+  next page and draws its own loading, error and end rows). Below 700 px it falls back to a page
+  that scrolls, the detail pinned at the top and no automatic loading.
 - `SettingsFormPage` (`components/layout/settings-form-page`): one settings group on its own screen
   (settings design, `SET-01`): the `SubPageHeader`, the fields, and a `footer` with the one "Salvar
   …" fixed to the bottom of the phone (white, top border, as a form over a screen; the shell hides
