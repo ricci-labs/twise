@@ -11,6 +11,7 @@ import { logoExamples } from '@web/components/brand/logo'
 import { owlEntranceExamples } from '@web/components/brand/owl-entrance'
 import { owlKitExamples } from '@web/components/brand/owl-kit'
 import { owlSceneExamples } from '@web/components/brand/owl-scene'
+import { comingMonthsBarsExamples } from '@web/components/charts/coming-months-bars'
 import { committedChartExamples } from '@web/components/charts/committed-chart'
 import { forecastChartExamples } from '@web/components/charts/forecast-chart'
 import { incomeBarExamples } from '@web/components/charts/income-bar'
@@ -53,6 +54,7 @@ import { kpiSkeletonExamples } from '@web/components/feedback/kpi-skeleton'
 import { listEndExamples } from '@web/components/feedback/list-end'
 import { listSkeletonExamples } from '@web/components/feedback/list-skeleton'
 import { momentSheetExamples } from '@web/components/feedback/moment-sheet'
+import { resultStateExamples } from '@web/components/feedback/result-state'
 import { sectionErrorExamples } from '@web/components/feedback/section-error'
 import { sectionSkeletonExamples } from '@web/components/feedback/section-skeleton'
 import { spinnerExamples } from '@web/components/feedback/spinner'
@@ -238,6 +240,8 @@ export const workbenchSections: readonly ComponentExamples[] = [
   auditChangeExamples,
   verdictExamples,
   beforeAfterTilesExamples,
+  comingMonthsBarsExamples,
+  resultStateExamples,
   pageHeaderExamples,
   cyclePreviewExamples,
   entryDayGroupExamples,
