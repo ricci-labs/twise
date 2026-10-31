@@ -10,6 +10,7 @@ import { ListSkeleton } from '@web/components/feedback/list-skeleton'
 import { SectionError } from '@web/components/feedback/section-error'
 import { showToast } from '@web/components/feedback/toast'
 import { EntryDayGroup } from '@web/components/finance/entry-day-group'
+import { TwiseIcon } from '@web/components/icons/twise-icon'
 import { PageFrame } from '@web/components/layout/page-frame'
 import { PageHeader } from '@web/components/layout/page-header'
 import { auditQueryOptions } from '@web/features/audit/api/audit.queries'
@@ -18,6 +19,7 @@ import type {
   HistoryDaysProps,
   HistoryEmptyProps,
   HistoryFilter,
+  HistoryItemProps,
   HistoryListProps,
   HistoryMoreProps,
   HistoryPageProps,
@@ -29,12 +31,15 @@ import {
   auditRowDetailOf,
   auditSentenceOf,
 } from '@web/features/audit/components/audit-views'
+import { HistoryFilters } from '@web/features/audit/components/history-filters'
 import { usePageTitle } from '@web/hooks/use-page-title'
 import { ApiError } from '@web/lib/api/api-error'
+import { X } from 'lucide-react'
 import { useEffect } from 'react'
 
 const TIME_ZONE = 'America/Sao_Paulo'
 const INVALID_QUERY = 'AUDIT_QUERY_INVALID'
+const ENTRIES = 'journal_entries'
 const SKELETON_ROWS = 6
 const NO_FILTERS = { area: undefined, actor: undefined, item: undefined, event: undefined }
 
@@ -47,6 +52,7 @@ export function HistoryPage(props: HistoryPageProps) {
         description={messages.lead(props.workspaceName)}
         descriptionOn="always"
       />
+      {!props.search.item && <HistoryFilters {...props} />}
       <HistoryList {...props} today={todayIn(TIME_ZONE, new Date())} />
     </PageFrame>
   )
@@ -81,8 +87,15 @@ function HistoryList(props: HistoryListProps) {
     return <HistoryEmpty search={search} onSearchChange={onSearchChange} />
   }
   const shown = events.find((event) => event.id === search.event)
+  const [first] = events
   return (
     <>
+      {search.item && first && (
+        <HistoryItem
+          event={first}
+          onClear={() => onSearchChange({ item: undefined, event: undefined })}
+        />
+      )}
       <HistoryDays workspaceId={workspaceId} days={auditDaysOf(events, today)} />
       <HistoryMore list={list} />
       {shown && (
@@ -94,6 +107,28 @@ function HistoryList(props: HistoryListProps) {
         />
       )}
     </>
+  )
+}
+
+function HistoryItem({ event, onClear }: HistoryItemProps) {
+  const isEntry = event.tableName === ENTRIES
+  const overline = isEntry ? messages.item.entry : messages.item.other
+  return (
+    <section
+      aria-label={overline}
+      className="flex items-center gap-3 rounded-xl border border-border bg-surface py-2.5 pr-2 pl-4"
+    >
+      <span className="grid size-10 shrink-0 place-items-center rounded-lg bg-sunken text-ink">
+        <TwiseIcon name={isEntry ? 'list' : 'history'} />
+      </span>
+      <span className="flex min-w-0 flex-1 flex-col">
+        <span className="text-note text-ink-muted">{overline}</span>
+        <strong className="line-clamp-2 text-row break-words">{event.entityLabel}</strong>
+      </span>
+      <Button variant="quiet" size="icon" aria-label={messages.item.clear} onClick={onClear}>
+        <X aria-hidden="true" />
+      </Button>
+    </section>
   )
 }
 

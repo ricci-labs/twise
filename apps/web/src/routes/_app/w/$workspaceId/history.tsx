@@ -18,6 +18,7 @@ export const Route = createFileRoute('/_app/w/$workspaceId/history')({
       <HistoryPage
         workspaceId={workspaceId}
         workspaceName={access.workspace.name}
+        memberDirectory={access.memberDirectory}
         search={search}
         onSearchChange={changeSearch}
       />

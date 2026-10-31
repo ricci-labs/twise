@@ -1,5 +1,6 @@
 import type { IsoDate } from '@financas/shared'
 import type { InfiniteData, UseInfiniteQueryResult } from '@tanstack/react-query'
+import type { PickerItem } from '@web/components/inputs/picker-sheet'
 import type { fetchAuditPage } from '@web/features/audit/api/audit.queries'
 import type { historySearchSchema } from '@web/features/audit/audit.schemas'
 import type { z } from 'zod'
@@ -22,9 +23,15 @@ export type AuditDay = {
   events: AuditEvent[]
 }
 
+export type MemberName = {
+  userId: string
+  displayName: string
+}
+
 export type HistoryPageProps = {
   workspaceId: string
   workspaceName: string
+  memberDirectory: readonly MemberName[]
   search: HistorySearch
   onSearchChange: (change: Partial<HistorySearch>) => void
 }
@@ -36,6 +43,23 @@ export type HistoryListProps = HistoryPageProps & {
 export type HistoryDaysProps = Pick<HistoryPageProps, 'workspaceId'> & {
   days: readonly AuditDay[]
   selectedId?: string
+}
+
+export type HistoryFiltersProps = Pick<
+  HistoryPageProps,
+  'search' | 'onSearchChange' | 'memberDirectory'
+>
+
+export type HistoryFilterMenuProps = {
+  label: string
+  items: readonly PickerItem[]
+  value: string | undefined
+  onSelect: (value: string | undefined) => void
+}
+
+export type HistoryItemProps = {
+  event: AuditEvent
+  onClear: () => void
 }
 
 export type HistoryEmptyProps = Pick<HistoryPageProps, 'search' | 'onSearchChange'>

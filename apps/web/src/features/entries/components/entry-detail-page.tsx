@@ -276,7 +276,17 @@ function EntryDetailSections({ workspaceId, permissions, entry, view }: EntryDet
         )}
       </DetailSection>
       {hasPermission(permissions, 'audit', 'view') && (
-        <LinkedItem icon="history" label={messages.history} link={area('history')} />
+        <LinkedItem
+          icon="history"
+          label={messages.history}
+          link={
+            <Link
+              to="/w/$workspaceId/history"
+              params={{ workspaceId }}
+              search={{ item: entry.id }}
+            />
+          }
+        />
       )}
     </div>
   )
