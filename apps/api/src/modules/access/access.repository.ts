@@ -2,8 +2,13 @@ import type { WorkspaceTransaction } from '@api/core/db/db.types'
 import { rolePermissions, roles } from '@api/modules/access/access.table'
 import type { NewSystemRole, RoleDeletion, RoleDetails } from '@api/modules/access/access.types'
 import type { AuditTarget } from '@api/modules/audit'
-import type { Permission } from '@financas/shared'
-import { and, asc, eq, inArray, isNull } from 'drizzle-orm'
+import { type Permission, SYSTEM_ROLE_KEYS } from '@financas/shared'
+import { and, asc, eq, inArray, isNull, sql } from 'drizzle-orm'
+
+const systemRoleRank = sql`array_position(array[${sql.join(
+  SYSTEM_ROLE_KEYS.map((key) => sql`${key}`),
+  sql`, `,
+)}]::text[], ${roles.systemKey}::text)`
 
 export async function insertSystemRole(tx: WorkspaceTransaction, role: NewSystemRole) {
   const [inserted] = await tx.insert(roles).values(role).returning({ id: roles.id })
@@ -62,7 +67,7 @@ export function selectActiveRolesWithDescriptions(tx: WorkspaceTransaction) {
     })
     .from(roles)
     .where(isNull(roles.deletedAt))
-    .orderBy(asc(roles.createdAt))
+    .orderBy(asc(roles.createdAt), asc(systemRoleRank), asc(roles.name))
 }
 
 export function selectWorkspacePermissions(tx: WorkspaceTransaction) {
