@@ -681,6 +681,18 @@ component here, so the form, and later the account, card and planning forms, sha
   wrapping; `layout="tiles"` (desktop): three tiles side by side, the value large (it shrinks with
   the tile, `text-tile-amount`, so 9 digits never break out) and "antes" below. A value that did
   not change says "sem mudança"; a negative one is red.
+- `ComingMonthsBars` (`components/charts/coming-months-bars`, purchase design `HOME-02`): the next
+  months' committed share of the fixed income before and after a purchase: a legend (Já
+  comprometido, Esta compra, the reference line), then one row per month: the label, an SVG bar
+  (committed in `chart-4`, the purchase in `chart-3`, the reference line in `warning`; months
+  that do not change are faint), "58% → **64%**" (the new value in warning from the reference up)
+  or just "22%". A bar above 100% stops at the end with an overflow mark ("passa de 100%"). Each
+  bar is an image named "dez/26: 64% para 70% da renda fixa".
+- `ResultState` (`components/feedback/result-state`, purchase design rule 7): what fills a result
+  area when there is no result: the art, a title, one sentence, an optional `detail` (a `MetaLine`
+  with the code and reference) and an `action`. `frame` `dashed` (the start), `card` (the phone) or
+  `bare` (fills a desktop pane, never a card in a card); `tone` of the icon circle `neutral` or
+  `danger`; `isAlert` announces it.
 - `AuditChange` (`components/display/audit-change`, settings design `Historico-evento`): one
   history change: the actor's mark (`AuditActorMark`, shared with `AuditEventRow`) with the
   sentence and "Hoje, 11:05 · Pela web", a Campo / Antes / Depois table (`table-fixed`, values
