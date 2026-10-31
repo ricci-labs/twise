@@ -16,6 +16,7 @@ import {
   currentAreaOf,
   hasNewEntryButton,
   hasTabBar,
+  isUnderMore,
   tabAreaOf,
   workspaceNavigation,
 } from '@web/features/workspaces/components/workspace-navigation'
@@ -61,7 +62,7 @@ export function WorkspaceShell({
     label: messages.nav.more,
     icon: 'menu',
     render: <button type="button" onClick={() => setIsMoreOpen(true)} />,
-    isCurrent: tabs.more.some((item) => item.isCurrent),
+    isCurrent: isUnderMore(currentArea) || tabs.more.some((item) => item.isCurrent),
   }
 
   return (
