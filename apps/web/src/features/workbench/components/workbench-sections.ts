@@ -18,6 +18,7 @@ import { paceRingExamples } from '@web/components/charts/pace-ring'
 import { progressBarExamples } from '@web/components/charts/progress-bar'
 import { amountExamples } from '@web/components/display/amount'
 import { archivedToggleExamples } from '@web/components/display/archived-toggle'
+import { auditChangeExamples } from '@web/components/display/audit-change'
 import { auditEventRowExamples } from '@web/components/display/audit-event-row'
 import { avatarExamples } from '@web/components/display/avatar'
 import { cardExamples } from '@web/components/display/card'
@@ -230,6 +231,7 @@ export const workbenchSections: readonly ComponentExamples[] = [
   roleCardExamples,
   invitationRowExamples,
   auditEventRowExamples,
+  auditChangeExamples,
   pageHeaderExamples,
   cyclePreviewExamples,
   entryDayGroupExamples,

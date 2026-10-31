@@ -671,6 +671,12 @@ component here, so the form, and later the account, card and planning forms, sha
   invitation (`li`): an e-mail or phone tile (named for screen readers), the contact (2 lines,
   breaks anywhere), the role badge (partial for custom roles) with "Vale até dd/mm", "Convidado por
   {nome} em dd/mm", and "Link mostrado uma vez" for phone invitations; an `actions` slot.
+- `AuditChange` (`components/display/audit-change`, settings design `Historico-evento`): one
+  history change: the actor's mark (`AuditActorMark`, shared with `AuditEventRow`) with the
+  sentence and "Hoje, 11:05 · Pela web", a Campo / Antes / Depois table (`table-fixed`, values
+  break anywhere) whose changed rows are tinted with the new value in bold and say "(mudou)" to
+  screen readers, and the note "O campo que mudou fica marcado. Referência **xxxxxxxx**: …". No
+  rows, no table; the sheet or the side pane around it belongs to the screen.
 - `AuditEventRow` (`components/display/audit-event-row`, settings design `AUD-01`): one history
   event (`li`): the actor's initial, or a grey bolt for "Automático" (`actorName: null`), the
   sentence as parts with the names in bold (3 lines), and the `MetaLine` with time · area · ref,
