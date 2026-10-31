@@ -32,6 +32,7 @@ import { Route as AppWWorkspaceIdCategoriesRouteImport } from './routes/_app/w/$
 import { Route as AppWWorkspaceIdCommissionSplitRouteImport } from './routes/_app/w/$workspaceId/commission-split'
 import { Route as AppWWorkspaceIdContactsRouteImport } from './routes/_app/w/$workspaceId/contacts'
 import { Route as AppWWorkspaceIdEntriesRouteImport } from './routes/_app/w/$workspaceId/entries'
+import { Route as AppWWorkspaceIdHistoryRouteImport } from './routes/_app/w/$workspaceId/history'
 import { Route as AppWWorkspaceIdTrashRouteImport } from './routes/_app/w/$workspaceId/trash'
 import { Route as AppWWorkspaceIdAccountIndexRouteImport } from './routes/_app/w/$workspaceId/account/index'
 import { Route as AppWWorkspaceIdAccountNameRouteImport } from './routes/_app/w/$workspaceId/account/name'
@@ -176,6 +177,11 @@ const AppWWorkspaceIdContactsRoute = AppWWorkspaceIdContactsRouteImport.update({
 const AppWWorkspaceIdEntriesRoute = AppWWorkspaceIdEntriesRouteImport.update({
   id: '/entries',
   path: '/entries',
+  getParentRoute: () => AppWWorkspaceIdRouteRoute,
+} as any)
+const AppWWorkspaceIdHistoryRoute = AppWWorkspaceIdHistoryRouteImport.update({
+  id: '/history',
+  path: '/history',
   getParentRoute: () => AppWWorkspaceIdRouteRoute,
 } as any)
 const AppWWorkspaceIdTrashRoute = AppWWorkspaceIdTrashRouteImport.update({
@@ -379,6 +385,7 @@ export interface FileRoutesByFullPath {
   '/w/$workspaceId/commission-split': typeof AppWWorkspaceIdCommissionSplitRoute
   '/w/$workspaceId/contacts': typeof AppWWorkspaceIdContactsRoute
   '/w/$workspaceId/entries': typeof AppWWorkspaceIdEntriesRoute
+  '/w/$workspaceId/history': typeof AppWWorkspaceIdHistoryRoute
   '/w/$workspaceId/trash': typeof AppWWorkspaceIdTrashRoute
   '/w/$workspaceId/': typeof AppWWorkspaceIdIndexRoute
   '/w/$workspaceId/account/name': typeof AppWWorkspaceIdAccountNameRoute
@@ -431,6 +438,7 @@ export interface FileRoutesByTo {
   '/w/$workspaceId/commission-split': typeof AppWWorkspaceIdCommissionSplitRoute
   '/w/$workspaceId/contacts': typeof AppWWorkspaceIdContactsRoute
   '/w/$workspaceId/entries': typeof AppWWorkspaceIdEntriesRoute
+  '/w/$workspaceId/history': typeof AppWWorkspaceIdHistoryRoute
   '/w/$workspaceId/trash': typeof AppWWorkspaceIdTrashRoute
   '/w/$workspaceId': typeof AppWWorkspaceIdIndexRoute
   '/w/$workspaceId/account/name': typeof AppWWorkspaceIdAccountNameRoute
@@ -487,6 +495,7 @@ export interface FileRoutesById {
   '/_app/w/$workspaceId/commission-split': typeof AppWWorkspaceIdCommissionSplitRoute
   '/_app/w/$workspaceId/contacts': typeof AppWWorkspaceIdContactsRoute
   '/_app/w/$workspaceId/entries': typeof AppWWorkspaceIdEntriesRoute
+  '/_app/w/$workspaceId/history': typeof AppWWorkspaceIdHistoryRoute
   '/_app/w/$workspaceId/trash': typeof AppWWorkspaceIdTrashRoute
   '/_app/w/$workspaceId/': typeof AppWWorkspaceIdIndexRoute
   '/_app/w/$workspaceId/account/name': typeof AppWWorkspaceIdAccountNameRoute
@@ -542,6 +551,7 @@ export interface FileRouteTypes {
     | '/w/$workspaceId/commission-split'
     | '/w/$workspaceId/contacts'
     | '/w/$workspaceId/entries'
+    | '/w/$workspaceId/history'
     | '/w/$workspaceId/trash'
     | '/w/$workspaceId/'
     | '/w/$workspaceId/account/name'
@@ -594,6 +604,7 @@ export interface FileRouteTypes {
     | '/w/$workspaceId/commission-split'
     | '/w/$workspaceId/contacts'
     | '/w/$workspaceId/entries'
+    | '/w/$workspaceId/history'
     | '/w/$workspaceId/trash'
     | '/w/$workspaceId'
     | '/w/$workspaceId/account/name'
@@ -649,6 +660,7 @@ export interface FileRouteTypes {
     | '/_app/w/$workspaceId/commission-split'
     | '/_app/w/$workspaceId/contacts'
     | '/_app/w/$workspaceId/entries'
+    | '/_app/w/$workspaceId/history'
     | '/_app/w/$workspaceId/trash'
     | '/_app/w/$workspaceId/'
     | '/_app/w/$workspaceId/account/name'
@@ -853,6 +865,13 @@ declare module '@tanstack/react-router' {
       path: '/entries'
       fullPath: '/w/$workspaceId/entries'
       preLoaderRoute: typeof AppWWorkspaceIdEntriesRouteImport
+      parentRoute: typeof AppWWorkspaceIdRouteRoute
+    }
+    '/_app/w/$workspaceId/history': {
+      id: '/_app/w/$workspaceId/history'
+      path: '/history'
+      fullPath: '/w/$workspaceId/history'
+      preLoaderRoute: typeof AppWWorkspaceIdHistoryRouteImport
       parentRoute: typeof AppWWorkspaceIdRouteRoute
     }
     '/_app/w/$workspaceId/trash': {
@@ -1076,6 +1095,7 @@ interface AppWWorkspaceIdRouteRouteChildren {
   AppWWorkspaceIdCommissionSplitRoute: typeof AppWWorkspaceIdCommissionSplitRoute
   AppWWorkspaceIdContactsRoute: typeof AppWWorkspaceIdContactsRoute
   AppWWorkspaceIdEntriesRoute: typeof AppWWorkspaceIdEntriesRoute
+  AppWWorkspaceIdHistoryRoute: typeof AppWWorkspaceIdHistoryRoute
   AppWWorkspaceIdTrashRoute: typeof AppWWorkspaceIdTrashRoute
   AppWWorkspaceIdIndexRoute: typeof AppWWorkspaceIdIndexRoute
   AppWWorkspaceIdAccountNameRoute: typeof AppWWorkspaceIdAccountNameRoute
@@ -1117,6 +1137,7 @@ const AppWWorkspaceIdRouteRouteChildren: AppWWorkspaceIdRouteRouteChildren = {
   AppWWorkspaceIdCommissionSplitRoute: AppWWorkspaceIdCommissionSplitRoute,
   AppWWorkspaceIdContactsRoute: AppWWorkspaceIdContactsRoute,
   AppWWorkspaceIdEntriesRoute: AppWWorkspaceIdEntriesRoute,
+  AppWWorkspaceIdHistoryRoute: AppWWorkspaceIdHistoryRoute,
   AppWWorkspaceIdTrashRoute: AppWWorkspaceIdTrashRoute,
   AppWWorkspaceIdIndexRoute: AppWWorkspaceIdIndexRoute,
   AppWWorkspaceIdAccountNameRoute: AppWWorkspaceIdAccountNameRoute,

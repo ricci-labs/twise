@@ -18,6 +18,7 @@ const SPLIT_PAGE = 'split'
 const COMMISSION_SPLIT_PAGE = 'commission-split'
 
 const SETTINGS_AREA = 'settings'
+const HISTORY_AREA = 'history'
 const MEMBERS_AREA = 'members'
 const ACCOUNT_AREA = 'account'
 const ROLES_PAGE = 'roles'
@@ -77,7 +78,12 @@ export function workspaceNavigation(
 
 export function hasNewEntryButton(pathname: string): boolean {
   const [, , , area, item] = pathname.split('/')
-  if (area === TRASH_PAGE || item === TRASH_PAGE || area === SETTINGS_AREA) {
+  if (
+    area === TRASH_PAGE ||
+    item === TRASH_PAGE ||
+    area === SETTINGS_AREA ||
+    area === HISTORY_AREA
+  ) {
     return false
   }
   if (area === COMMISSION_SPLIT_PAGE || (area === PLANNING_AREA && item === SPLIT_PAGE)) {
