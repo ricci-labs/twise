@@ -671,6 +671,11 @@ component here, so the form, and later the account, card and planning forms, sha
   invitation (`li`): an e-mail or phone tile (named for screen readers), the contact (2 lines,
   breaks anywhere), the role badge (partial for custom roles) with "Vale até dd/mm", "Convidado por
   {nome} em dd/mm", and "Link mostrado uma vez" for phone invitations; an `actions` slot.
+- `AuditEventRow` (`components/display/audit-event-row`, settings design `AUD-01`): one history
+  event (`li`): the actor's initial, or a grey bolt for "Automático" (`actorName: null`), the
+  sentence as parts with the names in bold (3 lines), and the `MetaLine` with time · area · ref,
+  "pelo WhatsApp" as a badge first. With a `link` the row is that link with a chevron;
+  `isSelected` marks the event shown beside the list (`aria-current`, grey with an ink bar).
 - `MemberRow` (`components/display/member-row`, settings design `MEM-01`): one person of the
   workspace (`li`): the 42 px initial, the name (2 lines) with a "você" pill, the e-mail alone on
   line 2 (2 lines, breaks anywhere, `wrap-anywhere`), then the role as a green badge with "Desde
