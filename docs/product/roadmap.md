@@ -453,7 +453,7 @@ updated: 2026-10-30
   8. [x] Web: Membros, Papéis and Convites as tabs (`MEM-01..03`, #437–#449 and the desktop role
      editor)
   9. [x] Web: Minha conta (`ME-01`, #451–#454 and the desktop cards; "Trocada em …" waits for G79)
-  10. [ ] Web: Histórico (`AUD-01`), with `WorkScreen` on the desktop
+  10. [x] Web: Histórico (`AUD-01`, #456–#461), with `WorkScreen` on the desktop
   11. [ ] Web: "Posso comprar?" (`HOME-02`): the form, the live result, the states and the desktop
       work screen
   12. [ ] Review of the round against every PNG

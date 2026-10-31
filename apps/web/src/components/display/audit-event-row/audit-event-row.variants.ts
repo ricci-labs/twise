@@ -3,7 +3,7 @@ import { cva } from 'class-variance-authority'
 export const auditEventRowVariants = cva('border-border not-first:border-t')
 
 export const auditEventRowMainVariants = cva(
-  'relative flex items-start gap-3 py-3 text-ink outline-none focus-visible:ring-2 focus-visible:ring-focus-ring aria-current:-mx-4 aria-current:bg-sunken aria-current:px-4 aria-current:before:absolute aria-current:before:inset-y-0 aria-current:before:left-0 aria-current:before:w-0.75 aria-current:before:bg-ink',
+  'relative flex items-start gap-3 py-3 text-ink outline-none focus-visible:ring-2 focus-visible:ring-focus-ring aria-current:-mx-3 aria-current:bg-sunken aria-current:px-3 aria-current:before:absolute aria-current:before:inset-y-0 aria-current:before:left-0 aria-current:before:w-0.75 aria-current:before:bg-ink',
 )
 
 export const auditEventRowSystemVariants = cva(

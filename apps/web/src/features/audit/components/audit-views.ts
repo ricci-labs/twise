@@ -72,7 +72,20 @@ export function auditChangeRowsOf(event: AuditEvent): AuditChangeRow[] {
 }
 
 export function canOpenItem(event: AuditEvent): boolean {
-  return event.tableName === ENTRIES && event.action !== 'delete'
+  return isEntryEvent(event) && event.action !== 'delete'
+}
+
+export function isEntryEvent(event: AuditEvent): boolean {
+  return event.tableName === ENTRIES
+}
+
+export function auditTrailTextOf(event: AuditEvent): string {
+  const actor = event.actor?.name ?? messages.automatic
+  const changed = event.action === 'update' ? event.changes.filter((change) => change.changed) : []
+  const [only] = changed
+  const field =
+    changed.length === 1 && only ? messages.trailEdited(messages.fields[only.field]) : ''
+  return `${actor} ${verbOf(event)}${field}`
 }
 
 export function referenceOf(event: AuditEvent): string | null {

@@ -14,6 +14,7 @@ export const auditMessages = {
     `${weekday.charAt(0).toLocaleUpperCase('pt-BR')}${weekday.slice(1)}, ${dayMonth}`,
   failed: 'Não deu para carregar o histórico.',
   moreFailed: 'Não deu para carregar mais.',
+  loadingMore: 'Carregando mais…',
   retry: 'Tentar de novo',
   empty: 'Nada registrado ainda.',
   emptyText: 'Quando alguém mudar algo no espaço, aparece aqui.',
@@ -33,6 +34,14 @@ export const auditMessages = {
     other: 'Só este item',
     clear: 'Ver tudo',
   },
+  desktop: {
+    list: 'Eventos do histórico',
+    trailEntry: 'Neste lançamento',
+    trailOther: 'Neste item',
+    allOfEntry: 'Ver tudo deste lançamento',
+    allOfItem: 'Ver tudo deste item',
+  },
+  trailEdited: (field: string) => `: ${field.toLocaleLowerCase('pt-BR')}`,
   change: {
     title: 'Mudança',
     close: 'Fechar',

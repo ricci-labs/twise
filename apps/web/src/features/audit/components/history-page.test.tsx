@@ -184,4 +184,50 @@ describe('AUD-01 Histórico', () => {
     await expect.element(page.getByRole('button', { name: 'Área' })).toBeVisible()
     await expect.poll(() => queries.at(-1)).not.toContain('rowId')
   })
+
+  it('shows the list and the change side by side on the desktop, with the item trail', async () => {
+    await page.viewport(1440, 900)
+    await openHistory()
+
+    const events = page.getByRole('region', { name: 'Eventos do histórico' })
+    const change = page.getByRole('region', { name: 'Mudança' })
+    await expect
+      .element(events.getByRole('link', { name: /Member B editou o lançamento Padaria/ }))
+      .toHaveAttribute('aria-current', 'true')
+    await expect.element(change.getByText('Member B editou o lançamento Padaria')).toBeVisible()
+    await expect.element(change.getByRole('link', { name: 'Ver lançamento' })).toBeVisible()
+    const trail = change.getByRole('region', { name: 'Neste lançamento' })
+    await expect.element(trail.getByText('Member B editou: valor')).toBeVisible()
+    await expect
+      .element(trail.getByRole('link', { name: 'Ver tudo deste lançamento' }))
+      .toHaveAttribute('href', expect.stringContaining(`item=${PADARIA_ID}`))
+
+    await events.getByRole('link', { name: /excluiu a conta Carteira/ }).click()
+
+    await expect.element(change.getByText('Member A excluiu a conta Carteira')).toBeVisible()
+    expect(change.getByRole('link', { name: 'Ver lançamento' }).query()).toBeNull()
+    expect(document.documentElement.scrollHeight).toBeLessThanOrEqual(window.innerHeight)
+    await expectNoAccessibilityViolations(page.getByRole('main').element())
+  })
+
+  it('loads the next 50 on its own near the end of the list on the desktop', async () => {
+    await page.viewport(1440, 900)
+    await openHistory(auditAnswer([manyEvents(50), [EDITED_PADARIA]]))
+
+    const events = page.getByRole('region', { name: 'Eventos do histórico' })
+    await expect.element(events.getByText('Compra 149')).toBeInTheDocument()
+    expect(page.getByRole('button', { name: 'Mostrar mais' }).query()).toBeNull()
+    const pane = events.element() as HTMLElement
+    pane.scrollTop = pane.scrollHeight
+
+    await expect.element(events.getByText('Isso é tudo do histórico.')).toBeInTheDocument()
+    await expect.element(events.getByText('Padaria')).toBeInTheDocument()
+  })
+
+  it('falls back to "Mostrar mais" in a low desktop window', async () => {
+    await page.viewport(1280, 680)
+    await openHistory(auditAnswer([manyEvents(50), [EDITED_PADARIA]]))
+
+    await expect.element(page.getByRole('button', { name: 'Mostrar mais' })).toBeInTheDocument()
+  })
 })
