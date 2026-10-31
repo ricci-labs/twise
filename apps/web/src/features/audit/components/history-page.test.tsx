@@ -218,9 +218,13 @@ describe('AUD-01 Histórico', () => {
     await expect.element(events.getByText('Compra 149')).toBeInTheDocument()
     expect(page.getByRole('button', { name: 'Mostrar mais' }).query()).toBeNull()
     const pane = events.element() as HTMLElement
-    pane.scrollTop = pane.scrollHeight
 
-    await expect.element(events.getByText('Isso é tudo do histórico.')).toBeInTheDocument()
+    await expect
+      .poll(() => {
+        pane.scrollTop = pane.scrollHeight
+        return events.getByText('Isso é tudo do histórico.').query()
+      })
+      .not.toBeNull()
     await expect.element(events.getByText('Padaria')).toBeInTheDocument()
   })
 

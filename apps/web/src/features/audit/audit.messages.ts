@@ -17,7 +17,7 @@ export const auditMessages = {
   loadingMore: 'Carregando mais…',
   retry: 'Tentar de novo',
   empty: 'Nada registrado ainda.',
-  emptyText: 'Quando alguém mudar algo no espaço, aparece aqui.',
+  emptyText: 'Tudo o que alguém registrar, editar ou excluir aparece aqui, com quem e quando.',
   nothingFound: 'Nada com esses filtros.',
   clearFilters: 'Limpar filtros',
   invalidFilters: 'Os filtros não valiam mais e foram limpos.',

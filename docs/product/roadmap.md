@@ -430,7 +430,7 @@ updated: 2026-10-30
   14. [x] Review of the round against every PNG (#369–#404; G65–G68 added on the way)
   15. [x] The open items' card and share detail ("Cartão X · metade de R$ 240,00"), approved by the
       user on 2026-10-18: API (G69, #405) and the contact page (#406)
-- [ ] **Settings, "Posso comprar?" and phone system bars round: SET-01, MEM-01..03, ME-01, AUD-01,
+- [x] **Settings, "Posso comprar?" and phone system bars round: SET-01, MEM-01..03, ME-01, AUD-01,
   HOME-02** (designs `../design/settings/`, `../design/purchase/`, `../design/system-bars/`,
   exported and approved 2026-10-29; one PR per step, every screen checked side by side with its PNG
   and run through the long-text test):
@@ -456,7 +456,8 @@ updated: 2026-10-30
   10. [x] Web: Histórico (`AUD-01`, #456–#461), with `WorkScreen` on the desktop
   11. [x] Web: "Posso comprar?" (`HOME-02`, #462–#466): the form, the live result, the states and
       the desktop work screen
-  12. [ ] Review of the round against every PNG
+  12. [x] Review of the round against every PNG (#467–#470: settings, members, account, history and
+      the tab marks; the API's roles order fixed on the way, #468)
 - [ ] Remaining project skills (`new-module`, `db-migration`, `domain-rule`, `pr`) and Claude Code hooks
 
 ## Phase 1: MVP

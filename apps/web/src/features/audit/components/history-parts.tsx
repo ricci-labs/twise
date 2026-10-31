@@ -56,7 +56,7 @@ export function HistoryEmpty({ search, onSearchChange }: HistoryEmptyProps) {
   if (hasFilters(search)) {
     return (
       <EmptyBlock
-        icon="history"
+        icon="receipt"
         title={messages.nothingFound}
         action={
           <Button variant="secondary" onClick={() => onSearchChange(NO_FILTERS)}>
@@ -66,7 +66,7 @@ export function HistoryEmpty({ search, onSearchChange }: HistoryEmptyProps) {
       />
     )
   }
-  return <EmptyBlock icon="history" title={messages.empty} text={messages.emptyText} />
+  return <EmptyBlock icon="receipt" title={messages.empty} text={messages.emptyText} />
 }
 
 export function HistoryDays({ days, selectedId }: HistoryDaysProps) {
