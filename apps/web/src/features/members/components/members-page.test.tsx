@@ -55,6 +55,7 @@ describe('MEM-01 Membros', () => {
   it('lists the people with their e-mail, role and since when, marking you', async () => {
     await openMembers()
     await expect.element(page.getByRole('heading', { name: 'Membros', level: 1 })).toBeVisible()
+    expect(document.querySelector('[data-slot=floating-action]')).toBeNull()
     const people = page.getByRole('region', { name: '2 pessoas' })
     const rows = people.getByRole('listitem')
     await expect.element(rows.nth(0).getByText('Member A', { exact: true })).toBeVisible()

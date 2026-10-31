@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
 import { Button } from '@web/components/actions/button'
+import { ItemActions } from '@web/components/actions/item-actions'
 import { ConfirmDialog } from '@web/components/feedback/confirm-dialog'
 import { showToast } from '@web/components/feedback/toast'
 import { TwiseIcon } from '@web/components/icons/twise-icon'
@@ -18,7 +19,7 @@ import { useState } from 'react'
 const messages = membersMessages.editor
 const NAME_SEPARATOR = ', '
 
-export function RoleDelete({ workspaceId, role }: RoleDeleteProps) {
+export function RoleDelete({ workspaceId, role, isMenu = false }: RoleDeleteProps) {
   const navigate = useNavigate()
   const [dialog, setDialog] = useState<RoleDeleteDialog>(null)
   const remove = useDeleteRole(workspaceId)
@@ -61,14 +62,30 @@ export function RoleDelete({ workspaceId, role }: RoleDeleteProps) {
       )
   return (
     <>
-      <Button
-        variant="dangerText"
-        className="-ml-3 self-start"
-        onClick={() => setDialog(isInUse ? 'inUse' : 'confirm')}
-      >
-        <TwiseIcon name="trash" size="sm" />
-        {messages.delete}
-      </Button>
+      {isMenu ? (
+        <ItemActions
+          title={role.name}
+          triggerLabel={messages.roleActions(role.name)}
+          actions={[
+            {
+              key: 'delete',
+              label: messages.delete,
+              icon: 'trash',
+              tone: 'danger',
+              onSelect: () => setDialog(isInUse ? 'inUse' : 'confirm'),
+            },
+          ]}
+        />
+      ) : (
+        <Button
+          variant="dangerText"
+          className="-ml-3 self-start"
+          onClick={() => setDialog(isInUse ? 'inUse' : 'confirm')}
+        >
+          <TwiseIcon name="trash" size="sm" />
+          {messages.delete}
+        </Button>
+      )}
       <ConfirmDialog
         title={messages.deleteTitle(role.name)}
         description={messages.deleteText}

@@ -26,7 +26,7 @@ export function RoleCard({
       <div className={roleCardTextVariants()}>
         <span className={roleCardNameVariants()}>{name}</span>
         <span className={roleCardMetaVariants()}>
-          <Badge tone={isSystem ? 'neutral' : 'partial'} size="status" hasDot={!isSystem}>
+          <Badge tone={isSystem ? 'neutral' : 'partial'} size="status" hasDot>
             {isSystem ? messages.system : messages.custom}
           </Badge>
           <span>{usageOf(memberCount, invitationCount)}</span>

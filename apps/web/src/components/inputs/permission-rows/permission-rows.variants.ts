@@ -5,12 +5,14 @@ export const permissionRowsVariants = cva(
 )
 
 export const permissionAreaVariants = cva(
-  'flex flex-col gap-2 border-border py-3 not-first:border-t',
+  'm-0 min-w-0 border-0 border-border p-0 py-3 not-first:border-t',
 )
 
-export const permissionAreaTitleVariants = cva('text-label font-semibold text-ink')
+export const permissionAreaTitleVariants = cva(
+  'float-left mb-2 w-full p-0 text-label font-bold text-ink',
+)
 
-export const permissionGridVariants = cva('grid grid-cols-4 gap-2')
+export const permissionGridVariants = cva('clear-left grid grid-cols-4 gap-2')
 
 export const permissionToggleVariants = cva(
   [
