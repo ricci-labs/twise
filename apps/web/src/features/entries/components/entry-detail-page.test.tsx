@@ -134,7 +134,7 @@ describe('ENT-03 entry detail', () => {
     await expect.element(page.getByText('Para a cozinha nova.')).toBeVisible()
     await expect
       .element(page.getByRole('link', { name: 'Histórico deste lançamento' }))
-      .toBeVisible()
+      .toHaveAttribute('href', `/w/${WORKSPACE_ID}/history?item=${ENTRY_ID}`)
     await expectNoAccessibilityViolations(page.getByRole('main').element())
     expect(
       middleOf(page.getByRole('link', { name: 'Editar' }).element()) -

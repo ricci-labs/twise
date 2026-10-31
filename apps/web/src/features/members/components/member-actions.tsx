@@ -1,6 +1,6 @@
 import { DELETE_REASON_MAX_LENGTH } from '@financas/shared'
 import { useNavigate } from '@tanstack/react-router'
-import { ItemActions } from '@web/components/actions/item-actions'
+import { type ItemAction, ItemActions } from '@web/components/actions/item-actions'
 import { ConfirmDialog } from '@web/components/feedback/confirm-dialog'
 import { showToast } from '@web/components/feedback/toast'
 import { TextArea } from '@web/components/inputs/text-area'
@@ -9,9 +9,14 @@ import { useLeaveWorkspace } from '@web/features/members/api/use-leave-workspace
 import { useRemoveMember } from '@web/features/members/api/use-remove-member'
 import { RoleSheet } from '@web/features/members/components/role-sheet'
 import { membersMessages } from '@web/features/members/members.messages'
-import type { MemberActionsProps, MemberDialog } from '@web/features/members/members.types'
+import type {
+  MemberActionsProps,
+  MemberDialog,
+  MemberMenuInput,
+} from '@web/features/members/members.types'
 import { ApiError } from '@web/lib/api/api-error'
 import { errorMessageFor } from '@web/lib/errors/error-message'
+import { hasPermission } from '@web/lib/permissions'
 import { useId, useState } from 'react'
 
 const messages = membersMessages
@@ -89,43 +94,27 @@ export function MemberActions({
     }
   }
 
-  const mayChangeRole = canChangeRole && (member.role.systemKey !== OWNER || isActorOwner)
-  const actions = isYou
-    ? [
-        {
-          key: 'leave',
-          label: messages.actions.leave,
-          icon: 'out' as const,
-          tone: 'danger' as const,
-          onSelect: () => setDialog('leave'),
-        },
-      ]
-    : [
-        ...(mayChangeRole
-          ? [
-              {
-                key: 'role',
-                label: messages.actions.changeRole,
-                icon: 'users' as const,
-                onSelect: () => setDialog('role'),
-              },
-            ]
-          : []),
-        ...(canRemove
-          ? [
-              {
-                key: 'remove',
-                label: messages.actions.remove,
-                icon: 'trash' as const,
-                tone: 'danger' as const,
-                onSelect: () => {
-                  setReason('')
-                  setDialog('remove')
-                },
-              },
-            ]
-          : []),
-      ]
+  const actions = memberMenuOf({
+    isYou,
+    canChangeRole: canChangeRole && (member.role.systemKey !== OWNER || isActorOwner),
+    canSeeHistory: hasPermission(actorPermissions, 'audit', 'view'),
+    canRemove,
+    open: {
+      account: () => void navigate({ to: '/w/$workspaceId/account', params: { workspaceId } }),
+      leave: () => setDialog('leave'),
+      role: () => setDialog('role'),
+      history: () =>
+        void navigate({
+          to: '/w/$workspaceId/history',
+          params: { workspaceId },
+          search: { actor: member.userId },
+        }),
+      remove: () => {
+        setReason('')
+        setDialog('remove')
+      },
+    },
+  })
   if (actions.length === 0) {
     return null
   }
@@ -189,4 +178,46 @@ export function MemberActions({
       />
     </>
   )
+}
+
+function memberMenuOf({
+  isYou,
+  canChangeRole,
+  canSeeHistory,
+  canRemove,
+  open,
+}: MemberMenuInput): ItemAction[] {
+  if (isYou) {
+    return [
+      { key: 'account', label: messages.actions.account, icon: 'user', onSelect: open.account },
+      {
+        key: 'leave',
+        label: messages.actions.leave,
+        icon: 'out',
+        tone: 'danger',
+        onSelect: open.leave,
+      },
+    ]
+  }
+  const choices: [boolean, ItemAction][] = [
+    [
+      canChangeRole,
+      { key: 'role', label: messages.actions.changeRole, icon: 'users', onSelect: open.role },
+    ],
+    [
+      canSeeHistory,
+      { key: 'history', label: messages.actions.history, icon: 'history', onSelect: open.history },
+    ],
+    [
+      canRemove,
+      {
+        key: 'remove',
+        label: messages.actions.remove,
+        icon: 'trash',
+        tone: 'danger',
+        onSelect: open.remove,
+      },
+    ],
+  ]
+  return choices.filter(([isShown]) => isShown).map(([, action]) => action)
 }

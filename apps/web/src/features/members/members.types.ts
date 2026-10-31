@@ -71,6 +71,14 @@ export type MemberActionsProps = {
   isActorOwner: boolean
 }
 
+export type MemberMenuInput = {
+  isYou: boolean
+  canChangeRole: boolean
+  canSeeHistory: boolean
+  canRemove: boolean
+  open: Record<'account' | 'leave' | 'role' | 'history' | 'remove', () => void>
+}
+
 export type MemberDialog = 'remove' | 'leave' | 'lastOwner' | 'role' | null
 
 export type RoleSheetProps = {

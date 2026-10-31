@@ -7,6 +7,7 @@ import {
   account,
   apiError,
   fakeApi,
+  MEMBER_B_ID,
   VIEWER_PERMISSIONS,
   WORKSPACE_ID,
   workspaceAccess,
@@ -82,6 +83,22 @@ describe('MEM-01 Membros', () => {
       [`GET /api/workspaces/${WORKSPACE_ID}/members`]: () => apiError('INTERNAL', SERVER_ERROR),
     })
     await expect.element(page.getByText('Não foi possível carregar os membros.')).toBeVisible()
+  })
+
+  it('opens the history of someone and your own account from the row menus', async () => {
+    const app = await openMembers()
+    await page.getByRole('button', { name: 'Ações de Member A' }).click()
+    await expect
+      .element(page.getByRole('dialog').getByRole('button', { name: 'Minha conta' }))
+      .toBeVisible()
+    await userEvent.keyboard('{Escape}')
+
+    await page.getByRole('button', { name: 'Ações de Member B' }).click()
+    await page.getByRole('dialog').getByRole('button', { name: 'Ver no histórico' }).click()
+
+    await expect
+      .poll(() => app.router.state.location.href)
+      .toBe(`/w/${WORKSPACE_ID}/history?actor=${MEMBER_B_ID}`)
   })
 
   it('removes someone with an optional reason', async () => {

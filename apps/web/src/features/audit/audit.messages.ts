@@ -21,6 +21,18 @@ export const auditMessages = {
   clearFilters: 'Limpar filtros',
   invalidFilters: 'Os filtros não valiam mais e foram limpos.',
   end: 'Isso é tudo do histórico.',
+  filters: {
+    label: 'Filtros do histórico',
+    area: 'Área',
+    actor: 'Quem',
+    allAreas: 'Tudo',
+    everyone: 'Todos',
+  },
+  item: {
+    entry: 'Só este lançamento',
+    other: 'Só este item',
+    clear: 'Ver tudo',
+  },
   change: {
     title: 'Mudança',
     close: 'Fechar',

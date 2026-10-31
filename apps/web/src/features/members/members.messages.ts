@@ -198,7 +198,9 @@ export const membersMessages = {
   actions: {
     trigger: (name: string) => `Ações de ${name}`,
     changeRole: 'Mudar papel',
+    history: 'Ver no histórico',
     remove: 'Remover do espaço',
+    account: 'Minha conta',
     leave: 'Sair do espaço',
   },
   remove: {

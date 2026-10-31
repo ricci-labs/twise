@@ -132,4 +132,56 @@ describe('AUD-01 Histórico', () => {
     await expect.element(page.getByText('Carteira')).toBeVisible()
     expect(calls).toBeGreaterThan(1)
   })
+
+  it('filters by area and by who did it', async () => {
+    const queries: string[] = []
+    const app = await openHistory({
+      [AUDIT]: (request) => {
+        queries.push(new URL(request.url).search)
+        return Response.json({ items: HOUSEHOLD_EVENTS, nextCursor: null })
+      },
+    })
+
+    await page.getByRole('button', { name: 'Área' }).click()
+    await page
+      .getByRole('dialog', { name: 'Área' })
+      .getByRole('button', { name: 'Lançamentos' })
+      .click()
+    await expect.element(page.getByRole('button', { name: 'Área: Lançamentos' })).toBeVisible()
+
+    await page.getByRole('button', { name: 'Quem' }).click()
+    await page
+      .getByRole('dialog', { name: 'Quem' })
+      .getByRole('button', { name: 'Automático' })
+      .click()
+
+    await expect
+      .poll(() => app.router.state.location.search)
+      .toEqual({ area: 'entries', actor: 'automatic' })
+    await expect.poll(() => queries.at(-1)).toContain('area=entries')
+    expect(queries.at(-1)).toContain('actorId=automatic')
+  })
+
+  it('shows only one entry when it comes from the entry, with an X to see everything', async () => {
+    const queries: string[] = []
+    await openHistory(
+      {
+        [AUDIT]: (request) => {
+          queries.push(new URL(request.url).search)
+          return Response.json({ items: [EDITED_PADARIA], nextCursor: null })
+        },
+      },
+      `${HISTORY}?item=${PADARIA_ID}`,
+    )
+
+    const item = page.getByRole('region', { name: 'Só este lançamento' })
+    await expect.element(item.getByText('Padaria')).toBeVisible()
+    expect(queries[0]).toContain(`rowId=${PADARIA_ID}`)
+    expect(page.getByRole('button', { name: 'Área' }).query()).toBeNull()
+
+    await item.getByRole('button', { name: 'Ver tudo' }).click()
+
+    await expect.element(page.getByRole('button', { name: 'Área' })).toBeVisible()
+    await expect.poll(() => queries.at(-1)).not.toContain('rowId')
+  })
 })
