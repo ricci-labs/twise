@@ -44,14 +44,14 @@
     "check:owl-motion": "node scripts/generate-owl-motion.mjs --check"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.6.4",
+    "@biomejs/biome": "^2.6.8",
     "@commitlint/cli": "^21.2.4",
     "@commitlint/config-conventional": "^21.2.4",
-    "@swc/core": "^1.16.21",
+    "@swc/core": "^1.16.22",
     "@types/node": "^24.19.2",
-    "dependency-cruiser": "^18.7.2",
+    "dependency-cruiser": "^18.8.0",
     "lefthook": "^2.2.2",
-    "oxc-parser": "^0.157.0",
+    "oxc-parser": "^0.159.0",
     "typescript": "^7.0.2"
   }
 }
